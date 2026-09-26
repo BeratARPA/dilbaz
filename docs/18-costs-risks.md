@@ -1,5 +1,20 @@
 # 18 — Maliyet ve Riskler
 
+## 0. Bütçe kısıtı: sıfır (2026-09-26)
+
+Kullanıcının bütçesi **sıfırdır**. Yalnızca ücretsiz katmanlar kullanılır; ücret doğurabilecek hiçbir iş (ücretli API, eval, Batch, ücretli plan, kart doğrulaması isteyen kayıt) başlatılmaz.
+
+- **Ücretsiz ve kullanımda:** Supabase ücretsiz plan, GitHub (özel depo + ayda 2.000 Actions dakikası; ödeme yöntemi yokken aşımda ücret alınmaz, işler durur), Brevo SMTP (günde 300 e-posta; giriş kodları için).
+- **Karar bekleyen ücretli kalemler:** Claude API (etkileşimli rotalar ve içerik üretimi; ADR-0005), Azure Speech (ücretsiz katman bile kart doğrulaması istiyor; ADR-0006). Deepgram'ın kayıt kredisi ($200) ücretsizdir ama plan bu krediye bağımlı olmamalıdır.
+- **Faz 1'den önce** sıfır bütçe seçenekleri ADR-0009 ile karara bağlanır. Değerlendirilecek yollar:
+  - LLM'siz deterministik çekirdek döngü (`07` §1.6 zaten bunu şart koşuyor)
+  - Cihaz üstü TTS/ASR
+  - Açık veriler (Tatoeba vb.)
+  - İçeriğin Claude Code oturumlarında hazırlanıp deterministik doğrulamayla pakete girmesi
+  - Ücretsiz katmanlı LLM sağlayıcıları (mahremiyet koşullarıyla)
+
+Aşağıdaki tablo özgün plandır; ücretli satırlar ADR-0009'a kadar askıdadır.
+
 ## 1. Aylık işletim maliyeti (iki kullanıcı, tahmini)
 
 Fiyatlar 2026-09 itibarıyla doğrulanmıştır. Gerçek değerler `llm_usage` ve `speech_usage` tablolarından izlenir.
@@ -42,3 +57,4 @@ Fiyatlar 2026-09 itibarıyla doğrulanmıştır. Gerçek değerler `llm_usage` v
 | R12 | Lisans sorunları (ShareAlike, CEFR/EVP metinleri) | Düşük (kişisel kullanım) | Orta | Açık lisanslı kaynaklar, kendi özetlerimiz, atıflar, `LICENSES.md` |
 | R13 | Seviye tahmini yanıltıcı olur | Orta | Orta | Aralık + güven, dış kalibrasyon, CAF'ı seviyeye çevirmeme |
 | R14 | Partnerler arasında karşılaştırma gerilimi | Düşük | Orta | Sıralama yok, varsayılan yalnızca özet, paylaşım anahtarları |
+| R15 | **Sıfır bütçe:** ücretli yapay zekâ ve ses hizmetleri kullanılamaz | Kesin | Yüksek | Deterministik çekirdek, ücretsiz katmanlar, cihaz üstü ses, açık veriler, ADR-0009 kararı (§0) |

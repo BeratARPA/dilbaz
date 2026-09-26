@@ -14,9 +14,10 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
 | 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
-| 3 | **Anthropic** | console.anthropic.com → API anahtarı. **Aylık harcama limiti koy** (öneri: $50). | Faz 0 |
-| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi) → API anahtarı. | Faz 0 |
-| 5 | **Azure** | Azure hesabı → "Speech" kaynağı, bölge **West Europe**, fiyatlandırma katmanı **F0 (ücretsiz)**. Anahtar ve bölgeyi not et. | Faz 0 |
+| 3 | **Anthropic** | ⏸ **Sıfır bütçe nedeniyle askıda** (`18` §0, ADR-0009 kararı bekleniyor). Karar çıkarsa: console.anthropic.com → API anahtarı + aylık harcama limiti. | Faz 1 öncesi karar |
+| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi, kart gerekmez) → API anahtarı. ADR-0009 ile birlikte kesinleşir. | Faz 1 öncesi karar |
+| 5 | **Azure** | ⏸ **Askıda:** ücretsiz katman bile kart doğrulaması istiyor (`18` §0). Karar çıkarsa: "Speech" kaynağı, bölge West Europe, katman F0. | Faz 1 öncesi karar |
+| — | **Brevo (SMTP)** | Ücretsiz hesap → gönderen doğrula → SMTP anahtarı → Supabase: Authentication → Emails → SMTP Settings (host `smtp-relay.brevo.com`, port 587, gönderen adı `Dilbaz`). Yerleşik e-posta servisi yalnızca ekip üyelerine ve saatte 2 e-posta gönderir, şablonları kilitlidir; kodla giriş için şart. | Faz 0 (F0-10) |
 | 6 | **Vercel** | Web sürümü için proje. | Faz 6 |
 
 ### Anahtarları ayarlama (kendin çalıştır)
