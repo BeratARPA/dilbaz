@@ -1,8 +1,8 @@
-# 07 — Yapay Zekâ Öğretmen (Claude)
+# 07 — Yapay Zekâ Öğretmen (LLM)
 
-Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, model politikası, API kuralları, pedagojik korkuluklar, prompt sözleşmeleri, değerlendirme ve maliyet.
+Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve model politikası, API kuralları, pedagojik korkuluklar, prompt sözleşmeleri, değerlendirme ve kota planı.
 
-> **Kodlayan ajan için zorunlu:** Claude API ile ilgili herhangi bir kodu yazmadan ya da değiştirmeden önce **`claude-api` skill'ini yükle** ve oradaki güncel API biçimlerini kullan. Bu dokümandaki API ayrıntıları 2026-09 itibarıyladır. Skill ve resmi SDK dokümantasyonu bu dokümandan önce gelir.
+> **Kodlayan ajan için zorunlu:** Sağlayıcılar ücretsiz katmanlardır (ADR-0009). LLM kodu yazmadan önce sağlayıcının güncel belgesini **context7** ile doğrula; hafızadan API yazma. Claude API yeniden açılırsa önce **`claude-api` skill'ini yükle** (ADR-0005). Bu dokümandaki ayrıntılar 2026-09 itibarıyladır; resmî belgeler bu dokümandan önce gelir.
 
 ## 1. İlkeler
 
@@ -11,13 +11,23 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, model politikası,
 3. **Yapılandırılmış çıktı:** Her rota bir JSON şemasıyla konuşur. Serbest metin yalnızca şemadaki metin alanlarındadır.
 4. **Kapalı listeler:** Hata etiketleri, gramer kodları ve bağlaçlar paketten gelen kapalı listelerdir. LLM liste dışı kod üretemez; üretirse çıktı reddedilir.
 5. **Korkuluklar kodda da uygulanır:** Promptta "cevabı verme" demek yetmez. İstemci, H4'ü açma koşulları sağlanmadan göstermez. Sunucu, H1–H3'ün doğru cevabı içermediğini kontrol eder (I-02, I-11).
-6. **Çekirdek döngü asla LLM'e bağımlı olmaz:** LLM erişilemezse ya da bütçe dolmuşsa kartlar deterministik kontrolle devam eder. Kullanıcıya "ayrıntılı geri bildirim daha sonra" denir.
+6. **Çekirdek döngü asla LLM'e bağımlı olmaz:** LLM erişilemezse, kota dolmuşsa ya da kullanıcı veri onayı vermemişse kartlar deterministik değerlendirmeyle devam eder (ADR-0009 §2). Kullanıcıya "ayrıntılı geri bildirim daha sonra" denir.
 
-## 2. Model politikası
+## 2. Sağlayıcı ve model politikası (ADR-0009)
 
-- **Varsayılan model: `claude-opus-5`, tüm rotalar.** (2026-09 fiyatı: girdi $5, çıktı $25 / 1M token; önbellek okuma ~0,1×; Batch API %50 indirimli.)
-- Model ve rota ayarları tek bir yapılandırma dosyasındadır: `supabase/functions/_shared/llm_config.ts` (Python araçlarında `tools/llm_config.py`). Kodda model adı sabit yazılmaz.
-- Rota başına **effort** ayarı:
+- **Bütçe sıfır:** Yalnızca ücretsiz katmanlar kullanılır. Her rota için sıra: birincil sağlayıcı → yedek sağlayıcı → deterministik yol.
+
+  | Rota | Birincil | Yedek | Son çare |
+  |---|---|---|---|
+  | `answer_check` | Gemini Flash-Lite | Groq `openai/gpt-oss-120b` | Deterministik değerlendirme |
+  | `gap_suggest` | Gemini Flash | Gemini Flash-Lite → Groq | Yakalama + bekleyen öneri |
+  | `speaking_annotate` (aylık test dahil) | Gemini Flash | Gemini Flash-Lite | Deterministik akıcılık ölçümleri; işaretleme sonradan |
+  | Sonraki fazların rotaları | O fazda eval ile seçilir | | |
+
+  - **Sıra eval'le kesinleşir.** Bu sıra bir tahmindir; her rota için birincil ve yedek sağlayıcıyı eval belirler (§8). "En iyi", eşikleri geçenler arasında en yüksek doğruluğu veren seçenektir; eşitlikte gecikmeye bakılır.
+  - **Groq ve uzun rotalar:** Groq'un ücretsiz katmanındaki dakikada 8K token sınırı, uzun rotalara (`speaking_annotate`) izin vermez.
+- **Ayarların yeri:** Sağlayıcılar, model adları, rota sıraları ve kotalar tek bir yapılandırma dosyasındadır: `supabase/functions/_shared/llm_config.ts`. Kodda model adı sabit yazılmaz. İçerik araçlarında çalışma anı LLM'i yoktur; içerik Claude Code oturumlarında üretilir (`10`).
+- **Düşünme derinliği:** Rota başına anlamsal bir **effort** düzeyi tanımlanır. Adaptör bunu sağlayıcının ayarına çevirir (ör. Gemini'de düşünme düzeyi, `gpt-oss`'ta `reasoning_effort`).
 
   | Rota | Effort | Gerekçe |
   |---|---|---|
@@ -29,29 +39,25 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, model politikası,
   | `roleplay_debrief` | medium | |
   | `writing_feedback` | medium | |
   | `mediation_check` | medium | |
-  | Batch içerik üretimi | medium | Doğrulama geçişi high |
 
-- **Model değiştirmek kullanıcının kararıdır.** Maliyet ya da gecikme sorun olursa önce şu adımlar denenir:
-  1. Deterministik ön kontrollerin kapsamını artırmak
-  2. Prompt önbelleği
+- **Değişiklik kuralı:** Sağlayıcı, model ya da prompt değiştirmek kullanıcının kararıdır ve eval sonuçlarıyla desteklenir. Kota ya da gecikme sorun olursa önce şu adımlar denenir:
+  1. Deterministik ön kontrollerin ve paket varyantlarının kapsamını artırmak
+  2. Önbelleğe uygun sabit sistem promptu
   3. Effort düşürmek
-  4. Batch kullanmak
-
-  Daha ucuz bir modele (ör. `claude-sonnet-5`, `claude-haiku-4-5`) geçiş ancak kullanıcı onaylarsa ve eval sonuçları eşikleri koruyorsa yapılır.
+  4. Rotayı aynı ailenin kotası daha geniş bir modeline taşımak
 
 ## 3. API kullanım kuralları (Edge Functions, TypeScript/Deno)
 
-- Resmî SDK kullanılır: `import Anthropic from "npm:@anthropic-ai/sdk"`. Ham `fetch` ya da OpenAI uyumlu ara katman kullanılmaz.
-- **Yapılandırılmış çıktı:** `client.messages.parse({ ..., output_config: { format: zodOutputFormat(Schema) } })` → `parsed_output`. `parsed_output` null ise → tek bir yeniden deneme, sonra hata.
-- **Durma nedenleri her zaman kontrol edilir:**
-  - `refusal` → `stop_details` loglanır, kullanıcıya nötr bir hata gösterilir.
-  - `max_tokens` → `max_tokens` artırılarak tek yeniden deneme.
-- **Reddetme yedeklemesi:** Etkileşimli rotalarda sunucu tarafı fallback açıktır (`fallbacks: "default"` + beta `server-side-fallback-2026-07-01`). Batch API bu parametreyi kabul etmez. Yapılandırılmış çıktı ile beta yolunun birlikte kullanımı skill ile doğrulanır.
-- **Yapılmayacaklar:**
-  - Assistant prefill yok (modelde desteklenmiyor)
-  - `temperature` ve diğer örnekleme parametreleri yok (400 döner)
-  - `budget_tokens` yok. Düşünme derinliği yalnızca `output_config.effort` ile ayarlanır.
-- **`max_tokens`:** Düşük tutulmaz; kesilmiş çıktı daha pahalıya gelir.
+- **SDK:** Resmî SDK'lar kullanılır. OpenAI uyumlu uç nokta sunan sağlayıcılar (Groq ve Gemini'nin uyumluluk katmanı) tek bir adaptörü paylaşabilir. Seçim F1-15'te belgelerle (context7) doğrulanır. Sağlayıcılar `_shared/llm/` altında ortak bir arayüzün arkasındadır.
+- **Yapılandırılmış çıktı:**
+  - Şema zod ile tanımlanır ve sağlayıcıya JSON Schema olarak verilir (yapılandırılmış çıktı ya da JSON modu).
+  - Dönen JSON sunucuda zod ile **her zaman** doğrulanır.
+  - Geçersizse tek bir yeniden deneme yapılır, sonra sıradaki sağlayıcıya geçilir. Hepsi başarısız olursa sonuç `uncertain` sayılır.
+- **Bitiş nedenleri her zaman kontrol edilir:**
+  - Güvenlik engeli ya da reddetme → olay kodu loglanır, sıradaki sağlayıcı denenir. Yine olmazsa kullanıcıya nötr bir mesaj gösterilir.
+  - Uzunluk sınırı → `max_tokens` artırılarak tek yeniden deneme.
+- **Örnekleme parametreleri:** Sağlayıcının önerdiği varsayılanlarda kalır. Tutarlılık rubrik, örnekler ve eval ile sağlanır.
+- **`max_tokens`:** Düşük tutulmaz; kesilmiş çıktı bir yeniden deneme ve kota harcar.
 
   | Rota | `max_tokens` |
   |---|---|
@@ -64,18 +70,22 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, model politikası,
   | writing_feedback | 12000 |
   | mediation_check | 12000 |
 
-  16K üstü gerekirse streaming kullanılır.
-- **Prompt önbelleği:**
-  - Her rotanın sistem promptu sabittir: rubrik, etiket kataloğu, örnekler. Model için minimum önbelleklenebilir önek 512 tokendır; bu uzunluk aşılır.
-  - Sistem bloğunda `cache_control: {type: "ephemeral"}` kullanılır. Değişken içerik yalnızca `messages` içindedir.
-  - Sistem promptunda tarih, UUID, sırasız JSON olmaz.
-  - `usage.cache_read_input_tokens` loglanır ve izlenir.
-  - Rol oyununda geçmiş yalnızca sona eklenerek büyür, böylece önbellek korunur.
-- **Hata yönetimi:** SDK'nın tipli hata sınıfları kullanılır. 429/5xx için SDK yeniden denemesi yeterlidir. 400/404 yeniden denenmez.
-- **Kullanım kaydı ve bütçe:**
-  - Her çağrı `llm_usage` tablosuna yazılır: rota, model, token türleri, hesaplanan maliyet.
-  - Günlük kullanıcı başı tavan: `llm_config.dailyBudgetUsd = 1.50`. Aşılırsa rota `budget_exceeded` döner, istemci deterministik moda geçer.
-- **Gizlilik:** LLM'e yalnızca metin gider (transkript, istem, öğe bilgisi). Ses, isim, e-posta gitmez.
+- **Önbelleğe uygunluk:**
+  - Her rotanın sistem promptu sabittir: rubrik, etiket kataloğu, örnekler. Değişken içerik yalnızca kullanıcı mesajındadır.
+  - Sistem promptunda tarih, UUID, sırasız JSON olmaz. Sağlayıcıların örtük önbelleği ancak böyle çalışır. Groq'ta önbellekten okunan tokenlar kotaya sayılmaz.
+  - Rol oyununda geçmiş yalnızca sona eklenerek büyür.
+- **Hata yönetimi:**
+  - 429 (kota) → sağlayıcı o kotanın sıfırlanmasına kadar "dolu" işaretlenir, sıradaki sağlayıcıya geçilir.
+  - 5xx ve zaman aşımı → SDK'nın yeniden denemesinden sonra sıradaki sağlayıcıya geçilir.
+  - 400/404 yeniden denenmez; olay kodu loglanır.
+- **Kullanım kaydı ve kota:**
+  - Her çağrı `llm_usage` tablosuna yazılır: rota, sağlayıcı, model, token türleri, gecikme. Ücretsiz katmanda `cost_usd` = 0 olur.
+  - İki kullanıcı aynı kotaları paylaşır. **Adil paylaşım:** Her kullanıcıya her sağlayıcı ve model kotasının yarısı ayrılır. Pay dolunca rota `quota_exhausted` döner, istemci deterministik moda geçer.
+  - Günlük sayaçlar sağlayıcının sıfırlama saatine göre tutulur (Gemini: Pasifik saatiyle gece yarısı).
+- **Gizlilik ve onay:**
+  - LLM'e yalnızca metin gider: transkript, istem, öğe bilgisi. Ses, isim, e-posta ve kullanıcı kimliği gitmez.
+  - Gemini'nin ücretsiz katmanında gönderilen içerik ürün geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Her kullanıcı karşılamada (F1-12) kendi adına onay verir; onay yoksa istekleri Groq'a ya da deterministik yola gider.
+  - Groq hesabında ZDR (sıfır saklama) açılır.
 
 ## 4. Rotalar ve sözleşmeler
 
@@ -189,14 +199,15 @@ MediationOutput     = { covered_points: string[], missed_points: string[],
 ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 ```
 
-### 4.7 Batch rotaları (Python araçları, çevrimdışı)
+### 4.7 İçerik rotaları (Claude Code oturumları, çevrimdışı)
 
-İçerik hattı (`10-content-pipeline.md`) Message Batches API kullanır (%50 indirimli, asenkron). Sonuçlar `custom_id` ile eşlenir, sıraya güvenilmez. Rotalar:
+İçerik hattı (`10-content-pipeline.md`) çalışma anı LLM'i kullanmaz (ADR-0009). Aşağıdaki işler Claude Code oturumlarında yapılır. Çıktılar `content/work/` altına JSONL olarak yazılır ve pydantic şemalarıyla doğrulanır:
 
 - `content.sentences` — hedef lemma için taşıyıcı cümleler
 - `content.gloss_tr` — Türkçe karşılık ve açıklama
-- `content.validate` — doğallık, seviye ve anlam kontrolü; ayrı bir geçiş
-- `content.grammar_note`
+- `content.validate` — doğallık, seviye ve anlam kontrolü; üretenden ayrı bir oturumda
+- `content.variants` — kabul edilebilir cevap varyantları (deterministik değerlendirmenin temeli)
+- `content.grammar_note` — H3 kural notları dahil
 - `content.tasks`, `content.texts`, `content.dialogues`
 - `content.pseudowords`
 - `content.contrast_sets`
@@ -234,10 +245,11 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 
 | Durum | Davranış |
 |---|---|
-| Ağ yok / zaman aşımı | Kart: deterministik sonuç. Eşleşmezse "şimdilik doğru sayıldı, sonra kontrol edilecek" kuyruğu (`attempts.pending_llm = true`). Görev: kayıt yerelde bekler, senkronda işlenir. |
-| `refusal` (fallback sonrası da) | Nötr mesaj, deneme `uncertain` sayılır, olay loglanır |
-| Şema ihlali / katalog dışı kod | 1 yeniden deneme, sonra `uncertain` |
-| Bütçe aşıldı | Deterministik mod, kullanıcıya bilgi (suçlayıcı değil) |
+| Ağ yok / zaman aşımı | Kart: deterministik değerlendirme (ADR-0009 §2). `uncertain` sonuçlar `attempts.llm.pending = true` ile işaretlenir. Bağlantı gelince kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir. Görev: kayıt yerelde bekler, senkronda işlenir. |
+| Kota doldu (sağlayıcı ya da kullanıcı payı) | Sıradaki sağlayıcı; hepsi doluysa deterministik mod. Kullanıcıya nötr bilgi verilir, suçlayıcı değil. |
+| Güvenlik engeli / reddetme (tüm sağlayıcılarda) | Nötr mesaj, deneme `uncertain` sayılır, olay kodu loglanır |
+| Şema ihlali / katalog dışı kod | 1 yeniden deneme, sonra sıradaki sağlayıcı, sonra `uncertain` |
+| Kullanıcının veri onayı yok | Groq ya da deterministik yol (§3) |
 | LLM ile deterministik sonuç çelişirse | Deterministik "doğru" ise her zaman doğru kabul edilir |
 
 ## 8. Değerlendirme (eval) seti
@@ -265,25 +277,28 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   | roleplay_turn | Seviye+1 üstü kelime oranı | ≤ %5 |
   | roleplay_turn | Konuşma sırasında düzeltme | %0 |
 
-- Uygulama sırasında `claude-api` skill'inin `build-eval` akışı kullanılır. Her eval çalıştırmasının maliyeti ölçülür ve raporlanır.
+- **Sağlayıcı seçimi:** Çalıştırıcı aynı seti her aday sağlayıcı ve modelle çalıştırır. Rota başına sıra (§2) sonuçlara göre belirlenir ve `evals/results/` altına yazılır.
+- **Kotalar:** Eval ücretsiz kotalarda çalışır. Gemini Flash'ın günlük ~20 isteği yüzünden bazı rotaların eval'i birkaç güne yayılır. Çalıştırmadan önce kullanıcıya süre ve kota etkisi söylenir.
+- **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır. Eşikler:
+  - doğru ya da varyant cevabı "yanlış" sayma ≤ %3
+  - H1–H3'te cevap sızıntısı %0
 
-## 9. Maliyet tahmini (2 kullanıcı)
+## 9. Kota planı (2 kullanıcı)
+
+Maliyet $0'dır (ADR-0009). Sınır para değil, ücretsiz kotalardır.
 
 Varsayımlar (kişi başı günlük):
 - 20 LLM'li kart kontrolü (deterministik ön kontrol sonrası)
 - 2 konuşma işaretlemesi
 - 5 Söyleyemediklerim önerisi
-- Haftada 3 rol oyunu (10 tur)
+- Haftada 3 rol oyunu (10 tur; Faz 5)
 
-| Rota | Kişi başı aylık (tahmini) |
-|---|---|
-| answer_check | ~$5–7 |
-| speaking_annotate | ~$3–4 |
-| gap_suggest | ~$1–2 |
-| roleplay | ~$2–3 |
-| Aylık test (çift işaretleme) | < $1 |
-| **Toplam** | **~$12–17** → **iki kişi ~$25–35/ay** |
+| Rota | İki kişi, günlük | Birincil kota (2026-09) | Not |
+|---|---|---|---|
+| answer_check | ~40 | Gemini Flash-Lite, ~500 istek/gün | Rahat |
+| gap_suggest + speaking_annotate | ~14 | Gemini Flash, ~20 istek/gün | Sınıra yakın; taşan istekler Flash-Lite'a düşer |
+| Aylık test (çift işaretleme) | Ayda ~4 | Gemini Flash | |
+| roleplay (Faz 5) | ~9 tur | O fazda eval ile seçilir | |
 
-- İçerik üretimi (Batch, bir kerelik): seviye paketi başına ~$20–60. Tüm A0–C2 yolculuğu boyunca ~$150–300.
-- Gerçek maliyet `llm_usage` tablosundan ölçülür, İlerleme > Ayarlar'da gösterilir.
-- Maliyet beklentinin üstündeyse `claude-api` skill'inin `cost-optimize` akışı uygulanır. Model değişikliği kullanıcı onayıyla yapılır (§2).
+- Kotalar sağlayıcı panelinde (AI Studio, Groq konsolu) ve `llm_usage` tablosunda izlenir; İlerleme > Ayarlar'da gösterilir.
+- Kota ve model listesi her faz başında yeniden kontrol edilir. Ücretsiz katman daralırsa önce §2'deki adımlar denenir.

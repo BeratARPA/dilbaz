@@ -6,7 +6,8 @@ Dilbaz, bir dili **sıfırdan (A0) ileri seviyeye (C1–C2) gerçekten öğreten
 - **Kullanıcılar:** Berat ve sevgilisi (ikisi de ~A1–A2, hedef 12 ayda B1 konuşma).
 - **Platform:** Android (öncelik), Windows, web.
 - **Kısıtlar:** Günde en fazla 30 dk ve **iş gibi hissettirmeyecek**.
-- **Yığın:** Flutter + saf Dart motor + Supabase + Claude API + Deepgram/Azure ses.
+- **Yığın:** Flutter + saf Dart motor + Supabase + ücretsiz katman LLM'leri (Gemini, Groq) + Deepgram ve cihaz üstü ses.
+- **Bütçe sıfır** (ADR-0009): Ücretli ya da kart isteyen hiçbir servis kullanılmaz. Her bileşende ücretsiz olan en iyi seçenek eval ile seçilir.
 
 ## Her oturumun başında
 1. `docs/17-roadmap.md` → mevcut faz, ilk işaretlenmemiş görev, alttaki ilerleme günlüğü.
@@ -81,7 +82,7 @@ cd supabase/functions && deno test -A && deno lint && deno fmt --check
 # İçerik araçları
 cd content/tools && uv sync && uv run dilbaz-content --help && uv run pytest && uv run ruff check . && uv run ruff format --check . && uv run mypy src
 
-# LLM eval (ÜCRETLİ; kullanıcı onayıyla)
+# LLM eval (ücretsiz kotaları tüketir; önce kullanıcıya haber ver)
 deno run -A evals/run.ts --route answer_check
 ```
 
@@ -96,10 +97,11 @@ deno run -A evals/run.ts --route answer_check
 - **Python:** `ruff` + tip ipuçları + `pydantic` şemaları. LLM çıktıları önbelleğe alınır.
 - **Kapsam dışı yazma:** Görev dışı düzenleme, gereksiz soyutlama, konuşma dışı yorum ekleme yok. Mevcut kodun üslubuna uy.
 
-## Claude API (uygulamanın kendi LLM kullanımı)
-- LLM ile ilgili herhangi bir kodu yazmadan ya da değiştirmeden önce **`claude-api` skill'ini yükle.** Güncel API biçimleri oradadır: yapılandırılmış çıktı (`output_config.format`), effort, önbellek, Batch, reddetme yedeklemesi.
-- **Varsayılan model:** `claude-opus-5` (`docs/07` §2). Model değişikliği yalnızca kullanıcı kararıyla ve eval sonuçlarıyla yapılır.
-- **Prompt ya da model değişikliği → eval zorunlu** (`docs/07` §8). Eval ücretlidir, çalıştırmadan önce kullanıcıya tahmini maliyeti söyle.
+## Uygulamanın kendi LLM kullanımı (ADR-0009)
+- **Sağlayıcılar:** Gemini ve Groq ücretsiz katmanları, adaptör arkasında. Çağrı sırası: birincil → yedek → deterministik yol. Rota başına sağlayıcı ve model yalnızca `_shared/llm_config.ts`'de (`docs/07` §2).
+- **SDK ve API biçimi:** LLM kodu yazmadan önce sağlayıcının güncel belgesini context7 ile doğrula. Hafızadan API yazma. Claude API yeniden açılırsa önce **`claude-api` skill'ini yükle**.
+- **Sağlayıcı, model ya da prompt değişikliği → eval zorunlu** (`docs/07` §8). Eval ücretsiz kotalarda çalışır; çalıştırmadan önce kullanıcıya süre ve kota etkisini söyle. Değişiklik kullanıcı kararıyla ve eval sonuçlarıyla yapılır.
+- **Veri onayı:** Gemini ücretsiz katmanına giden metin ürün geliştirmede kullanılabilir. Her kullanıcı kendi adına onay verir; onay yoksa istek Groq'a ya da deterministik yola gider.
 
 ## Test ve "tamamlandı" tanımı (ayrıntı: `docs/15-testing.md`)
 Bir görev ancak şu koşullar sağlanınca tamamlanmış sayılır:
@@ -121,7 +123,7 @@ Bir görev ancak şu koşullar sağlanınca tamamlanmış sayılır:
 - Hesap açma, API anahtarı oluşturma ya da girme, ödeme/harcama limiti.
 - Sistem veya güvenlik ayarı (Windows Geliştirici Modu vb.). Sisteme araç kurulumu gerekiyorsa komutu öner, onay al.
 - Üretime migrasyon (`supabase db push`), paket yükleme (`upload`), web yayını, veri silme.
-- Ücretli toplu işler: eval, Batch içerik üretimi, TTS paket üretimi. Önce tahmini maliyeti söyle.
+- Ücretli ya da kart isteyen her şey (sıfır bütçe; başlatılmaz, önce sor). Ücretsiz kotaları uzun süre tüketecek toplu işler (eval, TTS paket üretimi): önce süreyi ve kota etkisini söyle.
 - Değişmez bir kuralı esnetmek, varsayılan modeli değiştirmek, yeni ücretli sağlayıcı eklemek.
 - İnsan girdisi gereken işler: içerik örneklem incelemesi, ASR veri seti kaydı.
 

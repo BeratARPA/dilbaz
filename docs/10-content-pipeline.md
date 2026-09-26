@@ -8,7 +8,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
 2. **Her öğenin kaynağı kayıtlıdır:** `source`, `license`, `attribution` alanları.
 3. **Otomatik kontroller önce, insan kontrolü örneklemle.** Her üretim partisinden rastgele 20 öğe kullanıcıya gösterilir.
 4. **Seviye disiplini:** Bir seviyenin cümlesi, hedef öğe dışında yalnızca o seviye ve altındaki lemmaları içerir.
-5. **Tekrarlanabilirlik:** Her adımın girdisi ve çıktısı dosyadır. Adımlar yeniden çalıştırılabilir. LLM çıktıları önbelleğe alınır (tekrar ücret ödenmez).
+5. **Tekrarlanabilirlik:** Her adımın girdisi ve çıktısı dosyadır. Adımlar yeniden çalıştırılabilir. LLM ile üretilen içerik (Claude Code oturumları, ADR-0009) dosyada saklanır; yeniden üretim gerekmez.
 
 ## 2. Kaynaklar ve lisanslar (2026-09-25'te doğrulandı)
 
@@ -24,7 +24,8 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
 | **Wiktionary (Wiktextract/kaikki)** | IPA, anlamlar, sözcük türü | CC BY-SA 4.0 + GFDL | Anlam ayrımı için referans |
 | **CEFR Companion Volume (2020)** | Can-do tanımları | © Council of Europe, açık lisans yok | Pakete **yalnızca kod + kendi kısa özetimiz** girer. Tam metin kopyalanmaz. |
 | **English Vocabulary/Grammar Profile** | Seviye kontrolü | © CUP; yalnızca kişisel, ticari olmayan araştırma/öğretim; toplu indirme yok | **Pakete girmez.** Yalnızca elle referans. |
-| **LLM üretimi (Claude)** | Cümle, açıklama, metin, görev | Kendi içeriğimiz | Doğrulama geçişinden geçer |
+| **LLM üretimi (Claude Code oturumları)** | Cümle, açıklama, varyant, metin, görev | Kendi içeriğimiz | Ayrı oturumda doğrulama + insan örneklemi (ADR-0009) |
+| **Kokoro-82M** | Paket sesleri (S6) | Model Apache-2.0; üretilen ses kendi içeriğimiz | Çevrimdışı, içerik makinesinde |
 | **Kullanıcı içeriği** | Söyleyemediklerim, altyazı, düzeltmeler | Kişisel | Pakete girmez; kişisel öğe olarak senkronlanır |
 
 **ShareAlike notu:** NGSL, Octanove, wordfreq verisi ve Wiktionary CC BY-SA'dır. Paketler dağıtılırsa CC BY-SA 4.0 ile dağıtılmalıdır. Kişisel kullanımda sorun yoktur, ama her paket `LICENSES.md` ve manifest atıflarıyla üretilir.
@@ -35,7 +36,8 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
 - **Paketler:**
   - `spacy` + `en_core_web_md` (lemma, sözcük türü)
   - `wordfreq`
-  - `anthropic` (resmî SDK; `claude-api` skill'i yüklenerek yazılır)
+  - Çalışma anı LLM SDK'sı yok: LLM işleri Claude Code oturumlarında yapılır (ADR-0009)
+  - `kokoro` (paket sesleri; Python < 3.13 istediği için ayrı bir uv ortamında)
   - `pydantic`, `typer` (CLI), `rich`, `pytest`
   - `fsrs[optimizer]` (FSRS optimizasyonu; ayrı araç)
 - **Başka hedef diller:** spaCy'nin resmî modeli olmayan diller için Stanza. Örneğin Türkçe hedef dil olursa Stanza'nın Türkçe modelleri kullanılır.
@@ -54,15 +56,15 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 |---|---|---|---|
 | S0 | `ingest` | Kaynak URL'leri → `sources/` | İndir, sağlama toplamı, sürüm kaydı |
 | S1 | `lexicon` | Kaynaklar → `lexicon.en.jsonl` | Lemma, sıklık sırası, NGSL/NGSL-S üyeliği, CEFR-J/Octanove seviyesi, sözcük türü, IPA, anlamlar |
-| S2 | `select --level A1` | Sözlük → hedef öğe listesi | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + LLM önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
-| S3 | `generate sentences` | Hedefler → aday cümleler | Önce Tatoeba'dan uygun adaylar (seviye filtresi), sonra Batch API ile LLM üretimi. İzinli kelime listesi önbelleklenmiş önek olarak verilir. Bağlamlar: günlük hayat + ilgi alanları. |
-| S4 | `validate` | Adaylar → kabul/ret | Deterministik kontroller + LLM doğrulama geçişi (§5) |
+| S2 | `select --level A1` | Sözlük → hedef öğe listesi | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + Claude Code oturumu önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
+| S3 | `generate sentences` | Hedefler → aday cümleler | Önce Tatoeba'dan uygun adaylar (seviye filtresi). Eksik kalanlar Claude Code oturumunda üretilir: araç, hedef ve izinli kelime listesini içeren bir iş dosyası çıkarır; oturumda üretilen JSONL `work/` altına yazılır ve şemayla doğrulanır. Bağlamlar: günlük hayat + ilgi alanları. |
+| S4 | `validate` | Adaylar → kabul/ret | Deterministik kontroller + ayrı oturumda doğrulama geçişi + 👤 örneklem (§5) |
 | S5 | `pair --l1 tr` | Kabul edilen öğeler → tr-en paketi | Türkçe karşılıklar, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, hata etiketi kataloğu |
-| S6 | `audio` | Metinler → ses dosyaları | Azure TTS: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
+| S6 | `audio` | Metinler → ses dosyaları | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
 | S8 | `placement` | Sözlük → X_Lex bankası | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
 | S9 | `build` | Tümü → `build/en@N.sqlite` + ses manifesti | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
-| S10 | `report` | Build → `build/en@N.report.md` | Sayılar, ret oranları, maliyet, insan kontrolü örneklemi |
+| S10 | `report` | Build → `build/en@N.report.md` | Sayılar, ret oranları, üretim oturumları, insan kontrolü örneklemi |
 | — | `upload` | Build → Supabase Storage `packs/` + `packs` satırı | Yalnızca kullanıcı onayıyla (dışa yayın) |
 
 ## 5. Doğrulama kuralları (S4)
@@ -79,12 +81,14 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 - **Uygunsuz içerik listesi** filtresi.
 - **Hedef öğe** cümlede gerçekten geçiyor (lemma/kalıp eşleşmesi).
 
-### 5.2 LLM doğrulama geçişi (Batch, effort high)
-- Doğallık (1–5), dilbilgisi doğruluğu, anlam belirsizliği, hedef anlamın doğru kullanımı, Türkçe karşılığın doğruluğu (geri çeviri karşılaştırmasıyla).
+### 5.2 Bağımsız doğrulama geçişi (Claude Code, ayrı oturum)
+- Üreten oturumdan ayrı bir oturumda, üretim gerekçeleri görülmeden yapılır.
+- Ölçütler: doğallık (1–5), dilbilgisi doğruluğu, anlam belirsizliği, hedef anlamın doğru kullanımı, Türkçe karşılığın doğruluğu (geri çeviri karşılaştırmasıyla).
 - **Kabul:** doğallık ≥ 4, belirsizlik yok, çeviri doğru.
+- Kararlar parti dosyasına yazılır. Ardından her partiden rastgele 20 öğe 👤 kullanıcıya gösterilir (§1.3).
 
 ### 5.3 Uydurma kelimeler (X_Lex)
-- LLM, İngilizce ses dizimine uygun uydurma kelimeler önerir.
+- Adaylar Claude Code oturumunda ya da İngilizce ses dizimine uygun basit bir üreteçle çıkarılır.
 - Kabul koşulları:
   - wordfreq sıklığı 0
   - CMUdict'te yok
@@ -94,13 +98,13 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 
 ### 5.4 Metinler (S7)
 - **Seviye metni:** metindeki lemmaların ≥ %98'i ≤ seviye listesinde. Kalan %2 önce öğretilecek kelimeler olarak işaretlenir.
-- Sorular ve cevap anahtarı üretilir. Cevaplanamayan ya da belirsiz sorular LLM kontrolüyle elenir.
+- Sorular ve cevap anahtarı üretilir. Cevaplanamayan ya da belirsiz sorular bağımsız doğrulama geçişinde elenir.
 
 ## 6. Tr-en paketi içeriği (S5)
 
 - **Karşılıklar (`glosses`):** anlam, kısa açıklama (A seviyeleri Türkçe), kullanım notu, karşıtlık notu.
 - **Hata etiketi kataloğu (`error_tags`):**
-  - Elle hazırlanır, LLM yardımıyla genişletilir.
+  - Elle hazırlanır, Claude Code oturumlarında genişletilir.
   - Kaynak: Swan & Smith (2001), Türkçe konuşanlar bölümü kategorileri.
   - Başlangıçta ~30 etiket. Her etiket için: kod, kategori (gramer / kelime / telaffuz / algı / pragmatik), ciddiyet ağırlığı, Türkçe açıklama, 3+ örnek, ilgili gramer kodları.
   - Örnek kodlar:
@@ -118,7 +122,8 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
     | `exist.there_have` | "var" → there is / have karışması |
     | `pl.missing` | Çoğul eki eksik |
 
-- **Kabul edilebilir varyantlar:** kısaltmalar, eş anlamlılar, farklı ama doğal yapılar. LLM önerir, deterministik kontrol eder.
+- **Kabul edilebilir varyantlar:** kısaltmalar, eş anlamlılar, farklı ama doğal yapılar. Oturumda üretilir, deterministik kontrolden geçer. LLM'siz değerlendirmenin (ADR-0009 §2) temeli olduğu için her kart cümlesinde geniş tutulur.
+- **Kural notları (H3):** her gramer kodu için Türkçe, kısa bir kural notu. Cevabı içermediği derlemede test edilir (I-02).
 - **Can-do özetleri:** kendi kısa Türkçe özetlerimiz (resmî metin kopyalanmaz).
 - **Görev yönergeleri ve öğrenme notu şablonları** (Türkçe).
 
@@ -139,6 +144,6 @@ Kullanıcıdan gelen içerik (Söyleyemediklerim, altyazı replikleri, konuşma 
 
 ## 9. Maliyet
 
-- Seviye başına LLM (Batch, %50 indirimli, önbellekli önek): ~$20–60.
-- TTS: ücretsiz katman ya da paket başına ~$2–8.
-- Her `report` gerçek maliyeti yazar. Bir sonraki paket üretimi öncesinde kullanıcıya bildirilir.
+- $0 (ADR-0009). LLM işleri Claude Code aboneliğiyle, sesler Kokoro ile çevrimdışı yapılır.
+- Sınır para değil, oturum süresidir. Büyük partiler birkaç oturuma yayılır.
+- Her `report`, üretim oturumlarını, ret oranlarını ve insan örnekleminin sonucunu yazar.

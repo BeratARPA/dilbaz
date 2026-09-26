@@ -57,7 +57,7 @@ Dal: `faz-0`
 Dal: `faz-1`
 
 ### Ön koşul
-- [ ] **F1-00** ADR-0009 — sıfır bütçe (`18` §0): Claude API ve Azure olmadan çalışma yolları (deterministik çekirdek, cihaz üstü ses, açık veriler, içeriğin Claude Code oturumlarında hazırlanması, ücretsiz LLM seçenekleri). 👤 Kullanıcı kararı. Etkilenen görevler: F1-03…F1-05, F1-14, F1-15, F1-17, F1-19.
+- [x] **F1-00** ADR-0009 — sıfır bütçe (`18` §0): Claude API ve Azure olmadan çalışma yolları. 👤 Karar (2026-09-26): her bileşende ücretsiz olan en iyisi. LLM: Gemini + Groq ücretsiz katmanları, deterministik yedek. Ses: Deepgram kredisi, cihaz üstü, Kokoro. İçerik: Claude Code oturumları. Etkilenen görevler aşağıda güncellendi.
 
 ### İçerik
 - [ ] **F1-01** Hat S0–S1:
@@ -68,14 +68,15 @@ Dal: `faz-1`
   - 120 kalıplık sohbet çantası (NGSL-Spoken + LLM önerisi + 👤 hızlı gözden geçirme)
   - 40 gramer kodu
 - [ ] **F1-03** S3–S4 cümle üretimi ve doğrulama:
-  - Tatoeba adayları + Batch LLM
-  - **`claude-api` skill'ini yükle**
+  - Tatoeba adayları + Claude Code oturumlarında üretim (ADR-0009)
+  - Üretenden ayrı oturumda doğrulama geçişi (`10` §5.2)
   - QA raporu; 👤 20 örneklik inceleme
 - [ ] **F1-04** S5 tr-en:
-  - Karşılıklar, açıklamalar, varyantlar, karşıtlık notları
+  - Karşılıklar, açıklamalar, karşıtlık notları
+  - Geniş varyant listeleri ve H3 kural notları (LLM'siz değerlendirmenin temeli, ADR-0009 §2)
   - ~30 etiketlik hata kataloğu (`10` §6)
 - [ ] **F1-05** Paketin tamamlanması:
-  - S6 ses (Azure TTS, 2 ses + yavaş)
+  - S6 ses: Kokoro, çevrimdışı (≥ 2 ses + yavaş); 👤 kısa dinleme karşılaştırması (Kokoro / Gemini Flash TTS)
   - S8 X_Lex bankası
   - S9 derleme: `en@1.sqlite`, `tr-en@1.sqlite`
   - S10 rapor
@@ -83,7 +84,7 @@ Dal: `faz-1`
 
 ### Motor
 - [ ] **F1-06** FSRS adaptörü + otomatik puan (`03` §0.3) + `card_state_after`.
-- [ ] **F1-07** `LanguageServices` (normalize/tokenize/lemma) + deterministik ön kontrol (`03` §0.5) + varyantlar. Sentetik dil testleri.
+- [ ] **F1-07** `LanguageServices` (normalize/tokenize/lemma) + deterministik değerlendirme (`03` §0.5: eşleşme, hizalama, şablonlu merdiven) + varyantlar. Sentetik dil testleri.
 - [ ] **F1-08** Öğrenci modeli v1:
   - L1 kart hafızası; L2 düzeyleri (new/learning/recallable/durable)
   - X_Lex puanlama, bant olasılıkları, kişisel kapsama (`06` §2)
@@ -95,25 +96,27 @@ Dal: `faz-1`
 
 ### Uygulama ve sunucu
 - [ ] **F1-11** Paket indirme, doğrulama, atomik içe aktarma (`11` §5) + içerik DAO'ları.
-- [ ] **F1-12** Karşılama akışı (`09` §5.1): ekip oluşturma/katılma, ses onayı dahil.
+- [ ] **F1-12** Karşılama akışı (`09` §5.1): ekip oluşturma/katılma, ses onayı ve yapay zekâ veri onayı (ADR-0009, kullanıcı başına) dahil.
 - [ ] **F1-13** Seviye testi (A24: X_Lex + gramer + dikte) + başlangıç kaydı.
 - [ ] **F1-14** Ses altyapısı:
   - Kayıt ve kodlayıcı seçimi (`08` §4)
-  - `speech/transcribe` fonksiyonu: Deepgram adaptörü (İngilizce), Azure adaptörü (Türkçe)
+  - `speech/transcribe` fonksiyonu: Deepgram adaptörü (İngilizce); Türkçe cihaz üstü (`speech_to_text`), sunucu yedeği Groq/Gemini
+  - 👤 Deepgram anahtarı (`19` §1)
   - `speech_usage` kaydı
 - [ ] **F1-15** `tutor/answer_check` (`07` §4.1):
-  - **`claude-api` skill'ini yükle**
-  - zod şeması, önbellekli sistem promptu, merdiven sızıntı kontrolü, bütçe, `llm_usage`
+  - Sağlayıcı yönlendiricisi + Gemini ve Groq adaptörleri (SDK context7 ile doğrulanır; ADR-0009)
+  - zod şeması, sabit sistem promptu, merdiven sızıntı kontrolü, kota ve adil paylaşım, `llm_usage`
   - deno testleri
-  - Eval seti v1 (≥ 200 vaka); 👤 onayla ilk eval çalıştırması, maliyet raporlanır
+  - Eval seti v1 (≥ 200 vaka), ücretsiz kotalarda eval; sonuçlara göre rota sırası (`07` §2)
+  - 👤 Gemini ve Groq anahtarları (`19` §1)
 - [ ] **F1-16** Kart oturumu (A00, A01, A02): merdiven, "yanlış duyuldu", sessiz mod, otomatik puan, deneme + outbox.
-- [ ] **F1-17** Söyleyemediklerim (A19): yakalama butonu, yazılı ve sesli (Türkçe) yakalama, `tutor/gap_suggest`, karta ekleme, Android paylaş menüsü hedefi.
+- [ ] **F1-17** Söyleyemediklerim (A19): yakalama butonu, yazılı ve sesli (Türkçe) yakalama, `tutor/gap_suggest` (Gemini Flash; kota dolunca bekleyen öneri), karta ekleme, Android paylaş menüsü hedefi.
 - [ ] **F1-18** Bugün ekranı v1 + "Bugünlük yeter" + "bugün ne kadar vaktin var?".
-- [ ] **F1-19** Konuşma görevi v1 (A11) + `tutor/speaking_annotate` + akıcılık ölçümleri (motor) + aylık test v1 (A23: tek işaretleme).
+- [ ] **F1-19** Konuşma görevi v1 (A11) + `tutor/speaking_annotate` (Gemini Flash; kota yoksa sonradan) + akıcılık ölçümleri (motor) + aylık test v1 (A23: tek işaretleme).
 - [ ] **F1-20** İlerleme v1: kanıt sayıları, önce/sonra ses dinleme, basit eğilimler.
 - [ ] **F1-21** Senkron v1: outbox, `sync_push`/`sync_pull` RPC'leri, Faz 1 tabloları, pgTAP RLS testleri.
 - [ ] **F1-22** Bildirim: çıpa saatinde tek davet, sessiz saatler, bugün çalışıldıysa gönderilmez.
-- [ ] **F1-23** Ayarlar v1: bütçe, çıpa, sessiz mod, dışa aktar (JSON), tüm verimi sil.
+- [ ] **F1-23** Ayarlar v1: bütçe, çıpa, sessiz mod, yapay zekâ veri onayı, dışa aktar (JSON), tüm verimi sil.
 - [ ] **F1-24** Teslim:
   - Entegrasyon testleri (`15` §4: 1, 2, 3, 5)
   - İmzalı sürüm APK (yerel keystore, 👤 parola)
@@ -123,8 +126,8 @@ Dal: `faz-1`
 - İki kullanıcı Android'de şunları kullanıyor: seviye testi, kart döngüsü, Söyleyemediklerim, konuşma görevi, aylık test.
 - Denemeler senkronlanıyor.
 - I-01…I-08, I-12…I-15 ve I-17 testleri yeşil.
-- answer_check eval eşikleri sağlandı.
-- Maliyet `llm_usage` ve `speech_usage` tablolarında görünüyor.
+- answer_check eval eşikleri seçilen sağlayıcıyla sağlandı; deterministik değerlendirme altın set eşiklerini geçiyor (`07` §8).
+- Kullanım ve kota `llm_usage` ve `speech_usage` tablolarında görünüyor.
 
 ---
 
@@ -133,7 +136,7 @@ Dal: `faz-2`
 
 - [ ] **F2-01** ASR karşılaştırma testi (`08` §3.2):
   - Kayıt aracı ve 👤 veri seti kaydı
-  - AssemblyAI, Azure STT ve OpenAI adaptörleri
+  - Ücretsiz adayların adaptörleri: Gemini Transcribe, Groq `whisper-large-v3`, cihaz üstü (Android, `sherpa-onnx`), ücretsiz kredisi varsa AssemblyAI (`08` §3.2)
   - Sonuçlar; ADR-0006 güncellemesi; gerekirse varsayılan sağlayıcıyı değiştir
 - [ ] **F2-02** Konuşma görevi tam (A11):
   - İskeleler, yeniden yapma
@@ -141,7 +144,7 @@ Dal: `faz-2`
   - Aktarım tespiti → `transferred` düzeyi
 - [ ] **F2-03** 4/3/2 (A12).
 - [ ] **F2-04** Dikte (A05): hizalama, WER, `perc.*` etiketleri.
-- [ ] **F2-05** Gölgeleme (A07): `speech/assess` (Azure telaffuz, REST, WAV 16 kHz), `pron.*` eşlemesi.
+- [ ] **F2-05** Gölgeleme (A07): telaffuz sağlayıcısı kararı (ADR-0009: ücretsiz seçenek, Faz 2 başında), `speech/assess` (WAV 16 kHz), `pron.*` eşlemesi.
 - [ ] **F2-06** Dinle-anla (A03) + bağlamda boşluk (A04).
 - [ ] **F2-07** Birlikte: sohbet kartları (A14), partner varlığı (presence), "birlikte yapalım mı?" daveti.
 - [ ] **F2-08** Bilgi boşluğu (A15):
@@ -288,3 +291,4 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-11 | Debug APK (üretim yapılandırmasıyla) Samsung Galaxy A55'e (Android 16) kuruldu. Kullanıcı e-posta koduyla giriş yaptı, boş Bugün ekranı açıldı. |
 | 2026-09-26 | 0 | **Faz 0 raporu** | **Kabul:** CI yeşil (7/7 iş) ✓ · Android'de giriş ✓ · yerel pgTAP 53/53 ✓ · gizli anahtar yalnızca sağlayıcı panellerinde; depo geçmişi temiz (gitleaks) ✓. **Testler:** motor 40 (lib %100), uygulama 52, Deno 23, pytest 14, pgTAP 53. **Maliyet:** $0 (LLM/ses kullanımı yok). **Değişmez kurallar:** I-08 (FSRS yalnızca adaptörde, test), I-12 (yasak kelime taraması), I-15 (içe aktarma sınırı, dize taraması, `zz`), I-18 (partner verisine erişim yok, pgTAP). **Bilinen sorunlar:** (1) sıfır bütçe → F1-00 kararı; (2) sohbette paylaşılan DB parolası ve Brevo anahtarları değiştirilmeli (👤); (3) `home_widget`/`share_handler_android` Kotlin Gradle eklentisi uyarısı; (4) `supabase test db --linked` barındırılan projede pgtap'i kullanamıyor, üretim SQL ile doğrulandı; (5) ücretsiz Supabase projesi 1 hafta hareketsizlikte duraklar; (6) Brevo gönderen adresini `brevosend.com` olarak değiştiriyor, e-posta Gereksiz klasörüne düşebilir; (7) Windows derlemesi için VS C++ (Faz 3). **Kullanım kapısı:** Faz 0'da öğrenme özelliği yok; kapı Faz 1 sonunda (1–2 hafta günlük kullanım). |
 | 2026-09-26 | 1 | F1-00 (taslak) | `faz-0` → `main` birleştirildi (`--no-ff`), `faz-1` dalı açıldı. ADR-0009 taslağı yazıldı (`adr/0009-zero-budget.md`): bileşen bazında seçenekler, 4 karar noktası (K1 LLM, K2 İngilizce ASR, K3 paket sesleri, K4 içerik) ve öneriler, Faz 1 görev ve kabul etkileri. Kullanıcı kararı bekleniyor; Faz 1 görevleri karardan sonra başlar. |
+| 2026-09-26 | 1 | F1-00 | **ADR-0009 kabul edildi.** Kullanıcı kararı: her bileşende ücretsiz olan en iyisi; Gemini'nin veriyi ürün geliştirmede kullanması sorun değil. Kotalar doğrulandı: Gemini Flash ~20, Flash-Lite ~500 istek/gün; Groq `gpt-oss-120b` 1.000 istek ve 200K token/gün. Rota planı: kart kontrolü Flash-Lite → Groq → deterministik; öneri ve konuşma işaretleme Flash. Partner için kullanıcı başına veri onayı (F1-12). Ses: Deepgram kredisi, Türkçe ve dinamik TTS cihaz üstü, paket sesleri Kokoro; telaffuz kararı Faz 2 başında (F2-05 Azure'a bağlıydı). İçerik Claude Code oturumlarında. Güncellenen dokümanlar: CLAUDE.md, `00`, `03` (§0.3, §0.5), `07`, `08`, `10`, `11`, `12`, `13` (`llm_usage.provider`), `14`, `15`, `17`, `18`, `19`; ADR-0005/0006/0008 durum notları. `llm_config.ts`/`speech_config.ts` F1-14/F1-15'te yeniden yazılacak. |

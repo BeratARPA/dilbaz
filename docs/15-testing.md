@@ -13,9 +13,10 @@ Kalite burada iki anlama gelir:
 | Widget ve golden testler | `flutter test` | Ana akışlar (kart, merdiven, bugün, ilerleme) | Her commit |
 | Entegrasyon testleri | `integration_test` (Android emülatör) | Uçtan uca çekirdek akış, sahte (mock) servislerle | Faz sonu + haftalık |
 | Veritabanı testleri | pgTAP (`supabase test db`) | Her tablo için RLS, RPC'ler, tetikleyiciler | Her commit (CI'da Docker ile) |
-| Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, bütçe | Her commit |
+| Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, sağlayıcı sırası ve kota | Her commit |
 | İçerik hattı testleri | `pytest` | Doğrulayıcılar, kapsama hesabı, derleme | Her commit (content/ değişirse) |
-| LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Prompt/model değişikliğinde **zorunlu** (ücretli, CI'da elle tetiklenir) |
+| LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Sağlayıcı, model ya da prompt değişikliğinde **zorunlu** (ücretsiz kotaları tüketir; elle tetiklenir) |
+| Deterministik değerlendirme | `dart test` (motor) | `answer_check` altın seti; `07` §8 deterministik eşikleri | Her commit |
 | ASR karşılaştırma testi | `evals/asr/` | `08` §3.2 | Faz 2, sağlayıcı değişikliğinde |
 
 ## 2. Değişmez kural → test eşlemesi
@@ -99,4 +100,4 @@ Bir görev ancak şu koşullar sağlanınca tamamlanmış sayılır:
 ## 8. Elle kullanım testi (dogfooding)
 
 - Her faz sonunda iki kullanıcı en az birkaç gün gerçek kullanım yapar. Geri bildirimler `docs/feedback.md` dosyasına tarih ve maddeyle yazılır.
-- Haftalık küçük inceleme: `llm_usage` maliyeti, `app_events` hataları, ret oranları, kullanıcı itirazları (`user_dispute`).
+- Haftalık küçük inceleme: `llm_usage` kota tüketimi, `app_events` hataları, ret oranları, kullanıcı itirazları (`user_dispute`).

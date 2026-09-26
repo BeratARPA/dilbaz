@@ -2,44 +2,45 @@
 
 ## 0. Bütçe kısıtı: sıfır (2026-09-26)
 
-Kullanıcının bütçesi **sıfırdır**. Yalnızca ücretsiz katmanlar kullanılır; ücret doğurabilecek hiçbir iş (ücretli API, eval, Batch, ücretli plan, kart doğrulaması isteyen kayıt) başlatılmaz.
+Kullanıcının bütçesi **sıfırdır**. Yalnızca ücretsiz katmanlar kullanılır. Ücret doğurabilecek hiçbir iş (ücretli API, ücretli plan, kart doğrulaması isteyen kayıt) başlatılmaz. Karar: **ADR-0009** — her bileşende ücretsiz olan en iyi seçenek, eval ile seçilir.
 
-- **Ücretsiz ve kullanımda:** Supabase ücretsiz plan, GitHub (özel depo + ayda 2.000 Actions dakikası; ödeme yöntemi yokken aşımda ücret alınmaz, işler durur), Brevo SMTP (günde 300 e-posta; giriş kodları için).
-- **Karar bekleyen ücretli kalemler:** Claude API (etkileşimli rotalar ve içerik üretimi; ADR-0005), Azure Speech (ücretsiz katman bile kart doğrulaması istiyor; ADR-0006). Deepgram'ın kayıt kredisi ($200) ücretsizdir ama plan bu krediye bağımlı olmamalıdır.
-- **Faz 1'den önce** sıfır bütçe seçenekleri ADR-0009 ile karara bağlanır. Değerlendirilecek yollar:
-  - LLM'siz deterministik çekirdek döngü (`07` §1.6 zaten bunu şart koşuyor)
-  - Cihaz üstü TTS/ASR
-  - Açık veriler (Tatoeba vb.)
-  - İçeriğin Claude Code oturumlarında hazırlanıp deterministik doğrulamayla pakete girmesi
-  - Ücretsiz katmanlı LLM sağlayıcıları (mahremiyet koşullarıyla)
+- **Kullanımda:**
+  - Supabase ücretsiz plan
+  - GitHub: özel depo + ayda 2.000 Actions dakikası. Ödeme yöntemi yokken aşımda ücret alınmaz, işler durur.
+  - Brevo SMTP: günde 300 e-posta; giriş kodları için
+- **ADR-0009 ile eklenenler:**
+  - Gemini API ücretsiz katmanı
+  - Groq ücretsiz katmanı
+  - Deepgram kayıt kredisi ($200, kart yok)
+  - Cihaz üstü ses: Türkçe tanıma, dinamik TTS
+  - Kokoro-82M: çevrimdışı paket sesleri
+  - Claude Code aboneliği: içerik üretimi
+- **Kullanılmayanlar:** Claude API ve Azure Speech (kart gerekiyor). Bütçe olursa ADR-0005/0006'ya dönülebilir; rota sözleşmeleri aynı kalır.
 
-Taslak: `adr/0009-zero-budget.md` (önerildi, kullanıcı kararı bekleniyor).
+## 1. Aylık işletim maliyeti (iki kullanıcı)
 
-Aşağıdaki tablo özgün plandır; ücretli satırlar ADR-0009'a kadar askıdadır.
+Koşullar 2026-09-26'da doğrulanmıştır (ADR-0009). Gerçek kullanım `llm_usage` ve `speech_usage` tablolarından izlenir.
 
-## 1. Aylık işletim maliyeti (iki kullanıcı, tahmini)
-
-Fiyatlar 2026-09 itibarıyla doğrulanmıştır. Gerçek değerler `llm_usage` ve `speech_usage` tablolarından izlenir.
-
-| Kalem | Plan | Aylık tahmin | Not |
+| Kalem | Plan | Aylık | Not |
 |---|---|---|---|
 | Supabase | Ücretsiz | $0 | 500 MB DB, 1 GB depolama, otomatik yedek yok, 1 hafta hareketsizlikte durur |
-| Claude API (etkileşimli rotalar) | Kullandıkça öde | ~$25–35 | Varsayılan `claude-opus-5`; bkz. `07` §9 |
-| Deepgram (İngilizce ASR) | Kullandıkça öde | ~$2 | Yeni hesaba verilen $200 kredi yıllarca yeter |
-| Azure AI Speech (TTS, telaffuz, Türkçe ASR) | Ücretsiz katman (F0) | $0–5 | F0: 5 saat STT/ay, 0,5M karakter TTS/ay |
+| LLM (Gemini + Groq) | Ücretsiz katman | $0 | Sınır kotadır, para değil (`07` §9) |
+| Deepgram (İngilizce ASR) | Kayıt kredisi | $0 | Krediden ~$2/ay düşer; $200 yıllarca yeter |
+| Cihaz üstü ses (Türkçe ASR, dinamik TTS) | — | $0 | |
+| Kokoro (paket sesleri) | Açık kaynak | $0 | İçerik makinesinde çalışır |
+| İçerik üretimi | Claude Code aboneliği | Ek ücret yok | Oturum süresi harcar |
 | GitHub | Ücretsiz | $0 | Actions dakikaları kişisel depo için yeterli |
+| Brevo | Ücretsiz | $0 | |
 | Vercel (Faz 6, web) | Hobby | $0 | Kişisel kullanım |
-| **Toplam** | | **~$30–40/ay** | |
+| **Toplam** | | **$0/ay** | |
 
-**Tek seferlik ve dönemsel:**
-- İçerik üretimi (Batch LLM): seviye paketi başına ~$20–60. A0–C2 boyunca toplam ~$150–300.
-- Paket TTS'i: ücretsiz katman ya da paket başına ~$2–8.
-- LLM eval çalıştırmaları: çalıştırma başına ~$1–5 (her çalıştırmada ölçülür).
+**Tek seferlik işler:** Yok. İçerik ve ses üretimi para değil, oturum ve işlemci süresi harcar.
 
-**Harcama korumaları:**
-- Anthropic, Deepgram ve Azure panellerinde aylık harcama limiti (👤 kullanıcı ayarlar).
-- Uygulamada kullanıcı başı günlük LLM bütçesi ($1,50).
-- Maliyet panosu (Ayarlar > Kullanım).
+**Kota korumaları:**
+- Ücretli plan ve kart olmadığı için fatura oluşamaz.
+- Kullanıcı başı kota payı (adil paylaşım, `07` §3).
+- Deepgram kredisinin izlenmesi.
+- Kullanım panosu (Ayarlar > Kullanım).
 
 ## 2. Riskler
 
@@ -50,13 +51,14 @@ Fiyatlar 2026-09 itibarıyla doğrulanmıştır. Gerçek değerler `llm_usage` v
 | R3 | **LLM yanlış geri bildirim verir** (doğruyu yanlış sayar, uydurma kural) | Orta | Yüksek | Deterministik ön kontrol, kapalı etiket listesi, `uncertain`, eval eşikleri, kullanıcı itirazı |
 | R4 | İçerik kalitesi (doğal olmayan cümle, yanlış çeviri) | Orta | Orta | İki aşamalı doğrulama, insan örneklemi, "hata bildir" |
 | R5 | **Motivasyon düşüşü** | Orta | Yüksek | Suçluluksuz tasarım, seçim, birlikte görevler, kendi sesinden ilerleme, 30 dk sınırı |
-| R6 | Maliyetin beklentiyi aşması | Düşük–orta | Orta | Bütçeler, önbellek, Batch, effort ayarı, maliyet panosu. Model değişikliği kullanıcı kararı. |
+| R6 | Ücretsiz kotaların yetmemesi ya da daralması | Orta | Orta | Yedek sağlayıcı, deterministik yol, adil paylaşım, faz başında kota kontrolü. Sağlayıcı değişikliği kullanıcı kararı ve eval ile. |
 | R7 | Supabase ücretsiz plan sınırları (duraklama, yedeksizlik, 500 MB) | Orta | Orta | Günlük kullanım, gece yedeği, ses saklama kuralı, içerik Postgres dışında |
-| R8 | Sağlayıcı değişiklikleri (model emekliliği, fiyat, API değişikliği) | Orta | Orta | Tek yapılandırma dosyası, adaptör katmanı, `claude-api` skill'iyle güncel kalma |
+| R8 | Sağlayıcı değişiklikleri (model emekliliği, ücretsiz katmanın kalkması, API değişikliği) | Orta | Orta | Tek yapılandırma dosyası, adaptör katmanı, yedek sağlayıcı, context7 ile güncel belgeler |
 | R9 | Mahremiyet ihlali (RLS hatası) | Düşük | Yüksek | Varsayılan-red, pgTAP testleri, partnere yalnızca özet |
 | R10 | Senkron hataları (veri kaybı, çift kayıt) | Orta | Yüksek | Değişmez olaylar, idempotent push, outbox, yeniden oynatma aracı, PowerSync plan B |
 | R11 | Windows ve web platform sorunları (ses, bildirim, wasm) | Orta | Düşük | Android öncelikli; masaüstü ve web sonraki fazlarda, doğrulama görevleriyle |
 | R12 | Lisans sorunları (ShareAlike, CEFR/EVP metinleri) | Düşük (kişisel kullanım) | Orta | Açık lisanslı kaynaklar, kendi özetlerimiz, atıflar, `LICENSES.md` |
 | R13 | Seviye tahmini yanıltıcı olur | Orta | Orta | Aralık + güven, dış kalibrasyon, CAF'ı seviyeye çevirmeme |
 | R14 | Partnerler arasında karşılaştırma gerilimi | Düşük | Orta | Sıralama yok, varsayılan yalnızca özet, paylaşım anahtarları |
-| R15 | **Sıfır bütçe:** ücretli yapay zekâ ve ses hizmetleri kullanılamaz | Kesin | Yüksek | Deterministik çekirdek, ücretsiz katmanlar, cihaz üstü ses, açık veriler, ADR-0009 kararı (§0) |
+| R15 | **Sıfır bütçe:** ücretli yapay zekâ ve ses hizmetleri kullanılamaz | Kesin | Orta | ADR-0009: ücretsiz katmanlar, deterministik yol, cihaz üstü ses, açık veriler. Kalite eval ile korunur. |
+| R16 | Gemini ücretsiz katmanında metinlerin ürün geliştirmede kullanılması ve insan incelemesine açık olması | Kesin (kabul edildi) | Düşük–orta | Kullanıcı başına onay, veri en aza indirme (ad/e-posta/ses gitmez), Groq ya da deterministik seçenek |

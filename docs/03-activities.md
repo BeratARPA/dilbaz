@@ -23,6 +23,7 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | `off_target` | Başka bir şey söylenmiş | yanlış (ipucu: "istenen anlam bu değil") |
 | `unintelligible` | Ses tanıma anlamsız sonuç verdi | Deneme sayılmaz; tekrar kayıt ya da yazarak cevap istenir |
 | `uncertain` | LLM emin değil | Kullanıcıya "Bunu mu demek istedin?" sorulur; belirsiz kalırsa doğru sayılır ve öğe incelemeye düşer |
+| `uncertain` (LLM'siz) | Deterministik değerlendirme karar veremedi (§0.5, adım 4) | Üretim kanıtı sayılmaz. FSRS: Hard. LLM sonucu gelince kanıt ona göre işlenir. |
 
 ### 0.3 Otomatik FSRS puanı (öz değerlendirme yok)
 
@@ -32,6 +33,8 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | Hard (2) | Doğru, ama H1–H3 kullanıldı ya da ikinci/üçüncü denemede |
 | Good (3) | İlk denemede, ipucusuz doğru ya da kabul edilebilir varyant |
 | Easy (4) | Good koşulu + cevap gecikmesi, kişinin bu moddaki son 200 denemesinin 25. yüzdelik diliminin altında |
+
+**LLM'siz `uncertain`** (§0.5, adım 4) her zaman **Hard** alır: ceza da şişirme de yoktur. Sonradan gelen LLM sonucu (`llm_resolved`) kanıtı düzeltir, FSRS geçmişini değiştirmez (I-03).
 
 Ses tanımanın yanlış duyduğu durumlar için kullanıcı "yanlış duyuldu" deyip cevabını yazabilir. Yazılı cevap aynı denemenin parçası olarak değerlendirilir ve `asr_override=true` loglanır.
 
@@ -66,24 +69,44 @@ Her denemede şu alanlar doldurulur (tam şema `13-data-model.md`):
   1. Türkçe istem ve bağlam notu gösterilir ("arkadaşına söylüyorsun", "resmî").
   2. Kullanıcı basılı tutup konuşur (en fazla 12 sn).
   3. Ses tanıma çalışır, transkript gösterilir.
-  4. **Deterministik ön kontrol** (§0.5) referans ve varyantlarla eşleşirse doğru sayılır, LLM çağrılmaz.
-  5. Eşleşmezse `answer_check` rotası çalışır; verdict ve H1–H4 merdiveni tek çağrıda gelir.
+  4. **Deterministik değerlendirme** (§0.5) referans ve varyantlarla eşleşirse doğru sayılır, LLM çağrılmaz.
+  5. Eşleşmezse `answer_check` rotası çalışır; verdict ve H1–H4 merdiveni tek çağrıda gelir. LLM erişilemezse §0.5'in 4. adımı çalışır.
   6. Yanlışsa H1 açılır, kullanıcı tekrar dener (en fazla 3 deneme; her denemede bir üst ipucu).
   7. Sonunda doğru cümle sesiyle gösterilir, kullanıcı bir kez sesli tekrar eder (mini gölgeleme; puanlanmaz).
-- **Değerlendirme:** Deterministik → LLM. Telaffuz bu kartta puanlanmaz; transkript anlaşılmazsa `unintelligible` döner.
+- **Değerlendirme:** Deterministik → LLM → (LLM yoksa) hizalama. Telaffuz bu kartta puanlanmaz; transkript anlaşılmazsa `unintelligible` döner.
 - **Kanıt:** Üretim (konuşma) kanıtı.
 
-### 0.5 Deterministik ön kontrol (A01, A02, A04, A08)
+### 0.5 Deterministik değerlendirme (A01, A02, A04, A08)
 
-Maliyet ve hız için LLM'den önce çalışır:
+Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına çalışır (ADR-0009 §2):
 
 1. Normalizasyon:
    - küçük harf, noktalama ve fazla boşlukları silme
    - kısaltmaları açma (I'm → I am, don't → do not)
    - sayıları yazıya çevirme
    - İngiliz ve Amerikan yazımını eşitleme (colour/color)
-2. Normalize edilmiş cevap, normalize edilmiş referans ya da paketteki `variants` listesindeki biriyle birebir eşleşirse `correct` döner.
-3. Aksi hâlde LLM'e gider. LLM `acceptable_variant` derse, bu varyant kişisel varyant listesine eklenir; bir sonraki sefer deterministik eşleşir.
+2. Normalize edilmiş cevap şunlardan biriyle birebir eşleşirse `correct` döner:
+   - normalize edilmiş referans
+   - paketteki `variants` listesi
+   - kişisel varyantlar
+3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse, bu varyant kişisel varyant listesine eklenir; bir sonraki sefer deterministik eşleşir.
+4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, en yakın referans ya da varyantla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
+   - **Küçük ve sınıflanabilir fark** (eksik ya da fazla kelime, aynı lemmanın yanlış biçimi, sıra) → `minor_error` ya da `wrong`.
+     - Yalnızca kuralla kesin bulunabilen hata etiketleri eklenir.
+     - Fark hedef parçadaysa `target_ok=false`.
+   - **Hedef parça doğru, cümlenin geri kalanı çok farklı** → `uncertain` (LLM'siz):
+     - Üretim kanıtı sayılmaz; FSRS'e Hard yazılır (§0.3).
+     - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir.
+   - **Hedef parça yok ve fark büyük** → `off_target`.
+   - **İpucu merdiveni şablonludur:**
+     - H1: fark türü
+     - H2: farkın cevaptaki yeri
+     - H3: paketteki kural notu
+     - H4: referans
+5. Kullanıcı her sonuca "cevabım da doğru olabilir" diyebilir:
+   - İtiraz `attempt_amendments` (`user_dispute`) olarak yazılır.
+   - LLM varsa yeniden kontrol edilir; ayrıca içerik bildirimi olarak kaydedilir (`10` §8).
+   - Kendi kendine kabul yoktur (§0.3: öz değerlendirme yok).
 
 ## A02 — Yaz kartı (`card.produce_type`)
 - A01 ile aynıdır; cevap klavyeyle verilir. **Sessiz mod** açıkken varsayılan budur.

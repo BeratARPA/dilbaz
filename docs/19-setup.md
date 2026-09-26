@@ -14,9 +14,10 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
 | 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
-| 3 | **Anthropic** | ⏸ **Sıfır bütçe nedeniyle askıda** (`18` §0, ADR-0009 kararı bekleniyor). Karar çıkarsa: console.anthropic.com → API anahtarı + aylık harcama limiti. | Faz 1 öncesi karar |
-| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi, kart gerekmez) → API anahtarı. ADR-0009 ile birlikte kesinleşir. | Faz 1 öncesi karar |
-| 5 | **Azure** | ⏸ **Askıda:** ücretsiz katman bile kart doğrulaması istiyor (`18` §0). Karar çıkarsa: "Speech" kaynağı, bölge West Europe, katman F0. | Faz 1 öncesi karar |
+| 3 | **Google AI Studio (Gemini)** | aistudio.google.com → Google hesabıyla giriş → **Get API key** → **Create API key**. **Faturalandırma ekleme:** ücretsiz katmanda kalmalı. Kotalar AI Studio'nun kullanım sayfasında görünür. | F1-15'ten önce |
+| 4 | **Groq** | console.groq.com → e-postayla kayıt (kart yok) → **API Keys** → yeni anahtar. **Settings → Data Controls → Zero Data Retention: açık.** | F1-15'ten önce |
+| 5 | **Deepgram** | console.deepgram.com → e-postayla kayıt ($200 başlangıç kredisi, kart yok) → **API Keys** → yeni anahtar. | F1-14'ten önce |
+| — | **Anthropic, Azure** | Kullanılmıyor: kart gerekiyor (ADR-0009). Bütçe olursa ADR-0005/0006'ya dönülür. | — |
 | — | **Brevo (SMTP)** | Ücretsiz hesap → gönderen doğrula → SMTP anahtarı → Supabase: Authentication → Emails → SMTP Settings (host `smtp-relay.brevo.com`, port 587, gönderen adı `Dilbaz`). Yerleşik e-posta servisi yalnızca ekip üyelerine ve saatte 2 e-posta gönderir, şablonları kilitlidir; kodla giriş için şart. | Faz 0 (F0-10) |
 | 6 | **Vercel** | Web sürümü için proje. | Faz 6 |
 
@@ -27,11 +28,16 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 npx supabase login
 npx supabase link --project-ref <PROJE_REF>
 
-# Sunucu tarafı gizli anahtarlar (uygulamaya asla girmez)
-npx supabase secrets set ANTHROPIC_API_KEY=... DEEPGRAM_API_KEY=... AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=westeurope
+# Sunucu tarafı gizli anahtarlar (uygulamaya asla girmez).
+# Önce anahtarları bir düzenleyiciyle supabase/functions/.env dosyasına yaz (git dışı):
+#   GEMINI_API_KEY=...
+#   GROQ_API_KEY=...
+#   DEEPGRAM_API_KEY=...
+# Sonra dosyadan yükle; böylece anahtar kabuk geçmişine düşmez:
+npx supabase secrets set --env-file supabase/functions/.env
 ```
 
-Yerel geliştirme için aynı anahtarları `supabase/functions/.env` dosyasına yaz. Bu dosya git dışıdır.
+Aynı `supabase/functions/.env` dosyası yerel geliştirmede (`npx supabase functions serve`) de kullanılır. Bu dosya git dışıdır.
 
 Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yalnızca herkese açık bilgiler):
 

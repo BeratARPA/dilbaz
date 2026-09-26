@@ -21,16 +21,19 @@ Genel amaçlı ASR modelleri güçlü bir dil modeliyle çalışır ve konuşmay
 
 **Sonuç:** Varsayılan sağlayıcı Whisper tabanlı olmayacak. Seçim, kendi kayıtlarımızla yapılan **karşılaştırma testiyle** (§3) kesinleşir. Kullanıcı transkripti her zaman görür ve "yanlış duyuldu" diyebilir (`03` §0.3).
 
-## 3. Sağlayıcı seçimi (ADR-0006)
+## 3. Sağlayıcı seçimi (ADR-0006, ADR-0009)
 
 ### 3.1 Başlangıç seçimi
 
+Bütçe sıfırdır (ADR-0009). Azure kart doğrulaması istediği için kullanılmaz.
+
 | İhtiyaç | Sağlayıcı | Gerekçe |
 |---|---|---|
-| S1 İngilizce öğrenci konuşması | **Deepgram Nova-3** (kayıtlı ses API'si) | Dolgu sözcükleri parametreyle açılabiliyor (`filler_words=true`), kelime başına başlangıç/bitiş zamanı var. ~$0,0043/dk; yeni hesaba $200 kredi. |
-| S2 Türkçe | **Azure AI Speech** (tr-TR, kısa ses REST) | S3 ve S4 ile aynı sağlayıcı, tek anahtar |
-| S3 Telaffuz | **Azure Pronunciation Assessment** (referans metinli, REST, ≤ 30 sn) | Ses/hece/kelime doğruluğu, akıcılık, tamlık, isteğe bağlı prozodi. `EnableMiscue=true` ile eksik/fazla kelime tespiti. |
-| S4 TTS | **Azure Neural TTS** | Çok sayıda İngilizce ses ve aksan, SSML ile hız ayarı (0,5–2×). $15 / 1M karakter; ücretsiz katman ayda 0,5M karakter. |
+| S1 İngilizce öğrenci konuşması | **Deepgram Nova-3** (kayıtlı ses API'si), kayıt kredisiyle | Dolgu sözcükleri parametreyle açılabiliyor (`filler_words=true`), kelime başına başlangıç/bitiş zamanı var. ~$0,0043/dk; yeni hesaba kartsız $200 kredi, bizim kullanımımızla yıllarca yeter. |
+| S2 Türkçe | **Cihaz üstü tanıma** (`speech_to_text`, `tr-TR`) | Ücretsiz, hızlı, ses cihazdan çıkmaz. Windows/web ya da cihazda Türkçe yoksa sunucu yedeği: Groq `whisper-large-v3` ya da Gemini Transcribe (ücretsiz katmanlar). |
+| S3 Telaffuz | **Faz 2 başında seçilir** (F2-05 öncesi) | Adaylar: açık kaynak ses birimi tanıma + GOP puanı, Gemini ses anlama (güvenilirliği ölçülmeli), ASR kelime güven puanları. Karar çıkana kadar gölgeleme puansız çalışır. |
+| S4 TTS, paket sesleri | **Kokoro-82M** (Apache-2.0), içerik makinesinde çevrimdışı | Amerikan ve İngiliz sesleri, hız ayarı; sınırsız ve ücretsiz. F1-05'te Gemini Flash TTS ile kısa bir dinleme karşılaştırması yapılır. |
+| S4 TTS, dinamik | **Cihaz üstü** (`flutter_tts`) | Söyleyemediklerim önerisi, rol oyunu cevapları. Aynı metnin paket sesi varsa o çalınır. |
 
 ### 3.2 Karşılaştırma testi (ASR bake-off) — Faz 2
 
@@ -51,21 +54,21 @@ Genel amaçlı ASR modelleri güçlü bir dil modeliyle çalışır ve konuşmay
 - Senaryolu cümlelerde metnin kendisidir. Okunuş dinlenerek doğrulanır.
 - Serbest konuşmada kullanıcı kendi konuşmasını dinleyerek kelimesi kelimesine yazar; dolgu sözcükleri de dahildir.
 
-**Adaylar:**
-- Deepgram Nova-3 (`filler_words=true`)
-- AssemblyAI (`disfluencies=true`)
-- Azure STT (lexical biçim)
-- OpenAI `gpt-transcribe` (dolgu sözcüklerini koruma promptuyla)
-- `whisper-1` (kelime zamanlı)
+**Adaylar** (yalnızca ücretsiz erişilebilenler, ADR-0009; ücretsiz erişim Faz 2 başında yeniden doğrulanır):
+- Deepgram Nova-3 (`filler_words=true`; kayıt kredisi)
+- Gemini Transcribe (ücretsiz katman; dolgu sözcüklerini koruma talimatıyla)
+- Groq `whisper-large-v3` (ücretsiz katman, kelime zamanlı)
+- Cihaz üstü: Android `SpeechRecognizer` (`speech_to_text`), `sherpa-onnx` modelleri
+- AssemblyAI (`disfluencies=true`; ücretsiz kredisi varsa)
 
 **Ölçütler:**
 1. **Hata koruma oranı:** bilinçli hataların düzeltilmeden transkripte geçme yüzdesi. Hedef ≥ %90.
 2. Kelimesi kelimesine transkripte göre WER.
 3. Dolgu sözcüğü yakalama oranı.
 4. Gecikme (p50/p90).
-5. Maliyet.
+5. Ücretsiz kota ya da kredi süresi.
 
-**Karar kuralı:** Hata koruma ≥ %90 olanlar arasında en düşük WER. Eşitlikte gecikme ve maliyete bakılır. Sonuç `evals/asr/results/` altına ve ADR-0006'ya yazılır.
+**Karar kuralı:** Hata koruma ≥ %90 olanlar arasında en düşük WER. Eşitlikte gecikme ve ücretsiz kotaya bakılır. Sonuç `evals/asr/results/` altına ve ADR-0006'ya yazılır.
 
 Hiçbir aday %90'a ulaşmazsa kartlar için şu hibrit yol denenir: beklenen cevap ve varyantları "ipucu" olarak veren (bias/prompt) bir sağlayıcı ayarı ya da hedef bölgede telaffuz değerlendirmesiyle çapraz kontrol.
 
@@ -93,7 +96,7 @@ interface TextToSpeech {
 }
 ```
 
-Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts`, `azure_stt.ts`, `azure_pron.ts`, `azure_tts.ts`, ileride `assemblyai.ts`, `openai_stt.ts`. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır.
+Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts`, Türkçe sunucu yedeği için `groq_stt.ts` ya da `gemini_stt.ts`, Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
 
 ## 4. Kayıt formatları (istemci)
 
@@ -102,10 +105,10 @@ Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts`, `a
 | Amaç | Android | Windows | Web (Chrome/Firefox) |
 |---|---|---|---|
 | Genel ASR (S1, S2) | AAC-LC, 16 kHz mono, ~32 kbps (`.m4a`) | AAC-LC (`.m4a`) | Opus (`.webm`/`.ogg`) |
-| Telaffuz (S3, Azure REST) | **WAV PCM16, 16 kHz mono** | WAV PCM16 | WAV PCM16 |
+| Telaffuz (S3) | **WAV PCM16, 16 kHz mono** | WAV PCM16 | WAV PCM16 |
 
 - Kodlayıcı seçimi tek bir yerdedir: `app/lib/data/audio/recorder_config.dart`.
-- Telaffuz kayıtları ≤ 30 sn'dir (Azure REST sınırı). WAV boyutu ~32 KB/sn, yani 30 sn ≈ 1 MB.
+- Telaffuz kayıtları ≤ 30 sn'dir (gölgeleme cümleleri kısa; sağlayıcı sınırı Faz 2'de doğrulanır). WAV boyutu ~32 KB/sn, yani 30 sn ≈ 1 MB.
 - Kayıt süresi sınırları:
 
   | Etkinlik | En fazla |
@@ -154,6 +157,8 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 
 ## 7. Telaffuz değerlendirmesinin kullanımı (A07)
 
+> Sağlayıcı Faz 2 başında seçilir (ADR-0009). Aşağıdaki eşleme Azure'un hata türleri içindir. Başka bir sağlayıcı seçilirse onun çıktısı aynı `pron.*` etiketlerine eşlenir.
+
 - **Yerel ayar `en-US`:** IPA ses adları ve prozodi yalnızca bu yerel ayarda var. Aksan olarak Amerikan İngilizcesi hedeflenmez; ölçüt anlaşılırlıktır (P17).
 - Azure hata türleri Dilbaz `pron.*` etiketlerine eşlenir:
 
@@ -172,27 +177,38 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 ## 8. Seslendirme (TTS)
 
 - **Paket sesleri önceden üretilir** (`10-content-pipeline.md` S6):
+  - Motor: Kokoro-82M (Apache-2.0), içerik makinesinde çevrimdışı
   - Cümle, kalıp ve kelime başına en az 2 ses
   - Ses ayırt etme kelimeleri için en az 4 ses (HVPT çeşitliliği)
-  - A0–A1 için yavaş sürüm (SSML hızı %80)
+  - A0–A1 için yavaş sürüm (hız 0,8)
   - Ses düzeyi normalize edilir
   - Depolama: `pack-audio/en/{sürüm}/...`
-- **Dinamik TTS** (Söyleyemediklerim önerisi, rol oyunu cevapları): `tts` fonksiyonu, `hash(metin + ses + hız)` anahtarıyla `tts-cache` bucket'ında önbellekler.
-- **Ses listesi** paket manifestindedir: ses kimliği, yerel ayar (en-US, en-GB, en-AU), cinsiyet. En az 4 ses; en az ikisi en-US dışı.
-- **Ücretsiz katman sınırı:** 60 saniyede 20 istek. Paket üretimi bu hıza göre yavaşlatılır ya da üretim sırasında ücretli katman (S0) kullanılır.
+- **Ses listesi** paket manifestindedir: ses kimliği, yerel ayar, cinsiyet.
+  - En az 4 ses; en az ikisi en-US dışı.
+  - Kokoro'da Amerikan (en-US) ve İngiliz (en-GB) sesleri var; en-AU sesi yok.
+  - Model kartına göre en kaliteli Amerikan sesleri `af_heart` ve `af_bella`, en kaliteli İngiliz sesi `bf_emma`. Seçim F1-05'teki dinleme karşılaştırmasıyla yapılır.
+- **Dinamik TTS** (Söyleyemediklerim önerisi, rol oyunu cevapları): Cihazın TTS motoru (`flutter_tts`) kullanılır. Sunucuda TTS fonksiyonu ve `tts-cache` bucket'ı yoktur.
+- **Sınırlar:**
+  - Kokoro'nun kota sınırı yoktur.
+  - Supabase Storage'ın 1 GB sınırı paket sesleri ve görev kayıtlarıyla paylaşılır.
+  - Paket sesleri kısa ve sıkıştırılmış tutulur; biçim F1-05'te belirlenir.
 
 ## 9. Gizlilik
 
 - Sağlayıcılara yalnızca ses ve gerekli parametreler gider. Kullanıcı kimliği gönderilmez.
-- Deepgram'ın model geliştirme programından çıkış parametresi kullanılır (`mip_opt_out=true`; kurulumda dokümantasyondan doğrulanır). Azure veri kullanım ayarları kontrol edilir.
+- Deepgram'ın model geliştirme programından çıkış parametresi kullanılır (`mip_opt_out=true`; kurulumda dokümantasyondan doğrulanır).
+- Cihaz üstü tanıma ve TTS'te ses cihazdan çıkmaz. Android'de tanıyıcı, cihazın konuşma servisine göre çevrimiçi çalışabilir.
+- Gemini ya da Groq ses yedeği kullanılırsa `07` §3'teki onay kuralı geçerlidir.
 - Ses saklama kuralları: `14-security-privacy.md` §4.
 
 ## 10. Tahmini maliyet (iki kullanıcı, aylık)
 
+Maliyet $0'dır (ADR-0009). Deepgram kredisi dışında hiçbir kalem para ya da kredi tüketmez.
+
 | Kalem | Varsayım | Tahmin |
 |---|---|---|
-| İngilizce ASR (Deepgram) | Kişi başı ~8 dk/gün | ~480 dk → ~$2. $200 kredi yıllarca yeter. |
-| Telaffuz (Azure) | Kişi başı ~3 dk/gün | ~3 saat → ücretsiz katman (5 saat/ay) içinde |
-| Türkçe ASR (Azure) | Kısa kayıtlar | İhmal edilebilir. Ücretsiz katman 5 saati S3 ile paylaşılır. |
-| Dinamik TTS | ~50K karakter/ay | Ücretsiz katman (0,5M/ay) içinde |
-| Paket TTS (tek seferlik) | Paket başına 150–500K karakter | Ücretsiz katman ya da ~$2–8 |
+| İngilizce ASR (Deepgram) | Kişi başı ~8 dk/gün | ~480 dk/ay → kredinin ~$2'si. $200 kredi yıllarca yeter. |
+| Türkçe ASR | Kısa kayıtlar, cihaz üstü | $0 |
+| Telaffuz | Faz 2'de seçilecek | Ücretsiz seçenek |
+| Dinamik TTS | Cihaz üstü | $0 |
+| Paket TTS (tek seferlik) | Paket başına 150–500K karakter, Kokoro | $0 (içerik makinesinin CPU süresi) |

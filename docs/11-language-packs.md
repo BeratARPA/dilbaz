@@ -34,7 +34,7 @@ content/packs/en/
   connectors.jsonl         # bağlaç listesi (karmaşıklık ölçümü)
   fillers.jsonl            # dolgu sözcükleri (akıcılık ölçümü)
   placement/xlex.jsonl     # sürüm, bant, kelime, is_pseudo
-  voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet
+  voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet, motor (en@1: Kokoro)
   LICENSES.md
 
 content/packs/tr-en/

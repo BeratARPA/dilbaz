@@ -18,7 +18,9 @@
 │ Edge Functions (Deno 2): tutor · speech · pair · ops          RPC: sync_push · sync_pull │
 └────────┬───────────────────────────┬────────────────────────────┬────────────────────────┘
          ▼                           ▼                            ▼
-   Anthropic API (Claude)     Deepgram (İngilizce STT)     Azure AI Speech (TTS, telaffuz, Türkçe STT)
+   Gemini + Groq (ücretsiz LLM)   Deepgram (İngilizce STT)   Türkçe STT yedeği (Groq/Gemini)
+
+Cihaz üstü: Türkçe STT (speech_to_text), dinamik TTS (flutter_tts). Paket sesleri: Kokoro (çevrimdışı). ADR-0009.
 
 Çevrimdışı araçlar: content/tools (Python) ──▶ paketler (SQLite + ses) ──▶ Storage/packs
 CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
@@ -160,7 +162,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - Rotalar yol parçasıdır: `/functions/v1/tutor/<rota>`. Kod: `supabase/functions/<fonksiyon>/handler.ts` (bağımlılıklar enjekte edilir, testler ağsız) + `index.ts` (`Deno.serve`).
 - Kullanıcı başına dakikada 60 istek sınırı
 - Yapılandırılmış JSON log (kimlik ve süre; transkript ya da metin loglanmaz)
-- Anahtarlar Supabase secrets'ta tutulur (`ANTHROPIC_API_KEY`, `DEEPGRAM_API_KEY`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`)
+- Anahtarlar Supabase secrets'ta tutulur (`GEMINI_API_KEY`, `GROQ_API_KEY`, `DEEPGRAM_API_KEY`; ADR-0009)
 
 ## 8. Ortamlar ve yapılandırma
 
@@ -218,4 +220,4 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 
 - **İstemci hataları:** `app_events` tablosuna yazılır. Oran sınırlıdır ve kişisel veri içermez.
 - **Fonksiyon logları:** Supabase log panosu. Yapılandırılmış log, rota, süre, `stop_reason`.
-- **Maliyet panosu:** Ayarlar > Kullanım. `llm_usage` + `speech_usage` aylık toplamları.
+- **Kullanım panosu:** Ayarlar > Kullanım. `llm_usage` + `speech_usage` toplamları: sağlayıcı başına kota tüketimi ve Deepgram kredisi (ADR-0009).

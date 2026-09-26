@@ -142,7 +142,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Hata profili:** kalıcı / çözülüyor / çözüldü
 - **Can-do listesi:** kanıtlandı / gösterildi / denendi
 - **Haftalık kol dengesi grafiği;** medya dakikaları
-- **Ayarlar içinde:** yapay zekâ ve ses kullanım maliyeti
+- **Ayarlar içinde:** yapay zekâ ve ses kullanımı (kota ve Deepgram kredisi; ADR-0009)
 
 ### 5.12 Ayarlar
 - Profil, hedef, ilgi alanları

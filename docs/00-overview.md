@@ -40,7 +40,7 @@ Sistem **uydurma yüzde göstermez.** Bir tahmin belirsizse aralık ve güven d�
 - A0–C2 İngilizce içeriği (seviye seviye, ilk kullanıcıların bir adım önünde üretilerek).
 - Kelime, kalıp, gramer, telaffuz, dinleme, okuma, konuşma, yazma, etkileşim ve aracılık (mediation) becerileri.
 - FSRS ile aralıklı tekrar; kanıta dayalı öğrenci modeli; haftalık dengeyi kuran oturum planlayıcı.
-- Yapay zekâ öğretmen (Claude) — ipucu önce, cevap sonra; korkuluklu.
+- Yapay zekâ öğretmen (ücretsiz katman LLM'leri, ADR-0009) — ipucu önce, cevap sonra; korkuluklu.
 - Konuşma tanıma, seslendirme, telaffuz değerlendirmesi.
 - Çift özellikleri: sohbet kartları, iki telefonla bilgi boşluğu görevleri, ortak haftalık hedef.
 - Söyleyemediklerim defteri, dizi/altyazı madenciliği, medya günlüğü.
@@ -81,7 +81,7 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 | `04-learner-model.md` | Öğrenci modeli, kanıt düzeyleri, seviye tahmini | Model, ilerleme, planlayıcı |
 | `05-session-planner.md` | Günlük oturum algoritması | Bugün ekranı, planlayıcı |
 | `06-assessment.md` | Seviye testi, aylık konuşma testi, ölçüm formülleri | Değerlendirme işleri |
-| `07-ai-tutor.md` | Claude rotaları, prompt sözleşmeleri, korkuluklar, eval | Yapay zekâ ile ilgili her iş |
+| `07-ai-tutor.md` | LLM rotaları, prompt sözleşmeleri, korkuluklar, eval | Yapay zekâ ile ilgili her iş |
 | `08-speech.md` | Konuşma tanıma, seslendirme, telaffuz, ses hattı | Ses ile ilgili her iş |
 | `09-ux-motivation.md` | Ekranlar, metin dili, motivasyon kuralları | Her UI işi |
 | `10-content-pipeline.md` | İçerik üretimi, doğrulama, lisanslar | İçerik araçları |
@@ -108,13 +108,14 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 | 0002 | Sunucu: Supabase (Postgres, Auth, Storage, Edge Functions, Realtime) |
 | 0003 | Yerel öncelikli çalışma + değişmez olay günlüğü ile senkron |
 | 0004 | Aralıklı tekrar: FSRS (pub.dev `fsrs`) |
-| 0005 | Yapay zekâ: Claude API, sunucu tarafında, yapılandırılmış çıktı |
-| 0006 | Ses: sağlayıcıdan bağımsız arayüz. İngilizce ASR için Deepgram (kelimesi kelimesine). Telaffuz, TTS ve Türkçe ASR için Azure AI Speech. Seçim karşılaştırma testiyle kesinleşir. |
+| 0005 | Yapay zekâ: Claude API, sunucu tarafında, yapılandırılmış çıktı (ADR-0009 ile askıda) |
+| 0006 | Ses: sağlayıcıdan bağımsız arayüz. İngilizce ASR için Deepgram (kelimesi kelimesine). Seçim karşılaştırma testiyle kesinleşir. Azure bölümleri ADR-0009 ile değişti. |
 | 0007 | Motor ayrı saf Dart paketi (`dilbaz_engine`), dile özgü kod yok |
 | 0008 | İçerik hattı: Python araçları + versiyonlu dil paketleri |
-| 0009 | Sıfır bütçe: ücretli servis olmadan çalışma. Deterministik çekirdek, isteğe bağlı ücretsiz LLM, Deepgram kredisi, cihaz üstü ve çevrimdışı ses, içerik Claude Code oturumlarında. **Önerildi; kullanıcı kararı bekleniyor.** |
+| 0009 | Sıfır bütçe: her bileşende ücretsiz olan en iyi seçenek. LLM rotaları Gemini + Groq ücretsiz katmanlarıyla; her zaman deterministik yedek. Deepgram kredisi, cihaz üstü ses, Kokoro paket sesleri, içerik Claude Code oturumlarında. |
 
 ## 9. Durum
 
 - 2026-09-25: Plan tamamlandı. Kodlama başlamadı. Başlangıç: `17-roadmap.md` → Faz 0.
 - 2026-09-26: Faz 0 başladı (dal `faz-0`). Güncel durum `17-roadmap.md` ilerleme günlüğündedir.
+- 2026-09-26: Faz 0 tamamlandı ve `main`'e birleştirildi. Faz 1 başladı (dal `faz-1`); ADR-0009 (sıfır bütçe) kabul edildi.

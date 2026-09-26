@@ -266,13 +266,15 @@ create table experiment_assignments (experiment_id text references experiments,
   assigned_at timestamptz default now(), primary key (experiment_id, profile_id, unit_ref));
 
 create table llm_usage (id bigserial primary key, profile_id uuid references profiles on delete set null,
-  route text not null, model text not null, input_tokens int, output_tokens int,
-  cache_read_tokens int, cache_write_tokens int, cost_usd numeric(10,6), stop_reason text,
+  route text not null, provider text not null, model text not null, input_tokens int, output_tokens int,
+  cache_read_tokens int, cache_write_tokens int, cost_usd numeric(10,6),  -- ücretsiz katmanda 0 (ADR-0009)
+  stop_reason text,
   latency_ms int, created_at timestamptz default now());
 
 create table speech_usage (id bigserial primary key, profile_id uuid references profiles on delete set null,
   provider text not null, kind text not null check (kind in ('stt','pron','tts')),
-  seconds numeric, characters int, cost_usd numeric(10,6), created_at timestamptz default now());
+  seconds numeric, characters int, cost_usd numeric(10,6),  -- Deepgram kredisinden düşen tutar
+  created_at timestamptz default now());
 
 create table devices (id uuid primary key, profile_id uuid not null references profiles on delete cascade,
   platform text not null, app_version text, last_sync_at timestamptz);
