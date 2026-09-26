@@ -48,18 +48,19 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
 | Araç | Sürüm | Kurulum |
 |---|---|---|
 | Git | güncel | `winget install Git.Git` |
-| Flutter SDK | 3.47.x (stable) | docs.flutter.dev → Windows kurulumu (zip ya da VS Code Flutter eklentisi). `flutter` PATH'te olmalı. |
-| Android Studio | güncel stable | `winget install Google.AndroidStudio` → SDK Manager: Android SDK Platform 36, Build-Tools, Command-line Tools, Platform-Tools, Emulator. Sonra `flutter doctor --android-licenses`. |
+| Flutter SDK | 3.47.x (stable; 2026-09-26: 3.47.5) | docs.flutter.dev → Windows kurulumu (zip ya da VS Code Flutter eklentisi). `flutter` PATH'te olmalı. Güncelleme: `flutter upgrade`. |
+| Android Studio | güncel stable | `winget install Google.AndroidStudio` → SDK Manager: Android SDK Platform 36 ve 37, Build-Tools, Command-line Tools, Platform-Tools, Emulator. Sonra `flutter doctor --android-licenses`. Komut satırından: cmdline-tools 23 ile `sdkmanager` yerini `android sdk install platforms/android-36 build-tools/36.0.0 ndk/28.2.13676358 platform-tools emulator` komutuna bıraktı (`sdkmanager.bat` `;` içeren adları cmd'de böler). Kullanım verisini kapatmak için `android --no-metrics …`. |
 | JDK | 17+ | Android Studio'nun gömülü JDK'sı yeterli |
-| Docker Desktop | güncel | `winget install Docker.DockerDesktop` (WSL 2 ile). Yerel Supabase için gerekli. |
+| WSL 2 | güncel | **Önce:** yönetici PowerShell'de `wsl --install --no-distribution`, sonra **yeniden başlat** (Windows özelliği açar; sistem ayarı, kendin yaparsın). Docker Desktop için şart. |
+| Docker Desktop | güncel | `winget install Docker.DockerDesktop` (WSL 2 ile). İlk açılışta sözleşmeyi kabul et. Yerel Supabase için gerekli. |
 | Node.js | 20+ | `winget install OpenJS.NodeJS.LTS` (`npx supabase` için) |
-| Supabase CLI | güncel | `npx supabase` (kurulum gerekmez) ya da Scoop: `scoop bucket add supabase https://github.com/supabase/scoop-bucket.git` → `scoop install supabase` |
+| Supabase CLI | kök `package.json`'da sabit (2026-09-26: 2.118.0) | Proje kökünde `npm install` → `npx supabase …` sabitlenmiş sürümü kullanır. CI aynı sürümü kurar. |
 | Deno | 2.x | `winget install DenoLand.Deno` (fonksiyon testleri ve eval) |
 | Python | 3.12+ (sende 3.14 var) | Mevcut. `uv`: `winget install astral-sh.uv` |
 | Visual Studio | 2022 veya 2026 | **Yalnızca Faz 3 (Windows derlemesi):** "Desktop development with C++" iş yükü |
 
 ### Windows Geliştirici Modu (kendin aç)
-Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiriciler için → Geliştirici Modu: Açık.** Bu bir sistem güvenlik ayarıdır; ajan değiştirmez.
+Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiriciler için → Geliştirici Modu: Açık.** Bu bir sistem güvenlik ayarıdır; ajan değiştirmez. **Faz 0'dan itibaren gerekir:** uygulamada `windows/` klasörü ve eklentiler olduğu için Geliştirici Modu kapalıyken `flutter pub get` sembolik bağ hatası verir.
 
 ### Telefon (Android)
 - Ayarlar → Telefon hakkında → Yapım numarasına 7 kez dokun → Geliştirici seçenekleri → **USB hata ayıklama** açık.

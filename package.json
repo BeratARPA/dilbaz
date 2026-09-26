@@ -1,0 +1,8 @@
+{
+  "name": "dilbaz",
+  "private": true,
+  "description": "Dev tooling pins (Supabase CLI). The app itself is Flutter.",
+  "devDependencies": {
+    "supabase": "2.118.0"
+  }
+}
