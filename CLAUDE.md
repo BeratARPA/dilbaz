@@ -76,7 +76,7 @@ cd app && flutter build apk --release --dart-define-from-file=env/prod.json
 npx supabase start | npx supabase stop
 npx supabase migration new <ad> && npx supabase db reset && npx supabase test db
 npx supabase functions serve
-deno test -A supabase/functions/ && deno lint supabase/functions && deno fmt --check supabase/functions
+cd supabase/functions && deno test -A && deno lint && deno fmt --check
 
 # İçerik araçları
 cd content/tools && uv sync && uv run dilbaz-content --help && uv run pytest && uv run ruff check .

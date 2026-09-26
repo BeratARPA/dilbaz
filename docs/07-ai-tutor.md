@@ -58,8 +58,11 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, model politikası,
   | answer_check | 4000 |
   | gap_suggest | 3000 |
   | roleplay_turn | 3000 |
+  | comprehension_check | 3000 |
   | speaking_annotate | 12000 |
+  | roleplay_debrief | 12000 |
   | writing_feedback | 12000 |
+  | mediation_check | 12000 |
 
   16K üstü gerekirse streaming kullanılır.
 - **Prompt önbelleği:**
