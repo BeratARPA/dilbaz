@@ -76,6 +76,8 @@ Kalite burada iki anlama gelir:
 
 Eval ve ASR testleri ücretli olduğu için `workflow_dispatch` ile elle tetiklenir. Prompt dosyası değişen PR'da eval sonucu olmadan birleştirme yapılmaz (kural).
 
+Uygulama: `.github/workflows/ci.yml` (işler: `secrets`, `engine`, `app`, `apk`, `database`, `functions`, `content`). Yerelde aynı tarama pre-commit kancasıyla yapılır: `git config core.hooksPath .githooks` (klon başına bir kez).
+
 ## 6. Lint ve stil
 
 - **Dart:** `very_good_analysis` (ya da `flutter_lints` + katı kurallar). `prefer_const`, `always_declare_return_types`, `avoid_dynamic_calls` açık.
