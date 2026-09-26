@@ -48,6 +48,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `ingest [kaynak…] [--refresh]` (S0): Haftalık dökümler yalnızca `--refresh` ile yeniden indirilir.
   - `lexicon` (S1).
   - `select [--max-level A2] [--limit 600]` (S2).
+  - `carriers [--per-target 3]` (S3: Tatoeba taşıyıcı adayları).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -136,6 +137,25 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 - 40 nokta (A0 8, A1 16, A2 16), `02` §5'teki ilerlemeden.
 - Kodları (`gp.be.present`) kapalı listedir: hata etiketleri, öğeler ve LLM rotaları yalnızca bunları kullanır.
 - Her noktanın en az 2 örneği vardır. Türkçe konuşanlara özgü zorluk notları S5'te tr-en paketine yazılır.
+
+### 4.3 S3 taşıyıcı adayları
+
+- **Havuz:** Tatoeba'nın Türkçe çevirisi olan ve en fazla 12 kelimelik İngilizce cümleleri. 2026-09 dökümünde 647 bin cümle var; 523 binini anadili İngilizce olan kullanıcılar yazmış (`eng_user_languages`, beceri 5).
+- **Analiz:** spaCy `en_core_web_md` (ayrıştırıcı ve NER kapalı) her cümle için lemma, sözcük türü ve etiket çıkarır. Sonuç `work/tatoeba.en.analysis.jsonl.gz` dosyasında önbellekte tutulur. Anlık görüntü, çözümleyici ya da biçim değişmedikçe yeniden hesaplanmaz; ilk çalıştırma ~6 dakika sürer.
+- **Aday koşulları:**
+  - **Eşleşme:** Cümle hedef anlamın lemmasını aynı sözcük türüyle içerir. spaCy'nin AUX etiketi fiil sayılır, özel isim etiketi (günler) isim sayılır. Pakette tek anlamı seçilmiş bir lemma isimle zarf arasında geçebilir, çünkü spaCy "today, tomorrow" için isim diyor, listeler zarf diyor. Lemma tanınmazsa yüzey biçimi denenir: spaCy "clothes" için "clothe" veriyor.
+  - **Kelime seviyesi:** Hedef dışındaki her kelime hedefin seviyesinde ya da altındadır. A0 hedefler A1 kelime kullanabilir, çünkü A0'ın kelimesi doğal cümle için çok az. Sözlükte olmayan kelime cümleyi eler; özel isimler, sayılar ve noktalama seviyeye katılmaz.
+  - **Gramer seviyesi:** Kural tabanlı etiketleyicinin (§4.4) bulduğu gramer noktaları da hedefin seviyesini aşamaz. Bu, A1 bir kelimeye present perfect cümlesi gelmesini önler. Hedefin kendisiyle tetiklenen nokta sayılmaz: "always" sıklık zarfları noktasını (A2) tetikler ama bu, "always"i geri tutmaz.
+  - **Uzunluk:** Seviye sınırını aşmaz (§5.1).
+  - **Biçim:** Tırnak, parantez ve iki cümleli metinler elenir. Aynı metin bir kez sayılır.
+- **Puan (büyük olan iyi):**
+  - anadil yazarı +2
+  - özel isim başına −1,5 (Tatoeba "Tom" cümleleriyle dolu)
+  - ideal uzunluktan uzaklık başına −0,3
+  - kelimelerin ortalama sıklık sırası (log10) × −0,4
+  - cümlenin taşıdığı başka her seçili anlam için +0,15, en fazla 3 için. Daha büyük bir ödül adayları "too" cümlelerine yığıyordu.
+- **İlk sonuç (2026-09-27):** 600 anlamın hepsine 3 aday bulundu. Analiz önbellekteyken arama 36 sn sürüyor.
+- **Çıktı:** Her anlamın en iyi 3 adayı `work/carriers.en.candidates.jsonl` dosyasına yazılır; adayı olmayan anlamlar dosyanın başındadır. Seçim ve eksik cümlelerin yazılması küratörlükle yapılır (S4).
 
 ## 5. Doğrulama kuralları (S4)
 

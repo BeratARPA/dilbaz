@@ -15,6 +15,8 @@ from rich.table import Table
 from wordfreq import word_frequency
 
 from dilbaz_content import __version__
+from dilbaz_content.analysis import SpacyAnalyzer
+from dilbaz_content.carriers_step import run_carriers
 from dilbaz_content.ingest import (
     ChecksumMismatchError,
     OnProgress,
@@ -181,3 +183,30 @@ def select(
     console.print(table)
     last = max((sense.rank or 0 for sense in selection.word_senses), default=0)
     console.print(f"word senses reach frequency rank {last}")
+
+
+@app.command()
+def carriers(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="Target language of the pack.")] = "en",
+    per_target: Annotated[int, typer.Option(help="Candidates kept per word sense.")] = 3,
+) -> None:
+    """S3: find Tatoeba carrier candidates for the selected word senses."""
+    root = _content_dir(content_dir)
+    registry = load_registry(root / REGISTRY_FILE)
+    try:
+        with console.status("analyzing Tatoeba sentences") as status:
+            lines = run_carriers(
+                registry,
+                root,
+                l2=l2,
+                analyzer=SpacyAnalyzer,
+                per_target=per_target,
+                progress=lambda done: status.update(f"analyzed {done:,} sentences"),
+            )
+    except FileNotFoundError as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    counts = [sum(len(line.candidates) == n for line in lines) for n in range(per_target + 1)]
+    console.print(f"{len(lines)} word senses; by number of candidates 0..{per_target}: {counts}")
+    console.print(f"written to work/carriers.{l2}.candidates.jsonl")

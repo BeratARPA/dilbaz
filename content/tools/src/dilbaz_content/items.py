@@ -44,12 +44,13 @@ def level_index(level: str) -> int:
 
 
 class Provenance(BaseModel):
-    """Where an item comes from (I-16)."""
+    """Where an item comes from (I-16); attribution names the author when required."""
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     source: str = Field(min_length=1)
     license: str = Field(min_length=1)
+    attribution: str | None = None
 
 
 class WordSense(BaseModel):
@@ -94,4 +95,18 @@ class GrammarPoint(BaseModel):
     name: str = Field(min_length=1)
     description: str = Field(min_length=1)
     examples: tuple[str, ...] = Field(min_length=2)
+    provenance: Provenance
+
+
+class Sentence(BaseModel):
+    """`items/sentences.jsonl`: a carrier sentence and the items it carries."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    key: str = Field(pattern=r"^[a-z]{2,3}\.sent\.[a-z0-9_]+$")
+    text: str = Field(min_length=1)
+    level: Level
+    lemmas: tuple[str, ...]
+    targets: tuple[str, ...] = Field(min_length=1)
+    grammar: tuple[str, ...] = ()
     provenance: Provenance
