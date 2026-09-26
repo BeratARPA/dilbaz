@@ -33,7 +33,7 @@ Kalite burada iki anlama gelir:
 | I-09 Rehberlik azalır | Motor testi: iskele profili seviye tablosuyla eşleşir. |
 | I-10 Karışık çalışma | Planlayıcı testi: karşıtlık çiftleri aynı gün tanıtılmaz, öğrenildikten sonra aynı blokta karışık gelir. |
 | I-11 Yapay zekâ düşünmeyi devralmaz | Sunucu testleri: katalog dışı etiket reddi; cevapsız çağrı reddi. Eval eşikleri. |
-| I-12 Suçluluk yok | **Metin taraması:** ARB dosyalarında yasak kelime yok (`09` §2 listesi). Widget testi: uzun aradan dönüşte nötr ekran. |
+| I-12 Suçluluk yok | **Metin taraması:** ARB dosyalarında yasak kelime yok (`09` §2 listesi; `app/test/l10n/forbidden_words_test.dart`, Türkçe eklere karşı kök eşleşmesi). Widget testi: uzun aradan dönüşte nötr ekran. Tema testi: hata rengi turuncu, kırmızı değil (`09` §3). |
 | I-13 Zaman bütçesi | Planlayıcı özellik testi. |
 | I-14 Özerklik | Planlayıcı özellik testi: kalan süre ≥ 5 dk ise ≥ 2 seçenek. |
 | I-15 Dilden bağımsız motor | Sentetik dil (`zz`) testleri; içe aktarma sınırı testi; dize sabiti taraması (`11` §7). |

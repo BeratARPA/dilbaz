@@ -1,0 +1,17 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - lib/l10n/gen/**
+    - build/**
+    - android/**
+    - web/**
+    - windows/**
+
+linter:
+  rules:
+    # The app is not a published package; widgets and providers document
+    # themselves through names. Public API docs are required in the engine.
+    public_member_api_docs: false

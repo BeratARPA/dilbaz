@@ -1,0 +1,39 @@
+{
+  "@@locale": "tr",
+  "appTitle": "Dilbaz",
+  "@appTitle": {
+    "description": "Application name."
+  },
+  "tabToday": "Bugün",
+  "@tabToday": {
+    "description": "Bottom navigation tab with today's planner suggestions (docs/09 §4)."
+  },
+  "tabPractice": "Pratik",
+  "@tabPractice": {
+    "description": "Bottom navigation tab listing all activities by type."
+  },
+  "tabTogether": "Birlikte",
+  "@tabTogether": {
+    "description": "Bottom navigation tab for partner activities and the shared goal."
+  },
+  "tabProgress": "İlerleme",
+  "@tabProgress": {
+    "description": "Bottom navigation tab with evidence counts and level ranges."
+  },
+  "gapCaptureButton": "Söyleyemedim",
+  "@gapCaptureButton": {
+    "description": "Floating button shown on every tab; captures something the learner could not say (A19)."
+  },
+  "gapCaptureTitle": "Söyleyemedim",
+  "@gapCaptureTitle": {
+    "description": "Title of the capture page opened by the floating button."
+  },
+  "settingsTitle": "Ayarlar",
+  "@settingsTitle": {
+    "description": "Title of the settings page and tooltip of its button on the progress tab."
+  },
+  "sectionInPreparation": "Bu bölüm hazırlanıyor.",
+  "@sectionInPreparation": {
+    "description": "Placeholder body of screens that are not built yet."
+  }
+}

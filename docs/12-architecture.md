@@ -108,7 +108,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | supabase_flutter | 2.17.2 | 3.x ön sürüm, kullanılmaz. Yeni projelerde "publishable key". |
 | fsrs (Dart) | 2.0.1 (FSRS-6, 21 parametre) | Ayrıntı §5 |
 | record | 7.1.1 | Windows'ta Opus yok → AAC-LC/WAV (`08` §4) |
-| just_audio (+ just_audio_media_kit, Windows) · alternatif audioplayers | 0.10.6 · 6.8.1 | Windows oynatma için media_kit eklentisi ya da audioplayers |
+| just_audio (+ just_audio_media_kit, Windows) · alternatif audioplayers | 0.10.6 · 6.8.1 | Windows oynatma için media_kit eklentisi ya da audioplayers. `just_audio_media_kit` Windows derlemesiyle birlikte F3-09'da eklenir (Faz 0'da Windows araç zinciri yok). |
 | uuid | 4.6.0 | `v7()` var |
 | fl_chart | 1.2.0 | |
 | flutter_local_notifications | 22.3.1 | Web'de zamanlanmış bildirim yok |
@@ -117,6 +117,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | permission_handler | 13.0.2 | |
 | Supabase Edge Functions | Deno 2.x | `npm:` içe aktarma destekli |
 | CI Flutter kurulumu | subosito/flutter-action@v2 | |
+| Android Gradle Plugin · Gradle | 9.4.1 · 9.6.0 | Flutter 3.47.5 şablonu 9.1.0 · 9.3.1 getirir. `permission_handler_android` 14.1 `compileSdk = 37` kullanıyor; AGP 9.1 yeni `android-37.0` platform adını çözemediği için yükseltildi (2026-09-26). Uygulamada `compileSdk = 37`, `targetSdk` Flutter varsayılanı (36). Core library desugaring açık (`flutter_local_notifications`). **Risk:** `home_widget` ve `share_handler_android` hâlâ Kotlin Gradle eklentisini uyguluyor; Flutter ileride bunu hata sayacak. Güncellemeler izlenir. |
 
 ## 5. FSRS entegrasyonu
 
