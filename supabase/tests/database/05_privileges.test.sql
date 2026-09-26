@@ -1,7 +1,7 @@
 -- Least privilege for the Data API roles (docs/13-data-model.md §4).
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(12);
+select plan(13);
 
 select table_privs_are('public', 'profiles', 'authenticated',
   array['SELECT', 'INSERT', 'UPDATE'], 'profiles: read, create and update own row');
@@ -30,9 +30,19 @@ select table_privs_are('public', 'privilege_probe', 'authenticated', '{}'::text[
   'new tables are not exposed to signed-in users by default');
 select table_privs_are('public', 'privilege_probe', 'anon', '{}'::text[],
   'new tables are not exposed to anon by default');
+select is(
+  (
+    select count(*)::int
+    from unnest(array['profiles', 'courses', 'teams', 'team_members', 'privilege_probe']) t,
+         unnest(array['SELECT', 'INSERT', 'UPDATE', 'DELETE']) p
+    where not has_table_privilege('service_role', 'public.' || t, p)
+  ),
+  0,
+  'the service role can read and write user tables, new ones included'
+);
 select ok(
-  has_table_privilege('service_role', 'public.privilege_probe', 'select'),
-  'the service role keeps access for server functions'
+  has_sequence_privilege('service_role', 'public.sync_seq', 'usage'),
+  'the service role can use the sync sequence'
 );
 
 select * from finish();
