@@ -41,7 +41,7 @@ Dal: `faz-0`
   - `tutor` fonksiyonunda `health` rotası
   - `deno test`
 - [x] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
-- [ ] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
+- [x] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
 - [ ] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1):
   - Supabase projesi (Frankfurt)
   - Anthropic, Deepgram, Azure Speech anahtarları
@@ -280,3 +280,4 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-06 (ek) | Açık Data API yetkileri: Supabase varsayılanı `authenticated`'a TRUNCATE/DELETE dahil her şeyi veriyordu. Yeni migrasyon varsayılan yetkileri kaldırır, tablo başına yalnızca gereken yetkileri verir. pgTAP 52/52 (+ yetki testleri, yeni tablo varsayılan kapalı). GitHub deposu `BeratARPA/dilbaz` açıldı; `main` ve `faz-0` gönderildi. |
 | 2026-09-26 | 0 | F0-10 / F0-11 (üretim) | Kullanıcı: Supabase projesi `dilbaz` (eu-central-1), `supabase login`, `gh auth login`. Ajan: `app/env/prod.json` (URL + publishable key, git dışı), `supabase link` (parolasız, geçici giriş rolü), onayla `db push` (3 migrasyon). Üretimde "expose new tables" kapalı olduğu için `service_role` yetkisi de verilmiyordu; ortamları eşitleyen migrasyon eklendi (pgTAP 53/53). Üretim salt okunur SQL ile doğrulandı: RLS her tabloda açık, `anon` yetkisiz, `authenticated` yalnızca gereken yetkiler, `service_role` tam yetki. `test db --linked` pgtap'i erişilemeyen bir şemaya kurduğu için doğrulama sorguyla yapıldı. CI: `setup-uv` kayan `v10` etiketi yayınlamıyor, tam sürüme sabitlendi. |
 | 2026-09-26 | 0 | F0-10 (kapsam) | **Sıfır bütçe** (kullanıcı): Anthropic ve Azure adımları askıya alındı, Faz 1 öncesi ADR-0009 ile karar verilecek (`18` §0). Üretim girişi için Brevo SMTP eklendi: Supabase'in yerleşik e-postası yalnızca ekip üyelerine gönderiyor, şablonları ücretsiz planda kilitli (kod yerine bağlantı gidiyor), saatte 2 e-posta. |
+| 2026-09-26 | 0 | F0-09 | İlk tam yeşil CI koşusu (7/7 iş; `faz-0`, 322a967). Süreler: APK ~11,5 dk, uygulama ~3 dk, pgTAP ~3 dk, motor ~2 dk, diğerleri < 1 dk. Ücretsiz dakikaları korumak için yalnızca doküman değişikliklerinde CI atlanır. |

@@ -76,7 +76,7 @@ Kalite burada iki anlama gelir:
 
 Eval ve ASR testleri ücretli olduğu için `workflow_dispatch` ile elle tetiklenir. Prompt dosyası değişen PR'da eval sonucu olmadan birleştirme yapılmaz (kural).
 
-Uygulama: `.github/workflows/ci.yml` (işler: `secrets`, `engine`, `app`, `apk`, `database`, `functions`, `content`). Yerelde aynı tarama pre-commit kancasıyla yapılır: `git config core.hooksPath .githooks` (klon başına bir kez).
+Uygulama: `.github/workflows/ci.yml` (işler: `secrets`, `engine`, `app`, `apk`, `database`, `functions`, `content`). Bir koşu ~24 ücretsiz Actions dakikası harcar (en uzunu APK işi, ~12 dk). Sıfır bütçe nedeniyle yalnızca doküman değişikliği (`docs/`, `prompts/`, `*.md`) içeren push'larda CI çalışmaz. Yerelde aynı tarama pre-commit kancasıyla yapılır: `git config core.hooksPath .githooks` (klon başına bir kez).
 
 ## 6. Lint ve stil
 

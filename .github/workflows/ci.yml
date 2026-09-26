@@ -2,9 +2,19 @@
 # Paid checks (LLM eval, ASR bake-off) run only by hand, never here.
 name: ci
 
+# Docs-only changes skip CI to save the free Actions minutes (zero budget,
+# docs/18 §0); secrets are still scanned locally by the pre-commit hook.
 on:
   push:
+    paths-ignore:
+      - "docs/**"
+      - "prompts/**"
+      - "**/*.md"
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "prompts/**"
+      - "**/*.md"
 
 permissions:
   contents: read
