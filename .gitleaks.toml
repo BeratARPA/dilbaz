@@ -1,0 +1,13 @@
+# Secret scanning (CI and the pre-commit hook): the default rules plus one
+# narrow allowlist for false positives.
+title = "Dilbaz gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Language-pack item keys (en.ws.hospital.n.1) look like tokens to generic-api-key"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^content/packs/[^/]+/items/[^/]+\.jsonl$''']
+regexes = ['''^[a-z]{2,3}\.(?:ws|chunk|gp|sent|pattern|sound)\.[a-z0-9_.]+$''']

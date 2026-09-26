@@ -1,0 +1,697 @@
+# S2 word-sense decisions on top of the automatic rule (docs/10-content-pipeline.md §4.2).
+#
+# include: everyday lemmas taken first, even when they are not on NGSL-Spoken.
+# exclude: lemmas that are not word-sense cards. They are taught through
+#   grammar points (be, not, question words, comparatives, particles) or
+#   chunks (please, thank you, sorry, OK), are titles and gerunds, or are
+#   abstract news words with little use in everyday conversation.
+# senses: own glosses (license: own); they replace the first Wiktionary
+#   sense, which is often not the one a learner needs ("pen" = an enclosure).
+#   A lemma listed here gets exactly these senses. `level` overrides the
+#   level lists where they miss the part of speech ("wake" is listed as a noun).
+
+include:
+  # food and drink
+  [breakfast, lunch, dinner, coffee, tea, bread, milk, egg, apple, fruit, vegetable, chicken,
+   meat, fish, rice, cake, juice, cup, glass, bottle,
+  # home
+   kitchen, bathroom, bedroom, bed, table, chair, window, door, floor, garden,
+  # time and weather
+   monday, tuesday, wednesday, thursday, friday, saturday, sunday, weekend, afternoon, evening,
+   tomorrow, yesterday, birthday, holiday, winter, spring, autumn, weather, rain, sun, hot, cold,
+   warm,
+  # places and travel
+   shop, restaurant, hotel, airport, station, bus, train, ticket, map, village, mountain, sea,
+   beach, river, hospital,
+  # things
+   bag, shoe, clothes, shirt, dress, computer, email, message, internet, photo, pen,
+  # people
+   husband, daughter, sister, boyfriend, girlfriend, teacher, boss,
+  # describing people and things
+   tired, hungry, thirsty, cheap, expensive, rich, poor, healthy, tall, sad, angry, afraid, bored,
+   busy, difficult, interesting, boring, favorite, funny, quiet, dirty, slow, sick,
+  # daily actions
+   wake, cook, clean, wash, dance, sing, swim, ride, fly,
+  # school, free time, nature
+   homework, exam, lesson, hobby, sport, football, animal, cat, bird, tree, flower]
+
+exclude:
+  # grammar points
+  - be
+  - it
+  - not
+  - may
+  - can
+  - when
+  - where
+  - why
+  - how
+  - ever
+  - yet
+  - most
+  - less
+  - better
+  - best
+  - so
+  - all
+  - else
+  - either
+  - rather
+  - lot
+  - both
+  - used
+  - in
+  - "on"
+  - about
+  - over
+  - "off"
+  - after
+  - before
+  - along
+  - across
+  - above
+  - behind
+  - round
+  - past
+  - forward
+  - due
+  - further
+  # chunks
+  - "no"
+  - "yes"
+  - please
+  - thank
+  - thanks
+  - ok
+  - yeah
+  - sorry
+  # titles, gerunds and forms taught with their verb
+  - mr.
+  - mrs.
+  - being
+  - given
+  - following
+  - living
+  - running
+  - saw
+  - self
+  - post
+  # abstract or news words, little use in everyday conversation
+  - state
+  - system
+  - case
+  - support
+  - base
+  - set
+  - report
+  - care
+  - government
+  - issue
+  - power
+  - public
+  - law
+  - force
+  - lead
+  - control
+  - national
+  - deal
+  - research
+  - vote
+  - rate
+  - major
+  - position
+  - value
+  - figure
+  - trade
+  - product
+  - review
+  - sense
+  - response
+  - statement
+  - staff
+  - committee
+  - specific
+
+senses:
+  # food and drink
+  breakfast: [{pos: NOUN, sense: "the first meal of the day"}]
+  lunch: [{pos: NOUN, sense: "the meal in the middle of the day"}]
+  dinner: [{pos: NOUN, sense: "the main meal, eaten in the evening"}]
+  coffee: [{pos: NOUN, sense: "a hot brown drink made from roasted beans"}]
+  tea: [{pos: NOUN, sense: "a hot drink made by pouring water on dried leaves"}]
+  bread: [{pos: NOUN, sense: "a basic food made from flour and baked"}]
+  milk: [{pos: NOUN, sense: "the white drink that comes from cows"}]
+  egg: [{pos: NOUN, sense: "the round thing a hen lays, eaten as food"}]
+  apple: [{pos: NOUN, sense: "a round fruit with red or green skin"}]
+  fruit: [{pos: NOUN, sense: "sweet food that grows on plants, like apples"}]
+  vegetable: [{pos: NOUN, sense: "a plant or part of a plant eaten as food, like a carrot"}]
+  chicken: [{pos: NOUN, sense: "a bird kept for eggs and meat; its meat"}]
+  meat: [{pos: NOUN, sense: "the flesh of animals eaten as food"}]
+  fish: [{pos: NOUN, sense: "an animal that lives in water; its meat as food"}]
+  rice: [{pos: NOUN, sense: "small white or brown grains that are cooked and eaten"}]
+  cake: [{pos: NOUN, sense: "a sweet food baked from flour, eggs and sugar"}]
+  juice: [{pos: NOUN, sense: "a drink made from fruit"}]
+  cup: [{pos: NOUN, sense: "a small container with a handle for hot drinks"}]
+  glass: [{pos: NOUN, sense: "a container made of glass for cold drinks"}]
+  bottle: [{pos: NOUN, sense: "a container for liquids with a narrow top"}]
+  food: [{pos: NOUN, sense: "things that people and animals eat"}]
+  water: [{pos: NOUN, sense: "the clear liquid in rain, rivers and the sea"}]
+  eat: [{pos: VERB, sense: "to put food in your mouth and swallow it"}]
+  cook: [{pos: VERB, sense: "to prepare food by heating it"}]
+  # home
+  kitchen: [{pos: NOUN, sense: "the room where you cook"}]
+  bathroom: [{pos: NOUN, sense: "the room with a toilet, a shower or a bath"}]
+  bedroom: [{pos: NOUN, sense: "the room where you sleep"}]
+  bed: [{pos: NOUN, sense: "the furniture you sleep on"}]
+  table: [{pos: NOUN, sense: "furniture with a flat top and legs"}]
+  chair: [{pos: NOUN, sense: "a seat with a back for one person"}]
+  window: [{pos: NOUN, sense: "an opening in a wall, usually with glass"}]
+  door: [{pos: NOUN, sense: "the thing you open to go into or out of a room"}]
+  floor: [{pos: NOUN, sense: "the surface you walk on inside a building; a level of a building"}]
+  garden: [{pos: NOUN, sense: "an area next to a house with grass and plants"}]
+  house: [{pos: NOUN, sense: "a building where people live"}]
+  home: [{pos: NOUN, sense: "the place where you live"}, {pos: ADV, sense: "to or at the place where you live (go home)"}]
+  room: [{pos: NOUN, sense: "a part of a building with its own walls, like a bedroom"}]
+  wall: [{pos: NOUN, sense: "a side of a room or building; a structure of stone or brick"}]
+  # time and weather
+  monday: [{pos: NOUN, sense: "the day after Sunday, the first working day of the week"}]
+  tuesday: [{pos: NOUN, sense: "the day after Monday"}]
+  wednesday: [{pos: NOUN, sense: "the day after Tuesday"}]
+  thursday: [{pos: NOUN, sense: "the day after Wednesday"}]
+  friday: [{pos: NOUN, sense: "the day after Thursday, the last working day of the week"}]
+  saturday: [{pos: NOUN, sense: "the day after Friday"}]
+  sunday: [{pos: NOUN, sense: "the day after Saturday"}]
+  weekend: [{pos: NOUN, sense: "Saturday and Sunday"}]
+  afternoon: [{pos: NOUN, sense: "the time from midday until the evening"}]
+  evening: [{pos: NOUN, sense: "the time between the afternoon and the night"}]
+  morning: [{pos: NOUN, sense: "the early part of the day, before midday"}]
+  night: [{pos: NOUN, sense: "the time when it is dark and people sleep"}]
+  tomorrow: [{pos: ADV, sense: "on the day after today"}]
+  yesterday: [{pos: ADV, sense: "on the day before today"}]
+  today: [{pos: ADV, sense: "on this day"}]
+  birthday: [{pos: NOUN, sense: "the day of the year when you were born"}]
+  holiday: [{pos: NOUN, sense: "a time with no work or school; a trip for pleasure"}]
+  winter: [{pos: NOUN, sense: "the coldest season of the year"}]
+  spring: [{pos: NOUN, sense: "the season after winter, when plants start to grow"}]
+  summer: [{pos: NOUN, sense: "the warmest season of the year"}]
+  autumn: [{pos: NOUN, sense: "the season after summer, when leaves fall"}]
+  weather: [{pos: NOUN, sense: "how hot, cold, sunny or rainy it is outside"}]
+  rain: [{pos: NOUN, sense: "water that falls from clouds"}, {pos: VERB, sense: "to fall as rain (it is raining)"}]
+  sun: [{pos: NOUN, sense: "the star that gives the earth light and heat"}]
+  hot: [{pos: ADJ, sense: "having a high temperature; very warm"}]
+  cold: [{pos: ADJ, sense: "having a low temperature"}, {pos: NOUN, sense: "a common illness that makes your nose run"}]
+  warm: [{pos: ADJ, sense: "pleasantly hot, not cold"}]
+  time: [{pos: NOUN, sense: "what we measure in minutes, hours and days; the time on a clock"}]
+  year: [{pos: NOUN, sense: "twelve months"}]
+  day: [{pos: NOUN, sense: "a period of 24 hours; the time when it is light"}]
+  week: [{pos: NOUN, sense: "a period of seven days"}]
+  month: [{pos: NOUN, sense: "one of the twelve parts of a year, like May"}]
+  hour: [{pos: NOUN, sense: "a period of sixty minutes"}]
+  minute: [{pos: NOUN, sense: "a period of sixty seconds"}]
+  moment: [{pos: NOUN, sense: "a very short period of time"}]
+  period: [{pos: NOUN, sense: "a length of time"}]
+  date: [{pos: NOUN, sense: "a particular day of the month or year"}]
+  future: [{pos: NOUN, sense: "the time that will come"}]
+  present: [{pos: NOUN, sense: "a gift"}]
+  now: [{pos: ADV, sense: "at this moment"}]
+  then: [{pos: ADV, sense: "at that time; after that"}]
+  soon: [{pos: ADV, sense: "in a short time from now"}]
+  early: [{pos: ADV, sense: "before the usual or expected time"}, {pos: ADJ, sense: "near the beginning of a period (early morning)"}]
+  late: [{pos: ADJ, sense: "after the right or usual time"}, {pos: ADV, sense: "after the usual time (get up late)"}]
+  already: [{pos: ADV, sense: "before now, or sooner than expected"}]
+  once: [{pos: ADV, sense: "one time"}]
+  again: [{pos: ADV, sense: "one more time"}]
+  always: [{pos: ADV, sense: "at all times, every time"}]
+  never: [{pos: ADV, sense: "not at any time"}]
+  often: [{pos: ADV, sense: "many times, frequently"}]
+  next: [{pos: ADV, sense: "after this, then"}]
+  # places and travel
+  shop: [{pos: NOUN, sense: "a place where you buy things"}]
+  restaurant: [{pos: NOUN, sense: "a place where you pay to eat a meal"}]
+  hotel: [{pos: NOUN, sense: "a building where you pay to stay the night"}]
+  airport: [{pos: NOUN, sense: "a place where planes take off and land"}]
+  station: [{pos: NOUN, sense: "a place where trains or buses stop"}]
+  bus: [{pos: NOUN, sense: "a large vehicle that carries many passengers"}]
+  train: [{pos: NOUN, sense: "a line of carriages pulled along a railway"}]
+  car: [{pos: NOUN, sense: "a road vehicle for a few people"}]
+  ticket: [{pos: NOUN, sense: "a small paper that lets you travel or go into a place"}]
+  map: [{pos: NOUN, sense: "a drawing of an area showing roads and places"}]
+  city: [{pos: NOUN, sense: "a large and important town"}]
+  town: [{pos: NOUN, sense: "a place with houses and shops, smaller than a city"}]
+  village: [{pos: NOUN, sense: "a very small town in the countryside"}]
+  country: [{pos: NOUN, sense: "a nation with its own land and government"}]
+  world: [{pos: NOUN, sense: "the earth and all the people and countries on it"}]
+  mountain: [{pos: NOUN, sense: "a very high hill"}]
+  sea: [{pos: NOUN, sense: "a large area of salt water"}]
+  beach: [{pos: NOUN, sense: "the area of sand next to the sea"}]
+  river: [{pos: NOUN, sense: "a long natural flow of water"}]
+  hospital: [{pos: NOUN, sense: "a place where ill or injured people are treated"}]
+  school: [{pos: NOUN, sense: "a place where children go to learn"}]
+  office: [{pos: NOUN, sense: "a room or building where people work at desks"}]
+  street: [{pos: NOUN, sense: "a road in a town with houses or shops"}]
+  road: [{pos: NOUN, sense: "a way for cars between places"}]
+  park: [{pos: NOUN, sense: "a public garden in a town"}, {pos: VERB, sense: "to leave a car in a place for a time"}]
+  market: [{pos: NOUN, sense: "a place where people buy and sell things, often outside"}]
+  college: [{pos: NOUN, sense: "a place for studying after school"}]
+  place: [{pos: NOUN, sense: "a particular area, building or town"}]
+  area: [{pos: NOUN, sense: "a part of a place, town or country"}]
+  way: [{pos: NOUN, sense: "a road or route to a place; a method"}]
+  side: [{pos: NOUN, sense: "the left or right part of something"}]
+  top: [{pos: NOUN, sense: "the highest part of something"}]
+  front: [{pos: NOUN, sense: "the part of something that faces forward"}]
+  center: [{pos: NOUN, sense: "the middle of something; a building for an activity"}]
+  here: [{pos: ADV, sense: "in or to this place"}]
+  there: [{pos: ADV, sense: "in or to that place"}]
+  away: [{pos: ADV, sense: "to or at a distance from a place"}]
+  back: [{pos: ADV, sense: "to the place where someone or something was before"}]
+  up: [{pos: ADV, sense: "towards a higher place"}]
+  down: [{pos: ADV, sense: "towards a lower place"}]
+  out: [{pos: ADV, sense: "away from the inside; not at home"}]
+  around: [{pos: ADV, sense: "in or near a place; in a circle; about (around ten)"}]
+  outside: [{pos: ADV, sense: "not inside a building"}]
+  far: [{pos: ADV, sense: "a long distance away"}]
+  together: [{pos: ADV, sense: "with each other"}]
+  # things
+  bag: [{pos: NOUN, sense: "a container for carrying things"}]
+  shoe: [{pos: NOUN, sense: "a covering for your foot"}]
+  clothes: [{pos: NOUN, sense: "the things you wear, like shirts and trousers"}]
+  shirt: [{pos: NOUN, sense: "a piece of clothing for the upper body, often with buttons"}]
+  dress: [{pos: NOUN, sense: "a piece of clothing for a woman or girl that covers the body and legs"}]
+  computer: [{pos: NOUN, sense: "an electronic machine for work, games and the internet"}]
+  email: [{pos: NOUN, sense: "a message you send over the internet"}]
+  message: [{pos: NOUN, sense: "a piece of information you send to someone"}]
+  internet: [{pos: NOUN, sense: "the network that connects computers around the world", level: A1}]
+  photo: [{pos: NOUN, sense: "a picture taken with a camera"}]
+  pen: [{pos: NOUN, sense: "a thing you write with in ink"}]
+  phone: [{pos: NOUN, sense: "a device you use to talk to people far away"}, {pos: VERB, sense: "to call someone on the phone"}]
+  book: [{pos: NOUN, sense: "a set of printed pages inside a cover, for reading"}]
+  money: [{pos: NOUN, sense: "coins and notes that you use to buy things"}]
+  thing: [{pos: NOUN, sense: "an object, idea or fact that you do not name"}]
+  picture: [{pos: NOUN, sense: "a painting, drawing or photo"}]
+  list: [{pos: NOUN, sense: "names or things written one below the other"}]
+  sign: [{pos: NOUN, sense: "a board with words or a picture that gives information"}]
+  board: [{pos: NOUN, sense: "a flat surface to write on in a classroom; a flat piece for games"}]
+  line: [{pos: NOUN, sense: "a long thin mark"}]
+  fire: [{pos: NOUN, sense: "the flames and heat when something burns"}]
+  light: [{pos: NOUN, sense: "the brightness from the sun or a lamp"}, {pos: ADJ, sense: "not heavy"}]
+  bill: [{pos: NOUN, sense: "a paper showing how much you must pay"}]
+  card: [{pos: NOUN, sense: "a piece of thick paper or plastic, like a bank card"}]
+  key: [{pos: NOUN, sense: "a piece of metal that opens a lock"}]
+  paper: [{pos: NOUN, sense: "the thin material you write on"}]
+  # people and family
+  husband: [{pos: NOUN, sense: "the man a woman is married to"}]
+  wife: [{pos: NOUN, sense: "the woman a man is married to"}]
+  daughter: [{pos: NOUN, sense: "your female child"}]
+  son: [{pos: NOUN, sense: "your male child"}]
+  sister: [{pos: NOUN, sense: "a girl or woman with the same parents as you"}]
+  brother: [{pos: NOUN, sense: "a boy or man with the same parents as you"}]
+  mother: [{pos: NOUN, sense: "a female parent"}]
+  father: [{pos: NOUN, sense: "a male parent"}]
+  parent: [{pos: NOUN, sense: "a mother or a father"}]
+  family: [{pos: NOUN, sense: "parents, children and other relatives"}]
+  child: [{pos: NOUN, sense: "a young boy or girl"}]
+  kid: [{pos: NOUN, sense: "a child (informal)"}]
+  baby: [{pos: NOUN, sense: "a very young child"}]
+  boy: [{pos: NOUN, sense: "a male child"}]
+  girl: [{pos: NOUN, sense: "a female child"}]
+  man: [{pos: NOUN, sense: "an adult male person"}]
+  woman: [{pos: NOUN, sense: "an adult female person"}]
+  guy: [{pos: NOUN, sense: "a man (informal)"}]
+  person: [{pos: NOUN, sense: "a human being; one man, woman or child"}]
+  people: [{pos: NOUN, sense: "men, women and children; persons"}]
+  boyfriend: [{pos: NOUN, sense: "a man someone has a romantic relationship with"}]
+  girlfriend: [{pos: NOUN, sense: "a woman someone has a romantic relationship with"}]
+  friend: [{pos: NOUN, sense: "a person you know well and like"}]
+  couple: [{pos: NOUN, sense: "two people in a relationship; two things"}]
+  teacher: [{pos: NOUN, sense: "a person whose job is teaching"}]
+  student: [{pos: NOUN, sense: "a person who studies at a school or university"}]
+  doctor: [{pos: NOUN, sense: "a person whose job is treating ill people"}]
+  boss: [{pos: NOUN, sense: "the person you work for"}]
+  police: [{pos: NOUN, sense: "the people whose job is to protect people and catch criminals"}]
+  member: [{pos: NOUN, sense: "a person who belongs to a group or club"}]
+  team: [{pos: NOUN, sense: "a group of people who play or work together"}]
+  group: [{pos: NOUN, sense: "several people or things together"}]
+  name: [{pos: NOUN, sense: "the word someone or something is called"}]
+  age: [{pos: NOUN, sense: "how old someone or something is"}]
+  life: [{pos: NOUN, sense: "the time between birth and death; the way someone lives"}]
+  # the body and health
+  body: [{pos: NOUN, sense: "the whole physical form of a person or animal"}]
+  head: [{pos: NOUN, sense: "the top part of the body, with the face and the brain"}]
+  face: [{pos: NOUN, sense: "the front of the head, with the eyes, nose and mouth"}]
+  eye: [{pos: NOUN, sense: "the part of the body you see with"}]
+  hand: [{pos: NOUN, sense: "the part at the end of your arm, with fingers"}]
+  heart: [{pos: NOUN, sense: "the organ that pumps blood; also the center of feelings"}]
+  health: [{pos: NOUN, sense: "the condition of your body and mind"}]
+  sick: [{pos: ADJ, sense: "ill, not well"}]
+  healthy: [{pos: ADJ, sense: "well, not ill; good for your body"}]
+  tired: [{pos: ADJ, sense: "needing rest or sleep"}]
+  hungry: [{pos: ADJ, sense: "wanting to eat"}]
+  thirsty: [{pos: ADJ, sense: "wanting to drink"}]
+  # describing people and things
+  good: [{pos: ADJ, sense: "of high quality; pleasant"}]
+  bad: [{pos: ADJ, sense: "not good; unpleasant"}]
+  great: [{pos: ADJ, sense: "very good; very big"}]
+  nice: [{pos: ADJ, sense: "pleasant, kind"}]
+  fine: [{pos: ADJ, sense: "good, well (I'm fine)"}]
+  new: [{pos: ADJ, sense: "recently made or bought; not old"}]
+  old: [{pos: ADJ, sense: "having lived or existed for a long time; not new"}]
+  young: [{pos: ADJ, sense: "not old"}]
+  big: [{pos: ADJ, sense: "large in size"}]
+  large: [{pos: ADJ, sense: "big"}]
+  small: [{pos: ADJ, sense: "little in size"}]
+  little: [{pos: ADJ, sense: "small"}]
+  long: [{pos: ADJ, sense: "measuring a lot from one end to the other; lasting a lot of time"}]
+  short: [{pos: ADJ, sense: "not long; not tall"}]
+  tall: [{pos: ADJ, sense: "high, taller than most (for people and buildings)"}]
+  high: [{pos: ADJ, sense: "far above the ground; large in amount"}]
+  low: [{pos: ADJ, sense: "not high"}]
+  full: [{pos: ADJ, sense: "with no space left; having eaten enough"}]
+  hard: [{pos: ADJ, sense: "difficult; not soft"}, {pos: ADV, sense: "with a lot of effort (work hard)"}]
+  easy: [{pos: ADJ, sense: "not difficult"}]
+  difficult: [{pos: ADJ, sense: "not easy"}]
+  different: [{pos: ADJ, sense: "not the same"}]
+  same: [{pos: ADJ, sense: "not different; exactly like another"}]
+  important: [{pos: ADJ, sense: "having great value or effect"}]
+  interesting: [{pos: ADJ, sense: "making you want to know more"}]
+  boring: [{pos: ADJ, sense: "not interesting"}]
+  special: [{pos: ADJ, sense: "different and better than usual"}]
+  real: [{pos: ADJ, sense: "true, not imagined; not a copy"}]
+  "true": [{pos: ADJ, sense: "correct, based on facts"}]
+  right: [{pos: ADJ, sense: "correct, true"}, {pos: ADJ, sense: "on the side of your right hand"}]
+  wrong: [{pos: ADJ, sense: "not correct"}]
+  sure: [{pos: ADJ, sense: "certain, with no doubt"}]
+  ready: [{pos: ADJ, sense: "prepared to do something or to be used"}]
+  free: [{pos: ADJ, sense: "costing no money"}, {pos: ADJ, sense: "not busy; able to do what you want"}]
+  busy: [{pos: ADJ, sense: "having a lot to do"}]
+  happy: [{pos: ADJ, sense: "feeling pleased and glad"}]
+  sad: [{pos: ADJ, sense: "unhappy"}]
+  angry: [{pos: ADJ, sense: "feeling strong displeasure"}]
+  afraid: [{pos: ADJ, sense: "feeling fear"}]
+  bored: [{pos: ADJ, sense: "tired and unhappy because nothing is interesting"}]
+  funny: [{pos: ADJ, sense: "making you laugh"}]
+  fun: [{pos: ADJ, sense: "enjoyable"}, {pos: NOUN, sense: "enjoyment, a good time"}]
+  quiet: [{pos: ADJ, sense: "making little or no noise"}]
+  clean: [{pos: ADJ, sense: "not dirty"}, {pos: VERB, sense: "to remove dirt from something"}]
+  dirty: [{pos: ADJ, sense: "not clean"}]
+  cheap: [{pos: ADJ, sense: "not costing much money"}]
+  expensive: [{pos: ADJ, sense: "costing a lot of money"}]
+  rich: [{pos: ADJ, sense: "having a lot of money"}]
+  poor: [{pos: ADJ, sense: "having very little money"}]
+  strong: [{pos: ADJ, sense: "having a lot of power; not weak"}]
+  slow: [{pos: ADJ, sense: "not fast"}]
+  close: [{pos: VERB, sense: "to shut something"}, {pos: ADJ, sense: "near"}]
+  open: [{pos: VERB, sense: "to move something so that it is not closed"}, {pos: ADJ, sense: "not closed"}]
+  white: [{pos: ADJ, sense: "of the colour of snow or milk"}]
+  black: [{pos: ADJ, sense: "of the darkest colour, like the night sky"}]
+  red: [{pos: ADJ, sense: "of the colour of blood"}]
+  pretty: [{pos: ADJ, sense: "nice to look at"}, {pos: ADV, sense: "quite, fairly (pretty good)"}]
+  favorite: [{pos: ADJ, sense: "liked more than all the others"}]
+  own: [{pos: ADJ, sense: "belonging to you and not to anyone else (my own room)"}]
+  whole: [{pos: ADJ, sense: "all of something"}]
+  single: [{pos: ADJ, sense: "only one; not married"}]
+  possible: [{pos: ADJ, sense: "able to happen or be done"}]
+  clear: [{pos: ADJ, sense: "easy to understand, see or hear"}]
+  local: [{pos: ADJ, sense: "in or from the area near you"}]
+  only: [{pos: ADJ, sense: "the one and no other"}, {pos: ADV, sense: "no more than; just"}]
+  first: [{pos: ADJ, sense: "coming before all the others"}, {pos: ADV, sense: "before anything else"}]
+  second: [{pos: ADJ, sense: "coming after the first"}, {pos: NOUN, sense: "one sixtieth of a minute"}]
+  kind: [{pos: NOUN, sense: "a type, a sort"}, {pos: ADJ, sense: "friendly and good to others"}]
+  # daily actions and common verbs
+  have: [{pos: VERB, sense: "to own or hold something; to eat or drink (have lunch)"}]
+  do: [{pos: VERB, sense: "to perform an action or a job (do homework)"}]
+  get: [{pos: VERB, sense: "to receive or buy something; to become (get tired)"}]
+  go: [{pos: VERB, sense: "to move or travel to a place"}]
+  come: [{pos: VERB, sense: "to move towards the speaker or to a place"}]
+  make: [{pos: VERB, sense: "to produce or create something (make tea)"}]
+  take: [{pos: VERB, sense: "to get and carry something; to use a bus or train"}]
+  give: [{pos: VERB, sense: "to hand something to someone"}]
+  put: [{pos: VERB, sense: "to move something to a place"}]
+  bring: [{pos: VERB, sense: "to carry something or come with someone to a place"}]
+  carry: [{pos: VERB, sense: "to hold something while you move"}]
+  keep: [{pos: VERB, sense: "to continue to have something; to continue doing something"}]
+  find: [{pos: VERB, sense: "to discover something you were looking for"}]
+  lose: [{pos: VERB, sense: "to not be able to find something; to not win"}]
+  see: [{pos: VERB, sense: "to notice with your eyes"}]
+  look: [{pos: VERB, sense: "to turn your eyes to see something"}]
+  watch: [{pos: VERB, sense: "to look at something for some time, like TV or a film"}, {pos: NOUN, sense: "a small clock you wear on your wrist"}]
+  hear: [{pos: VERB, sense: "to notice sounds with your ears"}]
+  listen: [{pos: VERB, sense: "to pay attention to sounds or to someone speaking"}]
+  say: [{pos: VERB, sense: "to speak words"}]
+  tell: [{pos: VERB, sense: "to give information to someone"}]
+  talk: [{pos: VERB, sense: "to speak with someone"}]
+  speak: [{pos: VERB, sense: "to say words; to know and use a language"}]
+  ask: [{pos: VERB, sense: "to say a question to someone; to request something"}]
+  answer: [{pos: VERB, sense: "to reply to a question or a call"}, {pos: NOUN, sense: "what you say or write back"}]
+  call: [{pos: VERB, sense: "to phone someone; to give a name to"}, {pos: NOUN, sense: "a phone call"}]
+  know: [{pos: VERB, sense: "to have information in your mind"}]
+  think: [{pos: VERB, sense: "to have an opinion; to use your mind"}]
+  believe: [{pos: VERB, sense: "to think that something is true"}]
+  understand: [{pos: VERB, sense: "to know the meaning of something"}]
+  remember: [{pos: VERB, sense: "to keep something in your mind; not to forget"}]
+  forget: [{pos: VERB, sense: "to not remember"}]
+  mean: [{pos: VERB, sense: "to have a meaning (What does this word mean?)"}]
+  learn: [{pos: VERB, sense: "to get knowledge or a skill"}]
+  study: [{pos: VERB, sense: "to learn about a subject"}]
+  read: [{pos: VERB, sense: "to look at words and understand them"}]
+  write: [{pos: VERB, sense: "to put words on paper or a screen"}]
+  want: [{pos: VERB, sense: "to wish to have or do something"}]
+  need: [{pos: VERB, sense: "to must have something; to require"}]
+  like: [{pos: VERB, sense: "to find something pleasant"}]
+  love: [{pos: VERB, sense: "to like very much; to care deeply about someone"}, {pos: NOUN, sense: "a strong feeling of caring for someone"}]
+  enjoy: [{pos: VERB, sense: "to get pleasure from something"}]
+  hope: [{pos: VERB, sense: "to want something good to happen", level: A1}, {pos: NOUN, sense: "a feeling that something good will happen"}]
+  wish: [{pos: VERB, sense: "to want something that may not happen"}, {pos: NOUN, sense: "a hope for something"}]
+  feel: [{pos: VERB, sense: "to have an emotion or a feeling in your body"}]
+  seem: [{pos: VERB, sense: "to appear to be"}]
+  become: [{pos: VERB, sense: "to begin to be"}]
+  happen: [{pos: VERB, sense: "to take place, to occur"}]
+  work: [{pos: VERB, sense: "to do a job"}, {pos: NOUN, sense: "a job; the place where you work"}]
+  job: [{pos: NOUN, sense: "the work that you are paid for"}]
+  business: [{pos: NOUN, sense: "buying and selling; a company"}]
+  company: [{pos: NOUN, sense: "a business that sells goods or services"}]
+  use: [{pos: VERB, sense: "to do something with a tool, a machine or a thing"}]
+  help: [{pos: VERB, sense: "to make things easier for someone"}, {pos: NOUN, sense: "support that you give someone"}]
+  try: [{pos: VERB, sense: "to make an effort to do something", level: A1}]
+  start: [{pos: VERB, sense: "to begin"}, {pos: NOUN, sense: "the beginning"}]
+  begin: [{pos: VERB, sense: "to start"}]
+  finish: [{pos: VERB, sense: "to end something; to complete"}]
+  stop: [{pos: VERB, sense: "to end moving or doing something"}, {pos: NOUN, sense: "a place where a bus or train stops"}]
+  continue: [{pos: VERB, sense: "to keep doing something"}]
+  change: [{pos: VERB, sense: "to become or make different"}, {pos: NOUN, sense: "the act of changing; coins you get back"}]
+  turn: [{pos: VERB, sense: "to change direction; to move round"}, {pos: NOUN, sense: "a chance to do something in order (it's your turn)"}]
+  move: [{pos: VERB, sense: "to change place; to go to live somewhere else"}]
+  run: [{pos: VERB, sense: "to move quickly on your feet"}]
+  walk: [{pos: VERB, sense: "to move on foot"}, {pos: NOUN, sense: "a trip on foot"}]
+  sit: [{pos: VERB, sense: "to rest on a chair or seat"}]
+  stand: [{pos: VERB, sense: "to be on your feet"}]
+  wait: [{pos: VERB, sense: "to stay until something happens or someone comes"}]
+  stay: [{pos: VERB, sense: "to remain in a place; to live somewhere for a short time"}]
+  leave: [{pos: VERB, sense: "to go away from a place"}]
+  live: [{pos: VERB, sense: "to have your home in a place; to be alive"}]
+  die: [{pos: VERB, sense: "to stop living"}]
+  meet: [{pos: VERB, sense: "to see and talk to someone, by plan or by chance"}]
+  visit: [{pos: VERB, sense: "to go to see a person or a place"}, {pos: NOUN, sense: "a short stay with a person or in a place"}]
+  travel: [{pos: VERB, sense: "to go from one place to another, especially far"}]
+  drive: [{pos: VERB, sense: "to control a car"}, {pos: NOUN, sense: "a trip in a car"}]
+  ride: [{pos: VERB, sense: "to travel on a bike or a horse, or in a vehicle"}]
+  fly: [{pos: VERB, sense: "to travel through the air"}]
+  swim: [{pos: VERB, sense: "to move through water using your arms and legs"}]
+  dance: [{pos: VERB, sense: "to move your body to music"}]
+  sing: [{pos: VERB, sense: "to make music with your voice"}]
+  play: [{pos: VERB, sense: "to take part in a game; to make music with an instrument"}]
+  wake: [{pos: VERB, sense: "to stop sleeping", level: A1}]
+  sleep: [{pos: VERB, sense: "to rest with your eyes closed"}]
+  wash: [{pos: VERB, sense: "to clean with water"}]
+  wear: [{pos: VERB, sense: "to have clothes on your body"}]
+  buy: [{pos: VERB, sense: "to get something by paying money"}]
+  sell: [{pos: VERB, sense: "to give something for money"}]
+  pay: [{pos: VERB, sense: "to give money for something"}]
+  spend: [{pos: VERB, sense: "to use money to buy things; to use time"}]
+  cost: [{pos: VERB, sense: "to have a price of (It costs ten euros)"}, {pos: NOUN, sense: "the amount of money needed for something"}]
+  save: [{pos: VERB, sense: "to keep money to use later; to help someone out of danger"}]
+  show: [{pos: VERB, sense: "to let someone see something"}, {pos: NOUN, sense: "a TV programme or a performance"}]
+  win: [{pos: VERB, sense: "to be first or best in a game or competition"}]
+  break: [{pos: VERB, sense: "to separate into pieces; to damage"}, {pos: NOUN, sense: "a short rest"}]
+  cut: [{pos: VERB, sense: "to divide with a knife or scissors"}]
+  hit: [{pos: VERB, sense: "to touch something hard and fast"}]
+  kill: [{pos: VERB, sense: "to make someone or something die"}]
+  fall: [{pos: VERB, sense: "to move down to the ground"}]
+  drop: [{pos: VERB, sense: "to let something fall"}]
+  catch: [{pos: VERB, sense: "to take hold of something moving; to get a bus or train"}]
+  hold: [{pos: VERB, sense: "to have something in your hands"}]
+  pick: [{pos: VERB, sense: "to choose; to take with your fingers"}]
+  choose: [{pos: VERB, sense: "to decide which one you want"}]
+  decide: [{pos: VERB, sense: "to make a choice after thinking"}]
+  agree: [{pos: VERB, sense: "to have the same opinion"}]
+  let: [{pos: VERB, sense: "to allow someone to do something"}]
+  allow: [{pos: VERB, sense: "to let someone do something"}]
+  add: [{pos: VERB, sense: "to put something together with something else"}]
+  send: [{pos: VERB, sense: "to make a letter or message go to someone"}]
+  receive: [{pos: VERB, sense: "to get something that someone sends or gives"}]
+  check: [{pos: VERB, sense: "to look at something to make sure it is right"}, {pos: NOUN, sense: "a quick look to see that something is right"}]
+  offer: [{pos: VERB, sense: "to say you will give or do something"}, {pos: NOUN, sense: "something that someone offers you"}]
+  follow: [{pos: VERB, sense: "to go behind someone or something"}]
+  grow: [{pos: VERB, sense: "to become bigger"}]
+  build: [{pos: VERB, sense: "to make a building or other structure"}]
+  create: [{pos: VERB, sense: "to make something new"}]
+  produce: [{pos: VERB, sense: "to make or grow something"}]
+  include: [{pos: VERB, sense: "to have something as a part"}]
+  provide: [{pos: VERB, sense: "to give something that is needed"}]
+  increase: [{pos: VERB, sense: "to become or make bigger in number or amount"}]
+  record: [{pos: VERB, sense: "to store sound or pictures so you can play them later"}]
+  focus: [{pos: VERB, sense: "to give all your attention to something"}]
+  consider: [{pos: VERB, sense: "to think carefully about something"}]
+  cause: [{pos: VERB, sense: "to make something happen"}]
+  land: [{pos: VERB, sense: "to come down to the ground (a plane lands)"}]
+  cover: [{pos: VERB, sense: "to put something over something"}]
+  pass: [{pos: VERB, sense: "to go past; to succeed in an exam"}]
+  step: [{pos: VERB, sense: "to put one foot forward when walking"}]
+  share: [{pos: VERB, sense: "to have or use something together with others"}]
+  matter: [{pos: VERB, sense: "to be important (It doesn't matter)"}, {pos: NOUN, sense: "a problem or subject (What's the matter?)"}]
+  mind: [{pos: NOUN, sense: "the part of you that thinks"}, {pos: VERB, sense: "to be unhappy about something (Do you mind?)"}]
+  # school, free time and nature
+  homework: [{pos: NOUN, sense: "school work that you do at home"}]
+  exam: [{pos: NOUN, sense: "an important test of knowledge"}]
+  test: [{pos: NOUN, sense: "a set of questions to check what you know"}]
+  lesson: [{pos: NOUN, sense: "a period of time when you learn something"}]
+  class: [{pos: NOUN, sense: "a group of students; a lesson"}]
+  course: [{pos: NOUN, sense: "a series of lessons on a subject"}]
+  education: [{pos: NOUN, sense: "teaching and learning, especially in schools"}]
+  question: [{pos: NOUN, sense: "something you ask"}]
+  example: [{pos: NOUN, sense: "something that shows what others of its kind are like"}]
+  word: [{pos: NOUN, sense: "a unit of language, like 'cat' or 'run'"}]
+  story: [{pos: NOUN, sense: "a description of events, real or imagined"}]
+  news: [{pos: NOUN, sense: "new information about recent events"}]
+  information: [{pos: NOUN, sense: "facts about something"}]
+  idea: [{pos: NOUN, sense: "a thought or a plan"}]
+  problem: [{pos: NOUN, sense: "something difficult that you need to deal with"}]
+  reason: [{pos: NOUN, sense: "why something happens or is done"}]
+  result: [{pos: NOUN, sense: "what happens because of something; the final score"}]
+  fact: [{pos: NOUN, sense: "something that is true"}]
+  plan: [{pos: NOUN, sense: "something you intend to do"}]
+  chance: [{pos: NOUN, sense: "a possibility; an opportunity"}]
+  experience: [{pos: NOUN, sense: "something that happens to you; knowledge from doing things"}]
+  interest: [{pos: NOUN, sense: "a feeling of wanting to know more; a hobby"}]
+  hobby: [{pos: NOUN, sense: "something you do for fun in your free time"}]
+  sport: [{pos: NOUN, sense: "a physical game or activity, like football"}]
+  football: [{pos: NOUN, sense: "a game in which two teams kick a ball"}]
+  game: [{pos: NOUN, sense: "an activity with rules that you play for fun"}]
+  party: [{pos: NOUN, sense: "a social event with friends, food and music"}]
+  music: [{pos: NOUN, sense: "sounds made by singing or by playing instruments"}]
+  movie: [{pos: NOUN, sense: "a film"}]
+  program: [{pos: NOUN, sense: "a show on TV or radio; a piece of computer software"}]
+  animal: [{pos: NOUN, sense: "a living thing that can move, like a dog or a bird"}]
+  cat: [{pos: NOUN, sense: "a small animal often kept as a pet"}]
+  dog: [{pos: NOUN, sense: "an animal often kept as a pet or to guard a house"}]
+  bird: [{pos: NOUN, sense: "an animal with wings and feathers"}]
+  bear: [{pos: NOUN, sense: "a large wild animal with thick fur"}]
+  tree: [{pos: NOUN, sense: "a tall plant with a trunk and branches"}]
+  flower: [{pos: NOUN, sense: "the colourful part of a plant"}]
+  air: [{pos: NOUN, sense: "the gas around us that we breathe"}]
+  # other everyday words
+  number: [{pos: NOUN, sense: "a word or symbol like 1, 2 or 3"}]
+  half: [{pos: NOUN, sense: "one of two equal parts"}]
+  part: [{pos: NOUN, sense: "a piece of something"}]
+  bit: [{pos: NOUN, sense: "a small piece or amount"}]
+  end: [{pos: NOUN, sense: "the last part of something"}]
+  point: [{pos: NOUN, sense: "a unit of score in a game; a small dot"}, {pos: VERB, sense: "to show something with your finger"}]
+  level: [{pos: NOUN, sense: "a stage or standard (my English level)"}]
+  type: [{pos: NOUN, sense: "a kind, a sort"}]
+  form: [{pos: NOUN, sense: "a paper with questions that you fill in"}]
+  order: [{pos: VERB, sense: "to ask for food, drink or goods"}, {pos: NOUN, sense: "a request for food, drink or goods"}]
+  price: [{pos: NOUN, sense: "how much money something costs"}]
+  sale: [{pos: NOUN, sense: "a time when a shop sells things at lower prices"}]
+  account: [{pos: NOUN, sense: "an arrangement with a bank or website to keep money or use a service"}]
+  site: [{pos: NOUN, sense: "a website"}]
+  action: [{pos: NOUN, sense: "something that you do"}]
+  effect: [{pos: NOUN, sense: "a change that something causes"}]
+  rule: [{pos: NOUN, sense: "an instruction that says what you must or must not do"}]
+  sound: [{pos: NOUN, sense: "something that you hear"}, {pos: VERB, sense: "to seem from what you hear (That sounds good)"}]
+  view: [{pos: NOUN, sense: "what you can see from a place"}]
+  war: [{pos: NOUN, sense: "fighting between countries or groups"}]
+  very: [{pos: ADV, sense: "to a high degree"}]
+  really: [{pos: ADV, sense: "truly; very"}]
+  much: [{pos: ADV, sense: "a lot, to a great degree"}]
+  too: [{pos: ADV, sense: "also, as well"}, {pos: ADV, sense: "more than is good or needed (too hot)"}]
+  also: [{pos: ADV, sense: "too, as well"}]
+  just: [{pos: ADV, sense: "only; a very short time ago"}]
+  even: [{pos: ADV, sense: "used to show that something is surprising"}]
+  still: [{pos: ADV, sense: "continuing until now"}]
+  almost: [{pos: ADV, sense: "nearly"}]
+  enough: [{pos: ADV, sense: "as much as is needed"}]
+  quite: [{pos: ADV, sense: "fairly, rather"}]
+  actually: [{pos: ADV, sense: "in fact; really"}]
+  maybe: [{pos: ADV, sense: "perhaps"}]
+  probably: [{pos: ADV, sense: "very likely"}]
+  well: [{pos: ADV, sense: "in a good way"}, {pos: ADJ, sense: "healthy, not ill"}]
+  # second pass: lemmas that entered after the exclusions
+  note: [{pos: NOUN, sense: "a short written message"}]
+  instead: [{pos: ADV, sense: "in the place of something else"}]
+  page: [{pos: NOUN, sense: "one side of a sheet of paper in a book"}]
+  miss: [{pos: VERB, sense: "to feel sad that someone is not with you; to not catch a bus or train", level: A1}]
+  drink: [{pos: VERB, sense: "to take liquid into your mouth and swallow it"}, {pos: NOUN, sense: "a liquid for drinking"}]
+  hate: [{pos: VERB, sense: "to dislike very much"}]
+  church: [{pos: NOUN, sense: "a building where Christians pray"}]
+  guess: [{pos: VERB, sense: "to give an answer without knowing for sure"}]
+  raise: [{pos: VERB, sense: "to lift something up"}]
+  piece: [{pos: NOUN, sense: "a part of something"}]
+  cool: [{pos: ADJ, sense: "a little cold in a pleasant way; very good (informal)"}]
+  especially: [{pos: ADV, sense: "more than usual; mainly"}]
+  color: [{pos: NOUN, sense: "red, blue, green and so on"}]
+  explain: [{pos: VERB, sense: "to make something clear so that people understand"}]
+  throw: [{pos: VERB, sense: "to send something through the air with your hand"}]
+  stage: [{pos: NOUN, sense: "the raised area where actors and singers perform"}]
+  suggest: [{pos: VERB, sense: "to give an idea for someone to consider"}]
+  situation: [{pos: NOUN, sense: "what is happening at a particular time and place"}]
+  language: [{pos: NOUN, sense: "the system of words people use, like English or Turkish"}]
+  middle: [{pos: ADJ, sense: "in the center, between two others"}, {pos: NOUN, sense: "the central part"}]
+  size: [{pos: NOUN, sense: "how big or small something is"}]
+  choice: [{pos: NOUN, sense: "the act of choosing; something you can choose"}]
+  apply: [{pos: VERB, sense: "to ask formally for a job or a place"}]
+  pull: [{pos: VERB, sense: "to move something towards you"}]
+  certain: [{pos: ADJ, sense: "sure, with no doubt"}]
+  wonder: [{pos: VERB, sense: "to want to know something (I wonder why)"}]
+  stuff: [{pos: NOUN, sense: "things (informal)"}]
+  effort: [{pos: NOUN, sense: "hard work to do something"}]
+  exactly: [{pos: ADV, sense: "precisely, completely correct"}]
+  usually: [{pos: ADV, sense: "most of the time"}]
+  quality: [{pos: NOUN, sense: "how good or bad something is"}]
+  accept: [{pos: VERB, sense: "to say yes to something you are offered"}]
+  draw: [{pos: VERB, sense: "to make a picture with a pen or pencil"}]
+  realize: [{pos: VERB, sense: "to suddenly understand something"}]
+  mention: [{pos: VERB, sense: "to talk about something briefly", level: A2}]
+  expect: [{pos: VERB, sense: "to think that something will happen"}]
+  fit: [{pos: ADJ, sense: "healthy and strong, often from exercise"}]
+  difference: [{pos: NOUN, sense: "the way in which two things are not the same"}]
+  letter: [{pos: NOUN, sense: "a written message that you send by post"}, {pos: NOUN, sense: "a sign such as A, B or C"}]
+  notice: [{pos: VERB, sense: "to see or become aware of something", level: A2}]
+  lady: [{pos: NOUN, sense: "a woman (polite)"}]
+  box: [{pos: NOUN, sense: "a container with flat sides"}]
+  text: [{pos: NOUN, sense: "a message sent by phone"}, {pos: VERB, sense: "to send a text message"}]
+  opportunity: [{pos: NOUN, sense: "a good chance to do something"}]
+  push: [{pos: VERB, sense: "to move something away from you"}]
+  hair: [{pos: NOUN, sense: "the thin threads that grow on your head"}]
+  contact: [{pos: VERB, sense: "to call or write to someone"}]
+  address: [{pos: NOUN, sense: "the street, number and town where someone lives"}]
+  perhaps: [{pos: ADV, sense: "maybe"}]
+  degree: [{pos: NOUN, sense: "a unit for measuring temperature (20 degrees)"}]
+  detail: [{pos: NOUN, sense: "a small fact or piece of information"}]
+  laugh: [{pos: VERB, sense: "to make sounds because something is funny"}]
+  subject: [{pos: NOUN, sense: "a topic; a school subject like maths"}]
+  straight: [{pos: ADV, sense: "directly, without turning (go straight on)"}, {pos: ADJ, sense: "not bent or curved"}]
+  purpose: [{pos: NOUN, sense: "the reason why you do something"}]
+  machine: [{pos: NOUN, sense: "a piece of equipment that does a job, like a washing machine"}]
+  tonight: [{pos: ADV, sense: "this evening or night"}]
+  quick: [{pos: ADJ, sense: "fast; lasting a short time"}]
+  teach: [{pos: VERB, sense: "to help someone learn something"}]
+  fair: [{pos: ADJ, sense: "treating people equally; reasonable"}]
+  ahead: [{pos: ADV, sense: "in front; forward"}]
+  imagine: [{pos: VERB, sense: "to form a picture of something in your mind"}]
+  certainly: [{pos: ADV, sense: "without any doubt; of course"}]
+  extra: [{pos: ADJ, sense: "more than is usual or needed"}]
+  discuss: [{pos: VERB, sense: "to talk about something with other people"}]
+  dollar: [{pos: NOUN, sense: "the money used in the USA and some other countries"}]
+  fill: [{pos: VERB, sense: "to make something full"}]
+  ring: [{pos: VERB, sense: "to make a sound like a bell; to phone someone"}, {pos: NOUN, sense: "a round piece of jewellery worn on a finger"}]
+  item: [{pos: NOUN, sense: "one thing on a list or in a group"}]
+  copy: [{pos: NOUN, sense: "something made to look exactly like another thing"}, {pos: VERB, sense: "to make something exactly like another thing"}]

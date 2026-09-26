@@ -47,6 +47,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `version`, `check-manifest`: manifest şeması (`11` §3); kaynak başına lisans ve atıf zorunlu (I-16).
   - `ingest [kaynak…] [--refresh]` (S0): Haftalık dökümler yalnızca `--refresh` ile yeniden indirilir.
   - `lexicon` (S1).
+  - `select [--max-level A2] [--limit 600]` (S2).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -62,7 +63,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 |---|---|---|---|
 | S0 | `ingest` | `sources.yaml` → `sources/<kimlik>/<sürüm ya da tarih>/` | İndir, sağlama toplamını doğrula, `SNAPSHOT.json` yaz |
 | S1 | `lexicon` | Kaynaklar → `work/lexicon.en.jsonl` + rapor | Lemma, yazım varyantları, sıklık sırası, NGSL/NGSL-S üyeliği, CEFR-J/Octanove seviyesi, sözcük türü, çekimli biçimler, IPA (ABD/İngiltere), ARPAbet, anlamlar, kaynaklar (ayrıntı: §4.1) |
-| S2 | `select --level A1` | Sözlük → hedef öğe listesi | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + Claude Code oturumu önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
+| S2 | `select --max-level A2` | Sözlük + `curation/<l2>/` → `packs/<l2>/items/` (ayrıntı: §4.2) | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + Claude Code oturumu önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
 | S3 | `generate sentences` | Hedefler → aday cümleler | Önce Tatoeba'dan uygun adaylar (seviye filtresi). Eksik kalanlar Claude Code oturumunda üretilir: araç, hedef ve izinli kelime listesini içeren bir iş dosyası çıkarır; oturumda üretilen JSONL `work/` altına yazılır ve şemayla doğrulanır. Bağlamlar: günlük hayat + ilgi alanları. |
 | S4 | `validate` | Adaylar → kabul/ret | Deterministik kontroller + ayrı oturumda doğrulama geçişi + 👤 örneklem (§5) |
 | S5 | `pair --l1 tr` | Kabul edilen öğeler → tr-en paketi | Türkçe karşılıklar, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, hata etiketi kataloğu |
@@ -99,6 +100,42 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
   - NGSL'in 2.809, NGSL-Spoken'ın 721 kelimesinin tamamı içeride
   - Kapsama: IPA ABD %95,6, İngiltere %87,7; anlam %99,6
   - İlk 5.000 sıranın 4.956'sının seviyesi var
+
+### 4.2 S2 seçim kuralları
+
+**Küratörlük dosyaları.** S2'nin kararları `content/curation/<l2>/` altında commit edilen üç dosyadadır. Çıktılar `content/packs/<l2>/items/` altına yazılır; bunlar paketin kaynak dosyalarıdır ve commit edilir.
+- `word_senses.yaml`
+- `chunks.yaml`
+- `grammar_points.yaml`
+
+**Kelime anlamları (`word_senses.jsonl`):**
+- **Sıra:**
+  1. Küratörlük listesindeki gündelik sözcükler (`include`: yemek, ev, günler, hava, aile, duygular…)
+  2. NGSL-Spoken üyeleri
+  3. Diğerleri
+
+  Her grup kendi içinde sıklık sırasıyla dizilir. Konuşma listesi öne alınır, çünkü hedef konuşma. wordfreq'in genel sıklığı haber ağırlıklıdır (government, court, political).
+- **Dışlananlar (`exclude`):**
+  - Dilbilgisiyle öğretilenler: be, not, soru sözcükleri, karşılaştırma biçimleri, edat kökenli zarflar (in, on, about…)
+  - Kalıp olarak öğretilenler: please, thank you, sorry, OK
+  - Unvanlar, isim-fiiller
+  - Gündelik konuşmada az kullanılan soyut ve haber sözcükleri
+- **Sözcük türü:** Yalnızca içerik türleri (isim, fiil, sıfat, zarf) kelime kartı olur. Lemma başına en fazla 2 anlam alınır.
+- **Seviye:** Seviye listelerinden gelir. En sık 300 ailenin A1 anlamları A0 sayılır (`02` §2: A0 < 300 kelime).
+- **Açıklamalar:** Wiktionary'nin ilk anlamı öğrenci için sık sık yanlış ("pen" = ağıl, "tell" = saymak). Bu yüzden seçilen her anlamın İngilizce açıklaması küratörlük dosyasında kendi sözlerimizle yazılır (lisans: `own`). `select` çıktısında otomatik açıklama kalmamalıdır.
+- **Anahtar:** `en.ws.<lemma>.<tür>.<n>` (ör. `en.ws.watch.v.1`); anahtar hiç değişmez.
+- **İlk seçim (2026-09-27):** 546 lemma, 600 anlam (A0 167, A1 299, A2 134).
+
+**Sohbet çantası (`chunks.jsonl`):**
+- 120 kalıp, 17 iletişim işlevi: selamlaşma, anlamadığını söyleme, tepki, fikir, kişisel bilgi, istek, alışveriş, yol tarifi, sorunlar…
+- Seviyeler: A0 45, A1 57, A2 18.
+- Anahtar metinden türetilir (`en.chunk.how_are_you`). Aynı anahtara düşen iki metin hatadır.
+- 👤 Kullanıcılar listeyi gözden geçirir.
+
+**Gramer noktaları (`grammar_points.jsonl`):**
+- 40 nokta (A0 8, A1 16, A2 16), `02` §5'teki ilerlemeden.
+- Kodları (`gp.be.present`) kapalı listedir: hata etiketleri, öğeler ve LLM rotaları yalnızca bunları kullanır.
+- Her noktanın en az 2 örneği vardır. Türkçe konuşanlara özgü zorluk notları S5'te tr-en paketine yazılır.
 
 ## 5. Doğrulama kuralları (S4)
 

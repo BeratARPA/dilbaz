@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
@@ -20,8 +21,10 @@ from dilbaz_content.ingest import (
     PackageVersionError,
     ingest_source,
 )
+from dilbaz_content.items import LEVELS, Chunk, GrammarPoint, Level, WordSense
 from dilbaz_content.lexicon_step import LEXICON_FILE, run_lexicon
 from dilbaz_content.manifest import load_manifest
+from dilbaz_content.select_step import SelectionError, run_select
 from dilbaz_content.sources import (
     REGISTRY_FILE,
     DataSource,
@@ -142,3 +145,39 @@ def lexicon(content_dir: ContentDir = None) -> None:
     for name in ("ngsl", "ngsl_spoken", "top_5000_with_level"):
         table.add_row(name, f"{getattr(report, name):,}")
     console.print(table)
+
+
+@app.command()
+def select(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="Target language of the pack.")] = "en",
+    max_level: Annotated[str, typer.Option(help="Highest level to select.")] = "A2",
+    limit: Annotated[int, typer.Option(help="About how many word senses to take.")] = 600,
+) -> None:
+    """S2: select word senses, chunks and grammar points into packs/<l2>/items/."""
+    root = _content_dir(content_dir)
+    if max_level not in LEVELS:
+        console.print(f"[red]unknown level {max_level}[/red]")
+        raise typer.Exit(code=2)
+    level: Level = max_level
+    try:
+        selection = run_select(root, l2=l2, max_level=level, limit=limit)
+    except (SelectionError, FileNotFoundError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    table = Table(title=f"packs/{l2}/items")
+    table.add_column("kind")
+    for name in LEVELS[: LEVELS.index(level) + 1]:
+        table.add_column(name, justify="right")
+    table.add_column("total", justify="right")
+    kinds: dict[str, Sequence[WordSense | Chunk | GrammarPoint]] = {
+        "word senses": selection.word_senses,
+        "chunks": selection.chunks,
+        "grammar points": selection.grammar_points,
+    }
+    for kind, items in kinds.items():
+        counts = [sum(item.level == name for item in items) for name in LEVELS]
+        table.add_row(kind, *(str(n) for n in counts[: LEVELS.index(level) + 1]), str(len(items)))
+    console.print(table)
+    last = max((sense.rank or 0 for sense in selection.word_senses), default=0)
+    console.print(f"word senses reach frequency rank {last}")

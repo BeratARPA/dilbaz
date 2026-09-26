@@ -79,3 +79,29 @@ def test_commands_need_a_content_dir(tmp_path: Path, monkeypatch: pytest.MonkeyP
     result = runner.invoke(app, ["lexicon"])
     assert result.exit_code == 2
     assert "--content-dir" in result.output
+
+
+def test_select_writes_items_after_the_lexicon(content_dir: Path) -> None:
+    assert runner.invoke(app, ["ingest", "--content-dir", str(content_dir)]).exit_code == 0
+    assert runner.invoke(app, ["lexicon", "--content-dir", str(content_dir)]).exit_code == 0
+    curation = content_dir / "curation" / "en"
+    curation.mkdir(parents=True)
+    (curation / "word_senses.yaml").write_text("exclude: [be]\n", encoding="utf-8")
+    (curation / "chunks.yaml").write_text("[]\n", encoding="utf-8")
+    (curation / "grammar_points.yaml").write_text("[]\n", encoding="utf-8")
+
+    result = runner.invoke(app, ["select", "--content-dir", str(content_dir)])
+
+    assert result.exit_code == 0, result.output
+    assert "word senses" in result.output
+    assert (content_dir / "packs" / "en" / "items" / "word_senses.jsonl").is_file()
+
+
+def test_select_rejects_unknown_levels_and_bad_curation(content_dir: Path) -> None:
+    args = ["select", "--content-dir", str(content_dir)]
+    bad_level = runner.invoke(app, [*args, "--max-level", "Z9"])
+    assert bad_level.exit_code == 2
+    missing = runner.invoke(app, args)
+    assert missing.exit_code == 1
+    # Rich wraps long lines; compare with the whitespace collapsed.
+    assert "run `dilbaz-content lexicon`" in " ".join(missing.output.split())

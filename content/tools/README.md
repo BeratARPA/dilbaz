@@ -14,4 +14,5 @@ Büyük kaynaklar `content/sources/`, ara çıktılar `content/work/`, paketler 
 uv run dilbaz-content ingest            # S0: kaynakları indir (sabit dosyalar sha256 ile doğrulanır)
 uv run dilbaz-content ingest --refresh  # haftalık dökümleri (Tatoeba, Wiktextract) yeniden indir
 uv run dilbaz-content lexicon           # S1: content/work/lexicon.en.jsonl + rapor
+uv run dilbaz-content select            # S2: content/curation/en → content/packs/en/items
 ```
