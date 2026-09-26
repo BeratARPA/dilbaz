@@ -13,6 +13,8 @@ Kullanıcının bütçesi **sıfırdır**. Yalnızca ücretsiz katmanlar kullan�
   - İçeriğin Claude Code oturumlarında hazırlanıp deterministik doğrulamayla pakete girmesi
   - Ücretsiz katmanlı LLM sağlayıcıları (mahremiyet koşullarıyla)
 
+Taslak: `adr/0009-zero-budget.md` (önerildi, kullanıcı kararı bekleniyor).
+
 Aşağıdaki tablo özgün plandır; ücretli satırlar ADR-0009'a kadar askıdadır.
 
 ## 1. Aylık işletim maliyeti (iki kullanıcı, tahmini)

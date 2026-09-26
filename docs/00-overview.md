@@ -112,6 +112,7 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 | 0006 | Ses: sağlayıcıdan bağımsız arayüz. İngilizce ASR için Deepgram (kelimesi kelimesine). Telaffuz, TTS ve Türkçe ASR için Azure AI Speech. Seçim karşılaştırma testiyle kesinleşir. |
 | 0007 | Motor ayrı saf Dart paketi (`dilbaz_engine`), dile özgü kod yok |
 | 0008 | İçerik hattı: Python araçları + versiyonlu dil paketleri |
+| 0009 | Sıfır bütçe: ücretli servis olmadan çalışma. Deterministik çekirdek, isteğe bağlı ücretsiz LLM, Deepgram kredisi, cihaz üstü ve çevrimdışı ses, içerik Claude Code oturumlarında. **Önerildi; kullanıcı kararı bekleniyor.** |
 
 ## 9. Durum
 
