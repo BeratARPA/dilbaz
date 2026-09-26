@@ -1,0 +1,14 @@
+{
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@std/path": "jsr:@std/path@^1.1.4",
+    "@supabase/server/core": "npm:@supabase/server@^1.8.0/core"
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    }
+  }
+}

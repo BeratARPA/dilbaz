@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "app-web-local",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-Command",
+        "Set-Location app; flutter run -d web-server --web-port 5173 --dart-define-from-file=env/local.json"
+      ],
+      "port": 5173
+    }
+  ]
+}

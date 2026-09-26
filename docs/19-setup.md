@@ -13,10 +13,11 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 | # | Hizmet | Ne yapılacak | Ne zaman |
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
-| 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve parola yöneticine kaydet. Project URL ve **publishable key**'i not et. | Faz 0 (F0-10) |
-| 3 | **Anthropic** | console.anthropic.com → API anahtarı. **Aylık harcama limiti koy** (öneri: $50). | Faz 0 |
-| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi) → API anahtarı. | Faz 0 |
-| 5 | **Azure** | Azure hesabı → "Speech" kaynağı, bölge **West Europe**, fiyatlandırma katmanı **F0 (ücretsiz)**. Anahtar ve bölgeyi not et. | Faz 0 |
+| 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
+| 3 | **Anthropic** | ⏸ **Sıfır bütçe nedeniyle askıda** (`18` §0, ADR-0009 kararı bekleniyor). Karar çıkarsa: console.anthropic.com → API anahtarı + aylık harcama limiti. | Faz 1 öncesi karar |
+| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi, kart gerekmez) → API anahtarı. ADR-0009 ile birlikte kesinleşir. | Faz 1 öncesi karar |
+| 5 | **Azure** | ⏸ **Askıda:** ücretsiz katman bile kart doğrulaması istiyor (`18` §0). Karar çıkarsa: "Speech" kaynağı, bölge West Europe, katman F0. | Faz 1 öncesi karar |
+| — | **Brevo (SMTP)** | Ücretsiz hesap → gönderen doğrula → SMTP anahtarı → Supabase: Authentication → Emails → SMTP Settings (host `smtp-relay.brevo.com`, port 587, gönderen adı `Dilbaz`). Yerleşik e-posta servisi yalnızca ekip üyelerine ve saatte 2 e-posta gönderir, şablonları kilitlidir; kodla giriş için şart. | Faz 0 (F0-10) |
 | 6 | **Vercel** | Web sürümü için proje. | Faz 6 |
 
 ### Anahtarları ayarlama (kendin çalıştır)
@@ -40,26 +41,30 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
 
 ### Supabase Auth ayarı (panelden)
 - Authentication → Providers → Email: **açık**. "Confirm email" açık.
-- Email Templates → "Magic Link" şablonuna kod ekle: `Kodun: {{ .Token }}`. Uygulama bağlantı değil 6 haneli kod kullanır.
-- Authentication → Settings: yeni kayıtları kapat. İki kullanıcıyı panelden davet et ya da izin listesini kullan (ajan ayarlamayı gösterir).
+- Email Templates → **"Confirm signup"** ve **"Magic Link"** şablonlarına kod ekle (ilk giriş onay şablonunu kullanır): `Giriş kodun: {{ .Token }}`. Uygulama bağlantı değil 6 haneli kod kullanır. Metinler: `supabase/templates/`.
+- Kayıt izin listesi (migrasyonlar `db push` ile yüklendikten sonra):
+  1. Authentication → Hooks → **Before User Created** → Postgres fonksiyonu `private.hook_before_user_created` → etkinleştir.
+  2. SQL Editor'de iki e-postayı ekle (küçük harfle): `insert into private.signup_allowlist (email) values ('...'), ('...');`
+  - Yeni kayıtlar açık kalır; listede olmayan e-posta 403 alır.
 
 ## 2. Windows'a araç kurulumu
 
 | Araç | Sürüm | Kurulum |
 |---|---|---|
 | Git | güncel | `winget install Git.Git` |
-| Flutter SDK | 3.47.x (stable) | docs.flutter.dev → Windows kurulumu (zip ya da VS Code Flutter eklentisi). `flutter` PATH'te olmalı. |
-| Android Studio | güncel stable | `winget install Google.AndroidStudio` → SDK Manager: Android SDK Platform 36, Build-Tools, Command-line Tools, Platform-Tools, Emulator. Sonra `flutter doctor --android-licenses`. |
+| Flutter SDK | 3.47.x (stable; 2026-09-26: 3.47.5) | docs.flutter.dev → Windows kurulumu (zip ya da VS Code Flutter eklentisi). `flutter` PATH'te olmalı. Güncelleme: `flutter upgrade`. |
+| Android Studio | güncel stable | `winget install Google.AndroidStudio` → SDK Manager: Android SDK Platform 36 ve 37, Build-Tools, Command-line Tools, Platform-Tools, Emulator. Sonra `flutter doctor --android-licenses`. Komut satırından: cmdline-tools 23 ile `sdkmanager` yerini `android sdk install platforms/android-36 build-tools/36.0.0 ndk/28.2.13676358 platform-tools emulator` komutuna bıraktı (`sdkmanager.bat` `;` içeren adları cmd'de böler). Kullanım verisini kapatmak için `android --no-metrics …`. |
 | JDK | 17+ | Android Studio'nun gömülü JDK'sı yeterli |
-| Docker Desktop | güncel | `winget install Docker.DockerDesktop` (WSL 2 ile). Yerel Supabase için gerekli. |
+| WSL 2 | güncel | **Önce:** yönetici PowerShell'de `wsl --install --no-distribution`, sonra **yeniden başlat** (Windows özelliği açar; sistem ayarı, kendin yaparsın). Docker Desktop için şart. |
+| Docker Desktop | güncel | `winget install Docker.DockerDesktop` (WSL 2 ile). İlk açılışta sözleşmeyi kabul et. Yerel Supabase için gerekli. |
 | Node.js | 20+ | `winget install OpenJS.NodeJS.LTS` (`npx supabase` için) |
-| Supabase CLI | güncel | `npx supabase` (kurulum gerekmez) ya da Scoop: `scoop bucket add supabase https://github.com/supabase/scoop-bucket.git` → `scoop install supabase` |
+| Supabase CLI | kök `package.json`'da sabit (2026-09-26: 2.118.0) | Proje kökünde `npm install` → `npx supabase …` sabitlenmiş sürümü kullanır. CI aynı sürümü kurar. |
 | Deno | 2.x | `winget install DenoLand.Deno` (fonksiyon testleri ve eval) |
 | Python | 3.12+ (sende 3.14 var) | Mevcut. `uv`: `winget install astral-sh.uv` |
 | Visual Studio | 2022 veya 2026 | **Yalnızca Faz 3 (Windows derlemesi):** "Desktop development with C++" iş yükü |
 
 ### Windows Geliştirici Modu (kendin aç)
-Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiriciler için → Geliştirici Modu: Açık.** Bu bir sistem güvenlik ayarıdır; ajan değiştirmez.
+Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiriciler için → Geliştirici Modu: Açık.** Bu bir sistem güvenlik ayarıdır; ajan değiştirmez. **Faz 0'dan itibaren gerekir:** uygulamada `windows/` klasörü ve eklentiler olduğu için Geliştirici Modu kapalıyken `flutter pub get` sembolik bağ hatası verir.
 
 ### Telefon (Android)
 - Ayarlar → Telefon hakkında → Yapım numarasına 7 kez dokun → Geliştirici seçenekleri → **USB hata ayıklama** açık.

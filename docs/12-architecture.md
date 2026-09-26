@@ -108,15 +108,17 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | supabase_flutter | 2.17.2 | 3.x ön sürüm, kullanılmaz. Yeni projelerde "publishable key". |
 | fsrs (Dart) | 2.0.1 (FSRS-6, 21 parametre) | Ayrıntı §5 |
 | record | 7.1.1 | Windows'ta Opus yok → AAC-LC/WAV (`08` §4) |
-| just_audio (+ just_audio_media_kit, Windows) · alternatif audioplayers | 0.10.6 · 6.8.1 | Windows oynatma için media_kit eklentisi ya da audioplayers |
+| just_audio (+ just_audio_media_kit, Windows) · alternatif audioplayers | 0.10.6 · 6.8.1 | Windows oynatma için media_kit eklentisi ya da audioplayers. `just_audio_media_kit` Windows derlemesiyle birlikte F3-09'da eklenir (Faz 0'da Windows araç zinciri yok). |
 | uuid | 4.6.0 | `v7()` var |
 | fl_chart | 1.2.0 | |
 | flutter_local_notifications | 22.3.1 | Web'de zamanlanmış bildirim yok |
 | share_handler | 0.0.25 | Paylaş menüsü hedefi (receive_sharing_intent bakımı zayıf) |
 | home_widget | 0.10.0 | Android widget |
 | permission_handler | 13.0.2 | |
-| Supabase Edge Functions | Deno 2.x | `npm:` içe aktarma destekli |
+| Supabase Edge Functions | Deno 2.x (yerelde 2.9.7) | `npm:` içe aktarma destekli. `supabase/functions/deno.json` içe aktarma haritası; komutlar bu klasörden çalışır. |
+| @supabase/server · @std/assert · @std/path | 1.8.0 · 1.0.19 · 1.1.6 | Fonksiyonlarda kimlik doğrulama ve testler |
 | CI Flutter kurulumu | subosito/flutter-action@v2 | |
+| Android Gradle Plugin · Gradle | 9.4.1 · 9.6.0 | Flutter 3.47.5 şablonu 9.1.0 · 9.3.1 getirir. `permission_handler_android` 14.1 `compileSdk = 37` kullanıyor; AGP 9.1 yeni `android-37.0` platform adını çözemediği için yükseltildi (2026-09-26). Uygulamada `compileSdk = 37`, `targetSdk` Flutter varsayılanı (36). Core library desugaring açık (`flutter_local_notifications`). **Risk:** `home_widget` ve `share_handler_android` hâlâ Kotlin Gradle eklentisini uyguluyor; Flutter ileride bunu hata sayacak. Güncellemeler izlenir. |
 
 ## 5. FSRS entegrasyonu
 
@@ -154,7 +156,8 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | `ops` | `retention_cleanup`, `backup_export` | Yalnızca servis rolü, pg_cron + pg_net ile tetiklenir. |
 
 **Ortak kurallar:**
-- JWT doğrulaması
+- JWT doğrulaması fonksiyonun içinde, `@supabase/server` (`verifyAuth`, proje JWKS) ile yapılır. Platformun `verify_jwt` denetimi yeni API anahtarlarını (publishable/secret) anlamadığı için fonksiyonlarda `verify_jwt = false`'tur (`config.toml`).
+- Rotalar yol parçasıdır: `/functions/v1/tutor/<rota>`. Kod: `supabase/functions/<fonksiyon>/handler.ts` (bağımlılıklar enjekte edilir, testler ağsız) + `index.ts` (`Deno.serve`).
 - Kullanıcı başına dakikada 60 istek sınırı
 - Yapılandırılmış JSON log (kimlik ve süre; transkript ya da metin loglanmaz)
 - Anahtarlar Supabase secrets'ta tutulur (`ANTHROPIC_API_KEY`, `DEEPGRAM_API_KEY`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`)
@@ -166,7 +169,9 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | Yerel | `supabase start` (Docker Desktop) | `--dart-define-from-file=env/local.json` |
 | Üretim | Barındırılan ücretsiz proje (bölge: eu-central-1, Frankfurt) | `env/prod.json` |
 
-- `env/*.json` git dışıdır. Yalnızca proje URL'si ve **publishable key** içerir. Gizli anahtar uygulamaya asla girmez.
+- `env/*.json` git dışıdır. Yalnızca proje URL'si ve **publishable key** içerir. Gizli anahtar uygulamaya asla girmez. Biçim: `app/env.example.json`. Anahtarlar eksikse uygulama açılışta durur (`missing_env`).
+- **Yerel:** `app/env/local.json` → `SUPABASE_URL = http://127.0.0.1:54321` (Android emülatöründe `http://10.0.2.2:54321`, telefonda bilgisayarın yerel ağ IP'si), anahtar `npx supabase status` çıktısındaki `PUBLISHABLE_KEY`. Debug derlemeleri yerel HTTP'ye izin verir (`usesCleartextTraffic`, yalnızca debug manifesti).
+- **Web ile hızlı deneme:** `.claude/launch.json` → `app-web-local` (web sunucusu, port 5173, yerel Supabase).
 - **Migrasyonlar:** yerelde `supabase db reset` ile test edilir, üretime `supabase db push` ile uygulanır. Push, kullanıcının onayıyla ve faz sonlarında yapılır.
 - **Ücretsiz plan kısıtları:** 500 MB veritabanı, 1 GB depolama, 5 GB çıkış trafiği, **otomatik yedek yok**, **1 hafta hareketsizlikte proje durur**, en fazla 2 aktif proje.
   - Günlük kullanımda durma sorun olmaz. Uzun tatil öncesi uyarı notu gösterilir.

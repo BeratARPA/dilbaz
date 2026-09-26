@@ -29,7 +29,7 @@ create table profiles (
   weekly_days_goal int not null default 5 check (weekly_days_goal between 1 and 7),
   anchors jsonb not null default '[]',          -- [{label:"sabah kahvesi", time:"08:30"}]
   quiet_hours jsonb,                            -- {from:"22:30", to:"08:00"}
-  goal_text text, interests text[] default '{}',
+  goal_text text, interests text[] not null default '{}',
   scaffold_overrides jsonb not null default '{}',
   settings jsonb not null default '{}',         -- sessiz mod, kart kayıtlarını sakla, deney onayı…
   updated_at timestamptz not null default now(),
@@ -39,7 +39,7 @@ create table profiles (
 
 create table teams (
   id uuid primary key, name text not null, invite_code text unique not null,
-  created_by uuid not null references profiles, created_at timestamptz default now()
+  created_by uuid not null references profiles, created_at timestamptz not null default now()
 );
 
 create table team_members (
@@ -48,7 +48,7 @@ create table team_members (
   role text not null default 'member',
   share_levels boolean not null default false,     -- partner seviye tahminimi görsün mü
   share_monthly boolean not null default false,    -- aylık test özetimi görsün mü
-  joined_at timestamptz default now(),
+  joined_at timestamptz not null default now(),
   primary key (team_id, profile_id)
 );
 
@@ -61,7 +61,7 @@ create table courses (
   active boolean not null default true,
   updated_at timestamptz not null default now(),
   server_seq bigint not null default nextval('sync_seq'),
-  created_at timestamptz default now(),
+  created_at timestamptz not null default now(),
   unique (profile_id, l2)
 );
 ```
@@ -159,7 +159,8 @@ create table gap_entries (
 create table recordings (
   id uuid primary key, profile_id uuid not null references profiles on delete cascade,
   course_id uuid not null references courses on delete cascade,
-  task_ref text, attempt_id uuid, audio_path text not null, duration_ms int not null,
+  task_ref text, attempt_id uuid, audio_path text,     -- saklama süresi dolunca null (§7)
+  duration_ms int not null,
   asr jsonb,                             -- {provider, model, words:[{w,start_ms,end_ms,conf}]}
   annotation jsonb,                      -- {runs:[…], merged:{…}}
   metrics jsonb,                         -- 06 §3.3
@@ -311,12 +312,16 @@ create index on llm_usage (profile_id, created_at);
 ## 4. RLS politikaları
 
 - Tüm tablolarda RLS **açık**. Varsayılan: hiçbir şeye izin yok.
+- **Data API yetkileri açıktır:** `public` şemasındaki yeni tablolar `anon`/`authenticated` rollerine varsayılan olarak açılmaz (Supabase varsayılanı TRUNCATE dahil her şeyi verirdi; `20260926171355_explicit_grants.sql`). Her tablo, politikalarının gerektirdiği yetkileri migrasyonda açıkça verir; örneğin `profiles`/`courses`: SELECT, INSERT, UPDATE; `teams`/`team_members`: SELECT, INSERT; paylaşım anahtarları için sütun düzeyinde UPDATE. `service_role` (sunucu fonksiyonları) tüm kullanıcı tablolarında SELECT/INSERT/UPDATE/DELETE ve sıralarda kullanım yetkisini açıkça alır (`20260926172310_service_role_grants.sql`), çünkü üretimde "Automatically expose new tables" kapalıyken bu yetkiler de verilmiyor. Böylece yerel ve üretim aynı davranır.
 - **Sahiplik:**
   - `profile_id = auth.uid()` için select/insert.
   - Durum tablolarında (profil, kurslar, kartlar, kişisel öğeler, Söyleyemediklerim, kayıtlar, yazılar, altyazılar) update de serbest.
   - **Olay tablolarında update/delete yok** (§1).
 - **Ekip:**
-  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur.
+  - `teams`: üyeler ve kurucu okur. Kullanıcı yalnızca kendi adına (`created_by = auth.uid()`) ekip kurar.
+  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır (F1-12).
+  - Üye yalnızca kendi `share_levels` / `share_monthly` anahtarlarını değiştirir (sütun düzeyinde UPDATE yetkisi); `role` değiştirilemez.
+  - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.
 - **İkili görev:**
   - `pair_sessions`: katılımcılar okur.
@@ -366,9 +371,19 @@ Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok 
 
 ## 8. Yerel veritabanı (drift) aynası
 
-- **Kullanıcı tabloları:** Sunucudaki kullanıcı tablolarının aynısı (aynı sütunlar, `server_seq` dahil) + `pending_push boolean`.
-- **`outbox`:** `id`, `table`, `row_id`, `op`, `created_at`, `attempts`. Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
-- **`sync_state`:** son `server_seq` imleci, son başarılı senkron.
-- **İçerik tabloları** (`content_items`, `content_links`, `content_texts`, `content_tasks`, `content_forms` …): salt okunur, paket SQLite dosyasından atomik olarak aktarılır.
-- **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır.
-- **drift migrasyonları** şema sürümüyle ilerler. Her migrasyonun testi vardır (drift'in şema doğrulama araçlarıyla).
+Kod: `app/lib/data/db/` (şema v1, F0-05).
+
+- **Kullanıcı tabloları:** Sunucuda senkronlanan 13 tablonun aynısı (§2.2–2.4 ile `profiles`, `courses`; aynı sütun adları, `server_seq` dahil) + `pending_push boolean`.
+  - Yerelde `server_seq` sunucu atayana kadar `null`dır.
+  - `pending_push` yerel yazmalarda outbox kaydıyla aynı işlemde `true` yapılır. Sunucudan çekilen satırlar varsayılan `false` ile gelir.
+  - **Sunucunun yabancı anahtarları ve CHECK kısıtları yerelde tekrarlanmaz.** Senkronun sayfa sırası ve sunucu şemasının evrimi yerel eklemeleri bozmamalı. Doğrulama sunucuda ve repository katmanında yapılır. Benzersizlikler (`cards (profile_id, item_ref, mode)`, `courses (profile_id, l2)`) korunur.
+  - Zamanlar ISO-8601 metin olarak saklanır (drift `store_date_time_values_as_text`). UTC değerler UTC okunur.
+  - `jsonb`, `text[]` ve `uuid[]` alanları JSON metnidir (tip dönüştürücüleriyle `Map`/`List`). `media_logs.day` `YYYY-MM-DD` metnidir.
+- **`outbox`:** `id` (artan), `target_table`, `row_id`, `op` (`insert` olay / `upsert` durum), `created_at`, `attempts`, `next_attempt_at`, `last_error` (yalnızca hata kodu).
+  - Kayıt yalnızca satırı adlandırır. Push satırın o anki hâlini okur, aynı durum satırının birden çok güncellemesi tek gönderime iner.
+  - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
+  - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
+- **`sync_state`:** profil başına son `server_seq` imleci (`last_server_seq`) ve son başarılı senkron (`last_sync_at`).
+- **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
+- **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.
+- **drift migrasyonları** şema sürümüyle ilerler. Her sürüm artışında `dart run drift_dev make-migrations` çalıştırılır: anlık görüntü `app/drift_schemas/` altına, doğrulama yardımcıları `app/test/drift/` altına üretilir ve her geçiş için bir yükseltme testi yazılır. `migration_test.dart`, koddaki şemanın dışa aktarılan son anlık görüntüyle aynı olduğunu denetler.

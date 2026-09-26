@@ -13,41 +13,41 @@ Tam sürüm (v1.0) sekiz fazda inşa edilir. Her faz kullanılabilir bir sürüm
 ## Faz 0 — Temel kurulum
 Dal: `faz-0`
 
-- [ ] **F0-01** Git deposu:
+- [x] **F0-01** Git deposu:
   - `git init`, dal `faz-0`
   - `.gitignore`: Flutter/Dart/Deno/Python, `env/`, `supabase/functions/.env`, `content/{sources,work,build}/`, `evals/asr/audio/`, `*.jks`, `key.properties`
   - `.editorconfig`, README kontrolü
-- [ ] **F0-02** Araç doğrulama: `flutter doctor -v`, `docker info`, `supabase --version`, `deno --version`, `uv --version`, `node --version`. Eksik varsa 👤 `19-setup.md` §2.
-- [ ] **F0-03** `packages/engine` iskeleti:
+- [x] **F0-02** Araç doğrulama: `flutter doctor -v`, `docker info`, `supabase --version`, `deno --version`, `uv --version`, `node --version`. Eksik varsa 👤 `19-setup.md` §2.
+- [x] **F0-03** `packages/engine` iskeleti:
   - Dart 3.13 SDK kısıtı; `fsrs ^2.0.1`, `freezed` 4, `json_serializable`, `meta`
   - `very_good_analysis`, klasör yapısı (`12` §2)
   - Sentetik dil paketi üreteci (`test/fixtures/zz`)
   - İlk test: FSRS adaptörü (önekli içe aktarma, UTC)
-- [ ] **F0-04** `app` iskeleti:
+- [x] **F0-04** `app` iskeleti:
   - `flutter create --org com.dilbaz --project-name dilbaz_app --platforms android,windows,web app`
   - Bağımlılıklar (`12` §4)
   - `l10n.yaml` + `app_tr.arb`
   - Material 3 tema ve renk token'ları (`09` §3)
   - go_router (4 sekme + "Söyleyemedim" butonu), boş ekranlar
   - Yasak kelime testi (`15` §2, I-12)
-- [ ] **F0-05** drift şema v1: kullanıcı tabloları, outbox, sync_state, boş içerik tabloları (`13` §8). drift_flutter kurulumu, migrasyon testi.
-- [ ] **F0-06** Supabase yerel:
+- [x] **F0-05** drift şema v1: kullanıcı tabloları, outbox, sync_state, boş içerik tabloları (`13` §8). drift_flutter kurulumu, migrasyon testi.
+- [x] **F0-06** Supabase yerel:
   - `supabase init`
   - `config.toml`: e-posta OTP açık, kayıt izin listesi
   - İlk migrasyon: `sync_seq`, `profiles`, `courses`, `teams`, `team_members` + RLS
   - pgTAP testleri; `supabase start && supabase test db` geçer
-- [ ] **F0-07** Edge Functions iskeleti:
+- [x] **F0-07** Edge Functions iskeleti:
   - `_shared/`: auth, budget, `llm_config.ts`, `speech_config.ts`, yapılandırılmış log
   - `tutor` fonksiyonunda `health` rotası
   - `deno test`
-- [ ] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
-- [ ] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
-- [ ] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1):
+- [x] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
+- [x] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
+- [x] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1): *(ücretli anahtarlar sıfır bütçe nedeniyle F1-00'a ertelendi)*
   - Supabase projesi (Frankfurt)
   - Anthropic, Deepgram, Azure Speech anahtarları
   - `supabase link` ve `supabase secrets set` (kullanıcı çalıştırır)
   - `env/prod.json`
-- [ ] **F0-11** Android'de uçtan uca iskelet: debug APK telefonda açılır, e-posta kodu ile giriş, boş Bugün ekranı. Migrasyonlar üretime 👤 onayla `supabase db push`.
+- [x] **F0-11** Android'de uçtan uca iskelet: debug APK telefonda açılır, e-posta kodu ile giriş, boş Bugün ekranı. Migrasyonlar üretime 👤 onayla `supabase db push`.
 
 **Kabul:** CI yeşil; Android'de giriş çalışıyor; yerel pgTAP testleri geçiyor; anahtarlar yalnızca secrets'ta.
 
@@ -55,6 +55,9 @@ Dal: `faz-0`
 
 ## Faz 1 — Çekirdek döngü (v0.1)
 Dal: `faz-1`
+
+### Ön koşul
+- [ ] **F1-00** ADR-0009 — sıfır bütçe (`18` §0): Claude API ve Azure olmadan çalışma yolları (deterministik çekirdek, cihaz üstü ses, açık veriler, içeriğin Claude Code oturumlarında hazırlanması, ücretsiz LLM seçenekleri). 👤 Kullanıcı kararı. Etkilenen görevler: F1-03…F1-05, F1-14, F1-15, F1-17, F1-19.
 
 ### İçerik
 - [ ] **F1-01** Hat S0–S1:
@@ -267,3 +270,20 @@ Dal: `faz-7`
 | Tarih | Faz | Görev | Not |
 |---|---|---|---|
 | 2026-09-26 | — | Plan | Tüm plan dokümanları, ADR'ler, CLAUDE.md ve başlangıç promptları yazıldı. |
+| 2026-09-26 | 0 | F0-01 | Depo `main` üzerinde plan commit'iyle başlatıldı, iş `faz-0` dalında. `.gitignore` (gizli dosyalar, ses verisi, içerik çıktıları, üretilmiş `*.g.dart`/`*.freezed.dart`), `.gitattributes` (LF), `.editorconfig`. Sıra değişikliği: araç kontrolü (F0-02) eksik araçları erken kurmak için önce yapıldı. |
+| 2026-09-26 | 0 | F0-03 | `dilbaz_engine`: `SrsScheduler` FSRS adaptörü (önekli içe aktarma, UTC zorunlu, `CardMemory` JSON = `card_state_after`), müfredat/sözlük tipleri, `zz` sentetik paket üreteci, I-15 mimari testleri (içe aktarma sınırı, fsrs öneki, dize sabiti taraması), kapsam aracı. 40 test, `lib` kapsamı %100. Not: Dart 3.13 + very_good_analysis 11 yeni yapıcı sözdizimini (`new(...)`, `factory ({...})`) zorunlu kılıyor; freezed 4.0.2 ile uyumlu. build_runner 2.16'da `-d` kaldırılmış, CLAUDE.md komutları güncellendi. |
+| 2026-09-26 | 0 | F0-04 | `app` (dilbaz_app): `12` §4 bağımlılıkları, `l10n.yaml` + `app_tr.arb` (üretilen `lib/l10n/gen` git dışı), Material 3 tema (mavi-yeşil, hata rolü yumuşak turuncu, `FeedbackColors`), go_router 4 sekme + her sekmede "Söyleyemedim" butonu, boş ekranlar. Testler: yasak kelime taraması (I-12), gezinme, tema renk kuralları (14 test). Debug APK tüm eklentilerle derleniyor. Sapma: AGP 9.4.1 + Gradle 9.6.0 + `compileSdk 37` (`permission_handler_android` 14.1), `just_audio_media_kit` F3-09'a ertelendi (`12` §4). |
+| 2026-09-26 | 0 | F0-05 | drift şema v1: 13 senkron kullanıcı tablosu (sunucu aynası + `pending_push`), `outbox`, `sync_state`, 7 içerik tablosu. `driftDatabase` sağlayıcısı, ISO metin UTC zamanlar, JSON dönüştürücüler. Testler: tablo kümesi, senkron sütunları, UTC gidiş-dönüş, benzersizlik, JSON, outbox sırası, v1 anlık görüntü doğrulaması (26 uygulama testi). Kararlar `13` §8'de: yerelde FK/CHECK yok, outbox yalnızca satırı adlandırır. Düzeltmeler: `recordings.audio_path` saklama sonrası null olabildiği için nullable yapıldı. Üretilmiş kod artık analizden hariç tutulmuyor, derleme hataları görünür. |
+| 2026-09-26 | 0 | F0-07 | Edge Functions: `_shared/` (`llm_config.ts`: model, rota effort/max_tokens, refusal fallback, fiyatlar; `speech_config.ts`; `auth.ts`: `@supabase/server` JWKS doğrulaması; `budget.ts`: maliyet + günlük tavan; `log.ts`: kapalı alan kümeli JSON log; `http.ts`), `tutor` yol tabanlı yönlendirici + `health`. 23 deno testi (model adı yalnızca `llm_config.ts`'te, log'a metin sızmaz). Sıra değişikliği: F0-06 Docker'a (WSL yeniden başlatması) bağlı olduğu için F0-07 önce yapıldı. `config.toml`'da `verify_jwt = false` F0-06'da eklenecek. `07` §3 tablosuna eksik `max_tokens` değerleri eklendi. |
+| 2026-09-26 | 0 | F0-08 | `content/tools` (uv, `uv_build`): typer CLI `dilbaz-content` (`version`, `check-manifest`), pydantic manifest şeması (`11` §3; kaynak lisansı/atıfı zorunlu, I-16). pytest (14), ruff lint+format, mypy temiz. |
+| 2026-09-26 | 0 | F0-02 | Araçlar doğrulandı: Flutter 3.47.5 / Dart 3.13.4 (Android toolchain ✓; Visual Studio Faz 3), Docker 29.8.0 (WSL 2), Supabase CLI 2.118.0 (kök `package.json`'da sabit), Deno 2.9.7, uv 0.12.19, Node 24.19, Python 3.14.7, JDK 21. Kullanıcı: Geliştirici Modu, `wsl --install`, yeniden başlatma. Ajan: winget ile Deno/uv/gitleaks/Docker Desktop/Android Studio, Android SDK (platform 36+37, build-tools 36, NDK 28.2, emulator; SDK lisansları kurulumla kabul edildi). `19-setup` §2 gerçek adımlarla güncellendi. |
+| 2026-09-26 | 0 | F0-06 | Yerel Supabase (CLI 2.118, Postgres 17): `config.toml` e-posta OTP (6 hane, onay açık, iki şablonda `{{ .Token }}`), kayıt izin listesi = before-user-created hook + `private.signup_allowlist` (Data API'ye kapalı; `app_config` yerine, e-postalar gizli kalsın diye; `14` §2). İlk migrasyon: `sync_seq` + `server_seq` tetikleyicisi, `profiles`, `courses`, `teams`, `team_members`, RLS (varsayılan-red, anon yetkisiz, üyelik `private.is_team_member`, paylaşım anahtarlarına sütun düzeyi UPDATE). pgTAP 40/40. Uçtan uca curl: kod e-postası, doğrulama, izinsiz e-posta 403, oturumla `tutor/health` 200. Veri modeli düzeltmeleri: `interests` ve `created_at` alanları not null (yerel aynayla uyum). |
+| 2026-09-26 | 0 | F0-09 (kısmi) | `.github/workflows/ci.yml`: gizli anahtar taraması (gitleaks, tüm geçmiş), motor, uygulama, debug APK (artifact), pgTAP (`supabase db start` + `test db`), Deno, içerik araçları. Sürümler sabit (Flutter 3.47.5, Deno 2.9.7, Supabase CLI `package.json`'dan). Dependabot (Actions), yerel pre-commit gitleaks kancası (`.githooks`, `core.hooksPath`). Sapma: içerik araçları testi her koşuda çalışır (hızlı). **Açık:** ilk yeşil koşu GitHub deposu gerektiriyor (👤, `19` §1 #1). |
+| 2026-09-26 | 0 | F0-11 (kısmi) | Sıra değişikliği: F0-10 bir 👤 adımı olduğu için F0-11'in kod kısmı önce yapıldı. E-posta koduyla giriş: `AuthRepository` + Supabase uygulaması (GoTrue hata eşlemesi yerel sunucuda ölçülen yanıtlarla), `SignInController` (freezed durumlar), `SignInScreen`, oturum durumuna göre go_router yönlendirmesi, Ayarlar'da çıkış, `AppEnv` + `Supabase.initialize` (publishable key). 52 uygulama testi. Web + yerel Supabase ile uçtan uca denendi: izinsiz e-posta notu, Mailpit'ten kod, giriş → Bugün, çıkış → giriş sayfası. **Açık:** üretim projesi ve `db push` (👤 F0-10), telefonda debug APK ile deneme. |
+| 2026-09-26 | 0 | F0-06 (ek) | Açık Data API yetkileri: Supabase varsayılanı `authenticated`'a TRUNCATE/DELETE dahil her şeyi veriyordu. Yeni migrasyon varsayılan yetkileri kaldırır, tablo başına yalnızca gereken yetkileri verir. pgTAP 52/52 (+ yetki testleri, yeni tablo varsayılan kapalı). GitHub deposu `BeratARPA/dilbaz` açıldı; `main` ve `faz-0` gönderildi. |
+| 2026-09-26 | 0 | F0-10 / F0-11 (üretim) | Kullanıcı: Supabase projesi `dilbaz` (eu-central-1), `supabase login`, `gh auth login`. Ajan: `app/env/prod.json` (URL + publishable key, git dışı), `supabase link` (parolasız, geçici giriş rolü), onayla `db push` (3 migrasyon). Üretimde "expose new tables" kapalı olduğu için `service_role` yetkisi de verilmiyordu; ortamları eşitleyen migrasyon eklendi (pgTAP 53/53). Üretim salt okunur SQL ile doğrulandı: RLS her tabloda açık, `anon` yetkisiz, `authenticated` yalnızca gereken yetkiler, `service_role` tam yetki. `test db --linked` pgtap'i erişilemeyen bir şemaya kurduğu için doğrulama sorguyla yapıldı. CI: `setup-uv` kayan `v10` etiketi yayınlamıyor, tam sürüme sabitlendi. |
+| 2026-09-26 | 0 | F0-10 (kapsam) | **Sıfır bütçe** (kullanıcı): Anthropic ve Azure adımları askıya alındı, Faz 1 öncesi ADR-0009 ile karar verilecek (`18` §0). Üretim girişi için Brevo SMTP eklendi: Supabase'in yerleşik e-postası yalnızca ekip üyelerine gönderiyor, şablonları ücretsiz planda kilitli (kod yerine bağlantı gidiyor), saatte 2 e-posta. |
+| 2026-09-26 | 0 | F0-09 | İlk tam yeşil CI koşusu (7/7 iş; `faz-0`, 322a967). Süreler: APK ~11,5 dk, uygulama ~3 dk, pgTAP ~3 dk, motor ~2 dk, diğerleri < 1 dk. Ücretsiz dakikaları korumak için yalnızca doküman değişikliklerinde CI atlanır. |
+| 2026-09-26 | 0 | F0-10 | Supabase projesi ve bağlantı, `env/prod.json`, üretim auth yapılandırması (`config push`: 6 haneli kod şablonları, izin listesi hook'u, MFA kapalı), Brevo SMTP (kullanıcı), izin listesi: tek adres. Ücretli anahtarlar (Anthropic, Azure) sıfır bütçe ve kart olmaması nedeniyle F1-00'a ertelendi; Deepgram da F1-00 kararıyla birlikte. |
+| 2026-09-26 | 0 | F0-11 | Debug APK (üretim yapılandırmasıyla) Samsung Galaxy A55'e (Android 16) kuruldu. Kullanıcı e-posta koduyla giriş yaptı, boş Bugün ekranı açıldı. |
+| 2026-09-26 | 0 | **Faz 0 raporu** | **Kabul:** CI yeşil (7/7 iş) ✓ · Android'de giriş ✓ · yerel pgTAP 53/53 ✓ · gizli anahtar yalnızca sağlayıcı panellerinde; depo geçmişi temiz (gitleaks) ✓. **Testler:** motor 40 (lib %100), uygulama 52, Deno 23, pytest 14, pgTAP 53. **Maliyet:** $0 (LLM/ses kullanımı yok). **Değişmez kurallar:** I-08 (FSRS yalnızca adaptörde, test), I-12 (yasak kelime taraması), I-15 (içe aktarma sınırı, dize taraması, `zz`), I-18 (partner verisine erişim yok, pgTAP). **Bilinen sorunlar:** (1) sıfır bütçe → F1-00 kararı; (2) sohbette paylaşılan DB parolası ve Brevo anahtarları değiştirilmeli (👤); (3) `home_widget`/`share_handler_android` Kotlin Gradle eklentisi uyarısı; (4) `supabase test db --linked` barındırılan projede pgtap'i kullanamıyor, üretim SQL ile doğrulandı; (5) ücretsiz Supabase projesi 1 hafta hareketsizlikte duraklar; (6) Brevo gönderen adresini `brevosend.com` olarak değiştiriyor, e-posta Gereksiz klasörüne düşebilir; (7) Windows derlemesi için VS C++ (Faz 3). **Kullanım kapısı:** Faz 0'da öğrenme özelliği yok; kapı Faz 1 sonunda (1–2 hafta günlük kullanım). |

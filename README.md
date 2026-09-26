@@ -2,7 +2,7 @@
 
 Bir dili sıfırdan ileri seviyeye **gerçekten** öğreten, öğrenme bilimine dayalı kişisel öğrenme sistemi. İlk dil çifti: Türkçe konuşanlar için İngilizce.
 
-- **Durum:** Plan tamamlandı, kodlama başlamadı (2026-09-26).
+- **Durum:** Faz 0 (temel kurulum) sürüyor (2026-09-26). Güncel durum: [docs/17-roadmap.md](docs/17-roadmap.md).
 - **Platformlar:** Android (öncelik), Windows, web. Tek kod tabanı: Flutter.
 - **Temel fikir:** Ders değil, öğrenme kanıtı. Önce dene, sonra gör. Az ama her gün. İlerlemeni kendi sesinden duy.
 

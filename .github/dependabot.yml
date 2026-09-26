@@ -1,0 +1,8 @@
+# Keeps GitHub Actions current (docs/14-security-privacy.md §7). Package
+# upgrades (pub, npm, uv) are reviewed by hand once a month.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

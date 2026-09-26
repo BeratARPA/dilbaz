@@ -33,7 +33,7 @@ Kalite burada iki anlama gelir:
 | I-09 Rehberlik azalır | Motor testi: iskele profili seviye tablosuyla eşleşir. |
 | I-10 Karışık çalışma | Planlayıcı testi: karşıtlık çiftleri aynı gün tanıtılmaz, öğrenildikten sonra aynı blokta karışık gelir. |
 | I-11 Yapay zekâ düşünmeyi devralmaz | Sunucu testleri: katalog dışı etiket reddi; cevapsız çağrı reddi. Eval eşikleri. |
-| I-12 Suçluluk yok | **Metin taraması:** ARB dosyalarında yasak kelime yok (`09` §2 listesi). Widget testi: uzun aradan dönüşte nötr ekran. |
+| I-12 Suçluluk yok | **Metin taraması:** ARB dosyalarında yasak kelime yok (`09` §2 listesi; `app/test/l10n/forbidden_words_test.dart`, Türkçe eklere karşı kök eşleşmesi). Widget testi: uzun aradan dönüşte nötr ekran. Tema testi: hata rengi turuncu, kırmızı değil (`09` §3). |
 | I-13 Zaman bütçesi | Planlayıcı özellik testi. |
 | I-14 Özerklik | Planlayıcı özellik testi: kalan süre ≥ 5 dk ise ≥ 2 seçenek. |
 | I-15 Dilden bağımsız motor | Sentetik dil (`zz`) testleri; içe aktarma sınırı testi; dize sabiti taraması (`11` §7). |
@@ -43,7 +43,8 @@ Kalite burada iki anlama gelir:
 
 ## 3. Motor test stratejisi
 
-- **Sentetik dil paketi (`zz`):** Rastgele heceli kelimeler, sentetik lemma/biçim tabloları, sentetik gramer kodları. Motor testlerinin tamamı bununla çalışır (I-15).
+- **Sentetik dil paketi (`zz`):** Rastgele heceli kelimeler (ASCII dışı harfler dahil), sentetik lemma/biçim tabloları (düzensiz ve eş yazımlı biçimler dahil), sentetik gramer kodları, ayarlanabilir kelime ayırıcı. Motor testlerinin tamamı bununla çalışır (I-15). Üreteç: `packages/engine/test/fixtures/zz/zz_pack.dart`.
+- **Kapsam ölçümü:** `dart test --coverage-path=coverage/lcov.info` + `dart run tool/check_coverage.dart` (üretilmiş `*.g.dart`/`*.freezed.dart` hariç, eşik %90).
 - **Özellik tabanlı testler:** Rastgele öğrenci durumları, kart kümeleri ve içerik üreteçleri ile planlayıcı ve model değişmezleri denenir. Seed'li ve tekrarlanabilirdir.
 - **FSRS entegrasyonu:** Bilinen bir tekrar dizisi için paketten beklenen durumlar karşılaştırılır. Tekrar oynatma (fuzz kapalı) determinizmi test edilir.
 - **Simülasyon testi:** Sentetik bir öğrenci (hatırlama olasılığı FSRS'e göre örneklenir) 8 hafta çalıştırılır. Tekrar yükü tavanı aşmamalı, kol açıkları kapanmalı, yeni öğe akışı durmamalı.
@@ -74,6 +75,8 @@ Kalite burada iki anlama gelir:
 9. Gizli anahtar taraması
 
 Eval ve ASR testleri ücretli olduğu için `workflow_dispatch` ile elle tetiklenir. Prompt dosyası değişen PR'da eval sonucu olmadan birleştirme yapılmaz (kural).
+
+Uygulama: `.github/workflows/ci.yml` (işler: `secrets`, `engine`, `app`, `apk`, `database`, `functions`, `content`). Bir koşu ~24 ücretsiz Actions dakikası harcar (en uzunu APK işi, ~12 dk). Sıfır bütçe nedeniyle yalnızca doküman değişikliği (`docs/`, `prompts/`, `*.md`) içeren push'larda CI çalışmaz. Yerelde aynı tarama pre-commit kancasıyla yapılır: `git config core.hooksPath .githooks` (klon başına bir kez).
 
 ## 6. Lint ve stil
 

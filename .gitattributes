@@ -1,0 +1,32 @@
+# Normalize line endings: LF in the repository and in the working tree.
+* text=auto eol=lf
+
+# Windows scripts keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.jks binary
+*.keystore binary
+*.sqlite binary
+*.db binary
+*.zip binary
+*.gz binary
+*.mp3 binary
+*.m4a binary
+*.wav binary
+*.ogg binary
+*.webm binary
+*.wasm binary
