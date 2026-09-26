@@ -6,6 +6,8 @@ from typer.testing import CliRunner
 from dilbaz_content import __version__
 from dilbaz_content.cli import app
 
+from sample_sentences import write_s4_inputs
+
 runner = CliRunner()
 
 MANIFEST = """
@@ -105,3 +107,32 @@ def test_select_rejects_unknown_levels_and_bad_curation(content_dir: Path) -> No
     assert missing.exit_code == 1
     # Rich wraps long lines; compare with the whitespace collapsed.
     assert "run `dilbaz-content lexicon`" in " ".join(missing.output.split())
+
+
+def test_sentences_fails_while_ambiguous_senses_are_open(tmp_path: Path) -> None:
+    root = write_s4_inputs(tmp_path / "content")
+    result = runner.invoke(app, ["sentences", "--content-dir", str(root)])
+    assert result.exit_code == 1
+    assert "ambiguous_sense" in result.output
+
+
+def test_sentences_builds_the_carriers(tmp_path: Path) -> None:
+    curation = """
+carriers:
+  en.ws.right.adj.1: [{tatoeba: 3}]
+  en.ws.right.adj.2: [{tatoeba: 8}]
+"""
+    root = write_s4_inputs(tmp_path / "content", curation)
+    result = runner.invoke(app, ["sentences", "--content-dir", str(root)])
+    assert result.exit_code == 0, result.output
+    output = " ".join(result.output.split())
+    assert "4 sentences (4 Tatoeba, 0 own)" in output
+    assert "issues: none" in output
+
+
+def test_sentences_needs_the_candidates(tmp_path: Path) -> None:
+    root = write_s4_inputs(tmp_path / "content")
+    (root / "work" / "carriers.en.candidates.jsonl").unlink()
+    result = runner.invoke(app, ["sentences", "--content-dir", str(root)])
+    assert result.exit_code == 1
+    assert "run `dilbaz-content carriers`" in " ".join(result.output.split())

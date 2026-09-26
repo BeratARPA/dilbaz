@@ -49,6 +49,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `lexicon` (S1).
   - `select [--max-level A2] [--limit 600]` (S2).
   - `carriers [--per-target 3]` (S3: Tatoeba taşıyıcı adayları).
+  - `sentences` (S4: taşıyıcı cümleler, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -56,7 +57,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
 ## 4. Aşamalar
 
 ```text
-S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 validate ─▶ S5 pair ─▶ S6 audio
+S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 sentences ─▶ S5 pair ─▶ S6 audio
       ─▶ S7 texts & tasks ─▶ S8 placement ─▶ S9 build ─▶ S10 report ─▶ (upload)
 ```
 
@@ -65,8 +66,8 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 | S0 | `ingest` | `sources.yaml` → `sources/<kimlik>/<sürüm ya da tarih>/` | İndir, sağlama toplamını doğrula, `SNAPSHOT.json` yaz |
 | S1 | `lexicon` | Kaynaklar → `work/lexicon.en.jsonl` + rapor | Lemma, yazım varyantları, sıklık sırası, NGSL/NGSL-S üyeliği, CEFR-J/Octanove seviyesi, sözcük türü, çekimli biçimler, IPA (ABD/İngiltere), ARPAbet, anlamlar, kaynaklar (ayrıntı: §4.1) |
 | S2 | `select --max-level A2` | Sözlük + `curation/<l2>/` → `packs/<l2>/items/` (ayrıntı: §4.2) | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + Claude Code oturumu önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
-| S3 | `generate sentences` | Hedefler → aday cümleler | Önce Tatoeba'dan uygun adaylar (seviye filtresi). Eksik kalanlar Claude Code oturumunda üretilir: araç, hedef ve izinli kelime listesini içeren bir iş dosyası çıkarır; oturumda üretilen JSONL `work/` altına yazılır ve şemayla doğrulanır. Bağlamlar: günlük hayat + ilgi alanları. |
-| S4 | `validate` | Adaylar → kabul/ret | Deterministik kontroller + ayrı oturumda doğrulama geçişi + 👤 örneklem (§5) |
+| S3 | `carriers` | Kelime anlamları + Tatoeba → `work/carriers.en.candidates.jsonl` (ayrıntı: §4.3) | Seviye ve gramer filtresinden geçen Tatoeba adayları, anlam başına en iyi 3 |
+| S4 | `sentences` | Adaylar + `curation/<l2>/sentences.yaml` → `packs/<l2>/items/sentences.jsonl` (ayrıntı: §4.4, §5) | Seçim; eksik ya da kötü adayların yerine Claude Code oturumunda yazılan cümleler; deterministik kontroller; ayrı oturumda doğrulama geçişi; 👤 örneklem |
 | S5 | `pair --l1 tr` | Kabul edilen öğeler → tr-en paketi | Türkçe karşılıklar, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, hata etiketi kataloğu |
 | S6 | `audio` | Metinler → ses dosyaları | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
@@ -134,7 +135,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 - 👤 Kullanıcılar listeyi gözden geçirir.
 
 **Gramer noktaları (`grammar_points.jsonl`):**
-- 40 nokta (A0 8, A1 16, A2 16), `02` §5'teki ilerlemeden.
+- 40 nokta (A0 8, A1 22, A2 10), `02` §5'teki ilerlemeden. Seviyeler CEFR-J Grammar Profile'daki CEFR-J, Core Inventory ve EGP sütunlarıyla karşılaştırıldı; üçünün de A1 dediği maddeler A1'dedir.
 - Kodları (`gp.be.present`) kapalı listedir: hata etiketleri, öğeler ve LLM rotaları yalnızca bunları kullanır.
 - Her noktanın en az 2 örneği vardır. Türkçe konuşanlara özgü zorluk notları S5'te tr-en paketine yazılır.
 
@@ -145,17 +146,41 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 - **Aday koşulları:**
   - **Eşleşme:** Cümle hedef anlamın lemmasını aynı sözcük türüyle içerir. spaCy'nin AUX etiketi fiil sayılır, özel isim etiketi (günler) isim sayılır. Pakette tek anlamı seçilmiş bir lemma isimle zarf arasında geçebilir, çünkü spaCy "today, tomorrow" için isim diyor, listeler zarf diyor. Lemma tanınmazsa yüzey biçimi denenir: spaCy "clothes" için "clothe" veriyor.
   - **Kelime seviyesi:** Hedef dışındaki her kelime hedefin seviyesinde ya da altındadır. A0 hedefler A1 kelime kullanabilir, çünkü A0'ın kelimesi doğal cümle için çok az. Sözlükte olmayan kelime cümleyi eler; özel isimler, sayılar ve noktalama seviyeye katılmaz.
-  - **Gramer seviyesi:** Kural tabanlı etiketleyicinin (§4.4) bulduğu gramer noktaları da hedefin seviyesini aşamaz. Bu, A1 bir kelimeye present perfect cümlesi gelmesini önler. Hedefin kendisiyle tetiklenen nokta sayılmaz: "always" sıklık zarfları noktasını (A2) tetikler ama bu, "always"i geri tutmaz.
+  - **Gramer seviyesi:** Kural tabanlı etiketleyicinin (§4.4) bulduğu gramer noktaları da hedefin seviyesini aşamaz. Bu, A1 bir kelimeye present perfect cümlesi gelmesini önler. Hedefin kendisiyle tetiklenen nokta sayılmaz: "much" sayılabilir/sayılamaz noktasını (A2) tetikler ama bu, "much"u geri tutmaz.
+  - **Paket dışı yapılar:** en@1'in öğretmediği yapılar da `02` §5'teki seviyeleriyle sayılır: edilgen, used to, past continuous, might/may/could, would (would like hariç), if, yan cümleler (who, which, that, what…) B1; perfect continuous, past perfect ve "must have" türü kipler B2; when yan cümlesi ve ", so" A2. Bunlar paket kodu değildir, yalnızca seviyeyi belirler.
+  - **Tireli bileşikler:** "well-known", "ten-year-old" içindeki kelime kendi anlamını taşımaz, eşleşme sayılmaz.
   - **Uzunluk:** Seviye sınırını aşmaz (§5.1).
   - **Biçim:** Tırnak, parantez ve iki cümleli metinler elenir. Aynı metin bir kez sayılır.
 - **Puan (büyük olan iyi):**
   - anadil yazarı +2
-  - özel isim başına −1,5 (Tatoeba "Tom" cümleleriyle dolu)
+  - özel isim başına −1,5 (Tatoeba "Tom" cümleleriyle dolu). Seçili bir anlam olan özel isim (günler) sayılmaz.
   - ideal uzunluktan uzaklık başına −0,3
   - kelimelerin ortalama sıklık sırası (log10) × −0,4
   - cümlenin taşıdığı başka her seçili anlam için +0,15, en fazla 3 için. Daha büyük bir ödül adayları "too" cümlelerine yığıyordu.
-- **İlk sonuç (2026-09-27):** 600 anlamın hepsine 3 aday bulundu. Analiz önbellekteyken arama 36 sn sürüyor.
+  - cümlenin hedefin seviyesini aştığı her seviye için −0,25: en basit bağlam öne çıkar. 0,5'lik ceza A0 hedeflere "It's now or never." türü kısa deyimler getirdi.
+- **İlk sonuç (2026-09-27):** 600 anlamın hepsine 3 aday bulundu. Analiz önbellekteyken arama 38 sn sürüyor.
 - **Çıktı:** Her anlamın en iyi 3 adayı `work/carriers.en.candidates.jsonl` dosyasına yazılır; adayı olmayan anlamlar dosyanın başındadır. Seçim ve eksik cümlelerin yazılması küratörlükle yapılır (S4).
+
+### 4.4 S4 taşıyıcı cümleler
+
+- **Seçim:** Her anlam S3'ün en iyi adayını alır. `curation/<l2>/sentences.yaml` bunu değiştirir:
+  - `reject`: hiç kullanılmayacak Tatoeba kimlikleri.
+  - `carriers`: anlam → taşıyıcılar. Her taşıyıcı ya bir Tatoeba kimliğidir (adaylar dışından da olabilir; analiz önbelleğinden okunur) ya da Claude Code oturumunda yazılmış kendi cümlemizdir (`license: own`).
+- **Belirsiz anlamlar:** Aynı lemma ve sözcük türünde birden çok seçili anlam varsa (right: doğru/sağ, too: de/fazla, free: bedava/boş, letter: mektup/harf) etiketleyici ikisini ayıramaz. Bu anlamlar otomatik taşıyıcı almaz; küratörlük seçer, seçilmezse derleme durur. Böyle bir kelime cümlede yalnızca seçildiği anlama bağlanır.
+- **Cümle kaydı:** Her cümle analiz edilir; seviye (kelimeler, paket kodları, paket dışı yapılar), lemmalar, içerdiği bütün seçili anlamlar (`targets`), gramer kodları ve kaynak (Tatoeba kimliği, lisans, yazar) yazılır. Anahtar metinden türetilir; aynı anahtara düşen ikinci metin yakın tekrar sayılır.
+- **Gramer etiketleyici:** spaCy'nin Penn etiketleri ve lemmalarıyla çalışan kurallar. Kural emin değilse kod vermez. "I've got to go" zorunluluk sayılır (`gp.modals.obligation`), "have got" değil.
+- **Kontroller (§5.1):**
+  - Engelleyici: sözlükte olmayan kelime, paket seviyesini aşma, hedefin seviyesini aşma, uzunluk, hedef anlamın cümlede olmaması, uygunsuz kelime, biçim (tırnak, iki cümle), seçilmemiş belirsiz anlam.
+  - Uyarı: yakın tekrar.
+- **Çıktılar:**
+  - `packs/<l2>/items/sentences.jsonl`
+  - `word_senses.jsonl` içindeki `carriers`: anlamın seçilen cümleleri (`11` §4). S2 bu alanı boşaltır, S4 yeniden doldurur.
+  - `work/sentences.<l2>.turkish.jsonl`: Tatoeba'nın Türkçe çevirileri (S5 için)
+  - `work/sentences.<l2>.report.json`: sayılar, gramer dağılımı ve sorunlar
+- **İlk sonuç (2026-09-27):**
+  - 600 anlamın 344'ünde otomatik seçim değiştirildi: 320'sinde başka bir Tatoeba cümlesi, 24'ünde kendi cümlemiz.
+  - 587 cümle (563 Tatoeba, 24 kendi). Seviyeler: A0 44, A1 408, A2 135. Ortalama 5,4 kelime. Engelleyici sorun yok.
+  - Otomatik seçimin sık hataları şunlardı: deyimler ("a tall order", "right on the money"), yanlış anlam ("glasses" = gözlük), karamsar ton ("I don't have a family."), "I've got to …" yığılması ve etiketleyicinin kaçırdığı yapılar (edilgen, used to). Son ikisi kurallara eklendi.
 
 ## 5. Doğrulama kuralları (S4)
 
@@ -167,6 +192,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
   |---|---|---|---|---|---|
   | ≤ 6 | ≤ 8 | ≤ 12 | ≤ 16 | ≤ 22 | ≤ 30 |
 
+- **Hedef seviyesi:** Taşıyıcıda hedef dışındaki kelimeler, gramer ve paket dışı yapılar hedefin izin verdiği seviyeyi aşmaz (A0 hedef için A1, diğerleri için kendi seviyesi).
 - **Tekrar yok:** normalize edilmiş eşleşme ve yakın benzerlik (Jaccard > 0,8).
 - **Uygunsuz içerik listesi** filtresi.
 - **Hedef öğe** cümlede gerçekten geçiyor (lemma/kalıp eşleşmesi).

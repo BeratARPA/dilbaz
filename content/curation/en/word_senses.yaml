@@ -528,7 +528,7 @@ senses:
   add: [{pos: VERB, sense: "to put something together with something else"}]
   send: [{pos: VERB, sense: "to make a letter or message go to someone"}]
   receive: [{pos: VERB, sense: "to get something that someone sends or gives"}]
-  check: [{pos: VERB, sense: "to look at something to make sure it is right"}, {pos: NOUN, sense: "a quick look to see that something is right"}]
+  check: [{pos: VERB, sense: "to look at something to make sure it is right"}, {pos: NOUN, sense: "the bill in a restaurant (American English)"}]
   offer: [{pos: VERB, sense: "to say you will give or do something"}, {pos: NOUN, sense: "something that someone offers you"}]
   follow: [{pos: VERB, sense: "to go behind someone or something"}]
   grow: [{pos: VERB, sense: "to become bigger"}]

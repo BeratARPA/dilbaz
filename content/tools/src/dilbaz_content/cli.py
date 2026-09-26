@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -27,6 +28,7 @@ from dilbaz_content.items import LEVELS, Chunk, GrammarPoint, Level, WordSense
 from dilbaz_content.lexicon_step import LEXICON_FILE, run_lexicon
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.select_step import SelectionError, run_select
+from dilbaz_content.sentences_step import run_sentences
 from dilbaz_content.sources import (
     REGISTRY_FILE,
     DataSource,
@@ -210,3 +212,28 @@ def carriers(
     counts = [sum(len(line.candidates) == n for line in lines) for n in range(per_target + 1)]
     console.print(f"{len(lines)} word senses; by number of candidates 0..{per_target}: {counts}")
     console.print(f"written to work/carriers.{l2}.candidates.jsonl")
+
+
+@app.command()
+def sentences(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="Target language of the pack.")] = "en",
+) -> None:
+    """S4: build the carrier sentences from the candidates and the curation, and check them."""
+    root = _content_dir(content_dir)
+    try:
+        with console.status("building carrier sentences"):
+            report = run_sentences(root, l2=l2, analyzer=SpacyAnalyzer)
+    except (FileNotFoundError, ValueError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"{report.sentences} sentences ({report.tatoeba} Tatoeba, {report.own} own); "
+        f"levels {report.by_level}"
+    )
+    kinds = Counter(issue.kind for issue in report.issues)
+    console.print(f"issues: {dict(kinds) or 'none'}")
+    if report.senses_without_carrier:
+        console.print(f"[red]senses without a carrier:[/red] {list(report.senses_without_carrier)}")
+    if report.blocking or report.senses_without_carrier:
+        raise typer.Exit(code=1)
