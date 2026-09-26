@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:dilbaz_app/app/home_shell.dart';
 import 'package:dilbaz_app/app/routes.dart';
+import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
+import 'package:dilbaz_app/features/auth/presentation/sign_in_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
 import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
@@ -14,11 +18,30 @@ part 'router.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter router(Ref ref) {
+  final auth = ref.watch(authRepositoryProvider);
+  final signedIn = ValueNotifier<bool>(auth.isSignedIn);
+  // Stream errors are network failures while refreshing the session; the
+  // current session stays valid, so they do not change the route.
+  final subscription = auth.watchSignedIn().listen(
+    (value) => signedIn.value = value,
+    onError: (Object _) {},
+  );
+
   final rootKey = GlobalKey<NavigatorState>();
   final router = GoRouter(
     navigatorKey: rootKey,
     initialLocation: AppRoutes.today,
+    refreshListenable: signedIn,
+    redirect: (context, state) {
+      final onSignIn = state.matchedLocation == AppRoutes.signIn;
+      if (!signedIn.value) return onSignIn ? null : AppRoutes.signIn;
+      return onSignIn ? AppRoutes.today : null;
+    },
     routes: [
+      GoRoute(
+        path: AppRoutes.signIn,
+        builder: (context, state) => const SignInScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => HomeShell(navigationShell: shell),
         branches: [
@@ -68,6 +91,10 @@ GoRouter router(Ref ref) {
       ),
     ],
   );
-  ref.onDispose(router.dispose);
+  ref.onDispose(() {
+    unawaited(subscription.cancel());
+    router.dispose();
+    signedIn.dispose();
+  });
   return router;
 }

@@ -169,7 +169,9 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | Yerel | `supabase start` (Docker Desktop) | `--dart-define-from-file=env/local.json` |
 | Üretim | Barındırılan ücretsiz proje (bölge: eu-central-1, Frankfurt) | `env/prod.json` |
 
-- `env/*.json` git dışıdır. Yalnızca proje URL'si ve **publishable key** içerir. Gizli anahtar uygulamaya asla girmez.
+- `env/*.json` git dışıdır. Yalnızca proje URL'si ve **publishable key** içerir. Gizli anahtar uygulamaya asla girmez. Biçim: `app/env.example.json`. Anahtarlar eksikse uygulama açılışta durur (`missing_env`).
+- **Yerel:** `app/env/local.json` → `SUPABASE_URL = http://127.0.0.1:54321` (Android emülatöründe `http://10.0.2.2:54321`, telefonda bilgisayarın yerel ağ IP'si), anahtar `npx supabase status` çıktısındaki `PUBLISHABLE_KEY`. Debug derlemeleri yerel HTTP'ye izin verir (`usesCleartextTraffic`, yalnızca debug manifesti).
+- **Web ile hızlı deneme:** `.claude/launch.json` → `app-web-local` (web sunucusu, port 5173, yerel Supabase).
 - **Migrasyonlar:** yerelde `supabase db reset` ile test edilir, üretime `supabase db push` ile uygulanır. Push, kullanıcının onayıyla ve faz sonlarında yapılır.
 - **Ücretsiz plan kısıtları:** 500 MB veritabanı, 1 GB depolama, 5 GB çıkış trafiği, **otomatik yedek yok**, **1 hafta hareketsizlikte proje durur**, en fazla 2 aktif proje.
   - Günlük kullanımda durma sorun olmaz. Uzun tatil öncesi uyarı notu gösterilir.

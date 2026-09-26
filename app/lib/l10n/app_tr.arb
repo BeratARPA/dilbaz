@@ -35,5 +35,75 @@
   "sectionInPreparation": "Bu bölüm hazırlanıyor.",
   "@sectionInPreparation": {
     "description": "Placeholder body of screens that are not built yet."
+  },
+  "signInTitle": "Dilbaz'a giriş",
+  "@signInTitle": {
+    "description": "Title of the sign-in page."
+  },
+  "signInEmailIntro": "E-postanı yaz, sana 6 haneli bir kod gönderelim.",
+  "@signInEmailIntro": {
+    "description": "Explains the email-code sign-in; there are no passwords."
+  },
+  "signInEmailLabel": "E-posta",
+  "@signInEmailLabel": {
+    "description": "Label of the email field."
+  },
+  "signInSendCode": "Kod gönder",
+  "@signInSendCode": {
+    "description": "Button that sends the sign-in code."
+  },
+  "signInCodeSentTo": "Kodu {email} adresine gönderdik.",
+  "@signInCodeSentTo": {
+    "description": "Shown above the code field.",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "berat@example.com"
+      }
+    }
+  },
+  "signInCodeLabel": "6 haneli kod",
+  "@signInCodeLabel": {
+    "description": "Label of the code field."
+  },
+  "signInConfirm": "Giriş yap",
+  "@signInConfirm": {
+    "description": "Button that checks the code and signs in."
+  },
+  "signInResendCode": "Kodu yeniden gönder",
+  "@signInResendCode": {
+    "description": "Sends a new code to the same email."
+  },
+  "signInChangeEmail": "E-postayı değiştir",
+  "@signInChangeEmail": {
+    "description": "Goes back to the email field."
+  },
+  "authFailureInvalidEmail": "E-posta adresini kontrol eder misin?",
+  "@authFailureInvalidEmail": {
+    "description": "The email address has an invalid format."
+  },
+  "authFailureNotAllowed": "Bu e-postayla giriş açık değil.",
+  "@authFailureNotAllowed": {
+    "description": "The email is not on the sign-up allowlist."
+  },
+  "authFailureInvalidCode": "Kod eşleşmedi. Yeniden dener misin?",
+  "@authFailureInvalidCode": {
+    "description": "Wrong, malformed or expired code."
+  },
+  "authFailureRateLimited": "Biraz bekleyip yeniden deneyebilirsin.",
+  "@authFailureRateLimited": {
+    "description": "Too many requests in a short time."
+  },
+  "authFailureNetwork": "Bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@authFailureNetwork": {
+    "description": "The device is offline or the server is unreachable."
+  },
+  "authFailureUnknown": "Şu an olmadı. Birazdan yeniden dene.",
+  "@authFailureUnknown": {
+    "description": "Any other sign-in problem."
+  },
+  "signOut": "Çıkış yap",
+  "@signOut": {
+    "description": "Settings entry that ends the session on this device."
   }
 }
