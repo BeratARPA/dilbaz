@@ -42,12 +42,12 @@ Dal: `faz-0`
   - `deno test`
 - [x] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
 - [x] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
-- [ ] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1):
+- [x] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1): *(ücretli anahtarlar sıfır bütçe nedeniyle F1-00'a ertelendi)*
   - Supabase projesi (Frankfurt)
   - Anthropic, Deepgram, Azure Speech anahtarları
   - `supabase link` ve `supabase secrets set` (kullanıcı çalıştırır)
   - `env/prod.json`
-- [ ] **F0-11** Android'de uçtan uca iskelet: debug APK telefonda açılır, e-posta kodu ile giriş, boş Bugün ekranı. Migrasyonlar üretime 👤 onayla `supabase db push`.
+- [x] **F0-11** Android'de uçtan uca iskelet: debug APK telefonda açılır, e-posta kodu ile giriş, boş Bugün ekranı. Migrasyonlar üretime 👤 onayla `supabase db push`.
 
 **Kabul:** CI yeşil; Android'de giriş çalışıyor; yerel pgTAP testleri geçiyor; anahtarlar yalnızca secrets'ta.
 
@@ -55,6 +55,9 @@ Dal: `faz-0`
 
 ## Faz 1 — Çekirdek döngü (v0.1)
 Dal: `faz-1`
+
+### Ön koşul
+- [ ] **F1-00** ADR-0009 — sıfır bütçe (`18` §0): Claude API ve Azure olmadan çalışma yolları (deterministik çekirdek, cihaz üstü ses, açık veriler, içeriğin Claude Code oturumlarında hazırlanması, ücretsiz LLM seçenekleri). 👤 Kullanıcı kararı. Etkilenen görevler: F1-03…F1-05, F1-14, F1-15, F1-17, F1-19.
 
 ### İçerik
 - [ ] **F1-01** Hat S0–S1:
@@ -281,3 +284,6 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-10 / F0-11 (üretim) | Kullanıcı: Supabase projesi `dilbaz` (eu-central-1), `supabase login`, `gh auth login`. Ajan: `app/env/prod.json` (URL + publishable key, git dışı), `supabase link` (parolasız, geçici giriş rolü), onayla `db push` (3 migrasyon). Üretimde "expose new tables" kapalı olduğu için `service_role` yetkisi de verilmiyordu; ortamları eşitleyen migrasyon eklendi (pgTAP 53/53). Üretim salt okunur SQL ile doğrulandı: RLS her tabloda açık, `anon` yetkisiz, `authenticated` yalnızca gereken yetkiler, `service_role` tam yetki. `test db --linked` pgtap'i erişilemeyen bir şemaya kurduğu için doğrulama sorguyla yapıldı. CI: `setup-uv` kayan `v10` etiketi yayınlamıyor, tam sürüme sabitlendi. |
 | 2026-09-26 | 0 | F0-10 (kapsam) | **Sıfır bütçe** (kullanıcı): Anthropic ve Azure adımları askıya alındı, Faz 1 öncesi ADR-0009 ile karar verilecek (`18` §0). Üretim girişi için Brevo SMTP eklendi: Supabase'in yerleşik e-postası yalnızca ekip üyelerine gönderiyor, şablonları ücretsiz planda kilitli (kod yerine bağlantı gidiyor), saatte 2 e-posta. |
 | 2026-09-26 | 0 | F0-09 | İlk tam yeşil CI koşusu (7/7 iş; `faz-0`, 322a967). Süreler: APK ~11,5 dk, uygulama ~3 dk, pgTAP ~3 dk, motor ~2 dk, diğerleri < 1 dk. Ücretsiz dakikaları korumak için yalnızca doküman değişikliklerinde CI atlanır. |
+| 2026-09-26 | 0 | F0-10 | Supabase projesi ve bağlantı, `env/prod.json`, üretim auth yapılandırması (`config push`: 6 haneli kod şablonları, izin listesi hook'u, MFA kapalı), Brevo SMTP (kullanıcı), izin listesi: tek adres. Ücretli anahtarlar (Anthropic, Azure) sıfır bütçe ve kart olmaması nedeniyle F1-00'a ertelendi; Deepgram da F1-00 kararıyla birlikte. |
+| 2026-09-26 | 0 | F0-11 | Debug APK (üretim yapılandırmasıyla) Samsung Galaxy A55'e (Android 16) kuruldu. Kullanıcı e-posta koduyla giriş yaptı, boş Bugün ekranı açıldı. |
+| 2026-09-26 | 0 | **Faz 0 raporu** | **Kabul:** CI yeşil (7/7 iş) ✓ · Android'de giriş ✓ · yerel pgTAP 53/53 ✓ · gizli anahtar yalnızca sağlayıcı panellerinde; depo geçmişi temiz (gitleaks) ✓. **Testler:** motor 40 (lib %100), uygulama 52, Deno 23, pytest 14, pgTAP 53. **Maliyet:** $0 (LLM/ses kullanımı yok). **Değişmez kurallar:** I-08 (FSRS yalnızca adaptörde, test), I-12 (yasak kelime taraması), I-15 (içe aktarma sınırı, dize taraması, `zz`), I-18 (partner verisine erişim yok, pgTAP). **Bilinen sorunlar:** (1) sıfır bütçe → F1-00 kararı; (2) sohbette paylaşılan DB parolası ve Brevo anahtarları değiştirilmeli (👤); (3) `home_widget`/`share_handler_android` Kotlin Gradle eklentisi uyarısı; (4) `supabase test db --linked` barındırılan projede pgtap'i kullanamıyor, üretim SQL ile doğrulandı; (5) ücretsiz Supabase projesi 1 hafta hareketsizlikte duraklar; (6) Brevo gönderen adresini `brevosend.com` olarak değiştiriyor, e-posta Gereksiz klasörüne düşebilir; (7) Windows derlemesi için VS C++ (Faz 3). **Kullanım kapısı:** Faz 0'da öğrenme özelliği yok; kapı Faz 1 sonunda (1–2 hafta günlük kullanım). |
