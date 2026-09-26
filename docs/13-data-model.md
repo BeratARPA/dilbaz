@@ -312,6 +312,7 @@ create index on llm_usage (profile_id, created_at);
 ## 4. RLS politikaları
 
 - Tüm tablolarda RLS **açık**. Varsayılan: hiçbir şeye izin yok.
+- **Data API yetkileri açıktır:** `public` şemasındaki yeni tablolar `anon`/`authenticated` rollerine varsayılan olarak açılmaz (Supabase varsayılanı TRUNCATE dahil her şeyi verirdi; `20260926171355_explicit_grants.sql`). Her tablo, politikalarının gerektirdiği yetkileri migrasyonda açıkça verir; örneğin `profiles`/`courses`: SELECT, INSERT, UPDATE; `teams`/`team_members`: SELECT, INSERT; paylaşım anahtarları için sütun düzeyinde UPDATE. `service_role` erişimi korunur. Üretimde "Automatically expose new tables" kapalıdır.
 - **Sahiplik:**
   - `profile_id = auth.uid()` için select/insert.
   - Durum tablolarında (profil, kurslar, kartlar, kişisel öğeler, Söyleyemediklerim, kayıtlar, yazılar, altyazılar) update de serbest.

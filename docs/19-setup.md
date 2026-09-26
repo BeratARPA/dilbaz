@@ -13,7 +13,7 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 | # | Hizmet | Ne yapılacak | Ne zaman |
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
-| 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve parola yöneticine kaydet. Project URL ve **publishable key**'i not et. | Faz 0 (F0-10) |
+| 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
 | 3 | **Anthropic** | console.anthropic.com → API anahtarı. **Aylık harcama limiti koy** (öneri: $50). | Faz 0 |
 | 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi) → API anahtarı. | Faz 0 |
 | 5 | **Azure** | Azure hesabı → "Speech" kaynağı, bölge **West Europe**, fiyatlandırma katmanı **F0 (ücretsiz)**. Anahtar ve bölgeyi not et. | Faz 0 |

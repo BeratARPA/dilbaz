@@ -41,7 +41,7 @@ Bir kuralı değiştirmek gerekirse **önce** `docs/01-pedagogy.md`'yi gerekçes
 - **Yerel öncelikli:** Arayüz drift'ten beslenir. Yazmalar aynı işlemde outbox'a da düşer. Olaylar değiştirilemez ve idempotenttir (`docs/12` §6, `docs/13`).
 - **Kimlik ve zaman:** UUIDv7, tüm zamanlar UTC.
 - **Anahtarlar:** Gizli anahtarlar yalnızca Supabase secrets'ta. Uygulamada yalnızca URL + publishable key.
-- **Veritabanı:** Her tabloda RLS açık ve varsayılan-red. Yeni tablo = yeni pgTAP testi.
+- **Veritabanı:** Her tabloda RLS açık ve varsayılan-red. Yeni tablo = yeni pgTAP testi. Yeni tabloya Data API yetkisi (`grant`) migrasyonda açıkça verilir; varsayılan yetki yoktur (`docs/13` §4).
 - **İçerik:** Paketler versiyonlu SQLite dosyalarıdır. Postgres yalnızca kullanıcı verisini tutar.
 - **FSRS:** Yalnızca motorda, `import 'package:fsrs/fsrs.dart' as fsrs;` (önek zorunlu). `reviewDateTime` UTC. Sonuç `card_state_after` olarak saklanır.
 - **Mimari kararlar:** Değişiklik yeni bir ADR (`docs/adr/`) ile yapılır.
