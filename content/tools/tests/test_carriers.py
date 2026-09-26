@@ -316,3 +316,86 @@ def test_a_target_that_triggers_a_grammar_point_is_not_held_back_by_it() -> None
     grammar = {"gp.adverbs.frequency": "A2"}
     found = find_candidates([text], [always, WATCH_V], levels, grammar_levels=grammar)
     assert set(found) == {"en.ws.always.adv.1"}
+
+
+def test_selected_senses_count_at_their_pack_level() -> None:
+    hope = WATCH_V.model_copy(
+        update={"key": "en.ws.hope.v.1", "lemma": "hope", "pos": "VERB", "level": "A1"}
+    )
+    levels = word_levels([*LEXICON, lex("hope", 400, {"VERB": "B1"})])
+    text = sentence(
+        37,
+        "I hope we watch TV.",
+        [
+            ("I", "i", "PRON", "PRP"),
+            ("hope", "hope", "VERB", "VBP"),
+            ("we", "we", "PRON", "PRP"),
+            ("watch", "watch", "VERB", "VBP"),
+            ("TV", "tv", "NOUN", "NN"),
+        ],
+    )
+    found = find_candidates([text], [hope, WATCH_V], levels)
+    assert set(found) == {"en.ws.hope.v.1", "en.ws.watch.v.1"}
+    assert found["en.ws.watch.v.1"][0].level == "A1"
+
+
+def test_a_part_of_a_hyphenated_word_is_not_its_sense() -> None:
+    compound = sentence(
+        38,
+        "We watch-proof TV.",
+        [
+            ("We", "we", "PRON", "PRP"),
+            ("watch", "watch", "VERB", "VB"),
+            ("-", "-", "PUNCT", "HYPH"),
+            ("proof", "proof", "ADJ", "JJ"),
+            ("TV", "tv", "NOUN", "NN"),
+        ],
+    )
+    levels = word_levels([*LEXICON, lex("proof", 3000, {"ADJ": "A1"})])
+    assert find_candidates([compound], [WATCH_V], levels) == {}
+
+
+def test_a_selected_proper_noun_is_not_a_name() -> None:
+    levels = word_levels([*LEXICON, *EXTRA])
+    tokens = [
+        ("I", "i", "PRON", "PRP"),
+        ("watch", "watch", "VERB", "VBP"),
+        ("TV", "tv", "NOUN", "NN"),
+        ("on", "on", "ADP", "IN"),
+    ]
+    monday = sentence(39, "I watch TV on Monday.", [*tokens, ("Monday", "monday", "PROPN", "NNP")])
+    tom = sentence(40, "I watch TV on Tom.", [*tokens, ("Tom", "tom", "PROPN", "NNP")])
+    found = find_candidates([monday, tom], [WATCH_V, MONDAY], levels)
+    by_id = {c.sentence_id: c for c in found["en.ws.watch.v.1"]}
+    assert by_id[39].names == 0
+    assert by_id[40].names == 1
+    assert by_id[39].score > by_id[40].score
+
+
+def test_a_carrier_at_the_target_level_ranks_first() -> None:
+    # The same words; only the tag of "watch" raises the second one to A1.
+    easy = sentence(
+        41, "We watch.", [("We", "we", "PRON", "PRP"), ("watch", "watch", "VERB", "VB")]
+    )
+    harder = sentence(
+        42, "We watch!", [("We", "we", "PRON", "PRP"), ("watch", "watch", "VERB", "VBP")]
+    )
+    grammar = {"gp.present_simple.affirmative": "A1"}
+    found = find_candidates([harder, easy], [WATCH_V], word_levels(LEXICON), grammar_levels=grammar)
+    ranked = found["en.ws.watch.v.1"]
+    assert [(c.sentence_id, c.level) for c in ranked] == [(41, "A0"), (42, "A1")]
+    # 0.25 for the level gap, 0.3 because the ideal A1 length is longer.
+    assert round(ranked[0].score - ranked[1].score, 3) == 0.55
+
+
+def test_structures_outside_the_pack_reject_the_sentence() -> None:
+    passive = sentence(
+        43,
+        "TV is watched.",
+        [
+            ("TV", "tv", "NOUN", "NN"),
+            ("is", "be", "AUX", "VBZ"),
+            ("watched", "watch", "VERB", "VBN"),
+        ],
+    )
+    assert find_candidates([passive], [WATCH_V], word_levels(LEXICON)) == {}

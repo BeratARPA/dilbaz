@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, ConfigDict
 
 from dilbaz_content.analysis import AnalyzedSentence, Token
-from dilbaz_content.grammar_tags import LEXICAL_TRIGGERS, grammar_codes
+from dilbaz_content.grammar_tags import LEXICAL_TRIGGERS, grammar_codes, outside_levels
 from dilbaz_content.items import Level, WordSense, level_index
 from dilbaz_content.lexicon import LexiconEntry
 from dilbaz_content.select_step import A0_MAX_RANK
@@ -44,6 +44,8 @@ _INNER_BOUNDARY = re.compile(r"[.!?]\s+\S")
 # Bonus per other selected sense a sentence carries, for at most three.
 _REUSE_BONUS = 0.15
 _REUSE_CAP = 3
+# Penalty per level a carrier is above its target: the simplest context first.
+_LEVEL_GAP_PENALTY = 0.25
 
 
 @dataclass(frozen=True)
@@ -111,11 +113,12 @@ class Candidate(BaseModel):
     also_carries: tuple[str, ...] = ()
 
 
-def _allowed_level(target: Level) -> Level:
+def allowed_level(target: Level) -> Level:
+    """Highest level of the other words in a carrier of a [target]-level item."""
     return "A1" if target == "A0" else target
 
 
-def _levels_of(tokens: tuple[Token, ...], levels: WordLevels) -> list[Level | None] | None:
+def token_levels(tokens: tuple[Token, ...], levels: WordLevels) -> list[Level | None] | None:
     """Level of each token (None for unlevelled ones); None if a word is unknown.
 
     The surface form is tried when the lemma is unknown: spaCy lemmatizes
@@ -133,7 +136,18 @@ def _levels_of(tokens: tuple[Token, ...], levels: WordLevels) -> list[Level | No
     return found
 
 
-class _Matcher:
+def is_well_formed(text: str) -> bool:
+    """One sentence, without quotes, brackets and similar marks."""
+    return not _ODD_CHARACTERS.intersection(text) and not _INNER_BOUNDARY.search(text)
+
+
+def _hyphenated(tokens: tuple[Token, ...], index: int) -> bool:
+    before = index > 0 and tokens[index - 1][0] == "-"
+    after = index + 1 < len(tokens) and tokens[index + 1][0] == "-"
+    return before or after
+
+
+class SenseMatcher:
     """Finds the selected senses a token stands for."""
 
     def __init__(self, senses: Iterable[WordSense]) -> None:
@@ -149,12 +163,72 @@ class _Matcher:
         only = found[0]
         return [only] if only.pos in _CROSSING and pos in _CROSSING else []
 
+    def hits(self, tokens: tuple[Token, ...]) -> dict[str, tuple[int, WordSense]]:
+        """Sense key → (first token index, sense) of every sense in the sentence.
+
+        A part of a hyphenated word ("well-known", "ten-year-old") does not
+        stand for its own sense.
+        """
+        found: dict[str, tuple[int, WordSense]] = {}
+        for index, (text, lemma, pos, _) in enumerate(tokens):
+            if _hyphenated(tokens, index):
+                continue
+            for sense in self(text, lemma, pos):
+                found.setdefault(sense.key, (index, sense))
+        return found
+
+
+def pack_levels(
+    levels: list[Level | None], hits: Mapping[str, tuple[int, WordSense]]
+) -> list[Level | None]:
+    """Levels where a word that is a selected sense counts at the sense's level.
+
+    The pack teaches "hope" (a verb at B1 in CEFR-J) at A1; a sentence using it
+    is as hard as the pack says.
+    """
+    adjusted = list(levels)
+    for index, sense in hits.values():
+        current = adjusted[index]
+        if current is None or level_index(sense.level) < level_index(current):
+            adjusted[index] = sense.level
+    return adjusted
+
+
+def carrier_level(
+    sense: WordSense,
+    index: int,
+    levels: list[Level | None],
+    codes: Iterable[str],
+    grammar_levels: Mapping[str, Level],
+    outside: Iterable[Level] = (),
+) -> Level:
+    """Level of a sentence as a carrier of [sense] at token [index].
+
+    The other words, the grammar and the structures outside the pack
+    ([outside]) count; a grammar point that the target itself triggers
+    ("always": adverbs of frequency) does not.
+    """
+    others = [lv for i, lv in enumerate(levels) if i != index and lv is not None]
+    others.extend(
+        grammar_levels[code]
+        for code in codes
+        if code in grammar_levels and sense.lemma not in LEXICAL_TRIGGERS.get(code, frozenset())
+    )
+    others.extend(outside)
+    return max((sense.level, *others), key=level_index)
+
 
 def _score(
-    sentence: AnalyzedSentence, level: Level, words: int, others: int, levels: WordLevels
+    sentence: AnalyzedSentence,
+    target: Level,
+    level: Level,
+    words: int,
+    others: int,
+    names: int,
+    levels: WordLevels,
 ) -> float:
-    """Higher is better: native author, no names, ideal length, common words, reuse."""
-    names = sum(pos == "PROPN" for _, _, pos, _ in sentence.tokens)
+    """Higher is better: native author, no names, ideal length, common words, reuse,
+    and no more above the target's level than needed."""
     ranks = [
         levels.rank.get(lemma) for _, lemma, pos, _ in sentence.tokens if pos not in UNLEVELLED_POS
     ]
@@ -166,6 +240,7 @@ def _score(
         - 0.3 * abs(words - IDEAL_WORDS[level])
         - 0.4 * commonness
         + _REUSE_BONUS * min(others, _REUSE_CAP)
+        - _LEVEL_GAP_PENALTY * max(0, level_index(level) - level_index(target))
     )
 
 
@@ -182,46 +257,38 @@ def find_candidates(
     [grammar_levels] maps grammar codes to levels; a sentence whose grammar is
     above the target's level is not a candidate.
     """
-    match = _Matcher(senses)
+    match = SenseMatcher(senses)
     grammar_map: Mapping[str, Level] = grammar_levels or {}
     heaps: dict[str, list[tuple[float, int, Candidate]]] = {}
     seen_texts: set[str] = set()
     for sentence in sentences:
         normalized = " ".join(sentence.text.lower().split())
-        if (
-            normalized in seen_texts
-            or _ODD_CHARACTERS.intersection(sentence.text)
-            or _INNER_BOUNDARY.search(sentence.text)
-        ):
+        if normalized in seen_texts or not is_well_formed(sentence.text):
             continue
         seen_texts.add(normalized)
-        token_levels = _levels_of(sentence.tokens, levels)
-        if token_levels is None:
+        levels_found = token_levels(sentence.tokens, levels)
+        if levels_found is None:
             continue
         # First occurrence of each sense: "I watch you watch TV" is one candidate.
-        hits: dict[str, tuple[int, WordSense]] = {}
-        for index, (text, lemma, pos, _) in enumerate(sentence.tokens):
-            for sense in match(text, lemma, pos):
-                hits.setdefault(sense.key, (index, sense))
+        hits = match.hits(sentence.tokens)
         if not hits:
             continue
+        levels_found = pack_levels(levels_found, hits)
         codes = grammar_codes(sentence.tokens)
-        levelled = [code for code in codes if code in grammar_map]
+        outside = outside_levels(sentence.tokens)
+        # Names are hard to say and translate; a selected sense ("Monday") is not one.
+        hit_indexes = {index for index, _ in hits.values()}
+        names = sum(
+            pos == "PROPN" and i not in hit_indexes
+            for i, (_, _, pos, _) in enumerate(sentence.tokens)
+        )
         words = len(sentence.text.split())
         carried = sorted(hits)
         for index, sense in hits.values():
-            allowed = _allowed_level(sense.level)
-            others = [lv for i, lv in enumerate(token_levels) if i != index and lv is not None]
-            others.extend(
-                grammar_map[code]
-                for code in levelled
-                if sense.lemma not in LEXICAL_TRIGGERS.get(code, frozenset())
-            )
-            if any(level_index(lv) > level_index(allowed) for lv in others):
+            allowed = allowed_level(sense.level)
+            level = carrier_level(sense, index, levels_found, codes, grammar_map, outside)
+            if level_index(level) > level_index(allowed) or words > MAX_WORDS[allowed]:
                 continue
-            if words > MAX_WORDS[allowed]:
-                continue
-            level = max((sense.level, *others), key=level_index)
             candidate = Candidate(
                 target=sense.key,
                 sentence_id=sentence.id,
@@ -230,8 +297,11 @@ def find_candidates(
                 level=level,
                 words=words,
                 native=sentence.native,
-                names=sum(pos == "PROPN" for _, _, pos, _ in sentence.tokens),
-                score=round(_score(sentence, level, words, len(carried) - 1, levels), 3),
+                names=names,
+                score=round(
+                    _score(sentence, sense.level, level, words, len(carried) - 1, names, levels),
+                    3,
+                ),
                 grammar=codes,
                 turkish=tuple(t.text for t in sentence.turkish),
                 also_carries=tuple(key for key in carried if key != sense.key),

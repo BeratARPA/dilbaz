@@ -1,4 +1,6 @@
 # S2 grammar points for en@1, A0-A2 (docs/02-curriculum.md §5).
+# Levels were checked against the CEFR-J Grammar Profile and its Core
+# Inventory and EGP columns; within a level the order follows CEFR-J.
 #
 # The codes form the closed list that items, error tags and LLM routes use
 # (docs/07 §1.4). A code never changes once published. Notes on Turkish
@@ -94,6 +96,12 @@
   description: "Do or does before the subject, then the base verb."
   examples: ["Do you speak English?", "Does he work here?", "Where does she live?"]
 
+- code: gp.adverbs.frequency
+  level: A1
+  name: "Adverbs of frequency"
+  description: "always, usually, often, sometimes and never go before the main verb and after be."
+  examples: ["I usually get up at seven.", "She is never late.", "We sometimes eat out."]
+
 - code: gp.can.ability
   level: A1
   name: "can / can't"
@@ -105,6 +113,12 @@
   name: "Imperatives"
   description: "Give instructions with the base verb; use Don't for a negative."
   examples: ["Open the window.", "Don't be late.", "Please sit down."]
+
+- code: gp.pronouns.object
+  level: A1
+  name: "Object pronouns"
+  description: "me, you, him, her, it, us and them after verbs and prepositions."
+  examples: ["Can you help me?", "I see him every day.", "This present is for them."]
 
 - code: gp.possessive.s
   level: A1
@@ -130,6 +144,12 @@
   description: "what, where, when, who, why and how start the question."
   examples: ["Where do you work?", "What time is it?", "Why are you tired?"]
 
+- code: gp.conjunctions.basic
+  level: A1
+  name: "and, but, because"
+  description: "Join ideas: and adds, but contrasts, because gives a reason."
+  examples: ["I like tea and coffee.", "I like tea, but I don't like coffee.", "I'm happy because it's Friday."]
+
 - code: gp.present_continuous.now
   level: A1
   name: "Present continuous: now"
@@ -149,19 +169,19 @@
   examples: ["I'd like a coffee, please.", "Would you like some tea?", "I'd like to pay by card."]
 
 - code: gp.past_simple.be
-  level: A2
+  level: A1
   name: "Past simple: was / were"
   description: "was for I, he, she and it; were for you, we and they."
   examples: ["I was at home yesterday.", "They were tired.", "Was the film good?"]
 
 - code: gp.past_simple.regular
-  level: A2
+  level: A1
   name: "Past simple: regular verbs"
   description: "Add -ed to the verb for finished actions in the past."
   examples: ["I worked late yesterday.", "We watched a film.", "She called me last night."]
 
 - code: gp.past_simple.irregular
-  level: A2
+  level: A1
   name: "Past simple: irregular verbs"
   description: "Common verbs have their own past forms: go-went, have-had, see-saw."
   examples: ["We went to the beach.", "I had a sandwich.", "She saw her friend."]
@@ -202,12 +222,6 @@
   description: "some in positive sentences, any in negatives and questions; many with countable nouns, much with uncountable ones."
   examples: ["There is some milk in the fridge.", "Do you have any questions?", "I don't have much time."]
 
-- code: gp.adverbs.frequency
-  level: A2
-  name: "Adverbs of frequency"
-  description: "always, usually, often, sometimes and never go before the main verb and after be."
-  examples: ["I usually get up at seven.", "She is never late.", "We sometimes eat out."]
-
 - code: gp.modals.obligation
   level: A2
   name: "have to / must / should"
@@ -219,18 +233,6 @@
   name: "Present simple or present continuous"
   description: "Present simple for habits and facts, present continuous for what is happening now."
   examples: ["I usually walk to work, but today I'm taking the bus.", "What do you do? I'm a nurse.", "What are you doing? I'm reading."]
-
-- code: gp.pronouns.object
-  level: A2
-  name: "Object pronouns"
-  description: "me, you, him, her, it, us and them after verbs and prepositions."
-  examples: ["Can you help me?", "I called him yesterday.", "This present is for them."]
-
-- code: gp.conjunctions.basic
-  level: A2
-  name: "and, but, because, so"
-  description: "Join ideas: and adds, but contrasts, because gives a reason, so gives a result."
-  examples: ["I was tired, so I went to bed.", "I like tea, but I don't like coffee.", "I'm happy because it's Friday."]
 
 - code: gp.present_perfect.experience
   level: A2

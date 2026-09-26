@@ -100,7 +100,7 @@ Yeni bir kelime ya da kalıp, **içindeki diğer tüm kelimeleri bilinen** 1–2
 
 ## 5. Gramer ilerlemesi (taslak)
 
-Aşağıdaki liste standart ELT ilerlemesidir ve **English Grammar Profile (EGP) ile doğrulanacaktır** (EGP, 1200'den fazla gramer maddesini öğrenci korpusundan seviyelendirir). Her maddede Türkçe konuşanlar için bilinen zorluk notu yer alır.
+Aşağıdaki liste standart ELT ilerlemesidir. A0–A2 maddeleri **CEFR-J Grammar Profile** ile karşılaştırıldı. Bu profil her madde için Core Inventory ve English Grammar Profile (EGP) seviyelerini de verir; EGP, 1200'den fazla gramer maddesini öğrenci korpusundan seviyelendirir. Üç kaynağın da A1 dediği maddeler A1'e alındı: nesne zamirleri, and/but/because, sıklık zarfları, olumlu Past Simple ve was/were. Kaynakların ayrıştığı maddelerde standart ilerleme korundu. Bir seviyenin içindeki sıra CEFR-J alt seviyelerini (A1.1 → A1.3) izler. Her maddede Türkçe konuşanlar için bilinen zorluk notu yer alır.
 
 ### A0–A1
 - **be** (am/is/are): olumlu, olumsuz, soru.
@@ -109,20 +109,23 @@ Aşağıdaki liste standart ELT ilerlemesidir ve **English Grammar Profile (EGP)
 - Çoğul -s; this/that/these/those.
 - **there is/are** ve **have/has got**. *TR: ikisi de "var"; karışır.*
 - **Present Simple** ve 3. tekil **-s**; do/does ile soru ve olumsuz. *TR: -s düşer, "Does he works?" hatası.*
+- Sıklık zarfları (always, usually, never…) ve cümledeki yerleri.
 - can/can't; emir kipi; sahiplik (my/your…, 's).
+- **Nesne zamirleri** (me, him, us, them): emir kipi ve temel kalıplarla birlikte gelir (Help me. Tell me.). *TR: "onu" üçüne birden karşılık gelir; him/her/it karışır.*
 - Yer ve zaman edatları **in/on/at**. *TR: hal ekleri tek biçimde, edat seçimi zor.*
 - Wh- soruları; **How old are you?** *TR: "Kaç yaşındasın?" → "How many years…" hatası.*
+- Bağlaçlar: and, but, because.
 - Present Continuous (şu an); like + -ing.
+- **Past Simple girişi:** was/were ve olumlu cümle (düzenli -ed; went, had, saw gibi sık düzensizler).
 
 ### A2
-- **Past Simple** (düzenli/düzensiz), was/were, did ile soru ve olumsuz.
+- **Past Simple:** did ile soru ve olumsuz; düzensiz fiillerin genişlemesi. *TR: "I didn't went" hatası.*
 - going to / will (plan, tahmin).
 - Karşılaştırma: -er/-est, more/most.
 - Sayılabilir/sayılamaz; some/any, much/many, a lot of.
-- Sıklık zarfları ve cümledeki yerleri.
 - have to / should / must (temel).
 - **Present Simple ↔ Present Continuous** karşıtlığı.
-- Nesne zamirleri; bağlaçlar: and/but/because/so/when/then.
+- Bağlaçlar: so, when, then.
 - **Present Perfect girişi** (ever/never, just). *TR: doğrudan karşılığı yok.*
 - Fiil + to/-ing (want to, enjoy -ing).
 
