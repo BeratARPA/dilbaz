@@ -86,7 +86,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 generate ─▶ S4 valida
 - **Sıra:** Tek kelimeli girdiler, ailenin wordfreq sıklık toplamına göre sıralanır. Aile: lemma, tek kelimeli yazımlar ve çekimli biçimler.
   - Kendisi de başlık olan bir biçim ("saw", "number") sıklığını başka aileye vermez.
   - Başlık olmayan ve iki ailede geçen bir biçim, aileler arasında eşit bölünür.
-  - Çok kelimeli girdilerin (147) sırası yoktur: wordfreq'in öbek tahmini çok kaba. Bu girdiler sona yazılır; X_Lex bantları yalnızca tek kelimeli girdilerden seçilir.
+  - Çok kelimeli ya da tireli girdilerin (207; wordfreq tirede de böler: "part-time") sırası yoktur, çünkü öbek tahmini çok kaba. Bu girdiler sona yazılır. Tireli yazım varyantları da aileye katılmaz. X_Lex bantları yalnızca tek kelimeli girdilerden seçilir.
 - **Telaffuz:**
   - ABD IPA'sı CMUdict'in ilk (sözlük) telaffuzundan çevrilir. Wiktionary'nin GA etiketi bazen zayıf biçimi gösteriyor ("you" /jə/). Çevirmen vurguyu en uzun hece başı ilkesiyle hece başına koyar; kısaltmalardaki çift ana vurgunun öndekini ikincil yapar (/ˌtiˈvi/).
   - İngiltere IPA'sı Wiktionary'nin RP/UK etiketli ilk değeridir. Hiçbir aksan etiketlenmemişse etiketsiz ilk değer genel kabul edilir. Köşeli parantezli fonetik yazımlar alınmaz.

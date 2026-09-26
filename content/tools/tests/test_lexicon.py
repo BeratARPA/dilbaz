@@ -179,6 +179,19 @@ def test_forms_fall_back_to_all_entries_when_no_part_of_speech_matches() -> None
     assert lemmas["okay"].forms == ("okayed",)
 
 
+def test_hyphenated_words_count_as_phrases() -> None:
+    lemmas = build(
+        level_entries=(
+            level("part-time", "ADJ", "B1"),
+            level("takeoff", "NOUN", "B1", "cefrj", "take-off"),
+        )
+    )
+    assert lemmas["part-time"].multiword
+    assert lemmas["part-time"].rank is None
+    # A hyphenated spelling does not add wordfreq's phrase estimate either.
+    assert lemmas["takeoff"].family_zipf == zipf(fake_frequency("takeoff"))
+
+
 def test_phrases_have_no_rank_and_come_last() -> None:
     entries = build_lexicon(
         inputs(level_entries=(level("according to", "ADP", "A2"), level("watch", "VERB", "A1"))),

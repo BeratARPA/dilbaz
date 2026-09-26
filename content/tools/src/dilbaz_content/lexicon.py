@@ -55,6 +55,7 @@ class LexiconEntry(BaseModel):
     lemma: str
     display: str
     spellings: tuple[str, ...] = ()
+    # Several tokens for wordfreq: a space or a hyphen ("air force", "part-time").
     multiword: bool
     cefr: Cefr | None
     levels: tuple[LevelTag, ...] = ()
@@ -93,6 +94,11 @@ class LexiconInputs:
     ngsl_spoken: tuple[RankedLemma, ...]
     pronunciations: Mapping[str, tuple[str, ...]]
     wiki: Mapping[str, tuple[WikiEntry, ...]]
+
+
+def is_phrase(text: str) -> bool:
+    """Several tokens for wordfreq, which splits on spaces and hyphens."""
+    return " " in text or "-" in text
 
 
 def zipf(frequency: float) -> float:
@@ -190,7 +196,7 @@ def _inflection_merges(
                 lemmas_of[(form.lower(), entry.pos)].add(lemma)
     merges: dict[str, str] = {}
     for key, per_pos in levels.items():
-        if " " in key or key not in keys.display or not set(per_pos) <= _FOLDABLE_POS:
+        if is_phrase(key) or key not in keys.display or not set(per_pos) <= _FOLDABLE_POS:
             continue
         own = [e for e in _wiki_entries(wiki, key, keys.display[key], per_pos) if e.pos in per_pos]
         if any(entry.forms for entry in own):
@@ -303,7 +309,7 @@ def build_lexicon(inputs: LexiconInputs, frequency: Callable[[str], float]) -> L
     for key, display in keys.display.items():
         per_pos = levels.get(key, {})
         wiki = _wiki_entries(inputs.wiki, key, display, per_pos)
-        multiword = " " in key
+        multiword = is_phrase(key)
         spellings = keys.spellings.get(key, ())
         forms: tuple[str, ...] = ()
         if not multiword:
@@ -325,7 +331,7 @@ def build_lexicon(inputs: LexiconInputs, frequency: Callable[[str], float]) -> L
             # A form that is a headword itself ("saw", "number") keeps its own
             # frequency instead of lending it to another family.
             own = (form for form in forms if form not in keys.display)
-            members[key] = (key, *(s for s in spellings if " " not in s), *own)
+            members[key] = (key, *(s for s in spellings if not is_phrase(s)), *own)
         drafts[key] = {
             "lemma": key,
             "display": display,
