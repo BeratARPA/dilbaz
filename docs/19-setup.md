@@ -40,8 +40,11 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
 
 ### Supabase Auth ayarı (panelden)
 - Authentication → Providers → Email: **açık**. "Confirm email" açık.
-- Email Templates → "Magic Link" şablonuna kod ekle: `Kodun: {{ .Token }}`. Uygulama bağlantı değil 6 haneli kod kullanır.
-- Authentication → Settings: yeni kayıtları kapat. İki kullanıcıyı panelden davet et ya da izin listesini kullan (ajan ayarlamayı gösterir).
+- Email Templates → **"Confirm signup"** ve **"Magic Link"** şablonlarına kod ekle (ilk giriş onay şablonunu kullanır): `Giriş kodun: {{ .Token }}`. Uygulama bağlantı değil 6 haneli kod kullanır. Metinler: `supabase/templates/`.
+- Kayıt izin listesi (migrasyonlar `db push` ile yüklendikten sonra):
+  1. Authentication → Hooks → **Before User Created** → Postgres fonksiyonu `private.hook_before_user_created` → etkinleştir.
+  2. SQL Editor'de iki e-postayı ekle (küçük harfle): `insert into private.signup_allowlist (email) values ('...'), ('...');`
+  - Yeni kayıtlar açık kalır; listede olmayan e-posta 403 alır.
 
 ## 2. Windows'a araç kurulumu
 

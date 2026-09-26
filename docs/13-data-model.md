@@ -29,7 +29,7 @@ create table profiles (
   weekly_days_goal int not null default 5 check (weekly_days_goal between 1 and 7),
   anchors jsonb not null default '[]',          -- [{label:"sabah kahvesi", time:"08:30"}]
   quiet_hours jsonb,                            -- {from:"22:30", to:"08:00"}
-  goal_text text, interests text[] default '{}',
+  goal_text text, interests text[] not null default '{}',
   scaffold_overrides jsonb not null default '{}',
   settings jsonb not null default '{}',         -- sessiz mod, kart kayıtlarını sakla, deney onayı…
   updated_at timestamptz not null default now(),
@@ -39,7 +39,7 @@ create table profiles (
 
 create table teams (
   id uuid primary key, name text not null, invite_code text unique not null,
-  created_by uuid not null references profiles, created_at timestamptz default now()
+  created_by uuid not null references profiles, created_at timestamptz not null default now()
 );
 
 create table team_members (
@@ -48,7 +48,7 @@ create table team_members (
   role text not null default 'member',
   share_levels boolean not null default false,     -- partner seviye tahminimi görsün mü
   share_monthly boolean not null default false,    -- aylık test özetimi görsün mü
-  joined_at timestamptz default now(),
+  joined_at timestamptz not null default now(),
   primary key (team_id, profile_id)
 );
 
@@ -61,7 +61,7 @@ create table courses (
   active boolean not null default true,
   updated_at timestamptz not null default now(),
   server_seq bigint not null default nextval('sync_seq'),
-  created_at timestamptz default now(),
+  created_at timestamptz not null default now(),
   unique (profile_id, l2)
 );
 ```
@@ -317,7 +317,10 @@ create index on llm_usage (profile_id, created_at);
   - Durum tablolarında (profil, kurslar, kartlar, kişisel öğeler, Söyleyemediklerim, kayıtlar, yazılar, altyazılar) update de serbest.
   - **Olay tablolarında update/delete yok** (§1).
 - **Ekip:**
-  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur.
+  - `teams`: üyeler ve kurucu okur. Kullanıcı yalnızca kendi adına (`created_by = auth.uid()`) ekip kurar.
+  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır (F1-12).
+  - Üye yalnızca kendi `share_levels` / `share_monthly` anahtarlarını değiştirir (sütun düzeyinde UPDATE yetkisi); `role` değiştirilemez.
+  - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.
 - **İkili görev:**
   - `pair_sessions`: katılımcılar okur.

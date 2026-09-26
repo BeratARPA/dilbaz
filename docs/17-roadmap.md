@@ -31,7 +31,7 @@ Dal: `faz-0`
   - go_router (4 sekme + "Söyleyemedim" butonu), boş ekranlar
   - Yasak kelime testi (`15` §2, I-12)
 - [x] **F0-05** drift şema v1: kullanıcı tabloları, outbox, sync_state, boş içerik tabloları (`13` §8). drift_flutter kurulumu, migrasyon testi.
-- [ ] **F0-06** Supabase yerel:
+- [x] **F0-06** Supabase yerel:
   - `supabase init`
   - `config.toml`: e-posta OTP açık, kayıt izin listesi
   - İlk migrasyon: `sync_seq`, `profiles`, `courses`, `teams`, `team_members` + RLS
@@ -274,3 +274,4 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-07 | Edge Functions: `_shared/` (`llm_config.ts`: model, rota effort/max_tokens, refusal fallback, fiyatlar; `speech_config.ts`; `auth.ts`: `@supabase/server` JWKS doğrulaması; `budget.ts`: maliyet + günlük tavan; `log.ts`: kapalı alan kümeli JSON log; `http.ts`), `tutor` yol tabanlı yönlendirici + `health`. 23 deno testi (model adı yalnızca `llm_config.ts`'te, log'a metin sızmaz). Sıra değişikliği: F0-06 Docker'a (WSL yeniden başlatması) bağlı olduğu için F0-07 önce yapıldı. `config.toml`'da `verify_jwt = false` F0-06'da eklenecek. `07` §3 tablosuna eksik `max_tokens` değerleri eklendi. |
 | 2026-09-26 | 0 | F0-08 | `content/tools` (uv, `uv_build`): typer CLI `dilbaz-content` (`version`, `check-manifest`), pydantic manifest şeması (`11` §3; kaynak lisansı/atıfı zorunlu, I-16). pytest (14), ruff lint+format, mypy temiz. |
 | 2026-09-26 | 0 | F0-02 | Araçlar doğrulandı: Flutter 3.47.5 / Dart 3.13.4 (Android toolchain ✓; Visual Studio Faz 3), Docker 29.8.0 (WSL 2), Supabase CLI 2.118.0 (kök `package.json`'da sabit), Deno 2.9.7, uv 0.12.19, Node 24.19, Python 3.14.7, JDK 21. Kullanıcı: Geliştirici Modu, `wsl --install`, yeniden başlatma. Ajan: winget ile Deno/uv/gitleaks/Docker Desktop/Android Studio, Android SDK (platform 36+37, build-tools 36, NDK 28.2, emulator; SDK lisansları kurulumla kabul edildi). `19-setup` §2 gerçek adımlarla güncellendi. |
+| 2026-09-26 | 0 | F0-06 | Yerel Supabase (CLI 2.118, Postgres 17): `config.toml` e-posta OTP (6 hane, onay açık, iki şablonda `{{ .Token }}`), kayıt izin listesi = before-user-created hook + `private.signup_allowlist` (Data API'ye kapalı; `app_config` yerine, e-postalar gizli kalsın diye; `14` §2). İlk migrasyon: `sync_seq` + `server_seq` tetikleyicisi, `profiles`, `courses`, `teams`, `team_members`, RLS (varsayılan-red, anon yetkisiz, üyelik `private.is_team_member`, paylaşım anahtarlarına sütun düzeyi UPDATE). pgTAP 40/40. Uçtan uca curl: kod e-postası, doğrulama, izinsiz e-posta 403, oturumla `tutor/health` 200. Veri modeli düzeltmeleri: `interests` ve `created_at` alanları not null (yerel aynayla uyum). |

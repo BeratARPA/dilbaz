@@ -18,7 +18,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 
 - **Supabase Auth, e-posta + tek kullanımlık kod (OTP).** Derin bağlantı (magic link) yapılandırması gerektirmez. E-posta şablonu kodu (`{{ .Token }}`) içerecek şekilde ayarlanır.
 - Oturum `supabase_flutter`'ın oturum yönetimiyle tutulur. Web'de yalnızca HTTPS.
-- Kayıt serbest değildir: yeni kullanıcı yalnızca davet kodu/izin listesiyle kaydolabilir (Auth ayarı + `app_config.allowed_emails`).
+- Kayıt serbest değildir: yeni kullanıcı yalnızca izin listesindeki e-postayla kaydolabilir. Liste `private.signup_allowlist` tablosundadır (Data API'ye kapalı, e-postalar başka kullanıcılara görünmez). Supabase Auth'un **before-user-created** hook'u (`private.hook_before_user_created`) listede olmayan e-postayı 403 ile reddeder. Yerelde `config.toml` + `seed.sql`, üretimde panel ayarı + SQL (`19-setup.md` §1).
 
 ## 3. Partner mahremiyeti (I-18)
 
