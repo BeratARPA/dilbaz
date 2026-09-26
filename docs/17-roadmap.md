@@ -63,7 +63,7 @@ Dal: `faz-1`
 - [x] **F1-01** Hat S0–S1:
   - Kaynakları indir: NGSL, NGSL-S, CEFR-J, Octanove, wordfreq, CMUdict, Tatoeba EN–TR, Wiktextract alt kümesi
   - `lexicon.en.jsonl` üret, testleri yaz
-- [ ] **F1-02** S2 seçim (A0–A2):
+- [x] **F1-02** S2 seçim (A0–A2):
   - Kelime anlamları
   - 120 kalıplık sohbet çantası (NGSL-Spoken + LLM önerisi + 👤 hızlı gözden geçirme)
   - 40 gramer kodu
@@ -295,3 +295,4 @@ Dal: `faz-7`
 | 2026-09-26 | 1 | F1-01 | S0 `ingest`: `content/sources.yaml` kayıt defteri (8 kaynak, lisans ve atıf). 7 sabit dosya sha256 ile sabitlendi. Tatoeba ve Wiktextract haftalık döküm olarak tarih klasörüne iniyor. Her klasörde `SNAPSHOT.json` var. S1 `lexicon`: `work/lexicon.en.jsonl`, 8.679 girdi, ~30 sn. Kurallar `10` §4.1: çekim başlıklarının lemmaya katılması, Wiktionary biçimleri, ABD IPA'sı CMUdict'ten. pytest 91, ruff/mypy temiz. Sapmalar: CEFR-J v1.6 yalnızca istekle veriliyor, aynı koşullu v1.5 kullanıldı. NGSL lemmatize listeleri belirteç parçaları içerdiği için kullanılmadı. NGSL-Spoken'da bozuk "true" satırı var. Çok kelimeli girdilerin sırası yok. |
 | 2026-09-27 | 1 | F1-02 (taslak) | S2 `select`: kelime anlamları kural + küratörlükle seçiliyor. Sıra: gündelik `include` listesi, NGSL-Spoken, diğerleri; haber ağırlıklı wordfreq sırası konuşma hedefine uymuyordu. 546 lemma ve 600 anlam (A0 167, A1 299, A2 134); açıklamaların hepsi kendi sözlerimizle, çünkü Wiktionary'nin ilk anlamı sık sık yanlış. 120 kalıplık sohbet çantası (17 işlev) ve 40 gramer noktası (A0 8, A1 16, A2 16). Kaynaklar `content/curation/en/`, çıktılar `content/packs/en/items/`. pytest 109. 👤 Sohbet çantasının gözden geçirilmesi bekleniyor. |
 | 2026-09-27 | 1 | F1-03 (taslak) | S3 `carriers` + S4 `sentences`: 600 anlamın hepsine Tatoeba'dan 3 aday bulundu; 344 otomatik seçim elle değiştirildi (320 başka Tatoeba cümlesi, 24 kendi cümle). 587 cümle (A0 44, A1 408, A2 135), engelleyici sorun yok; anlamlar `carriers` alanıyla cümlelerine bağlı. Gramer seviyeleri CEFR-J/Core Inventory/EGP ile karşılaştırıldı: nesne zamirleri, and/but/because, sıklık zarfları ve olumlu Past Simple A1'e alındı (`02` §5). Etiketleyici paket dışı yapıları (edilgen, used to, yan cümle…) tanıyor; aynı lemmanın iki anlamı (right, too, free, letter) yalnızca küratörlükle seçiliyor. pytest 186. Sırada: ayrı oturumda doğrulama geçişi, QA raporu, 👤 20 örneklik inceleme. |
+| 2026-09-27 | 1 | F1-02 | 👤 Sohbet çantası onaylandı: 120 kalıp, değişiklik yok. Gramer noktaları CEFR-J Grammar Profile (Core Inventory ve EGP sütunlarıyla) karşılaştırılarak yeniden seviyelendi: A0 8, A1 22, A2 10 (`02` §5). `check` isminin açıklaması A1'deki gündelik kullanımına (restoran hesabı) çevrildi. Kelime anlamları S4'ten sonra taşıyıcılarını (`carriers`) taşıyor. |
