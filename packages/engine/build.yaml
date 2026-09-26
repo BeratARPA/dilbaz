@@ -6,3 +6,7 @@ targets:
           # JSON mirrors the database columns (docs/13-data-model.md).
           field_rename: snake
           explicit_to_json: true
+      source_gen:combining_builder:
+        options:
+          ignore_for_file:
+            - type=lint

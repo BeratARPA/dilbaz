@@ -159,7 +159,8 @@ create table gap_entries (
 create table recordings (
   id uuid primary key, profile_id uuid not null references profiles on delete cascade,
   course_id uuid not null references courses on delete cascade,
-  task_ref text, attempt_id uuid, audio_path text not null, duration_ms int not null,
+  task_ref text, attempt_id uuid, audio_path text,     -- saklama süresi dolunca null (§7)
+  duration_ms int not null,
   asr jsonb,                             -- {provider, model, words:[{w,start_ms,end_ms,conf}]}
   annotation jsonb,                      -- {runs:[…], merged:{…}}
   metrics jsonb,                         -- 06 §3.3
@@ -366,9 +367,19 @@ Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok 
 
 ## 8. Yerel veritabanı (drift) aynası
 
-- **Kullanıcı tabloları:** Sunucudaki kullanıcı tablolarının aynısı (aynı sütunlar, `server_seq` dahil) + `pending_push boolean`.
-- **`outbox`:** `id`, `table`, `row_id`, `op`, `created_at`, `attempts`. Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
-- **`sync_state`:** son `server_seq` imleci, son başarılı senkron.
-- **İçerik tabloları** (`content_items`, `content_links`, `content_texts`, `content_tasks`, `content_forms` …): salt okunur, paket SQLite dosyasından atomik olarak aktarılır.
-- **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır.
-- **drift migrasyonları** şema sürümüyle ilerler. Her migrasyonun testi vardır (drift'in şema doğrulama araçlarıyla).
+Kod: `app/lib/data/db/` (şema v1, F0-05).
+
+- **Kullanıcı tabloları:** Sunucuda senkronlanan 13 tablonun aynısı (§2.2–2.4 ile `profiles`, `courses`; aynı sütun adları, `server_seq` dahil) + `pending_push boolean`.
+  - Yerelde `server_seq` sunucu atayana kadar `null`dır.
+  - `pending_push` yerel yazmalarda outbox kaydıyla aynı işlemde `true` yapılır. Sunucudan çekilen satırlar varsayılan `false` ile gelir.
+  - **Sunucunun yabancı anahtarları ve CHECK kısıtları yerelde tekrarlanmaz.** Senkronun sayfa sırası ve sunucu şemasının evrimi yerel eklemeleri bozmamalı. Doğrulama sunucuda ve repository katmanında yapılır. Benzersizlikler (`cards (profile_id, item_ref, mode)`, `courses (profile_id, l2)`) korunur.
+  - Zamanlar ISO-8601 metin olarak saklanır (drift `store_date_time_values_as_text`). UTC değerler UTC okunur.
+  - `jsonb`, `text[]` ve `uuid[]` alanları JSON metnidir (tip dönüştürücüleriyle `Map`/`List`). `media_logs.day` `YYYY-MM-DD` metnidir.
+- **`outbox`:** `id` (artan), `target_table`, `row_id`, `op` (`insert` olay / `upsert` durum), `created_at`, `attempts`, `next_attempt_at`, `last_error` (yalnızca hata kodu).
+  - Kayıt yalnızca satırı adlandırır. Push satırın o anki hâlini okur, aynı durum satırının birden çok güncellemesi tek gönderime iner.
+  - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
+  - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
+- **`sync_state`:** profil başına son `server_seq` imleci (`last_server_seq`) ve son başarılı senkron (`last_sync_at`).
+- **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
+- **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.
+- **drift migrasyonları** şema sürümüyle ilerler. Her sürüm artışında `dart run drift_dev make-migrations` çalıştırılır: anlık görüntü `app/drift_schemas/` altına, doğrulama yardımcıları `app/test/drift/` altına üretilir ve her geçiş için bir yükseltme testi yazılır. `migration_test.dart`, koddaki şemanın dışa aktarılan son anlık görüntüyle aynı olduğunu denetler.

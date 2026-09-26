@@ -1,10 +1,12 @@
 include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
+  # Generated Dart code stays analyzed so that compile errors surface; its
+  # own `ignore_for_file` headers silence lints. drift's schema snapshots
+  # for migration tests are excluded (raw generic types).
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
     - lib/l10n/gen/**
+    - test/drift/*/generated/**
     - build/**
     - android/**
     - web/**

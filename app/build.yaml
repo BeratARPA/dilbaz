@@ -1,0 +1,17 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          databases:
+            app_database: lib/data/db/app_database.dart
+          schema_dir: drift_schemas/
+          test_dir: test/drift/
+          # ISO-8601 text keeps UTC values UTC when read back.
+          store_date_time_values_as_text: true
+          # Mirrors server column names.
+          case_from_dart_to_sql: snake_case
+      source_gen:combining_builder:
+        options:
+          ignore_for_file:
+            - type=lint

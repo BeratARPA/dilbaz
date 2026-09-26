@@ -30,7 +30,7 @@ Dal: `faz-0`
   - Material 3 tema ve renk token'ları (`09` §3)
   - go_router (4 sekme + "Söyleyemedim" butonu), boş ekranlar
   - Yasak kelime testi (`15` §2, I-12)
-- [ ] **F0-05** drift şema v1: kullanıcı tabloları, outbox, sync_state, boş içerik tabloları (`13` §8). drift_flutter kurulumu, migrasyon testi.
+- [x] **F0-05** drift şema v1: kullanıcı tabloları, outbox, sync_state, boş içerik tabloları (`13` §8). drift_flutter kurulumu, migrasyon testi.
 - [ ] **F0-06** Supabase yerel:
   - `supabase init`
   - `config.toml`: e-posta OTP açık, kayıt izin listesi
@@ -270,3 +270,4 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-01 | Depo `main` üzerinde plan commit'iyle başlatıldı, iş `faz-0` dalında. `.gitignore` (gizli dosyalar, ses verisi, içerik çıktıları, üretilmiş `*.g.dart`/`*.freezed.dart`), `.gitattributes` (LF), `.editorconfig`. Sıra değişikliği: araç kontrolü (F0-02) eksik araçları erken kurmak için önce yapıldı. |
 | 2026-09-26 | 0 | F0-03 | `dilbaz_engine`: `SrsScheduler` FSRS adaptörü (önekli içe aktarma, UTC zorunlu, `CardMemory` JSON = `card_state_after`), müfredat/sözlük tipleri, `zz` sentetik paket üreteci, I-15 mimari testleri (içe aktarma sınırı, fsrs öneki, dize sabiti taraması), kapsam aracı. 40 test, `lib` kapsamı %100. Not: Dart 3.13 + very_good_analysis 11 yeni yapıcı sözdizimini (`new(...)`, `factory ({...})`) zorunlu kılıyor; freezed 4.0.2 ile uyumlu. build_runner 2.16'da `-d` kaldırılmış, CLAUDE.md komutları güncellendi. |
 | 2026-09-26 | 0 | F0-04 | `app` (dilbaz_app): `12` §4 bağımlılıkları, `l10n.yaml` + `app_tr.arb` (üretilen `lib/l10n/gen` git dışı), Material 3 tema (mavi-yeşil, hata rolü yumuşak turuncu, `FeedbackColors`), go_router 4 sekme + her sekmede "Söyleyemedim" butonu, boş ekranlar. Testler: yasak kelime taraması (I-12), gezinme, tema renk kuralları (14 test). Debug APK tüm eklentilerle derleniyor. Sapma: AGP 9.4.1 + Gradle 9.6.0 + `compileSdk 37` (`permission_handler_android` 14.1), `just_audio_media_kit` F3-09'a ertelendi (`12` §4). |
+| 2026-09-26 | 0 | F0-05 | drift şema v1: 13 senkron kullanıcı tablosu (sunucu aynası + `pending_push`), `outbox`, `sync_state`, 7 içerik tablosu. `driftDatabase` sağlayıcısı, ISO metin UTC zamanlar, JSON dönüştürücüler. Testler: tablo kümesi, senkron sütunları, UTC gidiş-dönüş, benzersizlik, JSON, outbox sırası, v1 anlık görüntü doğrulaması (26 uygulama testi). Kararlar `13` §8'de: yerelde FK/CHECK yok, outbox yalnızca satırı adlandırır. Düzeltmeler: `recordings.audio_path` saklama sonrası null olabildiği için nullable yapıldı. Üretilmiş kod artık analizden hariç tutulmuyor, derleme hataları görünür. |
