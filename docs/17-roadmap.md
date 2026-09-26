@@ -18,7 +18,7 @@ Dal: `faz-0`
   - `.gitignore`: Flutter/Dart/Deno/Python, `env/`, `supabase/functions/.env`, `content/{sources,work,build}/`, `evals/asr/audio/`, `*.jks`, `key.properties`
   - `.editorconfig`, README kontrolü
 - [ ] **F0-02** Araç doğrulama: `flutter doctor -v`, `docker info`, `supabase --version`, `deno --version`, `uv --version`, `node --version`. Eksik varsa 👤 `19-setup.md` §2.
-- [ ] **F0-03** `packages/engine` iskeleti:
+- [x] **F0-03** `packages/engine` iskeleti:
   - Dart 3.13 SDK kısıtı; `fsrs ^2.0.1`, `freezed` 4, `json_serializable`, `meta`
   - `very_good_analysis`, klasör yapısı (`12` §2)
   - Sentetik dil paketi üreteci (`test/fixtures/zz`)
@@ -268,3 +268,4 @@ Dal: `faz-7`
 |---|---|---|---|
 | 2026-09-26 | — | Plan | Tüm plan dokümanları, ADR'ler, CLAUDE.md ve başlangıç promptları yazıldı. |
 | 2026-09-26 | 0 | F0-01 | Depo `main` üzerinde plan commit'iyle başlatıldı, iş `faz-0` dalında. `.gitignore` (gizli dosyalar, ses verisi, içerik çıktıları, üretilmiş `*.g.dart`/`*.freezed.dart`), `.gitattributes` (LF), `.editorconfig`. Sıra değişikliği: araç kontrolü (F0-02) eksik araçları erken kurmak için önce yapıldı. |
+| 2026-09-26 | 0 | F0-03 | `dilbaz_engine`: `SrsScheduler` FSRS adaptörü (önekli içe aktarma, UTC zorunlu, `CardMemory` JSON = `card_state_after`), müfredat/sözlük tipleri, `zz` sentetik paket üreteci, I-15 mimari testleri (içe aktarma sınırı, fsrs öneki, dize sabiti taraması), kapsam aracı. 40 test, `lib` kapsamı %100. Not: Dart 3.13 + very_good_analysis 11 yeni yapıcı sözdizimini (`new(...)`, `factory ({...})`) zorunlu kılıyor; freezed 4.0.2 ile uyumlu. build_runner 2.16'da `-d` kaldırılmış, CLAUDE.md komutları güncellendi. |

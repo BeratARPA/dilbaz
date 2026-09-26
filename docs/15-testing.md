@@ -43,7 +43,8 @@ Kalite burada iki anlama gelir:
 
 ## 3. Motor test stratejisi
 
-- **Sentetik dil paketi (`zz`):** Rastgele heceli kelimeler, sentetik lemma/biçim tabloları, sentetik gramer kodları. Motor testlerinin tamamı bununla çalışır (I-15).
+- **Sentetik dil paketi (`zz`):** Rastgele heceli kelimeler (ASCII dışı harfler dahil), sentetik lemma/biçim tabloları (düzensiz ve eş yazımlı biçimler dahil), sentetik gramer kodları, ayarlanabilir kelime ayırıcı. Motor testlerinin tamamı bununla çalışır (I-15). Üreteç: `packages/engine/test/fixtures/zz/zz_pack.dart`.
+- **Kapsam ölçümü:** `dart test --coverage-path=coverage/lcov.info` + `dart run tool/check_coverage.dart` (üretilmiş `*.g.dart`/`*.freezed.dart` hariç, eşik %90).
 - **Özellik tabanlı testler:** Rastgele öğrenci durumları, kart kümeleri ve içerik üreteçleri ile planlayıcı ve model değişmezleri denenir. Seed'li ve tekrarlanabilirdir.
 - **FSRS entegrasyonu:** Bilinen bir tekrar dizisi için paketten beklenen durumlar karşılaştırılır. Tekrar oynatma (fuzz kapalı) determinizmi test edilir.
 - **Simülasyon testi:** Sentetik bir öğrenci (hatırlama olasılığı FSRS'e göre örneklenir) 8 hafta çalıştırılır. Tekrar yükü tavanı aşmamalı, kol açıkları kapanmalı, yeni öğe akışı durmamalı.

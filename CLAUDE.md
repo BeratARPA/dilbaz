@@ -65,10 +65,10 @@ Bir kuralı değiştirmek gerekirse **önce** `docs/01-pedagogy.md`'yi gerekçes
 ## Komutlar
 ```bash
 # Motor (saf Dart)
-cd packages/engine && dart pub get && dart run build_runner build -d && dart analyze && dart test
+cd packages/engine && dart pub get && dart run build_runner build && dart analyze --fatal-infos && dart test --coverage-path=coverage/lcov.info && dart run tool/check_coverage.dart
 
 # Uygulama
-cd app && flutter pub get && dart run build_runner build -d && flutter analyze && flutter test
+cd app && flutter pub get && dart run build_runner build && flutter analyze && flutter test
 cd app && flutter run -d <cihaz> --dart-define-from-file=env/local.json
 cd app && flutter build apk --release --dart-define-from-file=env/prod.json
 
@@ -88,6 +88,8 @@ deno run -A evals/run.ts --route answer_check
 ## Kod kuralları
 - **Dil:** Kod, tanımlayıcılar, kod yorumları ve commit mesajları **İngilizce**. Dokümanlar (`docs/`) **Türkçe**. Kullanıcıya görünen metinler **yalnızca** `app/lib/l10n/app_tr.arb` üzerinden; metin dili `docs/09-ux-motivation.md` §2.
 - **Dart:** `very_good_analysis`, analiz uyarısı = hata. freezed ile değişmez modeller. Beklenen hatalar `sealed Result`. `dynamic` kullanılmaz. Genel `catch` yok. Dosya başına bir sorumluluk.
+  - Dart 3.13 yapıcı sözdizimi (lint zorunlu kılar): `new(this.x)`, `new named()`, `factory fromJson(...)`, freezed'de `const factory ({...}) = _X;`. Enum yapıcısında `const` yazılmaz.
+  - Üretilmiş dosyalar (`*.g.dart`, `*.freezed.dart`) git dışıdır; `build_runner build` ile üretilir (`-d` bayrağı build_runner 2.16'da kaldırıldı).
 - **Özellik klasörü:** `features/<ad>/{presentation,application}/`. Paylaşılan veri erişimi `data/repositories/`.
 - **Supabase SQL:** Her migrasyon geri alınamaz kabul edilir. Veri kaybettiren değişiklik yeni migrasyonla ve kullanıcı onayıyla yapılır.
 - **Edge Functions:** Yapılandırma tek yerde (`_shared/llm_config.ts`, `_shared/speech_config.ts`). Sağlayıcılar adaptör arkasında. Loglarda transkript ya da kişisel metin yok.

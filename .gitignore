@@ -44,7 +44,10 @@ content/build/
 .flutter-plugins
 .flutter-plugins-dependencies
 build/
-coverage/
+# Test coverage output at package roots (lib/src/coverage is engine code).
+/coverage/
+/app/coverage/
+/packages/*/coverage/
 lcov.info
 *.g.dart
 *.freezed.dart
