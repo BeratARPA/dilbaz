@@ -79,7 +79,7 @@ npx supabase functions serve
 cd supabase/functions && deno test -A && deno lint && deno fmt --check
 
 # İçerik araçları
-cd content/tools && uv sync && uv run dilbaz-content --help && uv run pytest && uv run ruff check .
+cd content/tools && uv sync && uv run dilbaz-content --help && uv run pytest && uv run ruff check . && uv run ruff format --check . && uv run mypy src
 
 # LLM eval (ÜCRETLİ; kullanıcı onayıyla)
 deno run -A evals/run.ts --route answer_check

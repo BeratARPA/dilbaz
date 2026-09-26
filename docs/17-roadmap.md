@@ -40,7 +40,7 @@ Dal: `faz-0`
   - `_shared/`: auth, budget, `llm_config.ts`, `speech_config.ts`, yapılandırılmış log
   - `tutor` fonksiyonunda `health` rotası
   - `deno test`
-- [ ] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
+- [x] **F0-08** İçerik araçları iskeleti: `content/tools` (uv, typer CLI `dilbaz-content --help`, pytest, ruff).
 - [ ] **F0-09** CI: `.github/workflows/ci.yml` (`15` §5) + gizli anahtar taraması. İlk koşu yeşil.
 - [ ] **F0-10** 👤 Hesaplar ve anahtarlar (`19-setup.md` §1):
   - Supabase projesi (Frankfurt)
@@ -272,3 +272,4 @@ Dal: `faz-7`
 | 2026-09-26 | 0 | F0-04 | `app` (dilbaz_app): `12` §4 bağımlılıkları, `l10n.yaml` + `app_tr.arb` (üretilen `lib/l10n/gen` git dışı), Material 3 tema (mavi-yeşil, hata rolü yumuşak turuncu, `FeedbackColors`), go_router 4 sekme + her sekmede "Söyleyemedim" butonu, boş ekranlar. Testler: yasak kelime taraması (I-12), gezinme, tema renk kuralları (14 test). Debug APK tüm eklentilerle derleniyor. Sapma: AGP 9.4.1 + Gradle 9.6.0 + `compileSdk 37` (`permission_handler_android` 14.1), `just_audio_media_kit` F3-09'a ertelendi (`12` §4). |
 | 2026-09-26 | 0 | F0-05 | drift şema v1: 13 senkron kullanıcı tablosu (sunucu aynası + `pending_push`), `outbox`, `sync_state`, 7 içerik tablosu. `driftDatabase` sağlayıcısı, ISO metin UTC zamanlar, JSON dönüştürücüler. Testler: tablo kümesi, senkron sütunları, UTC gidiş-dönüş, benzersizlik, JSON, outbox sırası, v1 anlık görüntü doğrulaması (26 uygulama testi). Kararlar `13` §8'de: yerelde FK/CHECK yok, outbox yalnızca satırı adlandırır. Düzeltmeler: `recordings.audio_path` saklama sonrası null olabildiği için nullable yapıldı. Üretilmiş kod artık analizden hariç tutulmuyor, derleme hataları görünür. |
 | 2026-09-26 | 0 | F0-07 | Edge Functions: `_shared/` (`llm_config.ts`: model, rota effort/max_tokens, refusal fallback, fiyatlar; `speech_config.ts`; `auth.ts`: `@supabase/server` JWKS doğrulaması; `budget.ts`: maliyet + günlük tavan; `log.ts`: kapalı alan kümeli JSON log; `http.ts`), `tutor` yol tabanlı yönlendirici + `health`. 23 deno testi (model adı yalnızca `llm_config.ts`'te, log'a metin sızmaz). Sıra değişikliği: F0-06 Docker'a (WSL yeniden başlatması) bağlı olduğu için F0-07 önce yapıldı. `config.toml`'da `verify_jwt = false` F0-06'da eklenecek. `07` §3 tablosuna eksik `max_tokens` değerleri eklendi. |
+| 2026-09-26 | 0 | F0-08 | `content/tools` (uv, `uv_build`): typer CLI `dilbaz-content` (`version`, `check-manifest`), pydantic manifest şeması (`11` §3; kaynak lisansı/atıfı zorunlu, I-16). pytest (14), ruff lint+format, mypy temiz. |

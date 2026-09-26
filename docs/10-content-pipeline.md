@@ -39,7 +39,8 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `pydantic`, `typer` (CLI), `rich`, `pytest`
   - `fsrs[optimizer]` (FSRS optimizasyonu; ayrı araç)
 - **Başka hedef diller:** spaCy'nin resmî modeli olmayan diller için Stanza. Örneğin Türkçe hedef dil olursa Stanza'nın Türkçe modelleri kullanılır.
-- **CLI:** `uv run dilbaz-content <komut>` (bkz. §4)
+- **CLI:** `uv run dilbaz-content <komut>` (bkz. §4). F0-08 itibarıyla: `version`, `check-manifest` (manifest şeması, `11` §3; kaynak başına lisans ve atıf zorunlu, I-16). Aşama komutları Faz 1'de eklenir.
+- **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
 
 ## 4. Aşamalar
