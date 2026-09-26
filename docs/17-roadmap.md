@@ -13,7 +13,7 @@ Tam sürüm (v1.0) sekiz fazda inşa edilir. Her faz kullanılabilir bir sürüm
 ## Faz 0 — Temel kurulum
 Dal: `faz-0`
 
-- [ ] **F0-01** Git deposu:
+- [x] **F0-01** Git deposu:
   - `git init`, dal `faz-0`
   - `.gitignore`: Flutter/Dart/Deno/Python, `env/`, `supabase/functions/.env`, `content/{sources,work,build}/`, `evals/asr/audio/`, `*.jks`, `key.properties`
   - `.editorconfig`, README kontrolü
@@ -267,3 +267,4 @@ Dal: `faz-7`
 | Tarih | Faz | Görev | Not |
 |---|---|---|---|
 | 2026-09-26 | — | Plan | Tüm plan dokümanları, ADR'ler, CLAUDE.md ve başlangıç promptları yazıldı. |
+| 2026-09-26 | 0 | F0-01 | Depo `main` üzerinde plan commit'iyle başlatıldı, iş `faz-0` dalında. `.gitignore` (gizli dosyalar, ses verisi, içerik çıktıları, üretilmiş `*.g.dart`/`*.freezed.dart`), `.gitattributes` (LF), `.editorconfig`. Sıra değişikliği: araç kontrolü (F0-02) eksik araçları erken kurmak için önce yapıldı. |

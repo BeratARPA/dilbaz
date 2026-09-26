@@ -116,3 +116,4 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 ## 9. Durum
 
 - 2026-09-25: Plan tamamlandı. Kodlama başlamadı. Başlangıç: `17-roadmap.md` → Faz 0.
+- 2026-09-26: Faz 0 başladı (dal `faz-0`). Güncel durum `17-roadmap.md` ilerleme günlüğündedir.
