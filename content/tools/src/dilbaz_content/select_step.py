@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -43,7 +44,11 @@ _CURATED = Provenance(source="dilbaz curation", license="own")
 
 
 class SenseChoice(BaseModel):
-    """A sense chosen by hand: an own gloss, or a Wiktionary sense by index."""
+    """A sense chosen by hand: an own gloss, or a Wiktionary sense by index.
+
+    `ipa_us`/`ipa_uk` replace the lexicon's transcription where Wiktionary
+    lists a secondary pronunciation without marking it ("breakfast").
+    """
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -51,6 +56,8 @@ class SenseChoice(BaseModel):
     sense: str | None = None
     wiktionary: int | None = Field(default=None, ge=0)
     level: Level | None = None
+    ipa_us: str | None = Field(default=None, pattern=r"^/[^/]+/$")
+    ipa_uk: str | None = Field(default=None, pattern=r"^/[^/]+/$")
 
 
 class WordSenseCuration(BaseModel):
@@ -117,9 +124,19 @@ def _wiktionary_gloss(entry: LexiconEntry, pos: str, index: int = 0) -> str | No
     return glosses[index] if index < len(glosses) else None
 
 
-def _choices(entry: LexiconEntry, max_level: Level) -> list[tuple[str, str, Level, Provenance]]:
-    """(pos, gloss, level, provenance) chosen by the rule."""
-    chosen: list[tuple[str, str, Level, Provenance]] = []
+@dataclass(frozen=True)
+class _Choice:
+    pos: str
+    gloss: str
+    level: Level
+    provenance: Provenance
+    ipa_us: str | None
+    ipa_uk: str | None
+
+
+def _choices(entry: LexiconEntry, max_level: Level) -> list[_Choice]:
+    """The senses chosen by the rule."""
+    chosen: list[_Choice] = []
     for tag in entry.levels:
         level = _sense_level(entry, tag.pos)
         if tag.pos not in CONTENT_POS or level is None:
@@ -128,14 +145,14 @@ def _choices(entry: LexiconEntry, max_level: Level) -> list[tuple[str, str, Leve
             continue
         gloss = _wiktionary_gloss(entry, tag.pos)
         if gloss is not None:
-            chosen.append((tag.pos, gloss, level, _AUTO))
+            chosen.append(_Choice(tag.pos, gloss, level, _AUTO, entry.ipa_us, entry.ipa_uk))
     return chosen[:MAX_SENSES_PER_LEMMA]
 
 
 def _curated_choices(
     entry: LexiconEntry, picks: Iterable[SenseChoice], max_level: Level
-) -> list[tuple[str, str, Level, Provenance]]:
-    chosen: list[tuple[str, str, Level, Provenance]] = []
+) -> list[_Choice]:
+    chosen: list[_Choice] = []
     for pick in picks:
         if pick.sense is not None:
             gloss, provenance = pick.sense, _CURATED
@@ -149,7 +166,9 @@ def _curated_choices(
         if level is None:
             raise SelectionError(f"{entry.lemma}: {pick.pos} has no level, give one")
         if level_index(level) <= level_index(max_level):
-            chosen.append((pick.pos, gloss, level, provenance))
+            ipa_us = pick.ipa_us or entry.ipa_us
+            ipa_uk = pick.ipa_uk or entry.ipa_uk
+            chosen.append(_Choice(pick.pos, gloss, level, provenance, ipa_us, ipa_uk))
     return chosen
 
 
@@ -204,19 +223,19 @@ def select_word_senses(
             else _choices(entry, max_level)
         )
         per_pos: Counter[str] = Counter()
-        for pos, gloss, level, provenance in chosen:
-            per_pos[pos] += 1
+        for choice in chosen:
+            per_pos[choice.pos] += 1
             senses.append(
                 WordSense(
-                    key=f"{l2}.ws.{slug(entry.lemma)}.{POS_CODES[pos]}.{per_pos[pos]}",
+                    key=f"{l2}.ws.{slug(entry.lemma)}.{POS_CODES[choice.pos]}.{per_pos[choice.pos]}",
                     lemma=entry.lemma,
-                    pos=pos,
-                    sense=gloss,
-                    level=level,
+                    pos=choice.pos,
+                    sense=choice.gloss,
+                    level=choice.level,
                     rank=entry.rank,
-                    ipa_us=entry.ipa_us,
-                    ipa_uk=entry.ipa_uk,
-                    provenance=provenance,
+                    ipa_us=choice.ipa_us,
+                    ipa_uk=choice.ipa_uk,
+                    provenance=choice.provenance,
                 )
             )
     return tuple(senses)

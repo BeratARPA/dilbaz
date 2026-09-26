@@ -56,6 +56,11 @@ WIKI_LINES = [
         "sounds": [
             {"ipa": "/wɒtʃ/", "tags": ["Received-Pronunciation"]},
             {"ipa": "/wɑtʃ/"},
+            {
+                "ipa": "/wɔtʃ/",
+                "tags": ["General-American"],
+                "note": "of Canada",
+            },
             {"audio": "watch.ogg"},
         ],
         "forms": [{"form": "watches", "tags": ["plural"]}],

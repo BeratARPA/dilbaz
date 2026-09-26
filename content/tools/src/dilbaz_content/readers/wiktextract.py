@@ -42,7 +42,7 @@ _ALLOWED_FORM_TAGS = _GRAMMATICAL_TAGS | {"US", "UK", "British", "American", "Co
 # Contractions ("'s", "'re") are expanded by normalization instead.
 _APOSTROPHES = ("'", "’")
 # Bump when the slim record changes, so that cached subsets are rebuilt.
-SLIM_VERSION = 4
+SLIM_VERSION = 5
 MAX_SENSES_PER_ENTRY = 12
 
 
@@ -56,12 +56,17 @@ class WikiSense(BaseModel):
 
 
 class WikiSound(BaseModel):
-    """One IPA transcription with its accent tags."""
+    """One IPA transcription with its accent tags and Wiktionary's note.
+
+    The note names an accent ("Local Dublin") or a qualifier ("in fast
+    speech"); such transcriptions are not an accent's usual form.
+    """
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     ipa: str
     tags: tuple[str, ...] = ()
+    note: str | None = None
 
 
 class WikiEntry(BaseModel):
@@ -90,6 +95,7 @@ class _RawSound(BaseModel):
 
     ipa: str | None = None
     tags: tuple[str, ...] = ()
+    note: str | None = None
 
 
 class _RawForm(BaseModel):
@@ -151,7 +157,7 @@ def slim_entry(line: str) -> WikiEntry | None:
         word=raw.word,
         pos=pos,
         senses=_senses(raw),
-        sounds=tuple(WikiSound(ipa=s.ipa, tags=s.tags) for s in raw.sounds if s.ipa),
+        sounds=tuple(WikiSound(ipa=s.ipa, tags=s.tags, note=s.note) for s in raw.sounds if s.ipa),
         forms=tuple(dict.fromkeys(forms)),
     )
 

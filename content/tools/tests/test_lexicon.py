@@ -245,6 +245,62 @@ def test_untagged_ipa_is_general_only_when_no_accent_is_tagged() -> None:
     assert (x.ipa_us, x.ipa_uk) == ("/b/", None)
 
 
+def test_marginal_transcriptions_are_the_last_resort() -> None:
+    sounds = (
+        WikiSound(ipa="/ˈəʊn.i/", tags=("UK",), note="in fast speech"),
+        WikiSound(ipa="/ˈaːn.li/", tags=("UK", "dialectal")),
+        WikiSound(ipa="/ˈəʊn.li/", tags=("UK",)),
+        WikiSound(ipa="/ˈoʊ.li/", tags=("US",), note="in rapid speech"),
+        WikiSound(ipa="/ˈoʊn.li/", tags=("US",)),
+    )
+    only = build(
+        level_entries=(level("only", "ADV", "A1"),),
+        wiki={"only": (WikiEntry(word="only", pos="ADV", sounds=sounds),)},
+    )["only"]
+    assert (only.ipa_us, only.ipa_uk) == ("/ˈoʊn.li/", "/ˈəʊn.li/")
+    dated = (WikiSound(ipa="/ˈɔːfən/", tags=("Received-Pronunciation", "dated")),)
+    often = build(
+        level_entries=(level("often", "ADV", "A1"),),
+        wiki={"often": (WikiEntry(word="often", pos="ADV", sounds=dated),)},
+    )["often"]
+    assert often.ipa_uk == "/ˈɔːfən/"
+
+
+def test_only_qualifier_notes_make_a_transcription_marginal() -> None:
+    # A dialect form whose accent is only in the note.
+    book_sounds = (
+        WikiSound(ipa="/buːk/", note="some speakers from Northern England"),
+        WikiSound(ipa="/bʊk/"),
+    )
+    book = build(
+        level_entries=(level("book", "NOUN", "A1"),),
+        wiki={"book": (WikiEntry(word="book", pos="NOUN", sounds=book_sounds),)},
+    )["book"]
+    assert book.ipa_uk == "/bʊk/"
+    # A sound change in the note describes a usual form.
+    there_sounds = (
+        WikiSound(ipa="/ðə(ɹ)/", note="weak form"),
+        WikiSound(ipa="/ðɛə(ɹ)/", note="strong form"),
+    )
+    there = build(
+        level_entries=(level("there", "ADV", "A1"),),
+        wiki={"there": (WikiEntry(word="there", pos="ADV", sounds=there_sounds),)},
+    )["there"]
+    assert there.ipa_uk == "/ðɛə(ɹ)/"
+    easy_sounds = (WikiSound(ipa="/ˈiːzi/", note="happy-tensing"),)
+    easy = build(
+        level_entries=(level("easy", "ADJ", "A1"),),
+        wiki={"easy": (WikiEntry(word="easy", pos="ADJ", sounds=easy_sounds),)},
+    )["easy"]
+    assert easy.ipa_uk == "/ˈiːzi/"
+    weak_only = (WikiSound(ipa="/ðə/", note="weak form"),)
+    the = build(
+        level_entries=(level("the", "DET", "A1"),),
+        wiki={"the": (WikiEntry(word="the", pos="DET", sounds=weak_only),)},
+    )["the"]
+    assert the.ipa_uk == "/ðə/"
+
+
 def test_exact_spelling_wins_over_other_case() -> None:
     wiki = {
         "tv": (

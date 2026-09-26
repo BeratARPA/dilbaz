@@ -92,7 +92,13 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - Çok kelimeli ya da tireli girdilerin (207; wordfreq tirede de böler: "part-time") sırası yoktur, çünkü öbek tahmini çok kaba. Bu girdiler sona yazılır. Tireli yazım varyantları da aileye katılmaz. X_Lex bantları yalnızca tek kelimeli girdilerden seçilir.
 - **Telaffuz:**
   - ABD IPA'sı CMUdict'in ilk (sözlük) telaffuzundan çevrilir. Wiktionary'nin GA etiketi bazen zayıf biçimi gösteriyor ("you" /jə/). Çevirmen vurguyu en uzun hece başı ilkesiyle hece başına koyar; kısaltmalardaki çift ana vurgunun öndekini ikincil yapar (/ˌtiˈvi/).
-  - İngiltere IPA'sı Wiktionary'nin RP/UK etiketli ilk değeridir. Hiçbir aksan etiketlenmemişse etiketsiz ilk değer genel kabul edilir. Köşeli parantezli fonetik yazımlar alınmaz.
+  - İngiltere IPA'sı Wiktionary'nin RP/UK etiketli ilk değeridir. ABD için olağan bir değer etiketlenmemişse etiketsiz ilk değer genel kabul edilir. Köşeli parantezli fonetik yazımlar alınmaz.
+  - **Marjinal söyleyişler** iki aksanda da son çaredir. Marjinal sayılanlar:
+    - niteleyici etiketliler (dated, dialectal, rare, nonstandard, also, sometimes, unstressed…)
+    - notunda niteleyici geçenler ("spelling pronunciation", "in fast speech", "weak form", "some speakers"…)
+
+    Wiktextract'ın `note` alanı bunun için alt kümede tutulur (`SLIM_VERSION` 5). Aksan ya da ses değişimi adı taşıyan notlar ("happy-tensing", "wine–whine merger") olağan biçimi de anlatır, bu yüzden marjinal sayılmaz. Sonuç (2026-09-27): sözlükte 31 İngiltere değeri değişti. İşlev sözcükleri zayıf biçim yerine sözlük biçimini alıyor (must /mʌst/, that /ðæt/), 9 sözcük ilk kez değer aldı. İngiltere kapsaması %87,8.
+  - Kaynağın hiç işaretlemediği hatalar S2 küratörlüğünde düzeltilir (§4.2). Wiktionary, "breakfast"ın yazılışa göre söylenişini (/ˈbreɪkˌfɑːst/) not düşmeden RP diye etiketliyor.
   - ARPAbet de saklanır; minimal çiftler bununla bulunur.
 - **Anlamlar:** Wiktionary'den sözcük türü başına en fazla 8 anlam. Seviye listesindeki türler önce gelir. Eskimiş, arkaik ve nadir anlamlar alınmaz. "Biçimi" (form-of) anlamlar yalnızca girdinin başka anlamı yoksa tutulur ("TV" → "Abbreviation of television").
 - **Wiktionary alt kümesi:** 3 GB'lık döküm bir kez taranır; yalnızca sözlüğün kelimeleri `work/wiktextract.en.subset.jsonl` dosyasına yazılır. Döküm, kelime listesi ya da alt küme biçimi (`SLIM_VERSION`) değişmedikçe yeniden taranmaz. Tam çalıştırma ~30 sn sürer.
@@ -126,6 +132,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - **Seviye:** Seviye listelerinden gelir. En sık 300 ailenin A1 anlamları A0 sayılır (`02` §2: A0 < 300 kelime).
 - **Açıklamalar:** Wiktionary'nin ilk anlamı öğrenci için sık sık yanlış ("pen" = ağıl, "tell" = saymak). Bu yüzden seçilen her anlamın İngilizce açıklaması küratörlük dosyasında kendi sözlerimizle yazılır (lisans: `own`). `select` çıktısında otomatik açıklama kalmamalıdır.
 - **Anahtar:** `en.ws.<lemma>.<tür>.<n>` (ör. `en.ws.watch.v.1`); anahtar hiç değişmez.
+- **Söyleniş düzeltmesi:** `senses` içindeki `ipa_uk`/`ipa_us`, S1'in kaynaktan doğru seçemediği değerin yerine geçer (breakfast, §4.1).
 - **İlk seçim (2026-09-27):** 546 lemma, 600 anlam (A0 167, A1 299, A2 134).
 
 **Sohbet çantası (`chunks.jsonl`):**

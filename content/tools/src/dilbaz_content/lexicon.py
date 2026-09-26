@@ -19,12 +19,63 @@ from pydantic import BaseModel, ConfigDict
 from dilbaz_content.arpabet import to_ipa
 from dilbaz_content.readers.level_lists import CEFR_LEVELS, LevelEntry
 from dilbaz_content.readers.ngsl import RankedLemma
-from dilbaz_content.readers.wiktextract import WikiEntry
+from dilbaz_content.readers.wiktextract import WikiEntry, WikiSound
 
 Cefr = Literal["A1", "A2", "B1", "B2", "C1", "C2"]
 MAX_SENSES_PER_POS = 8
 _US_TAGS = frozenset({"General-American", "US"})
 _UK_TAGS = frozenset({"Received-Pronunciation", "UK"})
+# Tags that mark a transcription as marginal rather than an accent's usual form
+# ("Early" comes with "Modern": Early Modern English).
+_QUALIFIER_TAGS = frozenset(
+    {
+        "also",
+        "archaic",
+        "colloquial",
+        "dated",
+        "dialectal",
+        "Early",
+        "emphatic",
+        "humorous",
+        "nonstandard",
+        "obsolete",
+        "proscribed",
+        "rare",
+        "reduced",
+        "regional",
+        "sometimes",
+        "Traditional",
+        "uncommon",
+        "unstressed",
+    }
+)
+# Words in a Wiktionary note that mark a transcription as marginal. Other notes
+# name an accent or a sound change ("happy-tensing", "wine-whine merger") and
+# often describe the usual form, so they do not.
+_QUALIFIER_NOTES = (
+    "archaic",
+    "century",
+    "colloquial",
+    "dated",
+    "dialectal",
+    "early modern",
+    "emphatic",
+    "fast speech",
+    "hypercorrect",
+    "hyperforeign",
+    "non-native",
+    "non-standard",
+    "nonstandard",
+    "obsolete",
+    "rapid speech",
+    "rare",
+    "regional",
+    "some speakers",
+    "spelling pronunciation",
+    "unstressed",
+    "weak form",
+    "working-class",
+)
 
 
 class LevelTag(BaseModel):
@@ -232,20 +283,43 @@ def _phonemic(ipa: str) -> str | None:
     return text[: end + 1] if text.startswith("/") and end > 0 else None
 
 
+def _marginal(sound: WikiSound) -> bool:
+    """A qualifier tag (dated, dialectal…) or note ("in fast speech", "weak form")."""
+    note = (sound.note or "").lower()
+    return bool(_QUALIFIER_TAGS.intersection(sound.tags)) or any(
+        qualifier in note for qualifier in _QUALIFIER_NOTES
+    )
+
+
 def _ipa(entries: Iterable[WikiEntry], arpabet: tuple[str, ...]) -> tuple[str | None, str | None]:
     """(US, UK) transcriptions.
 
     US: CMUdict's citation form when there is one, else Wiktionary's GA/US
     tag, else its first untagged transcription. UK: Wiktionary's RP/UK tag;
-    untagged transcriptions count only when no accent is tagged at all.
+    untagged transcriptions count only when no US form is tagged. Marginal
+    transcriptions (see `_marginal`) come after all others: Wiktionary tags
+    the spelling pronunciation of "breakfast" as RP without saying so, so a
+    note is the only reliable sign.
     """
-    sounds = [(p, s.tags) for e in entries for s in e.sounds if (p := _phonemic(s.ipa))]
-    tagged_uk = [p for p, tags in sounds if _UK_TAGS.intersection(tags)]
-    tagged_us = [p for p, tags in sounds if _US_TAGS.intersection(tags)]
-    untagged = [p for p, tags in sounds if not tags]
-    uk = tagged_uk[0] if tagged_uk else None
-    if uk is None and not tagged_us and untagged:
-        uk = untagged[0]
+    sounds = [(p, s) for e in entries for s in e.sounds if (p := _phonemic(s.ipa))]
+
+    def listed(accent: frozenset[str] | None, *, marginal: bool) -> list[str]:
+        return [
+            p
+            for p, s in sounds
+            if (accent.intersection(s.tags) if accent else not s.tags) and _marginal(s) == marginal
+        ]
+
+    usual_us = listed(_US_TAGS, marginal=False)
+    plain = listed(None, marginal=False)
+    marginal_plain = listed(None, marginal=True)
+    uk_choices = [
+        *listed(_UK_TAGS, marginal=False),
+        *(plain if not usual_us else ()),
+        *listed(_UK_TAGS, marginal=True),
+        *(marginal_plain if not usual_us else ()),
+    ]
+    uk = uk_choices[0] if uk_choices else None
     us: str | None = None
     if arpabet:
         try:
@@ -253,7 +327,13 @@ def _ipa(entries: Iterable[WikiEntry], arpabet: tuple[str, ...]) -> tuple[str | 
         except KeyError:
             us = None
     if us is None:
-        us = tagged_us[0] if tagged_us else next((p for p in untagged if p != uk), None)
+        us_choices = [
+            *usual_us,
+            *(p for p in plain if p != uk),
+            *listed(_US_TAGS, marginal=True),
+            *(p for p in marginal_plain if p != uk),
+        ]
+        us = us_choices[0] if us_choices else None
     return us, uk
 
 

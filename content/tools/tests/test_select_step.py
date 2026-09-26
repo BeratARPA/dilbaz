@@ -155,6 +155,21 @@ def test_curated_senses_replace_the_rule() -> None:
     assert senses[1].provenance.license == "CC BY-SA 4.0"
 
 
+def test_curated_senses_can_fix_the_ipa() -> None:
+    lexicon = [entry("breakfast", 2000, {"NOUN": "A1"})]
+    curation = WordSenseCuration(
+        senses={
+            "breakfast": (
+                SenseChoice(pos="NOUN", sense="the first meal of the day", ipa_uk="/ˈbɹɛk.fəst/"),
+            )
+        }
+    )
+    (sense,) = select(lexicon, curation)
+    assert (sense.ipa_us, sense.ipa_uk) == ("/breakfast/", "/ˈbɹɛk.fəst/")
+    with pytest.raises(ValidationError):
+        SenseChoice(pos="NOUN", ipa_uk="ˈbɹɛk.fəst")
+
+
 def test_curated_senses_above_the_level_are_dropped() -> None:
     lexicon = [entry("state", 101, {"NOUN": "A2"})]
     curation = WordSenseCuration(

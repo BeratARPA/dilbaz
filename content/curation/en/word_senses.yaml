@@ -9,6 +9,7 @@
 #   sense, which is often not the one a learner needs ("pen" = an enclosure).
 #   A lemma listed here gets exactly these senses. `level` overrides the
 #   level lists where they miss the part of speech ("wake" is listed as a noun).
+#   `ipa_uk`/`ipa_us` replace a transcription the sources get wrong.
 
 include:
   # food and drink
@@ -134,7 +135,8 @@ exclude:
 
 senses:
   # food and drink
-  breakfast: [{pos: NOUN, sense: "the first meal of the day"}]
+  # Wiktionary tags the spelling pronunciation /ˈbreɪkˌfɑːst/ as RP without a note.
+  breakfast: [{pos: NOUN, sense: "the first meal of the day", ipa_uk: "/ˈbɹɛk.fəst/"}]
   lunch: [{pos: NOUN, sense: "the meal in the middle of the day"}]
   dinner: [{pos: NOUN, sense: "the main meal, eaten in the evening"}]
   coffee: [{pos: NOUN, sense: "a hot brown drink made from roasted beans"}]

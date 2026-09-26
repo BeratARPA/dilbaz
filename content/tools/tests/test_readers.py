@@ -85,7 +85,8 @@ def test_slim_entry_keeps_teachable_senses_ipa_and_inflections() -> None:
     assert noun is not None
     assert noun.pos == "NOUN"
     assert [s.gloss for s in noun.senses] == ["A portable timepiece."]
-    assert [s.ipa for s in noun.sounds] == ["/wɒtʃ/", "/wɑtʃ/"]
+    assert [s.ipa for s in noun.sounds] == ["/wɒtʃ/", "/wɑtʃ/", "/wɔtʃ/"]
+    assert [s.note for s in noun.sounds] == [None, None, "of Canada"]
     verb = slim_entry(json.dumps(WIKI_LINES[1]))
     assert verb is not None
     assert verb.forms == ("watches", "watched")
