@@ -127,7 +127,8 @@ carriers:
     assert result.exit_code == 0, result.output
     output = " ".join(result.output.split())
     assert "4 sentences (4 Tatoeba, 0 own)" in output
-    assert "issues: none" in output
+    assert "validated 0" in output
+    assert "'unvalidated': 4" in output
 
 
 def test_sentences_needs_the_candidates(tmp_path: Path) -> None:

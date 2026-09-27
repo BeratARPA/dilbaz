@@ -229,7 +229,7 @@ def sentences(
         raise typer.Exit(code=1) from error
     console.print(
         f"{report.sentences} sentences ({report.tatoeba} Tatoeba, {report.own} own); "
-        f"levels {report.by_level}"
+        f"levels {report.by_level}; validated {report.validated}"
     )
     kinds = Counter(issue.kind for issue in report.issues)
     console.print(f"issues: {dict(kinds) or 'none'}")

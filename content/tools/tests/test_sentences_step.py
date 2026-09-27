@@ -8,9 +8,11 @@ from dilbaz_content.items import Sentence, WordSense
 from dilbaz_content.sentences_step import (
     CarrierChoice,
     SentenceCuration,
+    Validation,
     ambiguous_senses,
     load_curation,
     read_candidates,
+    read_validation,
     run_sentences,
 )
 
@@ -42,8 +44,10 @@ def test_each_sense_gets_its_best_candidate_or_the_curated_carriers(tmp_path: Pa
 
     report = run_sentences(root, l2="en", analyzer=OwnAnalyzer)
 
-    assert report.issues == ()
-    assert (report.sentences, report.tatoeba, report.own) == (4, 3, 1)
+    # Nothing has been validated yet: every sentence waits for the pass.
+    assert {issue.kind for issue in report.issues} == {"unvalidated"}
+    assert report.blocking == ()
+    assert (report.sentences, report.tatoeba, report.own, report.validated) == (4, 3, 1, 0)
     assert report.by_level == {"A0": 1, "A1": 3}
     found = sentences(root)
     we = found["We watch TV."]
@@ -166,7 +170,7 @@ carriers:
     report = run_sentences(root, l2="en", analyzer=OwnAnalyzer)
 
     assert report.blocking == ()
-    assert {(i.key, i.kind, i.detail) for i in report.issues} == {
+    assert {(i.key, i.kind, i.detail) for i in report.issues if i.kind != "unvalidated"} == {
         # Same key: the second text is dropped.
         ("en.sent.you_are_right", "near_duplicate", "You are right."),
         # Lemma sets overlap more than 80 %.
@@ -176,6 +180,44 @@ carriers:
             "en.sent.i_watch_tv_every_evening",
         ),
     }
+
+
+def decision(key: str, text: str, *, accepted: bool = True) -> Validation:
+    return Validation(
+        key=key,
+        text=text,
+        round=1,
+        naturalness=5 if accepted else 3,
+        grammatical=True,
+        ambiguous=False,
+        sense_ok=True,
+        suitable=True,
+        turkish_ok=None,
+        accepted=accepted,
+    )
+
+
+def test_sentences_need_an_accepted_validation_of_their_text(tmp_path: Path) -> None:
+    root = write_s4_inputs(tmp_path, RIGHTS)
+    decisions = [
+        decision("en.sent.we_watch_tv", "We watch TV."),
+        decision("en.sent.you_are_right", "You are right.", accepted=False),
+        # The text changed after the validation.
+        decision("en.sent.my_right_hand_is_cold", "My right hand is warm."),
+        # A later round decides again; the last line wins.
+        decision("en.sent.you_are_right", "You are right."),
+    ]
+    path = root / "curation" / "en" / "sentences.validation.jsonl"
+    path.write_text("".join(d.model_dump_json() + "\n" for d in decisions), encoding="utf-8")
+
+    report = run_sentences(root, l2="en", analyzer=OwnAnalyzer)
+
+    assert report.validated == 2
+    assert {i.key for i in report.issues if i.kind == "unvalidated"} == {
+        "en.sent.i_watch_tv_every_evening",
+        "en.sent.my_right_hand_is_cold",
+    }
+    assert read_validation(tmp_path / "missing.jsonl") == {}
 
 
 def test_curation_defaults_and_validation(tmp_path: Path) -> None:

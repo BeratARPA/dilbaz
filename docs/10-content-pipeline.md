@@ -178,7 +178,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - **Gramer etiketleyici:** spaCy'nin Penn etiketleri ve lemmalarıyla çalışan kurallar. Kural emin değilse kod vermez. "I've got to go" zorunluluk sayılır (`gp.modals.obligation`), "have got" değil.
 - **Kontroller (§5.1):**
   - Engelleyici: sözlükte olmayan kelime, paket seviyesini aşma, hedefin seviyesini aşma, uzunluk, hedef anlamın cümlede olmaması, uygunsuz kelime, biçim (tırnak, iki cümle), seçilmemiş belirsiz anlam.
-  - Uyarı: yakın tekrar.
+  - Uyarı: yakın tekrar; bağımsız doğrulamadan geçmemiş cümle (§5.2).
 - **Çıktılar:**
   - `packs/<l2>/items/sentences.jsonl`
   - `word_senses.jsonl` içindeki `carriers`: anlamın seçilen cümleleri (`11` §4). S2 bu alanı boşaltır, S4 yeniden doldurur.
@@ -207,8 +207,10 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 ### 5.2 Bağımsız doğrulama geçişi (Claude Code, ayrı oturum)
 - Üreten oturumdan ayrı bir oturumda, üretim gerekçeleri görülmeden yapılır.
 - Ölçütler: doğallık (1–5), dilbilgisi doğruluğu, anlam belirsizliği, hedef anlamın doğru kullanımı, Türkçe karşılığın doğruluğu (geri çeviri karşılaştırmasıyla).
-- **Kabul:** doğallık ≥ 4, belirsizlik yok, çeviri doğru.
-- Kararlar parti dosyasına yazılır. Ardından her partiden rastgele 20 öğe 👤 kullanıcıya gösterilir (§1.3).
+- **Kabul:** doğallık ≥ 4, dilbilgisi doğru, belirsizlik yok, hedef anlam doğru, içerik uygun. Yanlış bir Türkçe çeviri İngilizce cümleyi reddetmez. Doğrulamanın önerdiği düzeltme (`turkish_fix`) S5'te kullanılır.
+- **Kayıt:** Kararlar `curation/<l2>/sentences.validation.jsonl` dosyasına yazılır ve commit edilir. Her satırda cümlenin anahtarı ve metni, tur numarası, puanlar, `accepted` ve varsa gerekçeli istisna (`override`) bulunur. Aynı anahtarın son satırı geçerlidir. S4, bu dosyada metni birebir tutan kabul kaydı olmayan cümleyi `unvalidated` olarak raporlar (I-16). S9 derlemesi böyle bir cümleyi pakete almaz.
+- Reddedilen cümlelerin yerine gelenler yeni bir turda yine bağımsız olarak doğrulanır. Ardından her partiden rastgele 20 öğe 👤 kullanıcıya gösterilir (§1.3).
+- **İlk uygulama (2026-09-27):** 1. turda 587 cümlenin 523'ü kabul edildi (%89). Ret nedenleri: hedef anlam dışı kullanım 27, belirsizlik 22, doğallık 3 olanlar 25, uygunsuz 2. Yerlerine gelen cümlelerden 2. turda 65'in 61'i, 3. turda 4'ün 4'ü kabul edildi; paketteki 588 cümlenin hepsi doğrulanmış. Paketteki Tatoeba çevirilerinin 65'i S5'te düzeltilecek. Rapor: `content/reports/2026-09-27-en1-sentences-qa.md`.
 
 ### 5.3 Uydurma kelimeler (X_Lex)
 - Adaylar Claude Code oturumunda ya da İngilizce ses dizimine uygun basit bir üreteçle çıkarılır.

@@ -8,7 +8,9 @@ tell the two apart, so the curation names its carriers. Every sentence is
 analysed, levelled, linked to the selected senses it contains, tagged with
 grammar codes and checked. The chosen sentences become the `carriers` of their
 senses in `word_senses.jsonl` (docs/11 §4). Turkish translations of the Tatoeba
-sentences are kept in `work/` for S5.
+sentences are kept in `work/` for S5. The independent validation pass (docs/10
+§5.2) keeps its decisions in `curation/<l2>/sentences.validation.jsonl`; a
+sentence without an accepted decision for its current text is reported.
 """
 
 from __future__ import annotations
@@ -48,6 +50,7 @@ from dilbaz_content.items import Level, Provenance, Sentence, WordSense, level_i
 from dilbaz_content.select_step import read_lexicon
 
 CURATION_FILE = "sentences.yaml"
+VALIDATION_FILE = "sentences.validation.jsonl"
 REPORT_FILE = "sentences.{l2}.report.json"
 TURKISH_FILE = "sentences.{l2}.turkish.jsonl"
 # Near duplicates: sentences whose lemma sets overlap this much (docs/10 §5.1).
@@ -96,8 +99,10 @@ IssueKind = Literal[
     "malformed",
     "near_duplicate",
     "ambiguous_sense",
+    "unvalidated",
 ]
-# Issues that stop the build; near duplicates are warnings for review.
+# Issues that stop the build. Near duplicates are warnings for review;
+# unvalidated sentences wait for the next validation pass.
 BLOCKING: frozenset[str] = frozenset(
     {
         "unknown_word",
@@ -110,6 +115,40 @@ BLOCKING: frozenset[str] = frozenset(
         "ambiguous_sense",
     }
 )
+
+
+class Validation(BaseModel):
+    """One decision of the independent validation pass (docs/10 §5.2).
+
+    The pass judges the English sentence; a wrong Turkish translation does not
+    reject it but gives `turkish_fix` to S5.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    key: str
+    text: str
+    round: int = Field(ge=1)
+    naturalness: int = Field(ge=1, le=5)
+    grammatical: bool
+    ambiguous: bool
+    sense_ok: bool
+    suitable: bool
+    turkish_ok: bool | None = None
+    turkish_fix: str | None = None
+    notes: str = ""
+    accepted: bool
+    # Why the sentence is kept although a check failed.
+    override: str | None = None
+
+
+def read_validation(path: Path) -> dict[str, Validation]:
+    """The latest decision per sentence key; empty before the first pass."""
+    if not path.is_file():
+        return {}
+    with path.open(encoding="utf-8") as stream:
+        records = [Validation.model_validate_json(line) for line in stream if line.strip()]
+    return {record.key: record for record in records}
 
 
 class Issue(BaseModel):
@@ -130,6 +169,7 @@ class SentencesReport(BaseModel):
     sentences: int
     tatoeba: int
     own: int
+    validated: int = 0
     by_level: dict[str, int]
     grammar: dict[str, int]
     senses_without_carrier: tuple[str, ...]
@@ -397,6 +437,16 @@ def run_sentences(
         if sentence is not None:
             sentences.append(sentence)
     issues.extend(_near_duplicates(sentences))
+    decisions = read_validation(content_dir / "curation" / l2 / VALIDATION_FILE)
+    validated = 0
+    for sentence in sentences:
+        decision = decisions.get(sentence.key)
+        if decision is not None and decision.text == sentence.text and decision.accepted:
+            validated += 1
+        else:
+            issues.append(
+                Issue(key=sentence.key, kind="unvalidated", detail="no accepted validation")
+            )
 
     with (items / "sentences.jsonl").open("w", encoding="utf-8", newline="\n") as sink:
         for sentence in sentences:
@@ -417,6 +467,7 @@ def run_sentences(
         sentences=len(sentences),
         tatoeba=sum(s.provenance.source.startswith("tatoeba:") for s in sentences),
         own=sum(s.provenance.license == "own" for s in sentences),
+        validated=validated,
         by_level=dict(sorted(Counter(s.level for s in sentences).items())),
         grammar=dict(sorted(grammar.items())),
         senses_without_carrier=tuple(missing),
