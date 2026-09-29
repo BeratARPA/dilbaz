@@ -195,6 +195,16 @@ def extract_subset(
     return kept
 
 
+def headwords(dump: Path, progress: Callable[[int], None] | None = None) -> Iterator[str]:
+    """The lowercased English single-word headwords of the dump, with repeats."""
+    for number, line in enumerate(_lines(dump), start=1):
+        if progress is not None and number % 100_000 == 0:
+            progress(number)
+        head = _RawHead.model_validate_json(line)
+        if head.lang_code == "en" and " " not in head.word:
+            yield head.word.lower()
+
+
 def read_subset(path: Path) -> dict[str, tuple[WikiEntry, ...]]:
     """Subset entries grouped by lowercase word, in dump order."""
     grouped: dict[str, list[WikiEntry]] = {}

@@ -1,0 +1,181 @@
+# X_Lex placement bank curation (docs/06-assessment.md §2, docs/10 §5.3).
+#
+# seed: fixes the sample of real words per band and the pseudowords.
+# exclude: real words left out of the bank, with the reason. Mostly
+#   loanwords that a Turkish speaker recognises without knowing English
+#   (Turkish "popüler", "televizyon", "pizza"): a "yes" to them says nothing
+#   about English vocabulary. Excluding a word replaces only that word.
+# reject_pseudowords: generated pseudowords rejected by hand.
+# Written in a Claude Code session (ADR-0009); license: own.
+
+seed: 2026
+
+exclude:
+  # used in Turkish as they are or with Turkish spelling
+  academy: akademi
+  active: aktif
+  acute: akut
+  alarm: alarm
+  alcoholic: alkolik
+  alternative: alternatif
+  aluminum: alüminyum
+  anonymous: anonim
+  artist: artist
+  balance: balans
+  ballet: bale
+  ban: banlamak
+  bold: bold (yazı)
+  bomb: bomba
+  boxing: boks
+  cafe: kafe
+  calorie: kalori
+  cent: sent
+  ceremony: seremoni
+  character: karakter
+  chat: chat
+  chip: çip
+  collection: koleksiyon
+  college: kolej (yanlış arkadaş)
+  combination: kombinasyon
+  commander: komutan
+  communication: komünikasyon
+  composition: kompozisyon
+  concept: konsept
+  consensus: konsensüs
+  correlation: korelasyon
+  cream: krem
+  credit: kredi
+  critically: kritik
+  culture: kültür
+  decorate: dekore
+  delegate: delege
+  deposit: depozito
+  depression: depresyon
+  detective: dedektif
+  download: download
+  echo: eko
+  effect: efekt
+  electric: elektrik
+  elegant: elegan
+  ethic: etik
+  exercise: egzersiz
+  extreme: ekstrem
+  fabric: fabrika (yanlış arkadaş)
+  factory: fabrika
+  fan: fan
+  fictional: fiktif
+  film: film
+  final: final
+  flash: flaş
+  formal: formal
+  foul: faul
+  functional: fonksiyonel
+  gas: gaz
+  gene: gen
+  grill: grill
+  group: grup
+  holocaust: Holokost (hassas konu)
+  hybrid: hibrit
+  ignore: ignore
+  infected: enfekte
+  informal: informal
+  information: enformasyon
+  inject: enjekte
+  input: input
+  install: install
+  institution: enstitü
+  integrate: entegre
+  jazz: caz
+  liquid: likit
+  lobby: lobi
+  machine: makine
+  magazine: magazin (yanlış arkadaş)
+  mama: mama
+  meditation: meditasyon
+  melody: melodi
+  metal: metal
+  modification: modifikasyon
+  monitor: monitör
+  moral: moral
+  mortgage: mortgage
+  motivate: motive
+  mouse: mouse
+  negative: negatif
+  normal: normal
+  object: obje
+  office: ofis
+  online: online
+  oral: oral
+  organ: organ
+  organic: organik
+  organize: organize
+  organizer: organizatör
+  origin: orijin
+  original: orijinal
+  outlet: outlet
+  particle: partikül
+  personnel: personel
+  phenomenon: fenomen
+  physically: fiziksel
+  pizza: pizza
+  popular: popüler
+  portable: portatif
+  portion: porsiyon
+  post: post
+  postal: posta; Türkçede postal (bot)
+  practical: pratik
+  prince: prens
+  print: print
+  projection: projeksiyon
+  protest: protesto
+  puzzle: puzzle
+  quiz: quiz
+  radical: radikal
+  radio: radyo
+  reaction: reaksiyon
+  reality: reality show
+  reception: resepsiyon
+  rhetoric: retorik
+  rhythm: ritim
+  risk: risk
+  risky: riskli
+  rock: rock (müzik)
+  role: rol
+  route: rota
+  salon: salon
+  scenario: senaryo
+  senator: senatör
+  sensation: sansasyon
+  shocking: şok
+  shot: şut
+  show: şov
+  signal: sinyal
+  sofa: sofa
+  sophisticated: sofistike
+  specification: spesifikasyon
+  sponsor: sponsor
+  spray: sprey
+  structural: strüktürel
+  style: stil
+  superb: süper
+  superstar: süperstar
+  survivor: Survivor (yarışma)
+  syndrome: sendrom
+  system: sistem
+  tape: teyp
+  technical: teknik
+  television: televizyon
+  theater: tiyatro
+  therapist: terapist
+  therapy: terapi
+  toxic: toksik
+  traffic: trafik
+  transmission: transmisyon
+  tropical: tropikal
+  turkey: Turkey (ülke adı)
+  valentine: Sevgililer Günü (Valentine)
+  virtual: virtual
+  volcano: volkan
+  zip: zip
+
+reject_pseudowords: [twerkard, drerdard, thithous, trermous, whowky]

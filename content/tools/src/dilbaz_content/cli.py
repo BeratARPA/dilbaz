@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.progress import BarColumn, DownloadColumn, Progress, TextColumn, TransferSpeedColumn
 from rich.table import Table
-from wordfreq import word_frequency
+from wordfreq import top_n_list, word_frequency
 
 from dilbaz_content import __version__
 from dilbaz_content.analysis import SpacyAnalyzer
@@ -23,11 +23,13 @@ from dilbaz_content.ingest import (
     OnProgress,
     PackageVersionError,
     ingest_source,
+    latest_snapshot,
 )
 from dilbaz_content.items import LEVELS, Chunk, GrammarPoint, Level, WordSense
-from dilbaz_content.lexicon_step import LEXICON_FILE, run_lexicon
+from dilbaz_content.lexicon_step import CMUDICT, LEXICON_FILE, WIKTEXTRACT_DUMP, run_lexicon
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.pair_step import run_pair
+from dilbaz_content.placement_step import PlacementError, dictionary_words, run_placement
 from dilbaz_content.select_step import SelectionError, run_select
 from dilbaz_content.sentences_step import run_sentences
 from dilbaz_content.sources import (
@@ -266,3 +268,49 @@ def pair(
         console.print(f"[red]{issue.kind}[/red] {issue.key}: {issue.detail}")
     if report.blocking:
         raise typer.Exit(code=1)
+
+
+# Common English words for the one-letter check of pseudowords (docs/10 §5.3).
+_COMMON_WORDS = 50_000
+
+
+@app.command()
+def placement(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learners' language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S8: build the X_Lex placement bank (packs/<l2>/placement/xlex.jsonl)."""
+    root = _content_dir(content_dir)
+    registry = load_registry(root / REGISTRY_FILE)
+    sources = root / "sources"
+    try:
+        cmudict = latest_snapshot(sources, registry.get("cmudict")) / CMUDICT
+        dump = latest_snapshot(sources, registry.get("wiktextract")) / WIKTEXTRACT_DUMP
+        with console.status("building the placement bank") as status:
+            report = run_placement(
+                root,
+                l1=l1,
+                l2=l2,
+                frequency=word_frequency,
+                dictionary=lambda: dictionary_words(
+                    cmudict,
+                    dump,
+                    root / "work",
+                    l2=l2,
+                    progress=lambda lines: status.update(f"reading Wiktionary: {lines:,} lines"),
+                ),
+                common=lambda: frozenset(
+                    word for word in top_n_list(l2, _COMMON_WORDS) if word.isalpha()
+                ),
+            )
+    except (PlacementError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"{report.items} items; eligible words per band {report.eligible_by_band}; "
+        f"excluded {report.excluded}"
+    )
+    console.print(
+        f"pseudowords: {report.pseudo_tried} candidates, rejected {report.pseudo_rejected}"
+    )

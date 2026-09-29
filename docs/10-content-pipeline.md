@@ -51,6 +51,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `carriers [--per-target 3]` (S3: Tatoeba taşıyıcı adayları).
   - `sentences` (S4: taşıyıcı cümleler, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - `pair [--l1 tr] [--l2 en]` (S5: çift paketi, kontroller; engelleyici sorun varsa çıkış kodu 1).
+  - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -72,7 +73,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 | S5 | `pair --l1 tr` | Hedef paket + `curation/tr-en/` + S4 çevirileri → `packs/tr-en/` (ayrıntı: §6) | Türkçe karşılıklar ve istemler, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, H3 kural notları, hata etiketi kataloğu |
 | S6 | `audio` | Metinler → ses dosyaları | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
-| S8 | `placement` | Sözlük → X_Lex bankası | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
+| S8 | `placement` | Sözlük + `curation/<l2>/xlex.yaml` → `packs/<l2>/placement/xlex.jsonl` (ayrıntı: §5.3) | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
 | S9 | `build` | Tümü → `build/en@N.sqlite` + ses manifesti | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
 | S10 | `report` | Build → `build/en@N.report.md` | Sayılar, ret oranları, üretim oturumları, insan kontrolü örneklemi |
 | — | `upload` | Build → Supabase Storage `packs/` + `packs` satırı | Yalnızca kullanıcı onayıyla (dışa yayın) |
@@ -213,14 +214,32 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - Reddedilen cümlelerin yerine gelenler yeni bir turda yine bağımsız olarak doğrulanır. Ardından her partiden rastgele 20 öğe 👤 kullanıcıya gösterilir (§1.3).
 - **İlk uygulama (2026-09-27):** 1. turda 587 cümlenin 523'ü kabul edildi (%89). Ret nedenleri: hedef anlam dışı kullanım 27, belirsizlik 22, doğallık 3 olanlar 25, uygunsuz 2. Yerlerine gelen cümlelerden 2. turda 65'in 61'i, 3. turda 4'ün 4'ü kabul edildi; paketteki 588 cümlenin hepsi doğrulanmış. Paketteki Tatoeba çevirilerinin 65'i S5'te düzeltilecek. Rapor: `content/reports/2026-09-27-en1-sentences-qa.md`.
 
-### 5.3 Uydurma kelimeler (X_Lex)
-- Adaylar Claude Code oturumunda ya da İngilizce ses dizimine uygun basit bir üreteçle çıkarılır.
-- Kabul koşulları:
-  - wordfreq sıklığı 0
-  - CMUdict'te yok
-  - Wiktionary'de yok
-  - gerçek bir kelimeye 1 harf uzaklıkta değil
-- Her sürüm için 20 uydurma kelime.
+### 5.3 X_Lex bankası (S8)
+- **Gerçek kelimeler:**
+  - Sözlük sırasının (§4.1) her bin kelimelik bandından alınır. Bantlar 1–1000'den 4001–5000'e kadardır. Yalnızca tek kelimeli girdiler alınır.
+  - Dışarıda kalanlar:
+    - büyük harfle yazılan adlar (Monday)
+    - işlev sözcükleri
+    - 3 harften kısa girdiler
+    - engelli kelimeler
+    - küratörlüğün dışladıkları (`curation/<l2>/xlex.yaml`): çoğunlukla Türkçe konuşanın İngilizce bilmeden tanıdığı alıntılar (popular: popüler, television: televizyon, pizza) ve yanıltıcı benzerlikler (magazine, fabric). Bunlara verilen "biliyorum" İngilizce kelime bilgisini ölçmez.
+  - Wordfreq'in Türkçe sıklığı bu elemede kullanılamaz, çünkü Türkçe web metinlerindeki İngilizce kelimeleri de sayıyor (love, house).
+  - Her bant tohumla bir kez karıştırılır ve sırayla okunur. Bir kelimeyi dışlamak yalnızca onun yerine bir sonrakini getirir.
+  - Seçilen 60 kelime sıraya göre dizilir ve sürümlere dönüşümlü dağıtılır: A B C, B C A, C A B… Böylece hiçbir sürüm kolay kelimeleri toplamaz.
+- **Uydurma kelimeler:**
+  - İngilizce yazım kalıplarından üretilir: ön ses + ünlü + son ses + ek ("brastle", "cleepen").
+  - Kabul koşulları:
+    - wordfreq'te İngilizce ve öğrencinin dilinde sıklığı 0
+    - CMUdict'te ve Wiktionary'nin başlıklarında yok
+    - wordfreq'in en sık 50.000 İngilizce kelimesinden birine 1 harf uzaklıkta değil
+    - bu kelimelerden biriyle başlamıyor ya da bitmiyor ("floodous")
+    - kaba bir parça içermiyor (İngilizce ve Türkçe)
+  - Elle reddedilenler küratörlükte durur.
+  - Wiktionary başlıkları dökümden bir kez çıkarılır: `work/wiktionary.en.headwords.txt`, döküm değişince yenilenir.
+- **İlk sonuç (2026-09-29):**
+  - 360 madde: sürüm başına 100 gerçek kelime ve 20 uydurma kelime.
+  - Bantlarda uygun kelime 796–943 arası. 165 alıntı dışlandı.
+  - Uydurma kelime için 212 aday denendi. 62'si bir kelimeye 1 harf uzak, 43'ü bir kelimeyle başlıyor ya da bitiyor, 42'si sözlükte ya da sıklık listesinde vardı, 5'i elle reddedildi.
 
 ### 5.4 Metinler (S7)
 - **Seviye metni:** metindeki lemmaların ≥ %98'i ≤ seviye listesinde. Kalan %2 önce öğretilecek kelimeler olarak işaretlenir.

@@ -33,7 +33,7 @@ content/packs/en/
   grammar_codes.jsonl      # kapalı gramer kodu listesi (LLM kataloğu)
   connectors.jsonl         # bağlaç listesi (karmaşıklık ölçümü)
   fillers.jsonl            # dolgu sözcükleri (akıcılık ölçümü)
-  placement/xlex.jsonl     # sürüm, bant, kelime, is_pseudo
+  placement/xlex.jsonl     # version (A/B/C), band (1–5; uydurma kelimede null), word, is_pseudo
   voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet, motor (en@1: Kokoro)
   LICENSES.md
 
