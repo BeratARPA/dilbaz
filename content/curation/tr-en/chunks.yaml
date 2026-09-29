@@ -1,0 +1,154 @@
+# S5 Turkish meanings of the en@1 chunks (docs/10-content-pipeline.md §6).
+#
+# meaning: the Turkish prompt of the chunk's card (A01).
+# context: shown with the prompt where the Turkish alone could mean another
+#   chunk ("Ben de." after a positive or a negative sentence).
+# note: a short usage note in Turkish.
+# variants: other English answers accepted for the card (I-17). Contractions
+#   and punctuation are normalized (packs/en/normalization.yaml), so only real
+#   alternatives are listed.
+# Written in a Claude Code session (ADR-0009); license: own.
+
+# greetings and goodbyes
+en.chunk.hello: {meaning: "Merhaba.", variants: ["Hi.", "Hello there."]}
+en.chunk.hi: {meaning: "Selam.", variants: ["Hello.", "Hey."]}
+en.chunk.good_morning: {meaning: "Günaydın.", variants: ["Morning."]}
+en.chunk.good_evening: {meaning: "İyi akşamlar.", context: "karşılaşınca, selam verirken"}
+en.chunk.how_are_you: {meaning: "Nasılsın?", variants: ["How are you doing?"]}
+en.chunk.i_m_fine_thanks: {meaning: "İyiyim, teşekkürler.", variants: ["I'm fine, thank you.", "Fine, thanks.", "I'm good, thanks.", "I'm OK, thanks."]}
+en.chunk.and_you: {meaning: "Ya sen?", variants: ["How about you?", "What about you?"]}
+en.chunk.how_s_it_going: {meaning: "Nasıl gidiyor?", note: "Samimi; arkadaşlar arasında.", variants: ["How are things?"]}
+en.chunk.nice_to_meet_you: {meaning: "Tanıştığımıza memnun oldum.", variants: ["Pleased to meet you.", "Good to meet you."]}
+en.chunk.see_you_later: {meaning: "Sonra görüşürüz.", variants: ["See you."]}
+en.chunk.see_you_tomorrow: {meaning: "Yarın görüşürüz."}
+en.chunk.bye: {meaning: "Hoşça kal.", variants: ["Goodbye.", "Bye-bye."]}
+en.chunk.good_night: {meaning: "İyi geceler.", note: "Yalnızca ayrılırken ya da yatarken; akşam selamı good evening."}
+en.chunk.have_a_nice_day: {meaning: "İyi günler.", context: "ayrılırken", variants: ["Have a good day."]}
+en.chunk.take_care: {meaning: "Kendine iyi bak.", variants: ["Take care of yourself."]}
+
+# politeness
+en.chunk.please: {meaning: "Lütfen."}
+en.chunk.thank_you: {meaning: "Teşekkür ederim.", variants: ["Thanks.", "Thank you very much.", "Thanks a lot."]}
+en.chunk.you_re_welcome: {meaning: "Rica ederim.", note: "Thank you'ya verilen cevap."}
+en.chunk.i_m_sorry: {meaning: "Özür dilerim.", variants: ["Sorry.", "I'm so sorry.", "I'm really sorry."]}
+en.chunk.excuse_me: {meaning: "Affedersiniz.", context: "birinin dikkatini çekerken ya da yol isterken", note: "Özür dilemek için I'm sorry."}
+en.chunk.no_problem: {meaning: "Sorun değil.", variants: ["No worries."]}
+en.chunk.that_s_ok: {meaning: "Önemli değil.", variants: ["That's all right.", "It's OK.", "It's all right."]}
+en.chunk.don_t_worry: {meaning: "Merak etme.", variants: ["Don't worry about it."]}
+en.chunk.never_mind: {meaning: "Boş ver.", variants: ["Forget it."]}
+
+# when you do not understand
+en.chunk.sorry: {meaning: "Efendim?", context: "duyamadığında, tekrar etmesini isterken", variants: ["Pardon?", "Sorry, what?"]}
+en.chunk.can_you_say_that_again_please: {meaning: "Tekrar söyler misin, lütfen?", variants: ["Could you say that again, please?", "Can you repeat that, please?", "Could you repeat that, please?"]}
+en.chunk.can_you_speak_more_slowly_please: {meaning: "Daha yavaş konuşabilir misin, lütfen?", variants: ["Could you speak more slowly, please?", "Can you speak slower, please?"]}
+en.chunk.i_don_t_understand: {meaning: "Anlamıyorum.", variants: ["Sorry, I don't understand.", "I don't understand you."]}
+en.chunk.i_don_t_know: {meaning: "Bilmiyorum."}
+en.chunk.what_does_it_mean: {meaning: "Bu ne demek?", variants: ["What does that mean?", "What does this mean?"]}
+en.chunk.what_does_this_word_mean: {meaning: "Bu kelime ne demek?", variants: ["What does that word mean?"]}
+en.chunk.how_do_you_say_it_in_english: {meaning: "Bu İngilizcede nasıl söylenir?", variants: ["How do you say that in English?", "How do you say this in English?"]}
+en.chunk.how_do_you_spell_it: {meaning: "Nasıl yazılıyor?", context: "harf harf", variants: ["How do you spell that?", "How is it spelled?"]}
+en.chunk.what_do_you_mean: {meaning: "Ne demek istiyorsun?"}
+en.chunk.i_m_not_sure: {meaning: "Emin değilim."}
+en.chunk.let_me_think: {meaning: "Bir düşüneyim.", variants: ["Let me think about it."]}
+en.chunk.just_a_moment: {meaning: "Bir dakika.", context: "birinden beklemesini isterken", variants: ["Just a minute.", "One moment.", "Just a second."]}
+
+# reactions
+en.chunk.yes_of_course: {meaning: "Evet, tabii ki.", variants: ["Of course.", "Yes, sure."]}
+en.chunk.sure: {meaning: "Tabii.", variants: ["Of course.", "Sure thing."]}
+en.chunk.me_too: {meaning: "Ben de.", context: "olumlu bir cümleye katılırken (I like it.)"}
+en.chunk.me_neither: {meaning: "Ben de.", context: "olumsuz bir cümleye katılırken (I don't like it.)", note: "Olumsuz cümleye me too değil me neither ile katılınır."}
+en.chunk.i_think_so: {meaning: "Sanırım öyle."}
+en.chunk.i_don_t_think_so: {meaning: "Sanmıyorum."}
+en.chunk.that_s_right: {meaning: "Doğru.", context: "karşındakini onaylarken", variants: ["Right.", "Exactly."]}
+en.chunk.really: {meaning: "Gerçekten mi?"}
+en.chunk.great: {meaning: "Harika!", variants: ["That's great!"]}
+en.chunk.that_s_a_good_idea: {meaning: "Bu iyi bir fikir.", variants: ["Good idea."]}
+en.chunk.i_agree: {meaning: "Katılıyorum.", note: "agree bir fiildir; I am agree denmez.", variants: ["I agree with you."]}
+en.chunk.i_don_t_agree: {meaning: "Katılmıyorum.", variants: ["I disagree.", "I don't agree with you."]}
+en.chunk.it_depends: {meaning: "Duruma göre değişir."}
+en.chunk.maybe: {meaning: "Belki.", variants: ["Perhaps."]}
+en.chunk.why_not: {meaning: "Neden olmasın?"}
+en.chunk.of_course_not: {meaning: "Tabii ki hayır."}
+en.chunk.well_done: {meaning: "Aferin!", variants: ["Good job!"]}
+en.chunk.good_luck: {meaning: "Bol şans!"}
+en.chunk.that_sounds_good: {meaning: "Kulağa hoş geliyor.", variants: ["Sounds good."]}
+
+# opinions and feelings
+en.chunk.i_like_it: {meaning: "Hoşuma gidiyor."}
+en.chunk.i_don_t_like_it: {meaning: "Hoşuma gitmiyor."}
+en.chunk.i_love_it: {meaning: "Bayılıyorum."}
+en.chunk.i_think_it_s_great: {meaning: "Bence harika."}
+en.chunk.in_my_opinion: {meaning: "Bana göre", context: "fikrini söylemeye başlarken"}
+en.chunk.i_m_tired: {meaning: "Yorgunum."}
+en.chunk.i_m_hungry: {meaning: "Açım."}
+en.chunk.i_m_cold: {meaning: "Üşüyorum.", note: "Üşümek be cold ile söylenir.", variants: ["I feel cold."]}
+en.chunk.i_m_bored: {meaning: "Sıkıldım."}
+
+# talking about yourself
+en.chunk.what_s_your_name: {meaning: "Adın ne?"}
+en.chunk.my_name_is: {meaning: "Benim adım …", context: "kendi adını söyle"}
+en.chunk.where_are_you_from: {meaning: "Nerelisin?"}
+en.chunk.i_m_from_turkey: {meaning: "Türkiyeliyim.", variants: ["I come from Turkey."]}
+en.chunk.where_do_you_live: {meaning: "Nerede yaşıyorsun?"}
+en.chunk.i_live_in_istanbul: {meaning: "İstanbul'da yaşıyorum."}
+en.chunk.what_do_you_do: {meaning: "Ne iş yapıyorsun?", variants: ["What's your job?", "What do you do for a living?"]}
+en.chunk.i_work_in_an_office: {meaning: "Bir ofiste çalışıyorum."}
+en.chunk.how_old_are_you: {meaning: "Kaç yaşındasın?", note: "How many years are you denmez."}
+en.chunk.i_m_thirty_years_old: {meaning: "Otuz yaşındayım.", variants: ["I'm thirty."]}
+en.chunk.are_you_married: {meaning: "Evli misin?"}
+en.chunk.do_you_have_any_children: {meaning: "Çocuğun var mı?", variants: ["Do you have children?", "Have you got any children?"]}
+
+# requests and offers
+en.chunk.can_i_have_a_coffee_please: {meaning: "Bir kahve alabilir miyim, lütfen?", variants: ["Could I have a coffee, please?", "Can I get a coffee, please?", "I'd like a coffee, please."]}
+en.chunk.could_you_help_me: {meaning: "Bana yardım eder misiniz?", variants: ["Can you help me?", "Could you help me, please?"]}
+en.chunk.i_d_like_a_glass_of_water: {meaning: "Bir bardak su istiyorum.", context: "kibarca", variants: ["I'd like a glass of water, please."]}
+en.chunk.can_you_give_me_a_hand: {meaning: "Bana bir el atar mısın?", note: "Yardım istemenin günlük yolu.", variants: ["Could you give me a hand?"]}
+en.chunk.would_you_like_some_tea: {meaning: "Çay ister misin?", variants: ["Do you want some tea?", "Would you like a cup of tea?"]}
+en.chunk.here_you_are: {meaning: "Buyurun.", context: "bir şey verirken", variants: ["Here you go.", "Here it is."]}
+en.chunk.can_i_help_you: {meaning: "Yardımcı olabilir miyim?", variants: ["How can I help you?", "May I help you?"]}
+
+# suggestions and plans
+en.chunk.let_s_go: {meaning: "Hadi gidelim."}
+en.chunk.how_about_tomorrow: {meaning: "Yarına ne dersin?", variants: ["What about tomorrow?"]}
+en.chunk.what_about_you: {meaning: "Peki ya sen?", variants: ["How about you?", "And you?"]}
+en.chunk.do_you_want_to_come: {meaning: "Gelmek ister misin?", variants: ["Would you like to come?"]}
+en.chunk.what_time_is_it: {meaning: "Saat kaç?", variants: ["What's the time?"]}
+en.chunk.it_s_five_o_clock: {meaning: "Saat beş.", variants: ["It's five."]}
+en.chunk.what_day_is_it_today: {meaning: "Bugün günlerden ne?", variants: ["What day is today?"]}
+en.chunk.what_are_you_doing_tonight: {meaning: "Bu akşam ne yapıyorsun?"}
+en.chunk.are_you_free_on_saturday: {meaning: "Cumartesi müsait misin?", variants: ["Are you free this Saturday?"]}
+en.chunk.i_m_busy_right_now: {meaning: "Şu an meşgulüm.", variants: ["I'm busy now."]}
+en.chunk.i_ll_be_there_in_ten_minutes: {meaning: "On dakikaya oradayım."}
+
+# shopping and eating out
+en.chunk.how_much_is_it: {meaning: "Bu ne kadar?", variants: ["How much is this?", "How much is that?"]}
+en.chunk.how_much_does_it_cost: {meaning: "Bunun fiyatı ne kadar?", variants: ["How much does this cost?"]}
+en.chunk.i_ll_take_it: {meaning: "Bunu alıyorum.", context: "alışverişte karar verirken", variants: ["I'll take this one."]}
+en.chunk.can_i_pay_by_card: {meaning: "Kartla ödeyebilir miyim?", variants: ["Can I pay with a card?", "Can I pay by credit card?"]}
+en.chunk.the_bill_please: {meaning: "Hesap, lütfen.", variants: ["Can I have the bill, please?", "The check, please."]}
+en.chunk.i_m_just_looking: {meaning: "Sadece bakıyorum.", context: "mağazada"}
+en.chunk.a_table_for_two_please: {meaning: "İki kişilik bir masa, lütfen."}
+en.chunk.can_i_see_the_menu: {meaning: "Menüyü görebilir miyim?", variants: ["Can I have the menu, please?", "Could I see the menu?"]}
+
+# directions
+en.chunk.where_is_the_station: {meaning: "İstasyon nerede?"}
+en.chunk.is_it_far: {meaning: "Uzak mı?"}
+en.chunk.go_straight_on: {meaning: "Düz gidin.", variants: ["Go straight ahead."]}
+en.chunk.turn_left: {meaning: "Sola dönün."}
+en.chunk.turn_right: {meaning: "Sağa dönün."}
+en.chunk.how_do_i_get_to_the_airport: {meaning: "Havalimanına nasıl giderim?"}
+
+# conversation
+en.chunk.how_was_your_day: {meaning: "Günün nasıl geçti?"}
+en.chunk.what_happened: {meaning: "Ne oldu?"}
+en.chunk.by_the_way: {meaning: "Bu arada"}
+en.chunk.you_know: {meaning: "Bilirsin işte", context: "konuşurken düşünmek için"}
+en.chunk.i_mean: {meaning: "Yani", context: "söylediğini açıklarken ya da düzeltirken"}
+en.chunk.guess_what: {meaning: "Bil bakalım ne oldu?"}
+
+# problems
+en.chunk.i_have_a_problem: {meaning: "Bir sorunum var.", note: "problem sayılabilir; I have problem denmez.", variants: ["I've got a problem."]}
+en.chunk.it_doesn_t_work: {meaning: "Çalışmıyor.", context: "bir cihaz ya da makine için", variants: ["It's not working."]}
+en.chunk.i_need_help: {meaning: "Yardıma ihtiyacım var."}
+en.chunk.i_m_lost: {meaning: "Kayboldum."}
+en.chunk.i_don_t_feel_well: {meaning: "Kendimi iyi hissetmiyorum.", variants: ["I'm not feeling well.", "I don't feel very well."]}

@@ -250,9 +250,15 @@ def test_tagging_differences_do_not_hide_senses() -> None:
             ("clothes", "clothe", "NOUN", "NNS"),
         ],
     )
-    found = find_candidates([today, monday, clothes], [TODAY, MONDAY, CLOTHES], levels)
+    # spaCy does not lemmatize plural proper nouns.
+    mondays = sentence(
+        34,
+        "I watch TV on Mondays.",
+        [*monday.tokens[:4], ("Mondays", "mondays", "PROPN", "NNPS")],
+    )
+    found = find_candidates([today, monday, clothes, mondays], [TODAY, MONDAY, CLOTHES], levels)
     assert found["en.ws.today.adv.1"][0].sentence_id == 30
-    assert found["en.ws.monday.n.1"][0].sentence_id == 31
+    assert {c.sentence_id for c in found["en.ws.monday.n.1"]} == {31, 34}
     assert found["en.ws.clothes.n.1"][0].sentence_id == 32
 
 

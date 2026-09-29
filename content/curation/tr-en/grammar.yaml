@@ -1,0 +1,208 @@
+# S5 grammar points in Turkish (docs/10-content-pipeline.md §6).
+#
+# name: the point's Turkish name.
+# explanation: shown when the point is introduced (A00): what it is, and the
+#   difficulty Turkish speakers usually have (docs/02 §5).
+# rule: the H3 hint (docs/03 §0.5). It states the rule only; `pair` checks
+#   that it never contains the answer of a card that uses the point (I-02).
+# Written in a Claude Code session (ADR-0009); license: own.
+
+gp.be.present:
+  name: "be: am / is / are"
+  explanation: "İngilizcede \"-im, -sin, -dir\" ekleri yerine be fiili kullanılır: I am, you are, he/she/it is, we/they are. Türkçede bu ek çoğu zaman düşer, İngilizcede be hiç düşmez."
+  rule: "Cümlede be olmalı: I ile am, he/she/it ile is, you/we/they ile are."
+
+gp.be.negative:
+  name: "be: olumsuz"
+  explanation: "Olumsuz için be'den sonra not gelir: I am not, he is not. Konuşmada kısa biçimler yaygındır: isn't, aren't. \"I amn't\" diye bir biçim yoktur."
+  rule: "Olumsuzda not, am/is/are'dan sonra gelir. Kısaltma: is not → isn't, are not → aren't; I am not → I'm not."
+
+gp.be.questions:
+  name: "be: soru"
+  explanation: "Soru sorarken am/is/are öznenin önüne geçer: You are → Are you…? Kısa cevapta be tekrar edilir: Yes, I am. / No, she isn't."
+  rule: "Soruda be başa gelir: Am/Is/Are + özne + …? Kısa cevap: Yes/No + özne + be."
+
+gp.pronouns.subject:
+  name: "Özne zamirleri"
+  explanation: "Türkçede tek \"o\" var, İngilizcede üç: erkek için he, kadın için she, eşya ve hayvan için it. Türkçede özne düşebilir, İngilizcede her cümlede özne bulunur."
+  rule: "Özne düşmez. Erkek için he, kadın için she, şey ya da hayvan için it."
+
+gp.articles.a_an:
+  name: "a / an"
+  explanation: "Tekil ve sayılabilir bir ismin önüne a ya da an gelir: a car, an apple. Türkçede \"bir\" çoğu zaman söylenmez, İngilizcede bu artikel düşmez. En sık yapılan hatalardan biridir."
+  rule: "Tekil sayılabilir isimden önce a/an gelir. Ünlü sesle başlayan kelimeden önce an: an egg, an hour."
+
+gp.nouns.plural:
+  name: "Çoğul isimler"
+  explanation: "Birden fazlası için isme -s ya da -es eklenir: books, boxes. Türkçede sayıdan sonra çoğul eki gelmez (iki kitap), İngilizcede gelir: two books. Bazı çoğullar düzensizdir: children, people."
+  rule: "Birden fazlası için isme -s/-es eklenir; sayıdan sonra da: two books. Düzensizler: child → children, man → men, person → people."
+
+gp.possessive.adjectives:
+  name: "İyelik sözcükleri (my, your…)"
+  explanation: "Türkçedeki -im, -in ekleri yerine ismin önüne bir sözcük gelir: my car (arabam), your name (adın). his erkek, her kadın için kullanılır."
+  rule: "Sahiplik ismin önündeki sözcükle gösterilir: my, your, his, her, its, our, their. Erkekse his, kadınsa her."
+
+gp.age:
+  name: "Yaş söyleme"
+  explanation: "Yaş be ile söylenir: I am 30 (years old). Türkçedeki gibi \"have\" kullanılmaz. Yaş sorusu How old ile başlar."
+  rule: "Yaşta be kullanılır: özne + am/is/are + sayı (+ years old). Soru: How old + be + özne?"
+
+gp.articles.the:
+  name: "the"
+  explanation: "Dinleyici hangisinden söz ettiğini biliyorsa ya da o şeyden bir tane varsa the gelir: the door, the sun. Türkçede karşılığı yoktur; bu yüzden the ile a arasındaki seçim zaman alır."
+  rule: "Hangisi olduğu biliniyorsa ya da tek bir tane varsa the; ilk kez söz edilen herhangi biriyse a/an."
+
+gp.demonstratives:
+  name: "this / that / these / those"
+  explanation: "Yakındaki için this (tekil) ve these (çoğul), uzaktaki için that ve those. Türkçedeki bu/şu/o ayrımı gibi, ama tekil-çoğul ayrımı da vardır."
+  rule: "Yakın: this (tekil), these (çoğul). Uzak: that (tekil), those (çoğul)."
+
+gp.there_is_are:
+  name: "there is / there are"
+  explanation: "Bir yerde bir şeyin var olduğunu söylemek için there is (tekil) ve there are (çoğul) kullanılır. Türkçedeki \"var\" hem bunu hem de sahipliği karşılar; sahiplik için have kullanılır."
+  rule: "Bir yerde bir şey varsa there is (tekil) / there are (çoğul). Birinin bir şeyi varsa have."
+
+gp.have_got:
+  name: "have got / has got"
+  explanation: "Sahiplik ve aile için have got de kullanılır: I've got a car. he, she ve it ile has got olur. Anlamı have ile aynıdır."
+  rule: "Sahiplikte have got; he/she/it ile has got. Kısaltma: I have got → I've got."
+
+gp.present_simple.affirmative:
+  name: "Geniş zaman: olumlu"
+  explanation: "Alışkanlıklar ve genel doğrular için fiilin yalın hâli kullanılır: I work. he, she ve it ile fiile -s ya da -es eklenir: she works. Türkçe konuşanlar bu -s'yi sık unutur."
+  rule: "he/she/it ile fiile -s ya da -es eklenir: work → works, go → goes. Diğer öznelerle fiil yalın kalır."
+
+gp.present_simple.negative:
+  name: "Geniş zaman: olumsuz"
+  explanation: "Olumsuzda fiilden önce don't gelir; he, she ve it ile doesn't. doesn't'tan sonra fiile -s eklenmez."
+  rule: "Olumsuz: don't + yalın fiil; he/she/it ile doesn't + yalın fiil (fiile -s gelmez)."
+
+gp.present_simple.questions:
+  name: "Geniş zaman: soru"
+  explanation: "Soru, özneden önce do ya da does ile kurulur: Do you…? Does she…? Fiil yalın kalır. \"Does he works?\" yaygın bir hatadır."
+  rule: "Soru: Do/Does + özne + yalın fiil. he/she/it ile does; fiile -s gelmez."
+
+gp.adverbs.frequency:
+  name: "Sıklık zarfları"
+  explanation: "always, usually, often, sometimes, never gibi sözcükler ana fiilden önce, be'den sonra gelir: I usually walk. She is never late."
+  rule: "Sıklık zarfı ana fiilden önce gelir, ama be'den sonra."
+
+gp.can.ability:
+  name: "can / can't"
+  explanation: "Yetenek ve izin için can kullanılır: I can swim. Her özneyle aynı kalır; he can, she can. Ardından fiil yalın gelir."
+  rule: "can + yalın fiil; her özneyle aynı biçim (can'e -s gelmez). Olumsuz: can't. Soru: Can + özne + fiil?"
+
+gp.imperative:
+  name: "Emir cümleleri"
+  explanation: "Talimat verirken cümle fiille başlar, özne söylenmez: Open the window. Olumsuzu Don't ile yapılır: Don't be late. please eklemek kibar yapar."
+  rule: "Emir yalın fiille başlar; olumsuzu Don't + yalın fiil."
+
+gp.pronouns.object:
+  name: "Nesne zamirleri"
+  explanation: "Fiilden ya da edattan sonra me, you, him, her, it, us, them gelir: Help me. Türkçedeki \"onu\" üçüne birden karşılık gelir: erkek için him, kadın için her, şey için it."
+  rule: "Fiilden ve edattan sonra nesne biçimi: me, you, him, her, it, us, them. Erkekse him, kadınsa her."
+
+gp.possessive.s:
+  name: "İyelik 's"
+  explanation: "Bir şeyin birine ait olduğunu söylemek için kişinin adına 's eklenir: Ali's car (Ali'nin arabası). Sıra Türkçedeki gibidir: önce sahip, sonra sahip olunan."
+  rule: "Sahip + 's + sahip olunan şey. -s ile biten çoğulda yalnız kesme işareti: parents'."
+
+gp.prepositions.place:
+  name: "Yer edatları"
+  explanation: "Türkçedeki -de ekinin karşılığı birkaç edata bölünür: içinde in, üstünde on, bir noktada at. Edat ismin önüne gelir: in the kitchen."
+  rule: "İçinde in, bir yüzeyin üstünde on, bir noktada at; next to (yanında), under (altında)."
+
+gp.prepositions.time:
+  name: "Zaman edatları: in / on / at"
+  explanation: "Saatler için at, günler ve tarihler için on, aylar, yıllar ve günün bölümleri için in: at seven, on Monday, in the morning."
+  rule: "Saat: at. Gün ve tarih: on. Ay, yıl, mevsim ve günün bölümü: in (ama at night)."
+
+gp.questions.wh:
+  name: "Soru sözcükleriyle sorular"
+  explanation: "what, where, when, who, why, how gibi soru sözcükleri cümlenin başına gelir. Ardından soru sırası gelir: Where do you work? Türkçede soru sözcüğü cümlenin içinde durabilir, İngilizcede başa geçer."
+  rule: "Soru sözcüğü başa gelir; ardından soru sırası: be ya da do/does/can + özne + fiil."
+
+gp.conjunctions.basic:
+  name: "and, but, because"
+  explanation: "and ekler (ve), but karşıtlık bildirir (ama), because sebep verir (çünkü). because'dan sonra tam bir cümle gelir."
+  rule: "Ekleme: and. Karşıtlık: but. Sebep: because + özne + fiil."
+
+gp.present_continuous.now:
+  name: "Şimdiki zaman"
+  explanation: "Şu anda olan işler için am/is/are + fiil-ing kullanılır: I'm cooking. be düşmez; \"I cooking\" yaygın bir hatadır."
+  rule: "Şu an olan iş: am/is/are + fiil-ing. be'yi atlama."
+
+gp.like_ing:
+  name: "like / love / hate + -ing"
+  explanation: "like, love, enjoy ve hate'ten sonra gelen fiil genellikle -ing alır: I like reading (okumayı severim)."
+  rule: "like/love/enjoy/hate'ten sonraki fiil -ing alır."
+
+gp.would_like:
+  name: "would like"
+  explanation: "Bir şeyi kibarca istemek ya da teklif etmek için would like kullanılır: I'd like a coffee. want'tan daha naziktir. Ardından isim ya da to + fiil gelir."
+  rule: "Kibar istek: would like + isim ya da to + fiil. Kısaltma: I would → I'd. Soru: Would you like…?"
+
+gp.past_simple.be:
+  name: "Geçmiş zaman: was / were"
+  explanation: "be'nin geçmiş hâli: I, he, she ve it ile was; you, we ve they ile were. \"Evdeydim\" gibi \"-di\" ekli isim cümleleri böyle kurulur."
+  rule: "Geçmişte be: I/he/she/it ile was, you/we/they ile were."
+
+gp.past_simple.regular:
+  name: "Geçmiş zaman: düzenli fiiller"
+  explanation: "Biten işler için düzenli fiillere -ed eklenir: work → worked. Her özneyle aynı biçim kullanılır."
+  rule: "Düzenli fiil + -ed; her özneyle aynı biçim. -e ile bitene yalnız -d: like → liked."
+
+gp.past_simple.irregular:
+  name: "Geçmiş zaman: düzensiz fiiller"
+  explanation: "Sık kullanılan birçok fiilin geçmiş hâli kendine özgüdür: go → went, have → had, see → saw. Bunlar tek tek öğrenilir."
+  rule: "Düzensiz fiilin kendi geçmiş biçimi kullanılır (go → went); -ed eklenmez."
+
+gp.past_simple.negative_questions:
+  name: "Geçmiş zaman: olumsuz ve soru"
+  explanation: "Olumsuzda didn't, soruda did kullanılır ve fiil yalın kalır: I didn't go. Did you see? \"Did you went?\" yaygın bir hatadır."
+  rule: "didn't / did + yalın fiil; geçmiş biçim (went, saw) kullanılmaz."
+
+gp.future.going_to:
+  name: "be going to"
+  explanation: "Planlar ve niyetler için am/is/are going to + yalın fiil kullanılır: I'm going to visit my parents."
+  rule: "Plan: am/is/are + going to + yalın fiil."
+
+gp.future.will:
+  name: "will"
+  explanation: "Tahminler ve o anda verilen kararlar için will + yalın fiil kullanılır: I'll call you. will her özneyle aynı kalır."
+  rule: "will + yalın fiil; her özneyle aynı. Kısaltma: I will → I'll, will not → won't."
+
+gp.comparatives:
+  name: "Karşılaştırma (-er, more)"
+  explanation: "İki şeyi karşılaştırırken kısa sıfatlara -er, uzun sıfatlara more eklenir ve ardından than gelir: older than, more expensive than. good → better, bad → worse düzensizdir."
+  rule: "Kısa sıfat + -er + than; uzun sıfat: more + sıfat + than. good → better, bad → worse."
+
+gp.superlatives:
+  name: "En üstünlük (-est, most)"
+  explanation: "Bir grubun en … olanı için the + sıfat-est ya da the most + sıfat kullanılır: the biggest, the most famous. good → the best."
+  rule: "the + kısa sıfat-est; uzun sıfatta the most + sıfat. good → the best, bad → the worst."
+
+gp.countable_uncountable:
+  name: "some / any, much / many, a lot of"
+  explanation: "Olumlu cümlede some, olumsuz cümlede ve soruda any kullanılır. Sayılabilir isimle many, sayılamayanla much gelir; a lot of ikisiyle de olur."
+  rule: "Olumluda some, olumsuz ve soruda any. Sayılabilirle many, sayılamayanla much; a lot of her ikisiyle."
+
+gp.modals.obligation:
+  name: "have to / must / should"
+  explanation: "Gereklilik için have to ya da must, tavsiye için should kullanılır. Ardından fiil yalın gelir: You should see a doctor."
+  rule: "Gereklilik: have to / must + yalın fiil (he/she/it ile has to). Tavsiye: should + yalın fiil."
+
+gp.present_simple_vs_continuous:
+  name: "Geniş zaman mı, şimdiki zaman mı?"
+  explanation: "Alışkanlık ve genel doğru için geniş zaman (I work), şu an olan iş için şimdiki zaman (I'm working) kullanılır. Türkçedeki \"-iyor\" ikisini de karşılayabildiği için karışır."
+  rule: "Her zaman ya da genelde olan: geniş zaman. Şu anda olan: am/is/are + -ing."
+
+gp.present_perfect.experience:
+  name: "Present perfect: deneyim"
+  explanation: "Hayatta bir şeyi yapıp yapmadığını söylemek için have/has + fiilin üçüncü hâli kullanılır: I've been to London. Türkçede doğrudan karşılığı yoktur; ever ve never ile sık gelir."
+  rule: "Deneyim: have/has + fiilin üçüncü hâli (V3). he/she/it ile has. Zaman belirtilmez."
+
+gp.verb_patterns.to_ing:
+  name: "Fiil + to ya da -ing"
+  explanation: "Bazı fiillerden sonra to + fiil gelir (want, need, decide), bazılarından sonra fiil-ing (enjoy, finish). Hangisinin geldiği fiile göre değişir."
+  rule: "want/need/decide/hope/try + to + fiil; enjoy/finish/stop + fiil-ing."

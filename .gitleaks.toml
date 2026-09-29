@@ -6,8 +6,8 @@ title = "Dilbaz gitleaks configuration"
 useDefault = true
 
 [[allowlists]]
-description = "Language-pack item keys (en.ws.hospital.n.1) look like tokens to generic-api-key"
+description = "Item keys (en.ws.hospital.n.1) in target and pair packs look like tokens to generic-api-key"
 targetRules = ["generic-api-key"]
 condition = "AND"
-paths = ['''^content/packs/[^/]+/items/[^/]+\.jsonl$''']
+paths = ['''^content/packs/[^/]+/(?:items/)?[^/]+\.jsonl$''']
 regexes = ['''^[a-z]{2,3}\.(?:ws|chunk|gp|sent|pattern|sound)\.[a-z0-9_.]+$''']

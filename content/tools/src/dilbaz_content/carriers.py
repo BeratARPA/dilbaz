@@ -157,6 +157,9 @@ class SenseMatcher:
 
     def __call__(self, text: str, lemma: str, pos: str) -> list[WordSense]:
         found = self._by_lemma.get(lemma) or self._by_lemma.get(text.lower()) or []
+        if not found and pos == "PROPN" and lemma.endswith("s"):
+            # spaCy keeps plural proper nouns whole: "Mondays" has the lemma "mondays".
+            found = self._by_lemma.get(lemma[:-1], [])
         same = [s for s in found if pos in _POS_MATCH.get(s.pos, frozenset({s.pos}))]
         if same or len(found) != 1:
             return same

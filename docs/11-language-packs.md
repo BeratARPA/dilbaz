@@ -39,10 +39,11 @@ content/packs/en/
 
 content/packs/tr-en/
   manifest.yaml
-  glosses.jsonl            # item_key → meaning, explanation, usage_note
+  glosses.jsonl            # item_key → meaning, explanation, usage_note, context (cümle/kalıp istemi)
   contrast_notes.jsonl
   error_tags.jsonl         # code, category, severity, description, examples, grammar_codes, pron_map
   variants.jsonl           # item_key → kabul edilebilir varyantlar
+  rule_notes.jsonl         # gramer kodu → H3 kural notu (cevabı içermez, I-02)
   can_do_summaries.jsonl
   task_instructions.jsonl
   learning_notes.jsonl     # A25 şablonları
@@ -89,11 +90,29 @@ created_at: 2026-10-…
 { "key": "en.chunk.go_home", "meaning": "eve gitmek",
   "explanation": "home'dan önce 'to' gelmez: go home.",
   "usage_note": "house = bina, home = yuva/ev hissi" }
+{ "key": "en.sent.do_you_have_a_room", "meaning": "Odanız var mı?", "context": "otelde",
+  "provenance": { "source": "dilbaz curation", "license": "own" } }
+
+// tr-en/variants.jsonl: normalizasyondan sonra referanstan farklı, hedef kelimeyi içeren cevaplar
+{ "key": "en.sent.i_have_a_job", "variants": ["I've got a job."], "provenance": { … } }
+
+// tr-en/rule_notes.jsonl
+{ "code": "gp.be.present", "note": "Cümlede be olmalı: I ile am, he/she/it ile is, you/we/they ile are.",
+  "provenance": { … } }
+
+// tr-en/contrast_notes.jsonl
+{ "items": ["en.ws.say.v.1", "en.ws.tell.v.1"],
+  "note": "İkisi de söylemek: tell'den sonra kişi gelir (tell him), say'den sonra söz gelir (say yes, say it to him).",
+  "provenance": { … } }
 
 // tr-en/error_tags.jsonl
 { "code": "art.missing", "category": "grammar", "severity": 1.0,
   "description": "Tekil sayılabilir isimden önce a/an/the eksik.",
-  "examples": ["I have problem → I have a problem"], "grammar_codes": ["gp.articles.basic"] }
+  "examples": ["I have problem → I have a problem"], "grammar_codes": ["gp.articles.a_an"] }
+{ "code": "phon.th", "category": "pronunciation", "severity": 0.3,
+  "description": "th sesleri /θ/ ve /ð/ yerine t, d, s ya da z söylenmiş.",
+  "examples": ["tink → think", "dis → this", "tree (three demek istenirken) → three"],
+  "pron_map": { "θ": "t", "ð": "d" } }   // beklenen ses → yerine söylenen
 ```
 
 **Anahtar kuralları:**
@@ -127,7 +146,7 @@ abstract interface class LanguageServices {
 
 - **`forms` tablosu:** Derleme zamanında spaCy/Stanza ile geniş bir kelime listesinin çekimli biçimlerinden üretilir (go/goes/went/gone → go).
 - **Sondan eklemeli diller:** Türkçe ya da Fince hedef dil olursa biçim tablosu çok büyür. Manifest `tokenizer.runtime: "remote"` diyebilir; o zaman lemmatizasyon bir sunucu fonksiyonuyla (Stanza) yapılır. Bu genişleme noktası baştan tanımlıdır, ama ilk sürümde uygulanmaz.
-- **Normalizasyon kuralları veridir:** Kısaltma açma (I'm → I am), yazım varyantları (colour/color) ve sayı sözcükleri (2 → two) `normalization.yaml`'da tanımlıdır, kodda değil.
+- **Normalizasyon kuralları veridir:** Kısaltma açma (I'm → I am), yazım varyantları (colour/color) ve sayı sözcükleri (2 → two) `normalization.yaml`'da tanımlıdır, kodda değil. Dosyanın `tests` bölümündeki örnekleri hem motor hem içerik araçları (S5 varyant kontrolü) geçmelidir.
 
 ## 7. Dilden bağımsızlığı zorunlu kılan kontroller
 

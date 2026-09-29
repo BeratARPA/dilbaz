@@ -126,6 +126,27 @@ OWN_TOKENS: dict[str, tuple[Token, ...]] = {
         ("xyzzy", "xyzzy", "NOUN", "NN"),
         PERIOD,
     ),
+    # Variants of "We watch TV." for S5.
+    "We watch television.": (
+        ("We", "we", "PRON", "PRP"),
+        ("watch", "watch", "VERB", "VBP"),
+        ("television", "television", "NOUN", "NN"),
+        PERIOD,
+    ),
+    "We see TV.": (
+        ("We", "we", "PRON", "PRP"),
+        ("see", "see", "VERB", "VBP"),
+        ("TV", "tv", "NOUN", "NN"),
+        PERIOD,
+    ),
+    # A tagger slip: "watch" read as a noun.
+    "We all watch TV.": (
+        ("We", "we", "PRON", "PRP"),
+        ("all", "all", "PRON", "DT"),
+        ("watch", "watch", "NOUN", "NN"),
+        ("TV", "tv", "NOUN", "NN"),
+        PERIOD,
+    ),
 }
 
 

@@ -27,6 +27,7 @@ from dilbaz_content.ingest import (
 from dilbaz_content.items import LEVELS, Chunk, GrammarPoint, Level, WordSense
 from dilbaz_content.lexicon_step import LEXICON_FILE, run_lexicon
 from dilbaz_content.manifest import load_manifest
+from dilbaz_content.pair_step import run_pair
 from dilbaz_content.select_step import SelectionError, run_select
 from dilbaz_content.sentences_step import run_sentences
 from dilbaz_content.sources import (
@@ -236,4 +237,31 @@ def sentences(
     if report.senses_without_carrier:
         console.print(f"[red]senses without a carrier:[/red] {list(report.senses_without_carrier)}")
     if report.blocking or report.senses_without_carrier:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def pair(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learners' language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S5: build the pair pack (glosses, prompts, variants, rule notes, error tags) and check it."""
+    root = _content_dir(content_dir)
+    try:
+        with console.status("building the pair pack"):
+            report = run_pair(root, l1=l1, l2=l2, analyzer=SpacyAnalyzer)
+    except (FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"glosses {report.glosses}; prompts {report.prompts}; variants {report.variants}; "
+        f"rule notes {report.rule_notes}; contrast notes {report.contrast_notes}; "
+        f"error tags {report.error_tags}"
+    )
+    kinds = Counter(issue.kind for issue in report.issues)
+    console.print(f"issues: {dict(kinds) or 'none'}")
+    for issue in report.blocking[:20]:
+        console.print(f"[red]{issue.kind}[/red] {issue.key}: {issue.detail}")
+    if report.blocking:
         raise typer.Exit(code=1)

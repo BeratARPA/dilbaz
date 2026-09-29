@@ -1,0 +1,1348 @@
+{"key":"en.ws.breakfast.n.1","meaning":"kahvaltı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.lunch.n.1","meaning":"öğle yemeği","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dinner.n.1","meaning":"akşam yemeği","usage_note":"Günün ana yemeği; genelde akşam yenir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.coffee.n.1","meaning":"kahve","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tea.n.1","meaning":"çay","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bread.n.1","meaning":"ekmek","usage_note":"Sayılamaz: a bread değil, some bread ya da a loaf of bread.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.milk.n.1","meaning":"süt","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.egg.n.1","meaning":"yumurta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.apple.n.1","meaning":"elma","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fruit.n.1","meaning":"meyve","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.vegetable.n.1","meaning":"sebze","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.chicken.n.1","meaning":"tavuk","usage_note":"Hem hayvan hem et; yemek olarak a olmadan: I eat chicken.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.meat.n.1","meaning":"et","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fish.n.1","meaning":"balık","usage_note":"Çoğulu da çoğunlukla fish'tir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.rice.n.1","meaning":"pirinç, pilav","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cake.n.1","meaning":"kek, pasta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.juice.n.1","meaning":"meyve suyu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cup.n.1","meaning":"fincan, bardak","usage_note":"Kulplu, sıcak içecek için: a cup of coffee.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.glass.n.1","meaning":"bardak","usage_note":"Soğuk içecek için: a glass of water. glasses çoğu zaman gözlük demektir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bottle.n.1","meaning":"şişe","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.kitchen.n.1","meaning":"mutfak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bathroom.n.1","meaning":"banyo, tuvalet","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bedroom.n.1","meaning":"yatak odası","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bed.n.1","meaning":"yatak","usage_note":"go to bed: yatmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.table.n.1","meaning":"masa","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.chair.n.1","meaning":"sandalye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.window.n.1","meaning":"pencere","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.door.n.1","meaning":"kapı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.floor.n.1","meaning":"yer, zemin; kat","usage_note":"on the floor: yerde. the second floor: ikinci kat.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.garden.n.1","meaning":"bahçe","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.monday.n.1","meaning":"pazartesi","usage_note":"Gün adları büyük harfle yazılır; önünde on gelir: on Monday.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tuesday.n.1","meaning":"salı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wednesday.n.1","meaning":"çarşamba","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.thursday.n.1","meaning":"perşembe","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.friday.n.1","meaning":"cuma","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.saturday.n.1","meaning":"cumartesi","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sunday.n.1","meaning":"pazar","usage_note":"Gün adı; pazar yeri market'tir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.weekend.n.1","meaning":"hafta sonu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.afternoon.n.1","meaning":"öğleden sonra","usage_note":"in the afternoon: öğleden sonra.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.evening.n.1","meaning":"akşam","usage_note":"in the evening: akşamları, akşam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tomorrow.adv.1","meaning":"yarın","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.yesterday.adv.1","meaning":"dün","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.birthday.n.1","meaning":"doğum günü","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.holiday.n.1","meaning":"tatil, bayram","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.winter.n.1","meaning":"kış","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.spring.n.1","meaning":"ilkbahar, bahar","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.autumn.n.1","meaning":"sonbahar","usage_note":"Amerikan İngilizcesinde fall.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.weather.n.1","meaning":"hava (durumu)","usage_note":"Soluduğumuz hava air'dir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.rain.n.1","meaning":"yağmur","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.rain.v.1","meaning":"yağmur yağmak","usage_note":"Özne it: It is raining.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sun.n.1","meaning":"güneş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hot.adj.1","meaning":"sıcak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cold.adj.1","meaning":"soğuk","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cold.n.1","meaning":"soğuk algınlığı, nezle","usage_note":"have a cold: nezle olmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.warm.adj.1","meaning":"ılık, sıcak","usage_note":"hot'tan hafif, hoş bir sıcaklık.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.shop.n.1","meaning":"dükkân, mağaza","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.restaurant.n.1","meaning":"restoran, lokanta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hotel.n.1","meaning":"otel","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.airport.n.1","meaning":"havalimanı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.station.n.1","meaning":"istasyon, gar","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bus.n.1","meaning":"otobüs","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.train.n.1","meaning":"tren","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ticket.n.1","meaning":"bilet","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.map.n.1","meaning":"harita","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.village.n.1","meaning":"köy","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mountain.n.1","meaning":"dağ","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sea.n.1","meaning":"deniz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.beach.n.1","meaning":"plaj, sahil","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.river.n.1","meaning":"nehir, ırmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hospital.n.1","meaning":"hastane","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bag.n.1","meaning":"çanta, torba, poşet","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.shoe.n.1","meaning":"ayakkabı","usage_note":"Çoğunlukla çoğul: shoes.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.clothes.n.1","meaning":"giysiler, kıyafetler","usage_note":"Hep çoğuldur: my clothes are…","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.shirt.n.1","meaning":"gömlek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dress.n.1","meaning":"elbise","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.computer.n.1","meaning":"bilgisayar","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.email.n.1","meaning":"e-posta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.message.n.1","meaning":"mesaj, ileti","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.internet.n.1","meaning":"internet","usage_note":"Önünde the gelir: on the internet.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.photo.n.1","meaning":"fotoğraf","usage_note":"take a photo: fotoğraf çekmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pen.n.1","meaning":"tükenmez kalem, dolma kalem","usage_note":"Kurşun kalem pencil'dır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.husband.n.1","meaning":"koca, eş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.daughter.n.1","meaning":"kız evlat, kızı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sister.n.1","meaning":"kız kardeş, abla","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.boyfriend.n.1","meaning":"erkek arkadaş, sevgili","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.girlfriend.n.1","meaning":"kız arkadaş, sevgili","usage_note":"Arkadaşlık için çoğunlukla friend denir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.teacher.n.1","meaning":"öğretmen","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.boss.n.1","meaning":"patron, müdür","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tired.adj.1","meaning":"yorgun","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hungry.adj.1","meaning":"aç","usage_note":"be ile: I am hungry (açım).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.thirsty.adj.1","meaning":"susamış","usage_note":"I am thirsty: susadım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cheap.adj.1","meaning":"ucuz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.expensive.adj.1","meaning":"pahalı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.rich.adj.1","meaning":"zengin","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.poor.adj.1","meaning":"fakir, yoksul","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.healthy.adj.1","meaning":"sağlıklı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tall.adj.1","meaning":"uzun boylu, yüksek","usage_note":"İnsan ve bina için tall; saç ve yol için long.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sad.adj.1","meaning":"üzgün","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.angry.adj.1","meaning":"kızgın, öfkeli","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.afraid.adj.1","meaning":"korkmuş, korkan","usage_note":"be afraid of: -den korkmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bored.adj.1","meaning":"sıkılmış","usage_note":"I'm bored: sıkıldım. boring ise sıkıcı olan şeydir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.busy.adj.1","meaning":"meşgul, yoğun","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.difficult.adj.1","meaning":"zor","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.interesting.adj.1","meaning":"ilginç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.boring.adj.1","meaning":"sıkıcı","usage_note":"Sıkılan kişi bored'dır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.favorite.adj.1","meaning":"en sevdiği, favori","usage_note":"İngiliz yazımı favourite.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.funny.adj.1","meaning":"komik","usage_note":"Güldüren şey funny; eğlenceli olan fun.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.quiet.adj.1","meaning":"sessiz, sakin","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dirty.adj.1","meaning":"kirli","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.slow.adj.1","meaning":"yavaş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sick.adj.1","meaning":"hasta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wake.v.1","meaning":"uyanmak","usage_note":"Çoğunlukla wake up.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cook.v.1","meaning":"yemek pişirmek, yemek yapmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.clean.adj.1","meaning":"temiz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.clean.v.1","meaning":"temizlemek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wash.v.1","meaning":"yıkamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dance.v.1","meaning":"dans etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sing.v.1","meaning":"şarkı söylemek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.swim.v.1","meaning":"yüzmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ride.v.1","meaning":"binmek, (araçla) gitmek","usage_note":"Bisiklete ve ata ride; arabayı kullanmak drive.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fly.v.1","meaning":"uçmak, uçakla gitmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.homework.n.1","meaning":"ödev","usage_note":"Sayılamaz ve do ile: do homework.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.exam.n.1","meaning":"sınav","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.lesson.n.1","meaning":"ders","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hobby.n.1","meaning":"hobi, uğraş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sport.n.1","meaning":"spor","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.football.n.1","meaning":"futbol","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.animal.n.1","meaning":"hayvan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cat.n.1","meaning":"kedi","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bird.n.1","meaning":"kuş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tree.n.1","meaning":"ağaç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.flower.n.1","meaning":"çiçek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.have.v.1","meaning":"sahip olmak, -si olmak; yemek, içmek","usage_note":"I have a car: arabam var. have lunch: öğle yemeği yemek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.do.v.1","meaning":"yapmak","usage_note":"İşler ve görevler için do (do homework); bir şey üretmek için make.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.get.v.1","meaning":"almak, edinmek; olmak","usage_note":"get a ticket: bilet almak. get tired: yorulmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.like.v.1","meaning":"sevmek, hoşlanmak","usage_note":"Beğenilen şey fiilden sonra gelir: I like coffee.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.just.adv.1","meaning":"az önce, yeni; sadece","usage_note":"I just got here: az önce geldim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.make.v.1","meaning":"yapmak, hazırlamak","usage_note":"Bir şey üretirken make (make tea, make a cake); işler için do.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.go.v.1","meaning":"gitmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.up.adv.1","meaning":"yukarı, yukarıya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.out.adv.1","meaning":"dışarı, dışarıda","usage_note":"go out: dışarı çıkmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.say.v.1","meaning":"söylemek, demek","usage_note":"say'den sonra kişi gelmez; kişiye söylerken tell me.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.there.adv.1","meaning":"orada, oraya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.time.n.1","meaning":"zaman, vakit; saat","usage_note":"What time is it?: Saat kaç?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.year.n.1","meaning":"yıl, sene","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.new.adj.1","meaning":"yeni","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.people.n.1","meaning":"insanlar, kişiler","usage_note":"Çoğuldur: people are…","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.take.v.1","meaning":"almak, götürmek; (araca) binmek","usage_note":"take the bus: otobüse binmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.see.v.1","meaning":"görmek","usage_note":"Bakmak look at, izlemek watch.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.know.v.1","meaning":"bilmek, tanımak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.also.adv.1","meaning":"de, da, ayrıca","usage_note":"Fiilden önce gelir: I also have a brother.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.want.v.1","meaning":"istemek","usage_note":"Fiille: want to go (gitmek istemek).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.now.adv.1","meaning":"şimdi, şu an","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.think.v.1","meaning":"düşünmek, sanmak","usage_note":"I think so: sanırım öyle.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.come.v.1","meaning":"gelmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.look.v.1","meaning":"bakmak","usage_note":"Bir şeye bakarken at gelir: look at me. Görmek see, izlemek watch.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.need.v.1","meaning":"ihtiyacı olmak, gerekmek","usage_note":"I need water: suya ihtiyacım var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.good.adj.1","meaning":"iyi, güzel","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.only.adj.1","meaning":"tek, biricik","usage_note":"an only child: tek çocuk.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.only.adv.1","meaning":"sadece, yalnızca","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.day.n.1","meaning":"gün","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.first.adj.1","meaning":"ilk, birinci","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.first.adv.1","meaning":"önce, ilk önce","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.work.v.1","meaning":"çalışmak","usage_note":"Ders çalışmak study'dir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.work.n.1","meaning":"iş, iş yeri","usage_note":"go to work: işe gitmek; önünde a gelmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.then.adv.1","meaning":"sonra, o zaman","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.back.adv.1","meaning":"geri","usage_note":"come back: geri gelmek, dönmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.way.n.1","meaning":"yol; yöntem, şekil","usage_note":"this way: bu şekilde, bu yoldan.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.thing.n.1","meaning":"şey","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.well.adv.1","meaning":"iyi (bir şekilde)","usage_note":"Fiili niteler: She sings well. good ise sıfattır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.well.adj.1","meaning":"iyi, sağlıklı","usage_note":"Sağlık için: I'm not well (iyi değilim).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.right.adj.1","meaning":"doğru, haklı","usage_note":"You're right: haklısın.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.right.adj.2","meaning":"sağ","usage_note":"Yön olarak: my right hand. Sol left.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.use.v.1","meaning":"kullanmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.very.adv.1","meaning":"çok","usage_note":"Sıfat ve zarftan önce: very good. Fiille a lot: I like it a lot.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.much.adv.1","meaning":"çok, fazla","usage_note":"Çoğunlukla olumsuz cümlede ve soruda: I don't go out much.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.man.n.1","meaning":"adam, erkek","usage_note":"Çoğulu men.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.even.adv.1","meaning":"bile, hatta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.give.v.1","meaning":"vermek","usage_note":"give me the book = give the book to me.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.here.adv.1","meaning":"burada, buraya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.really.adv.1","meaning":"gerçekten, çok","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.too.adv.1","meaning":"de, da","usage_note":"Cümle sonunda: I want to go, too.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.too.adv.2","meaning":"fazla, gereğinden çok","usage_note":"Olumsuz bir anlamla: too big (fazla büyük). very ise yalnızca çok demektir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.call.v.1","meaning":"aramak (telefonla); adlandırmak","usage_note":"call me: beni ara.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.call.n.1","meaning":"telefon görüşmesi, arama","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.play.v.1","meaning":"oynamak; çalmak (çalgı)","usage_note":"play football: futbol oynamak. play the guitar: gitar çalmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.show.v.1","meaning":"göstermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.show.n.1","meaning":"gösteri, program","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.life.n.1","meaning":"hayat, yaşam","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.love.v.1","meaning":"sevmek, çok sevmek, bayılmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.love.n.1","meaning":"aşk, sevgi","usage_note":"be in love: âşık olmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.still.adv.1","meaning":"hâlâ","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tell.v.1","meaning":"söylemek, anlatmak","usage_note":"tell'den sonra kişi gelir: tell me. Kişi yoksa say.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.great.adj.1","meaning":"harika, çok iyi; büyük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.never.adv.1","meaning":"asla, hiç","usage_note":"Cümle zaten olumsuzdur; not eklenmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.long.adj.1","meaning":"uzun","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.game.n.1","meaning":"oyun; maç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.world.n.1","meaning":"dünya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.start.v.1","meaning":"başlamak, başlatmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.start.n.1","meaning":"başlangıç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.high.adj.1","meaning":"yüksek","usage_note":"Fiyat, dağ ve bina için; insan boyu için tall.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.down.adv.1","meaning":"aşağı, aşağıya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.help.v.1","meaning":"yardım etmek","usage_note":"Kişi doğrudan gelir: help me (bana yardım et).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.help.n.1","meaning":"yardım","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.part.n.1","meaning":"parça, bölüm, kısım","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.place.n.1","meaning":"yer, mekân","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.home.n.1","meaning":"ev, yuva","usage_note":"Yaşanılan yer; bina olarak ev house.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.home.adv.1","meaning":"eve, evde","usage_note":"go home: eve gitmek (to gelmez).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.feel.v.1","meaning":"hissetmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.old.adj.1","meaning":"eski; yaşlı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.keep.v.1","meaning":"tutmak, saklamak; devam etmek","usage_note":"keep going: devam etmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.change.v.1","meaning":"değişmek, değiştirmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.change.n.1","meaning":"değişiklik; para üstü, bozuk para","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.same.adj.1","meaning":"aynı","usage_note":"Önünde the gelir: the same.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.own.adj.1","meaning":"kendi","usage_note":"my own room: kendi odam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.house.n.1","meaning":"ev","usage_note":"Bina olarak ev; yaşanılan yer duygusuyla home.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.school.n.1","meaning":"okul","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.end.n.1","meaning":"son","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.find.v.1","meaning":"bulmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.big.adj.1","meaning":"büyük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.woman.n.1","meaning":"kadın","usage_note":"Çoğulu women.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.around.adv.1","meaning":"etrafta, civarda; yaklaşık","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.name.n.1","meaning":"ad, isim","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.little.adj.1","meaning":"küçük, ufak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.always.adv.1","meaning":"her zaman, hep","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.put.v.1","meaning":"koymak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.point.n.1","meaning":"puan; nokta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.point.v.1","meaning":"(parmakla) göstermek, işaret etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.team.n.1","meaning":"takım, ekip","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.company.n.1","meaning":"şirket, firma","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.win.v.1","meaning":"kazanmak","usage_note":"Oyun ve yarışma için win; para kazanmak earn.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.family.n.1","meaning":"aile","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.talk.v.1","meaning":"konuşmak","usage_note":"talk to someone: biriyle konuşmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ask.v.1","meaning":"sormak; istemek","usage_note":"ask a question: soru sormak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.become.v.1","meaning":"olmak (bir şeye dönüşmek)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.week.n.1","meaning":"hafta","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.number.n.1","meaning":"sayı, rakam; numara","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.guy.n.1","meaning":"adam, çocuk (günlük dilde)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.group.n.1","meaning":"grup","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.friend.n.1","meaning":"arkadaş, dost","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.again.adv.1","meaning":"yine, tekrar, bir daha","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.next.adv.1","meaning":"sonra, ardından","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.second.adj.1","meaning":"ikinci","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.second.n.1","meaning":"saniye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.child.n.1","meaning":"çocuk","usage_note":"Çoğulu children.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.try.v.1","meaning":"denemek, (yapmaya) çalışmak","usage_note":"try to help: yardım etmeye çalışmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.live.v.1","meaning":"yaşamak, oturmak","usage_note":"Where do you live?: Nerede oturuyorsun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.city.n.1","meaning":"şehir","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sure.adj.1","meaning":"emin","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.happen.v.1","meaning":"olmak, meydana gelmek","usage_note":"What happened?: Ne oldu?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.let.v.1","meaning":"izin vermek, bırakmak","usage_note":"let me help: yardım edeyim. let's go: hadi gidelim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.doctor.n.1","meaning":"doktor","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.run.v.1","meaning":"koşmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hold.v.1","meaning":"tutmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stop.v.1","meaning":"durmak, durdurmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stop.n.1","meaning":"durak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.free.adj.1","meaning":"bedava, ücretsiz","usage_note":"for free: bedavaya.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.free.adj.2","meaning":"boş, müsait","usage_note":"Are you free?: Müsait misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.money.n.1","meaning":"para","usage_note":"Sayılamaz: much money, some money.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.country.n.1","meaning":"ülke","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.head.n.1","meaning":"baş, kafa","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.night.n.1","meaning":"gece","usage_note":"at night: geceleri.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hand.n.1","meaning":"el","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.area.n.1","meaning":"bölge, alan, semt","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.order.v.1","meaning":"sipariş vermek, ısmarlamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.order.n.1","meaning":"sipariş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mean.v.1","meaning":"anlamına gelmek, demek istemek","usage_note":"What does it mean?: Ne demek?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bring.v.1","meaning":"getirmek","usage_note":"Buraya getirmek bring; oraya götürmek take.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.believe.v.1","meaning":"inanmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.book.n.1","meaning":"kitap","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.line.n.1","meaning":"çizgi","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.away.adv.1","meaning":"uzakta, uzağa","usage_note":"five minutes away: beş dakika uzaklıkta.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.job.n.1","meaning":"iş, meslek","usage_note":"Önünde a gelir: I have a job.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.business.n.1","meaning":"iş, ticaret; işletme","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.open.v.1","meaning":"açmak","usage_note":"Işık ve cihazlar için turn on.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.open.adj.1","meaning":"açık","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.problem.n.1","meaning":"sorun, problem","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hour.n.1","meaning":"saat (süre)","usage_note":"Altmış dakika; Saat kaç? sorusunda time.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.month.n.1","meaning":"ay","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.real.adj.1","meaning":"gerçek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.small.adj.1","meaning":"küçük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.large.adj.1","meaning":"büyük, geniş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.turn.v.1","meaning":"dönmek, çevirmek","usage_note":"turn left: sola dönmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.turn.n.1","meaning":"sıra","usage_note":"It's my turn: sıra bende.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.watch.v.1","meaning":"izlemek, seyretmek","usage_note":"Hareketli şeyler için (TV, maç); görmek see, bakmak look at.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.watch.n.1","meaning":"kol saati","usage_note":"Duvar saati clock'tur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.different.adj.1","meaning":"farklı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hard.adj.1","meaning":"zor; sert","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hard.adv.1","meaning":"sıkı, çok (çalışmak)","usage_note":"work hard: sıkı çalışmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.girl.n.1","meaning":"kız, kız çocuğu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.party.n.1","meaning":"parti, eğlence","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.question.n.1","meaning":"soru","usage_note":"ask a question: soru sormak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.top.n.1","meaning":"tepe, üst","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.face.n.1","meaning":"yüz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.person.n.1","meaning":"kişi, insan","usage_note":"Çoğulu çoğunlukla people.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.early.adv.1","meaning":"erken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.early.adj.1","meaning":"erken, (bir dönemin) başı","usage_note":"early morning: sabahın erken saatleri.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cause.v.1","meaning":"neden olmak, yol açmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.member.n.1","meaning":"üye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.result.n.1","meaning":"sonuç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.story.n.1","meaning":"hikâye, öykü","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.side.n.1","meaning":"taraf, yan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hope.v.1","meaning":"umut etmek, ummak","usage_note":"I hope so: umarım öyle.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hope.n.1","meaning":"umut","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.water.n.1","meaning":"su","usage_note":"Sayılamaz: a glass of water.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.move.v.1","meaning":"taşınmak; hareket etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.read.v.1","meaning":"okumak","usage_note":"Geçmişi yazılışı aynı, söylenişi farklı: read /red/.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.seem.v.1","meaning":"gibi görünmek","usage_note":"You seem tired: yorgun görünüyorsun.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hear.v.1","meaning":"duymak","usage_note":"Dikkatle dinlemek listen to.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wait.v.1","meaning":"beklemek","usage_note":"Birini beklerken for gelir: wait for me.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.include.v.1","meaning":"içermek, dahil etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.word.n.1","meaning":"kelime, sözcük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.car.n.1","meaning":"araba","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.today.adv.1","meaning":"bugün","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.full.adj.1","meaning":"dolu; tok","usage_note":"I'm full: doydum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.level.n.1","meaning":"seviye, düzey","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.buy.v.1","meaning":"satın almak, almak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.already.adv.1","meaning":"zaten, çoktan, şimdiden","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.enough.adv.1","meaning":"yeterince","usage_note":"Sıfattan sonra gelir: old enough.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.plan.n.1","meaning":"plan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.leave.v.1","meaning":"ayrılmak, gitmek; bırakmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.die.v.1","meaning":"ölmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bad.adj.1","meaning":"kötü","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.once.adv.1","meaning":"bir kez, bir kere","usage_note":"once a week: haftada bir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.add.v.1","meaning":"eklemek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.close.v.1","meaning":"kapatmak, kapanmak","usage_note":"Işık ve cihazlar için turn off.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.close.adj.1","meaning":"yakın","usage_note":"close friends: yakın arkadaşlar.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.white.adj.1","meaning":"beyaz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.study.v.1","meaning":"ders çalışmak, okumak (bir bölümü)","usage_note":"İş için çalışmak work.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.meet.v.1","meaning":"buluşmak, görüşmek; tanışmak","usage_note":"Nice to meet you: tanıştığıma memnun oldum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.music.n.1","meaning":"müzik","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.young.adj.1","meaning":"genç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.send.v.1","meaning":"göndermek, yollamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.war.n.1","meaning":"savaş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pay.v.1","meaning":"ödemek","usage_note":"Bir şeyin parasını öderken for gelir: pay for lunch.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.form.n.1","meaning":"form","usage_note":"fill in a form: form doldurmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.kind.n.1","meaning":"tür, çeşit","usage_note":"What kind of…?: Ne tür…?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.kind.adj.1","meaning":"nazik, iyi kalpli","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.far.adv.1","meaning":"uzak, uzakta","usage_note":"How far is it?: Ne kadar uzak?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.follow.v.1","meaning":"takip etmek, izlemek (arkasından gitmek)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.kill.v.1","meaning":"öldürmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fact.n.1","meaning":"gerçek, olgu","usage_note":"in fact: aslında.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.actually.adv.1","meaning":"aslında","usage_note":"Anlamı güncel değil, aslında: actually ≠ aktüel.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.program.n.1","meaning":"program","usage_note":"İngiliz yazımı programme (TV için).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hit.v.1","meaning":"vurmak, çarpmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.break.v.1","meaning":"kırmak, kırılmak; bozmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.break.n.1","meaning":"mola, ara","usage_note":"take a break: mola vermek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.kid.n.1","meaning":"çocuk (günlük dilde)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.course.n.1","meaning":"kurs, ders","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.continue.v.1","meaning":"devam etmek, sürdürmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.black.adj.1","meaning":"siyah, kara","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stay.v.1","meaning":"kalmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mind.n.1","meaning":"akıl, zihin","usage_note":"change your mind: fikrini değiştirmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mind.v.1","meaning":"sakıncası olmak, aldırmak","usage_note":"Do you mind?: Sakıncası var mı? I don't mind: bana fark etmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.body.n.1","meaning":"vücut, beden","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.minute.n.1","meaning":"dakika","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.idea.n.1","meaning":"fikir","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.allow.v.1","meaning":"izin vermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.matter.v.1","meaning":"önemli olmak","usage_note":"It doesn't matter: önemli değil, fark etmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.matter.n.1","meaning":"sorun, mesele","usage_note":"What's the matter?: Ne oldu? Sorun ne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fall.v.1","meaning":"düşmek; (yağmur, kar) yağmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.reason.n.1","meaning":"sebep, neden","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.share.v.1","meaning":"paylaşmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.drive.v.1","meaning":"araba kullanmak, sürmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.drive.n.1","meaning":"araba gezintisi, yolculuk","usage_note":"go for a drive: arabayla gezmeye çıkmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.class.n.1","meaning":"sınıf; ders","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.whole.adj.1","meaning":"bütün, tüm","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.together.adv.1","meaning":"birlikte, beraber","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.record.v.1","meaning":"kaydetmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.check.v.1","meaning":"kontrol etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.check.n.1","meaning":"hesap (restoranda)","usage_note":"Amerikan İngilizcesi; İngilizler bill der. Banka çeki anlamına gelmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.understand.v.1","meaning":"anlamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.create.v.1","meaning":"oluşturmak, yaratmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.list.n.1","meaning":"liste","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.single.adj.1","meaning":"tek; bekâr","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.speak.v.1","meaning":"konuşmak","usage_note":"Dil için speak: speak English. Sohbet için talk.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.student.n.1","meaning":"öğrenci","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.maybe.adv.1","meaning":"belki","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.room.n.1","meaning":"oda","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.office.n.1","meaning":"ofis, büro","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.offer.v.1","meaning":"teklif etmek, önermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.offer.n.1","meaning":"teklif","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.test.n.1","meaning":"sınav, test","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.remember.v.1","meaning":"hatırlamak, unutmamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.increase.v.1","meaning":"artmak, artırmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.food.n.1","meaning":"yemek, yiyecek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fire.n.1","meaning":"ateş; yangın","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.light.n.1","meaning":"ışık","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.light.adj.1","meaning":"hafif","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.health.n.1","meaning":"sağlık","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.important.adj.1","meaning":"önemli","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.news.n.1","meaning":"haber, haberler","usage_note":"Sonu -s ile biter ama tekildir: the news is…","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cost.v.1","meaning":"tutmak, (fiyatı) olmak","usage_note":"It costs ten euros: on avro tutuyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cost.n.1","meaning":"maliyet, fiyat","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.center.n.1","meaning":"merkez, orta","usage_note":"İngiliz yazımı centre.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.receive.v.1","meaning":"almak (gönderileni)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.information.n.1","meaning":"bilgi","usage_note":"Sayılamaz: some information (informations değil).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.local.adj.1","meaning":"yerel, mahalledeki","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sign.n.1","meaning":"levha, tabela; işaret","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.type.n.1","meaning":"tür, tip","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.eye.n.1","meaning":"göz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.price.n.1","meaning":"fiyat","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pass.v.1","meaning":"geçmek (sınavı, önünden)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sell.v.1","meaning":"satmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.easy.adj.1","meaning":"kolay","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.half.n.1","meaning":"yarı, yarım","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.spend.v.1","meaning":"harcamak; geçirmek (zaman)","usage_note":"spend money: para harcamak. spend the weekend: hafta sonunu geçirmek.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.often.adv.1","meaning":"sık sık, çoğu zaman","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.provide.v.1","meaning":"sağlamak, vermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sound.n.1","meaning":"ses","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sound.v.1","meaning":"gibi gelmek, kulağa … gelmek","usage_note":"That sounds good: kulağa hoş geliyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.boy.n.1","meaning":"oğlan, erkek çocuk","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.view.n.1","meaning":"manzara, görünüm","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.true.adj.1","meaning":"doğru, gerçek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.begin.v.1","meaning":"başlamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.eat.v.1","meaning":"yemek (yemek yemek)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bit.n.1","meaning":"biraz, parça","usage_note":"a bit: biraz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cover.v.1","meaning":"örtmek, kaplamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.short.adj.1","meaning":"kısa; kısa boylu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.almost.adv.1","meaning":"neredeyse, hemen hemen","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wrong.adj.1","meaning":"yanlış","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.present.n.1","meaning":"hediye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.action.n.1","meaning":"davranış, hareket, eylem","usage_note":"Yapılan şey; my actions: yaptıklarım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pretty.adj.1","meaning":"güzel, hoş","usage_note":"Görünüş için; insan, yer ve eşya için kullanılır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pretty.adv.1","meaning":"oldukça, epey","usage_note":"pretty good: oldukça iyi.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.age.n.1","meaning":"yaş","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.account.n.1","meaning":"hesap (banka, site)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.nice.adj.1","meaning":"hoş, güzel; nazik","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.rule.n.1","meaning":"kural","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cut.v.1","meaning":"kesmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.market.n.1","meaning":"pazar","usage_note":"Açık hava pazarı; Türkçedeki market genelde supermarket ya da shop.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.write.v.1","meaning":"yazmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.low.adj.1","meaning":"alçak, düşük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.happy.adj.1","meaning":"mutlu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.note.n.1","meaning":"not, pusula","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.air.n.1","meaning":"hava (soluduğumuz)","usage_note":"Hava durumu weather.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.street.n.1","meaning":"sokak, cadde","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.build.v.1","meaning":"inşa etmek, yapmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.probably.adv.1","meaning":"muhtemelen, büyük ihtimalle","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.experience.n.1","meaning":"deneyim, tecrübe","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.learn.v.1","meaning":"öğrenmek","usage_note":"Öğretmek teach.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.phone.n.1","meaning":"telefon","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.phone.v.1","meaning":"telefon etmek, aramak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.possible.adj.1","meaning":"mümkün, olası","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.example.n.1","meaning":"örnek","usage_note":"for example: örneğin.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.consider.v.1","meaning":"düşünmek, göz önünde bulundurmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.soon.adv.1","meaning":"yakında, birazdan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.picture.n.1","meaning":"resim, fotoğraf","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.site.n.1","meaning":"site, internet sitesi","usage_note":"Türkçedeki konut sitesi anlamı yoktur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.future.n.1","meaning":"gelecek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.answer.v.1","meaning":"cevap vermek, yanıtlamak","usage_note":"answer the phone: telefonu açmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.answer.n.1","meaning":"cevap, yanıt","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.late.adj.1","meaning":"geç kalmış, geç","usage_note":"I'm late: geç kaldım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.late.adv.1","meaning":"geç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.special.adj.1","meaning":"özel","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.morning.n.1","meaning":"sabah","usage_note":"in the morning: sabahleyin.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.red.adj.1","meaning":"kırmızı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pick.v.1","meaning":"seçmek; koparmak, toplamak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stand.v.1","meaning":"ayakta durmak, ayağa kalkmak","usage_note":"stand up: ayağa kalkmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.moment.n.1","meaning":"an","usage_note":"for a moment: bir anlığına. Wait a moment: Bir dakika.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.clear.adj.1","meaning":"açık, net, anlaşılır","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.strong.adj.1","meaning":"güçlü, kuvvetli; sert (kahve, çay)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.chance.n.1","meaning":"şans, olasılık, fırsat","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.step.v.1","meaning":"basmak, adım atmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.police.n.1","meaning":"polis","usage_note":"Çoğul fiil alır: the police are…","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.decide.v.1","meaning":"karar vermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sit.v.1","meaning":"oturmak","usage_note":"sit down: oturmak. Bir yerde yaşamak live.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.baby.n.1","meaning":"bebek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.road.n.1","meaning":"yol","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.land.v.1","meaning":"inmek (uçak)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.movie.n.1","meaning":"film","usage_note":"İngiliz İngilizcesinde film de denir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.board.n.1","meaning":"tahta, yazı tahtası","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.college.n.1","meaning":"yüksekokul, üniversite","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.lose.v.1","meaning":"kaybetmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sale.n.1","meaning":"indirim, indirimli satış","usage_note":"on sale: indirimde (ABD) ya da satışta.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bear.n.1","meaning":"ayı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.date.n.1","meaning":"tarih","usage_note":"Randevu anlamı da vardır: a date.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fun.adj.1","meaning":"eğlenceli","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fun.n.1","meaning":"eğlence","usage_note":"have fun: eğlenmek. Komik olan funny.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.parent.n.1","meaning":"ebeveyn, anne ya da baba","usage_note":"my parents: annemle babam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.town.n.1","meaning":"kasaba, şehir","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fine.adj.1","meaning":"iyi, idare eder","usage_note":"I'm fine: iyiyim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.enjoy.v.1","meaning":"keyif almak, sevmek","usage_note":"Ardından fiil -ing alır: enjoy swimming.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.save.v.1","meaning":"biriktirmek (para); kurtarmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.finish.v.1","meaning":"bitirmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.quite.adv.1","meaning":"oldukça, epey","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mother.n.1","meaning":"anne","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.front.n.1","meaning":"ön, ön taraf","usage_note":"in front of: önünde.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.carry.v.1","meaning":"taşımak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.drop.v.1","meaning":"düşürmek, bırakmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.father.n.1","meaning":"baba","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.interest.n.1","meaning":"ilgi","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.forget.v.1","meaning":"unutmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wish.v.1","meaning":"dilemek","usage_note":"I wish you luck: sana şans dilerim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wish.n.1","meaning":"dilek","usage_note":"make a wish: dilek tutmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.education.n.1","meaning":"eğitim","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ready.adj.1","meaning":"hazır","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.grow.v.1","meaning":"büyümek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.visit.v.1","meaning":"ziyaret etmek, gezmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.visit.n.1","meaning":"ziyaret","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.walk.v.1","meaning":"yürümek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.walk.n.1","meaning":"yürüyüş","usage_note":"take a walk / go for a walk: yürüyüşe çıkmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wear.v.1","meaning":"giymek, takmak (üstünde olmak)","usage_note":"Giyinik olmayı anlatır; giyinmek eylemi put on.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dog.n.1","meaning":"köpek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.period.n.1","meaning":"dönem, süre","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.effect.n.1","meaning":"etki","usage_note":"side effect: yan etki.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.choose.v.1","meaning":"seçmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wife.n.1","meaning":"eş, karı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.bill.n.1","meaning":"fatura; hesap","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.agree.v.1","meaning":"aynı fikirde olmak, katılmak","usage_note":"I agree with you: sana katılıyorum (be kullanılmaz).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.listen.v.1","meaning":"dinlemek","usage_note":"Bir şeyi dinlerken to gelir: listen to music.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.outside.adv.1","meaning":"dışarıda, dışarıya","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.produce.v.1","meaning":"üretmek, yetiştirmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.brother.n.1","meaning":"erkek kardeş, ağabey","usage_note":"big brother: ağabey. little brother: küçük erkek kardeş.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.catch.v.1","meaning":"yakalamak; (otobüs, tren) binmek, yetişmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.focus.v.1","meaning":"odaklanmak","usage_note":"focus on: -e odaklanmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.couple.n.1","meaning":"çift; birkaç","usage_note":"a couple of: birkaç, iki üç.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.summer.n.1","meaning":"yaz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.park.n.1","meaning":"park","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.park.v.1","meaning":"park etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.instead.adv.1","meaning":"onun yerine, bunun yerine","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.page.n.1","meaning":"sayfa","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.miss.v.1","meaning":"özlemek; kaçırmak (otobüs, tren)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.sleep.v.1","meaning":"uyumak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.card.n.1","meaning":"kart","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.drink.v.1","meaning":"içmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.drink.n.1","meaning":"içecek","usage_note":"a drink tek başına çoğu zaman içki (alkollü) anlamına gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hate.v.1","meaning":"nefret etmek, hiç sevmemek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.travel.v.1","meaning":"seyahat etmek, yolculuk etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.church.n.1","meaning":"kilise","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.guess.v.1","meaning":"tahmin etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.raise.v.1","meaning":"kaldırmak, yükseltmek","usage_note":"raise your hand: elini kaldırmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.piece.n.1","meaning":"parça, tane","usage_note":"a piece of paper: bir kâğıt parçası.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.cool.adj.1","meaning":"serin; havalı, harika (günlük dilde)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.especially.adv.1","meaning":"özellikle","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.color.n.1","meaning":"renk","usage_note":"İngiliz yazımı colour.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.explain.v.1","meaning":"açıklamak, anlatmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.throw.v.1","meaning":"atmak, fırlatmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.paper.n.1","meaning":"kâğıt","usage_note":"Sayılamaz: some paper, a piece of paper.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stage.n.1","meaning":"sahne","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.suggest.v.1","meaning":"önermek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.situation.n.1","meaning":"durum","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.language.n.1","meaning":"dil (lisan)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.middle.adj.1","meaning":"orta","usage_note":"middle name: göbek adı, ikinci ad.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.middle.n.1","meaning":"orta","usage_note":"in the middle of: -in ortasında.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.size.n.1","meaning":"beden, boyut, büyüklük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.choice.n.1","meaning":"seçim, tercih","usage_note":"make a choice: seçim yapmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.apply.v.1","meaning":"başvurmak","usage_note":"apply for a job: bir işe başvurmak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.pull.v.1","meaning":"çekmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.certain.adj.1","meaning":"emin, kesin","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.wonder.v.1","meaning":"merak etmek","usage_note":"I wonder why: nedenini merak ediyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.stuff.n.1","meaning":"şeyler, eşyalar (günlük dilde)","usage_note":"Sayılamaz: stuffs değil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.effort.n.1","meaning":"çaba, emek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.exactly.adv.1","meaning":"tam olarak, aynen","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.usually.adv.1","meaning":"genellikle, çoğunlukla","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.quality.n.1","meaning":"kalite","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.accept.v.1","meaning":"kabul etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.draw.v.1","meaning":"(resim) çizmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.realize.v.1","meaning":"fark etmek, anlamak","usage_note":"Gerçekleştirmek anlamına pek gelmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.mention.v.1","meaning":"söz etmek, bahsetmek","usage_note":"Ardından about gelmez: mention it.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.expect.v.1","meaning":"beklemek (olacağını düşünmek)","usage_note":"Birini ya da bir şeyi beklerken wait for.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fit.adj.1","meaning":"formda, zinde","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.difference.n.1","meaning":"fark","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.letter.n.1","meaning":"mektup","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.letter.n.2","meaning":"harf","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.notice.v.1","meaning":"fark etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.lady.n.1","meaning":"hanım, bayan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.box.n.1","meaning":"kutu","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.text.n.1","meaning":"mesaj (telefon)","usage_note":"Yazılı metin anlamı da vardır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.text.v.1","meaning":"mesaj atmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.opportunity.n.1","meaning":"fırsat","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.push.v.1","meaning":"itmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.hair.n.1","meaning":"saç","usage_note":"Sayılamaz: my hair is long.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.contact.v.1","meaning":"iletişime geçmek, ulaşmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.address.n.1","meaning":"adres","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.perhaps.adv.1","meaning":"belki","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.degree.n.1","meaning":"derece","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.detail.n.1","meaning":"ayrıntı","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.laugh.v.1","meaning":"gülmek","usage_note":"Birine gülmek laugh at.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.subject.n.1","meaning":"konu; ders (okul dersi)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.straight.adv.1","meaning":"dosdoğru, düz","usage_note":"go straight on: düz git.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.straight.adj.1","meaning":"düz, dümdüz","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.purpose.n.1","meaning":"amaç","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.machine.n.1","meaning":"makine","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.tonight.adv.1","meaning":"bu gece, bu akşam","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.quick.adj.1","meaning":"hızlı, çabuk, kısa","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.teach.v.1","meaning":"öğretmek","usage_note":"Öğrenmek learn.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fair.adj.1","meaning":"adil, hakça","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ahead.adv.1","meaning":"ileride, ileri, önde","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.imagine.v.1","meaning":"hayal etmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.certainly.adv.1","meaning":"kesinlikle, tabii ki","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.extra.adj.1","meaning":"ekstra, fazladan","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.discuss.v.1","meaning":"tartışmak, görüşmek","usage_note":"Ardından about gelmez: discuss the plan.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.dollar.n.1","meaning":"dolar","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.fill.v.1","meaning":"doldurmak","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ring.v.1","meaning":"çalmak (zil, telefon)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.ring.n.1","meaning":"yüzük","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.item.n.1","meaning":"eşya, madde, parça","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.copy.n.1","meaning":"kopya, nüsha","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.ws.copy.v.1","meaning":"kopyalamak, kopya çekmek","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.hello","meaning":"Merhaba.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.hi","meaning":"Selam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_morning","meaning":"Günaydın.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_evening","meaning":"İyi akşamlar.","context":"karşılaşınca, selam verirken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_are_you","meaning":"Nasılsın?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_fine_thanks","meaning":"İyiyim, teşekkürler.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.and_you","meaning":"Ya sen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_s_it_going","meaning":"Nasıl gidiyor?","usage_note":"Samimi; arkadaşlar arasında.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.nice_to_meet_you","meaning":"Tanıştığımıza memnun oldum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.see_you_later","meaning":"Sonra görüşürüz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.see_you_tomorrow","meaning":"Yarın görüşürüz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.bye","meaning":"Hoşça kal.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_night","meaning":"İyi geceler.","usage_note":"Yalnızca ayrılırken ya da yatarken; akşam selamı good evening.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.have_a_nice_day","meaning":"İyi günler.","context":"ayrılırken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.take_care","meaning":"Kendine iyi bak.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.please","meaning":"Lütfen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.thank_you","meaning":"Teşekkür ederim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.you_re_welcome","meaning":"Rica ederim.","usage_note":"Thank you'ya verilen cevap.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_sorry","meaning":"Özür dilerim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.excuse_me","meaning":"Affedersiniz.","usage_note":"Özür dilemek için I'm sorry.","context":"birinin dikkatini çekerken ya da yol isterken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.no_problem","meaning":"Sorun değil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_ok","meaning":"Önemli değil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.don_t_worry","meaning":"Merak etme.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.never_mind","meaning":"Boş ver.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.sorry","meaning":"Efendim?","context":"duyamadığında, tekrar etmesini isterken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_say_that_again_please","meaning":"Tekrar söyler misin, lütfen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_speak_more_slowly_please","meaning":"Daha yavaş konuşabilir misin, lütfen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_understand","meaning":"Anlamıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_know","meaning":"Bilmiyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_does_it_mean","meaning":"Bu ne demek?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_does_this_word_mean","meaning":"Bu kelime ne demek?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_you_say_it_in_english","meaning":"Bu İngilizcede nasıl söylenir?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_you_spell_it","meaning":"Nasıl yazılıyor?","context":"harf harf","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_do_you_mean","meaning":"Ne demek istiyorsun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_not_sure","meaning":"Emin değilim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.let_me_think","meaning":"Bir düşüneyim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.just_a_moment","meaning":"Bir dakika.","context":"birinden beklemesini isterken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.yes_of_course","meaning":"Evet, tabii ki.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.sure","meaning":"Tabii.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.me_too","meaning":"Ben de.","context":"olumlu bir cümleye katılırken (I like it.)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.me_neither","meaning":"Ben de.","usage_note":"Olumsuz cümleye me too değil me neither ile katılınır.","context":"olumsuz bir cümleye katılırken (I don't like it.)","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_think_so","meaning":"Sanırım öyle.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_think_so","meaning":"Sanmıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_right","meaning":"Doğru.","context":"karşındakini onaylarken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.really","meaning":"Gerçekten mi?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.great","meaning":"Harika!","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_a_good_idea","meaning":"Bu iyi bir fikir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_agree","meaning":"Katılıyorum.","usage_note":"agree bir fiildir; I am agree denmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_agree","meaning":"Katılmıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_depends","meaning":"Duruma göre değişir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.maybe","meaning":"Belki.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.why_not","meaning":"Neden olmasın?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.of_course_not","meaning":"Tabii ki hayır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.well_done","meaning":"Aferin!","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_luck","meaning":"Bol şans!","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_sounds_good","meaning":"Kulağa hoş geliyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_like_it","meaning":"Hoşuma gidiyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_like_it","meaning":"Hoşuma gitmiyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_love_it","meaning":"Bayılıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_think_it_s_great","meaning":"Bence harika.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.in_my_opinion","meaning":"Bana göre","context":"fikrini söylemeye başlarken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_tired","meaning":"Yorgunum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_hungry","meaning":"Açım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_cold","meaning":"Üşüyorum.","usage_note":"Üşümek be cold ile söylenir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_bored","meaning":"Sıkıldım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_s_your_name","meaning":"Adın ne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.my_name_is","meaning":"Benim adım …","context":"kendi adını söyle","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_are_you_from","meaning":"Nerelisin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_from_turkey","meaning":"Türkiyeliyim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_do_you_live","meaning":"Nerede yaşıyorsun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_live_in_istanbul","meaning":"İstanbul'da yaşıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_do_you_do","meaning":"Ne iş yapıyorsun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_work_in_an_office","meaning":"Bir ofiste çalışıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_old_are_you","meaning":"Kaç yaşındasın?","usage_note":"How many years are you denmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_thirty_years_old","meaning":"Otuz yaşındayım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.are_you_married","meaning":"Evli misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.do_you_have_any_children","meaning":"Çocuğun var mı?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_have_a_coffee_please","meaning":"Bir kahve alabilir miyim, lütfen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.could_you_help_me","meaning":"Bana yardım eder misiniz?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_d_like_a_glass_of_water","meaning":"Bir bardak su istiyorum.","context":"kibarca","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_give_me_a_hand","meaning":"Bana bir el atar mısın?","usage_note":"Yardım istemenin günlük yolu.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.would_you_like_some_tea","meaning":"Çay ister misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.here_you_are","meaning":"Buyurun.","context":"bir şey verirken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_help_you","meaning":"Yardımcı olabilir miyim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.let_s_go","meaning":"Hadi gidelim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_about_tomorrow","meaning":"Yarına ne dersin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_about_you","meaning":"Peki ya sen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.do_you_want_to_come","meaning":"Gelmek ister misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_time_is_it","meaning":"Saat kaç?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_s_five_o_clock","meaning":"Saat beş.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_day_is_it_today","meaning":"Bugün günlerden ne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_are_you_doing_tonight","meaning":"Bu akşam ne yapıyorsun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.are_you_free_on_saturday","meaning":"Cumartesi müsait misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_busy_right_now","meaning":"Şu an meşgulüm.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_ll_be_there_in_ten_minutes","meaning":"On dakikaya oradayım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_much_is_it","meaning":"Bu ne kadar?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_much_does_it_cost","meaning":"Bunun fiyatı ne kadar?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_ll_take_it","meaning":"Bunu alıyorum.","context":"alışverişte karar verirken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_pay_by_card","meaning":"Kartla ödeyebilir miyim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.the_bill_please","meaning":"Hesap, lütfen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_just_looking","meaning":"Sadece bakıyorum.","context":"mağazada","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.a_table_for_two_please","meaning":"İki kişilik bir masa, lütfen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_see_the_menu","meaning":"Menüyü görebilir miyim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_is_the_station","meaning":"İstasyon nerede?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.is_it_far","meaning":"Uzak mı?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.go_straight_on","meaning":"Düz gidin.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.turn_left","meaning":"Sola dönün.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.turn_right","meaning":"Sağa dönün.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_i_get_to_the_airport","meaning":"Havalimanına nasıl giderim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_was_your_day","meaning":"Günün nasıl geçti?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_happened","meaning":"Ne oldu?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.by_the_way","meaning":"Bu arada","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.you_know","meaning":"Bilirsin işte","context":"konuşurken düşünmek için","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_mean","meaning":"Yani","context":"söylediğini açıklarken ya da düzeltirken","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.guess_what","meaning":"Bil bakalım ne oldu?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_have_a_problem","meaning":"Bir sorunum var.","usage_note":"problem sayılabilir; I have problem denmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_doesn_t_work","meaning":"Çalışmıyor.","context":"bir cihaz ya da makine için","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_need_help","meaning":"Yardıma ihtiyacım var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_lost","meaning":"Kayboldum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_feel_well","meaning":"Kendimi iyi hissetmiyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.they_are_having_breakfast_now","meaning":"Onlar şimdi kahvaltı yapıyorlar.","provenance":{"source":"tatoeba:1543453","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_lunch_plans","meaning":"Öğle yemeği planlarınız var mı?","provenance":{"source":"tatoeba:3090257","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.she_is_having_dinner_now","meaning":"O şimdi akşam yemeği yiyor.","provenance":{"source":"tatoeba:1068085","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.this_coffee_is_too_strong","meaning":"Bu kahve fazla sert.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.this_tea_is_very_hot","meaning":"Bu çay çok sıcak.","provenance":{"source":"tatoeba:1265105","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.don_t_forget_to_buy_bread","meaning":"Ekmek almayı unutma!","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_drink_milk_every_morning","meaning":"Her sabah süt içerim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_eat_eggs_for_breakfast","meaning":"Kahvaltıda yumurta yerim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.that_s_a_really_big_apple","meaning":"O gerçekten büyük bir elma.","provenance":{"source":"tatoeba:4485000","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_to_eat_fruit","meaning":"Meyve yemeyi sever misin?","provenance":{"source":"tatoeba:8188839","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.she_doesn_t_like_eating_vegetables","meaning":"Sebze yemeyi sevmez.","provenance":{"source":"tatoeba:8493552","license":"CC BY 2.0 FR","attribution":"Cumle_Kurucu"}}
+{"key":"en.sent.i_eat_chicken_every_day","meaning":"Her gün tavuk yerim.","provenance":{"source":"tatoeba:7114961","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.i_don_t_eat_red_meat","meaning":"Ben kırmızı et yemem.","provenance":{"source":"tatoeba:6286619","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_eating_fish","meaning":"Balık yemekten hoşlanır mısın?","provenance":{"source":"tatoeba:866924","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_eat_rice_every_day","meaning":"Her gün pilav yemiyorum.","provenance":{"source":"tatoeba:6840760","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.have_a_little_of_this_cake","meaning":"Bu pastadan biraz al.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.children_like_drinking_fruit_juice","meaning":"Çocuklar meyve suyu içmekten hoşlanırlar.","provenance":{"source":"tatoeba:5310795","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.have_another_cup_of_coffee","meaning":"Bir fincan kahve daha iç.","provenance":{"source":"tatoeba:4465070","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.can_i_have_a_glass_of_water","meaning":"Bir bardak su alabilir miyim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_bottle_is_almost_full","meaning":"Şişe neredeyse dolu.","provenance":{"source":"tatoeba:4172163","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_go_to_the_kitchen","meaning":"Mutfağa gidelim.","provenance":{"source":"tatoeba:4580541","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_to_the_bathroom","meaning":"Banyoya gidiyorum.","provenance":{"source":"tatoeba:4583521","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_bedroom_is_too_small","meaning":"Yatak odam çok küçük.","provenance":{"source":"tatoeba:3310566","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_going_to_bed_now","meaning":"Şimdi yatacağım.","provenance":{"source":"tatoeba:4504193","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.put_it_on_the_table","meaning":"Masanın üzerine koy.","provenance":{"source":"tatoeba:4546337","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.you_re_sitting_in_my_chair","meaning":"Benim sandalyemde oturuyorsun.","provenance":{"source":"tatoeba:2718145","license":"CC BY 2.0 FR","attribution":"freefighter"}}
+{"key":"en.sent.don_t_leave_the_windows_open","meaning":"Pencereleri açık bırakmayın.","provenance":{"source":"tatoeba:1506760","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_door_is_open_now","meaning":"Kapı şimdi açık.","provenance":{"source":"tatoeba:1264277","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.don_t_sit_on_the_floor","meaning":"Yere oturma.","provenance":{"source":"tatoeba:1274568","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_a_garden","meaning":"Bir bahçeniz var mı?","provenance":{"source":"tatoeba:6286482","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_work_on_monday","meaning":"Pazartesi günü çalışmıyorum.","provenance":{"source":"tatoeba:3888630","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_time_on_tuesday","meaning":"Salı günü vaktin var mı?","provenance":{"source":"tatoeba:1669294","license":"CC BY 2.0 FR","attribution":"freefighter"}}
+{"key":"en.sent.today_is_wednesday_not_tuesday","meaning":"Bugün salı değil, çarşamba.","provenance":{"source":"tatoeba:13288183","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.on_thursdays_we_go_to_the_movies","meaning":"Perşembe günleri sinemaya gideriz.","provenance":{"source":"tatoeba:6585933","license":"CC BY 2.0 FR","attribution":"vvv123"}}
+{"key":"en.sent.what_do_you_do_on_fridays","meaning":"Cuma günleri ne yaparsın?","provenance":{"source":"tatoeba:5041059","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_can_t_go_on_saturday","meaning":"Cumartesi günü gidemem.","provenance":{"source":"tatoeba:4580518","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_get_together_on_sunday","meaning":"Pazar günü buluşalım.","provenance":{"source":"tatoeba:1266556","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.are_you_free_this_weekend","meaning":"Bu hafta sonu boş musun?","provenance":{"source":"tatoeba:1295683","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_lessons_in_the_afternoon","meaning":"Öğleden sonra derslerim var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.we_watch_tv_in_the_evening","meaning":"Akşamları televizyon izleriz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_have_time_tomorrow","meaning":"Yarın zamanın var mı?","provenance":{"source":"tatoeba:4069263","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_was_at_home_yesterday","meaning":"Dün evdeydim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_having_a_birthday_party","meaning":"Doğum günü partisi veriyorum.","provenance":{"source":"tatoeba:8142822","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.i_had_a_good_holiday","meaning":"İyi bir tatil geçirdim.","provenance":{"source":"tatoeba:4367718","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_very_cold_this_winter","meaning":"Bu kış çok soğuk.","provenance":{"source":"tatoeba:1119008","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.spring_came_late_this_year","meaning":"Bu yıl bahar geç geldi.","provenance":{"source":"tatoeba:3976466","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_spring_or_autumn","meaning":"İlkbaharı mı yoksa sonbaharı mı seversin?","provenance":{"source":"tatoeba:1358073","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.how_s_the_weather_out_there","meaning":"Orada hava nasıl?","provenance":{"source":"tatoeba:1283835","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_don_t_like_the_rain","meaning":"Yağmuru sevmiyoruz.","provenance":{"source":"tatoeba:480649","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_hope_it_doesn_t_rain","meaning":"Umarım yağmur yağmaz.","provenance":{"source":"tatoeba:4859995","license":"CC BY 2.0 FR","attribution":"dursun"}}
+{"key":"en.sent.the_sun_is_going_down","meaning":"Güneş batıyor.","provenance":{"source":"tatoeba:1270317","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_too_hot_to_sleep","meaning":"Hava çok sıcak, uyunmuyor.","provenance":{"source":"tatoeba:7133983","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.the_house_is_too_cold","meaning":"Ev çok soğuk.","provenance":{"source":"tatoeba:2137465","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_a_cold_now","meaning":"Şu an nezleyim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_getting_warm_in_here","meaning":"Burada hava ısınıyor.","provenance":{"source":"tatoeba:4289080","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_going_to_the_shop","meaning":"Biz dükkana gidiyoruz.","provenance":{"source":"tatoeba:5451954","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.when_does_the_restaurant_open","meaning":"Restoran ne zaman açılır?","provenance":{"source":"tatoeba:1554908","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_hotel_is_down_there","meaning":"Otel aşağıda.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_going_to_the_airport","meaning":"Havaalanına gidiyorum.","provenance":{"source":"tatoeba:4744110","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.this_is_the_right_station","meaning":"Bu doğru istasyon.","provenance":{"source":"tatoeba:3899656","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.here_comes_the_bus_now","meaning":"İşte otobüs şimdi geliyor.","provenance":{"source":"tatoeba:4637485","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_train_doesn_t_stop_here","meaning":"Tren burada durmaz.","provenance":{"source":"tatoeba:5968766","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_the_tickets","meaning":"Biletler sende mi?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_d_like_a_city_map","meaning":"Ben bir şehir haritası istiyorum.","provenance":{"source":"tatoeba:1260850","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_brother_lives_in_a_small_village","meaning":"Erkek kardeşim küçük bir köyde yaşıyor.","provenance":{"source":"tatoeba:696514","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.we_re_going_to_the_mountains","meaning":"Dağlara gidiyoruz.","provenance":{"source":"tatoeba:4486036","license":"CC BY 2.0 FR","attribution":"maydoo"}}
+{"key":"en.sent.do_you_love_the_sea","meaning":"Denizi sever misin?","provenance":{"source":"tatoeba:5030459","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_to_the_beach","meaning":"Plaja gidiyorum.","provenance":{"source":"tatoeba:5413424","license":"CC BY 2.0 FR","attribution":"oligophile"}}
+{"key":"en.sent.do_you_see_the_river","meaning":"Nehri görüyor musun?","provenance":{"source":"tatoeba:5939907","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_going_to_the_hospital","meaning":"Hastaneye gidiyorum.","provenance":{"source":"tatoeba:4583520","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_want_a_bag","meaning":"Poşet ister misiniz?","context":"kasada","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_have_new_shoes","meaning":"Yeni ayakkabıların mı var?","provenance":{"source":"tatoeba:3756555","license":"CC BY 2.0 FR","attribution":"vvv123"}}
+{"key":"en.sent.do_you_like_my_clothes","meaning":"Kıyafetlerimi beğendin mi?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.he_has_a_black_shirt","meaning":"Onun siyah bir gömleği var.","provenance":{"source":"tatoeba:1047856","license":"CC BY 2.0 FR","attribution":"AKINCI81"}}
+{"key":"en.sent.i_don_t_like_that_dress","meaning":"O elbiseyi sevmiyorum.","provenance":{"source":"tatoeba:3859614","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_a_new_computer","meaning":"Yeni bir bilgisayarım var.","provenance":{"source":"tatoeba:13709598","license":"CC BY 2.0 FR","attribution":"vowelharmony"}}
+{"key":"en.sent.i_just_got_your_email","meaning":"E-postanı az önce aldım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.you_have_no_new_messages","meaning":"Yeni mesajınız yok.","provenance":{"source":"tatoeba:5632173","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_is_on_the_internet","meaning":"O, internette.","provenance":{"source":"tatoeba:5243333","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_get_a_group_photo","meaning":"Bir grup fotoğrafı çekelim.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_have_a_pen","meaning":"Bir kalemin var mı?","provenance":{"source":"tatoeba:1255153","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.her_husband_is_a_doctor","meaning":"Kocası doktor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_have_a_daughter","meaning":"Kızın var mı?","provenance":{"source":"tatoeba:2768543","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.do_you_have_a_sister","meaning":"Bir kız kardeşin var mı?","provenance":{"source":"tatoeba:5430892","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_a_new_boyfriend","meaning":"Yeni bir erkek arkadaşım var.","provenance":{"source":"tatoeba:5666562","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.his_girlfriend_was_there_too","meaning":"Kız arkadaşı da oradaydı.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_am_a_teacher_too","meaning":"Ben de bir öğretmenim.","provenance":{"source":"tatoeba:1261085","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_boss_is_very_nice","meaning":"Patronum çok iyi biri.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_too_tired_to_think","meaning":"Düşünemeyecek kadar çok yorgunum.","provenance":{"source":"tatoeba:1276987","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_starting_to_get_hungry","meaning":"Acıkmaya başlıyorum.","provenance":{"source":"tatoeba:3004085","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_looks_like_your_dog_is_thirsty","meaning":"Köpeğiniz susamış gibi görünüyor.","provenance":{"source":"tatoeba:1635717","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_easy_to_make_and_it_s_cheap","meaning":"Yapılması kolay ve ucuzdur.","provenance":{"source":"tatoeba:849847","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_think_that_s_too_expensive","meaning":"Sanırım bu çok pahalı.","provenance":{"source":"tatoeba:2974907","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_family_thinks_i_m_rich","meaning":"Ailem zengin olduğumu düşünüyor.","provenance":{"source":"tatoeba:3834427","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_just_a_poor_student","meaning":"Ben sadece yoksul bir öğrenciyim.","provenance":{"source":"tatoeba:4511179","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_think_i_m_healthy","meaning":"Sence sağlıklı mıyım?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.my_brother_is_very_tall","meaning":"Benim erkek kardeşim çok uzun.","provenance":{"source":"tatoeba:1280099","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_old_man_looks_sad","meaning":"Yaşlı adam üzgün görünüyor.","provenance":{"source":"tatoeba:1269184","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_know_you_re_very_angry","meaning":"Çok kızgın olduğunu biliyorum.","provenance":{"source":"tatoeba:5275853","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.don_t_be_afraid_i_m_here","meaning":"Korkma, ben buradayım.","provenance":{"source":"tatoeba:5518037","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_getting_really_bored_just_sitting_here","meaning":"Sadece burada oturmaktan gerçekten çok sıkılıyorum.","provenance":{"source":"tatoeba:5201692","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_too_busy_to_go","meaning":"Gidemeyecek kadar çok meşgulüm.","provenance":{"source":"tatoeba:2049741","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_too_difficult_for_me","meaning":"Bu benim için çok zor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.that_s_a_very_interesting_question","meaning":"Bu çok ilginç bir soru.","provenance":{"source":"tatoeba:3766487","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_a_boring_job","meaning":"Sıkıcı bir işim var.","provenance":{"source":"tatoeba:4146824","license":"CC BY 2.0 FR","attribution":"Miremir"}}
+{"key":"en.sent.what_s_your_favorite_music_group","meaning":"En sevdiğin müzik grubu hangisi?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_think_that_s_funny","meaning":"Bunun komik olduğunu düşünmüyorum.","provenance":{"source":"tatoeba:6324697","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_house_is_very_quiet","meaning":"Ev çok sessiz.","provenance":{"source":"tatoeba:4715564","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_water_is_really_dirty","meaning":"Su gerçekten kirli.","provenance":{"source":"tatoeba:5077708","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_computer_is_very_slow","meaning":"Bilgisayarım çok yavaş.","provenance":{"source":"tatoeba:3133520","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_too_sick_to_work","meaning":"Çalışamayacak kadar hastayım.","provenance":{"source":"tatoeba:6816748","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.it_s_time_to_wake_up","meaning":"Uyanma vakti.","provenance":{"source":"tatoeba:3892582","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.do_you_like_to_cook","meaning":"Yemek pişirmeyi sever misin?","provenance":{"source":"tatoeba:4710577","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_room_is_very_clean","meaning":"Oda çok temiz.","provenance":{"source":"tatoeba:2670060","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_don_t_like_to_clean","meaning":"Temizlik yapmayı sevmem.","provenance":{"source":"tatoeba:2449298","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.are_you_washing_the_car","meaning":"Arabayı yıkıyor musun?","provenance":{"source":"tatoeba:6014580","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.tonight_let_s_all_go_dancing","meaning":"Bu gece hepimiz dans etmeye gidelim.","provenance":{"source":"tatoeba:3857173","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_sing_very_well","meaning":"Çok iyi şarkı söylemiyorum.","provenance":{"source":"tatoeba:5918303","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_swim_very_well","meaning":"Çok iyi yüzmem.","provenance":{"source":"tatoeba:6293080","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_can_ride_with_me","meaning":"Benim arabamla gelebilirsin.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_like_to_fly","meaning":"Uçmaktan hoşlanmam.","provenance":{"source":"tatoeba:6671142","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_ve_got_homework_to_do","meaning":"Yapacak ödevim var.","provenance":{"source":"tatoeba:2929768","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_exam_was_too_difficult_for_me","meaning":"Sınav benim için çok zordu.","provenance":{"source":"tatoeba:1641175","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_first_lesson_is_easy","meaning":"İlk ders kolay.","provenance":{"source":"tatoeba:4219211","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_hobby_is_taking_pictures","meaning":"Hobim fotoğraf çekmek.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_like_playing_sports","meaning":"Spor yapmayı sever misiniz?","provenance":{"source":"tatoeba:1310615","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_playing_football","meaning":"Futbol oynamayı sever misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_really_good_with_animals","meaning":"Hayvanlarla aram gerçekten çok iyi.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_have_a_cat","meaning":"Bir kedin var mı?","provenance":{"source":"tatoeba:4182709","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.do_you_have_a_bird","meaning":"Bir kuşun var mı?","provenance":{"source":"tatoeba:5574035","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.that_s_a_very_pretty_tree","meaning":"Bu çok güzel bir ağaç.","provenance":{"source":"tatoeba:13084878","license":"CC BY 2.0 FR","attribution":"Adelpa"}}
+{"key":"en.sent.i_m_looking_at_the_flower","meaning":"Çiçeğe bakıyorum.","provenance":{"source":"tatoeba:4622019","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_two_brothers","meaning":"İki erkek kardeşim var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_do_my_homework_every_day","meaning":"Her gün ödevimi yaparım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.where_can_i_get_a_ticket","meaning":"Nereden bilet alabilirim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_like_coffee","meaning":"Kahveyi severim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_just_got_the_news","meaning":"Az önce haberi aldım.","provenance":{"source":"tatoeba:2486959","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_make_tea_every_morning","meaning":"Her sabah çay yaparım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.let_s_go_to_the_park","meaning":"Parka gidelim.","provenance":{"source":"tatoeba:4720033","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_want_to_go_up_there","meaning":"Oraya çıkmak istemiyorum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_go_out_often","meaning":"Sık sık dışarı çıkıyor musun?","provenance":{"source":"tatoeba:6718574","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.don_t_say_that_word_again","meaning":"O kelimeyi bir daha söyleme.","provenance":{"source":"tatoeba:2734786","license":"CC BY 2.0 FR","attribution":"freefighter"}}
+{"key":"en.sent.i_m_going_back_there_now","meaning":"Şimdi oraya geri gidiyorum.","provenance":{"source":"tatoeba:3750694","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_just_don_t_have_time","meaning":"Zamanım yok işte.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.we_go_to_the_sea_every_year","meaning":"Her yıl denize gideriz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_a_new_phone","meaning":"Yeni bir telefonum var.","provenance":{"source":"tatoeba:13698943","license":"CC BY 2.0 FR","attribution":"Adelpa"}}
+{"key":"en.sent.i_m_good_with_people","meaning":"İnsanlarla aram iyidir.","provenance":{"source":"tatoeba:2693680","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.i_always_take_the_bus","meaning":"Her zaman otobüse binerim.","provenance":{"source":"tatoeba:3294776","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.i_can_see_the_sea","meaning":"Denizi görebiliyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_know_it_s_too_late","meaning":"Çok geç olduğunu biliyorum.","provenance":{"source":"tatoeba:6287270","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_also_have_a_brother","meaning":"Benim de bir erkek kardeşim var.","provenance":{"source":"tatoeba:5917334","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_want_to_go_too","meaning":"Ben de gitmek istiyorum.","provenance":{"source":"tatoeba:3761989","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_writing_a_letter_now","meaning":"Şimdi bir mektup yazıyorum.","provenance":{"source":"tatoeba:1298694","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_think_that_s_right","meaning":"Onun doğru olduğunu sanmıyorum.","provenance":{"source":"tatoeba:2045133","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.can_you_come_here_tomorrow","meaning":"Yarın buraya gelebilir misin?","provenance":{"source":"tatoeba:6894392","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.look_at_my_new_car","meaning":"Benim yeni arabama bakın.","provenance":{"source":"tatoeba:1259063","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_things_i_need_to_do","meaning":"Yapmam gereken şeyler var.","provenance":{"source":"tatoeba:2927463","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.that_s_a_very_good_idea","meaning":"Bu çok iyi bir fikir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_an_only_child","meaning":"Ben tek çocuğum.","provenance":{"source":"tatoeba:2726030","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.i_m_only_doing_my_job","meaning":"Yalnızca işimi yapıyorum.","provenance":{"source":"tatoeba:3337124","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.it_s_a_new_day","meaning":"Yeni bir gün.","provenance":{"source":"tatoeba:3265902","license":"CC BY 2.0 FR","attribution":"sayment"}}
+{"key":"en.sent.it_s_my_first_time","meaning":"Bu benim ilk seferim.","provenance":{"source":"tatoeba:2138259","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_have_a_drink_first","meaning":"Önce bir şeyler içelim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.where_do_you_work_now","meaning":"Şimdi nerede çalışıyorsun?","provenance":{"source":"tatoeba:3890982","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_back_to_work","meaning":"Ben işe dönüyorum.","provenance":{"source":"tatoeba:4107151","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.go_straight_then_turn_right","meaning":"Düz gidin sonra sağa dönün.","provenance":{"source":"tatoeba:5469910","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.come_back_to_the_house","meaning":"Eve dön.","provenance":{"source":"tatoeba:1625523","license":"CC BY 2.0 FR","attribution":"freefighter"}}
+{"key":"en.sent.let_s_do_it_this_way","meaning":"Bunu bu şekilde yapalım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_doing_the_right_thing","meaning":"Ben doğru şeyi yapıyorum.","provenance":{"source":"tatoeba:3705405","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_speak_english_very_well","meaning":"Çok iyi İngilizce konuşuyorsun.","provenance":{"source":"tatoeba:6067819","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_am_not_feeling_well","meaning":"Kendimi iyi hissetmiyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.that_s_not_the_right_answer","meaning":"Bu doğru cevap değil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_do_you_have_in_your_right_hand","meaning":"Sağ elinde ne var?","provenance":{"source":"tatoeba:2728257","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.can_i_use_your_phone","meaning":"Telefonunuzu kullanabilir miyim?","provenance":{"source":"tatoeba:1220525","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_very_good_friends","meaning":"Biz çok iyi arkadaşız.","provenance":{"source":"tatoeba:3869556","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_go_out_much","meaning":"Pek dışarı çıkmam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.who_is_that_man","meaning":"O adam kim?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.he_works_even_on_sundays","meaning":"Pazar günleri bile çalışıyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.give_her_the_book","meaning":"Kitabı ona ver.","provenance":{"source":"tatoeba:2025973","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_live_here_don_t_you","meaning":"Burada yaşıyorsun, değil mi?","provenance":{"source":"tatoeba:4286976","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.is_it_really_free","meaning":"Bu gerçekten ücretsiz mi?","provenance":{"source":"tatoeba:3864553","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_love_me_too","meaning":"Sen de beni seviyor musun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_room_is_too_big","meaning":"Oda fazla büyük.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_m_going_to_call_you_right_back","meaning":"Seni hemen geri arayacağım.","provenance":{"source":"tatoeba:3784697","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.give_me_a_call_tonight","meaning":"Bu gece bana bir telefon aç.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_kids_are_playing_outside","meaning":"Çocuklar dışarıda oynuyorlar.","provenance":{"source":"tatoeba:4778280","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_ve_got_something_to_show_you","meaning":"Sana gösterecek bir şeyim var.","provenance":{"source":"tatoeba:4578963","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_went_to_see_a_show_today","meaning":"Bugün bir gösteri izlemeye gittim.","provenance":{"source":"tatoeba:4586362","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.life_is_good_here","meaning":"Burada hayat güzel.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_love_the_people_here","meaning":"Ben buradaki insanları seviyorum.","provenance":{"source":"tatoeba:4983779","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_think_i_m_in_love","meaning":"Sanırım âşığım.","provenance":{"source":"tatoeba:2058285","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.are_you_still_having_a_good_time","meaning":"Hâlâ iyi vakit geçiriyor musun?","provenance":{"source":"tatoeba:6775412","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.just_tell_me_her_name","meaning":"Sadece bana onun adını söyle.","provenance":{"source":"tatoeba:4258582","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_having_a_great_time","meaning":"Harika vakit geçiriyoruz.","provenance":{"source":"tatoeba:5077814","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_never_free_on_mondays","meaning":"Pazartesileri asla boş olmam.","provenance":{"source":"tatoeba:2804954","license":"CC BY 2.0 FR","attribution":"User20656"}}
+{"key":"en.sent.i_have_very_long_hair","meaning":"Saçlarım çok uzun.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_good_at_games","meaning":"Ben oyunlarda iyiyim.","provenance":{"source":"tatoeba:4885426","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_a_big_world","meaning":"Dünya büyük bir yer.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.when_does_the_game_start","meaning":"Maç ne zaman başlar?","provenance":{"source":"tatoeba:4734115","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_a_great_start","meaning":"Harika bir başlangıç.","provenance":{"source":"tatoeba:5761779","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_price_is_very_high","meaning":"Fiyatı çok yüksek.","provenance":{"source":"tatoeba:3376551","license":"CC BY 2.0 FR","attribution":"User20656"}}
+{"key":"en.sent.i_d_like_to_help_you","meaning":"Sana yardım etmek isterim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_going_to_need_a_little_help","meaning":"Biraz yardıma ihtiyacım olacak.","provenance":{"source":"tatoeba:3787492","license":"CC BY 2.0 FR","attribution":"User20656"}}
+{"key":"en.sent.parts_of_the_book_are_quite_good","meaning":"Kitabın bazı bölümleri oldukça iyi.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.you_re_in_the_right_place","meaning":"Doğru yerdesin.","provenance":{"source":"tatoeba:3035173","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.today_i_m_staying_at_home","meaning":"Bugün evde kalıyorum.","provenance":{"source":"tatoeba:4787572","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_think_it_s_time_to_go_home","meaning":"Sanırım eve gitme vakti geldi.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_m_starting_to_feel_tired","meaning":"Kendimi yorgun hissetmeye başlıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.that_book_is_very_old","meaning":"O kitap çok eski.","provenance":{"source":"tatoeba:4676741","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.it_s_important_to_keep_learning","meaning":"Öğrenmeye devam etmek önemlidir.","provenance":{"source":"tatoeba:5526175","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_hard_to_change_people","meaning":"İnsanları değiştirmek zordur.","provenance":{"source":"tatoeba:4688832","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.here_is_your_change","meaning":"İşte paranızın üstü.","provenance":{"source":"tatoeba:1259475","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_the_same_problem","meaning":"Aynı sorunum var.","provenance":{"source":"tatoeba:3895239","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_your_own_work","meaning":"Kendi işini yap.","provenance":{"source":"tatoeba:1254404","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_have_a_house","meaning":"Bir evimiz var.","provenance":{"source":"tatoeba:4569254","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_your_school","meaning":"Okulunu seviyor musun?","provenance":{"source":"tatoeba:5578387","license":"CC BY 2.0 FR","attribution":"grindeldore"}}
+{"key":"en.sent.let_s_stay_until_the_end","meaning":"Sonuna kadar kalalım.","provenance":{"source":"tatoeba:6839216","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_can_t_find_the_hotel","meaning":"Oteli bulamıyorum.","provenance":{"source":"tatoeba:4587109","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_big_hands","meaning":"Ellerim büyük.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.who_is_that_woman","meaning":"O kadın kim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_going_to_miss_having_you_around","meaning":"Yanımda olmanı özleyeceğim.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.what_s_your_name","meaning":"Adın ne?","provenance":{"source":"tatoeba:459288","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.they_live_in_a_little_house","meaning":"Onlar küçük bir evde yaşıyor.","provenance":{"source":"tatoeba:5069144","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_not_always_right","meaning":"Her zaman haklı değilim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.our_team_has_ten_points","meaning":"Takımımızın on puanı var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_bad_manners_to_point_at_people","meaning":"İnsanları parmakla göstermek terbiyesizlik.","provenance":{"source":"tatoeba:3148165","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_ve_got_a_good_team","meaning":"İyi bir takımımız var.","provenance":{"source":"tatoeba:4932967","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_father_works_for_a_power_company","meaning":"Babam bir elektrik şirketinde çalışıyor.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_want_you_to_win","meaning":"Senin kazanmanı istiyorum.","provenance":{"source":"tatoeba:2710810","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.my_family_is_small","meaning":"Ailem küçük.","provenance":{"source":"tatoeba:1257987","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_like_talking_to_people","meaning":"İnsanlarla konuşmayı seviyorum.","provenance":{"source":"tatoeba:2898700","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_d_like_to_ask_a_question","meaning":"Bir soru sormak isterim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_d_like_to_become_a_doctor","meaning":"Doktor olmak isterim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_very_busy_this_week","meaning":"Bu hafta çok yoğunum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.seven_is_a_lucky_number","meaning":"Yedi şanslı bir sayıdır.","provenance":{"source":"tatoeba:1279623","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_know_that_guy","meaning":"O adamı tanıyor musun?","context":"günlük dil","provenance":{"source":"tatoeba:3744779","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_friends_there","meaning":"Orada arkadaşlarım var.","provenance":{"source":"tatoeba:4051768","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_going_out_again_tomorrow","meaning":"Yarın tekrar dışarı çıkıyoruz.","provenance":{"source":"tatoeba:6029028","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.what_are_you_going_to_do_next","meaning":"Bundan sonra ne yapacaksın?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_second_lesson_is_very_easy","meaning":"İkinci ders çok kolay.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.there_are_sixty_seconds_in_a_minute","meaning":"Bir dakikada altmış saniye vardır.","provenance":{"source":"tatoeba:866918","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_just_a_child","meaning":"Ben sadece bir çocuğum.","provenance":{"source":"tatoeba:2577301","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.i_m_only_trying_to_help","meaning":"Sadece yardım etmeye çalışıyorum.","provenance":{"source":"tatoeba:4363736","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_living_here","meaning":"Burada yaşamayı seviyor musun?","provenance":{"source":"tatoeba:4289143","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_a_big_city","meaning":"Bu büyük bir şehir.","provenance":{"source":"tatoeba:4210714","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_sure_you_re_right","meaning":"Haklı olduğundan eminim.","provenance":{"source":"tatoeba:2125380","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.that_doesn_t_happen_very_often","meaning":"Bu çok sık olmaz.","provenance":{"source":"tatoeba:4891291","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.let_me_help_you","meaning":"Sana yardım edeyim.","provenance":{"source":"tatoeba:1119578","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_to_the_doctor","meaning":"Doktora gidiyorum.","provenance":{"source":"tatoeba:3659403","license":"CC BY 2.0 FR","attribution":"vvv123"}}
+{"key":"en.sent.do_you_like_to_run","meaning":"Koşmayı sever misin?","provenance":{"source":"tatoeba:2498382","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_want_to_hold_my_hand","meaning":"Elimi tutmak ister misin?","provenance":{"source":"tatoeba:3678294","license":"CC BY 2.0 FR","attribution":"User20656"}}
+{"key":"en.sent.there_s_a_bus_stop_there","meaning":"Orada bir otobüs durağı var.","provenance":{"source":"tatoeba:8217107","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.we_re_doing_it_for_free","meaning":"Bunu ücretsiz yapıyoruz.","provenance":{"source":"tatoeba:4219597","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_the_money","meaning":"Para sende mi?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_people_drink_tea_in_your_country","meaning":"Ülkende insanlar çay içer mi?","provenance":{"source":"tatoeba:4173928","license":"CC BY 2.0 FR","attribution":"Miremir"}}
+{"key":"en.sent.my_head_is_fine_now","meaning":"Başım artık iyi.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_work_at_night","meaning":"Gece çalışıyor musun?","provenance":{"source":"tatoeba:6535394","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.many_young_families_live_in_this_area","meaning":"Birçok genç aile bu bölgede yaşar.","provenance":{"source":"tatoeba:4944620","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.tell_me_when_you_d_like_to_order","meaning":"Sipariş vermek istediğinizde bana söyleyin.","provenance":{"source":"tatoeba:1035373","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.can_i_take_your_order","meaning":"Siparişinizi alabilir miyim?","provenance":{"source":"tatoeba:2131369","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.what_does_this_word_mean","meaning":"Bu kelime ne anlama geliyor?","provenance":{"source":"tatoeba:1283814","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.bring_your_friends_with_you","meaning":"Arkadaşlarınızı yanınızda getirin.","provenance":{"source":"tatoeba:1326534","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_believe_you_are_right","meaning":"Haklı olduğuna inanıyorum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.it_s_a_good_book","meaning":"Bu iyi bir kitap.","provenance":{"source":"tatoeba:4704159","license":"CC BY 2.0 FR","attribution":"carsi"}}
+{"key":"en.sent.draw_a_line_on_the_paper","meaning":"Kağıdın üzerine bir çizgi çizin.","provenance":{"source":"tatoeba:1285643","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_five_minutes_away","meaning":"Beş dakika uzaktayız.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_a_job","meaning":"Bir işim var.","provenance":{"source":"tatoeba:2489366","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.his_business_is_doing_well","meaning":"Onun işi iyi gidiyor.","provenance":{"source":"tatoeba:1316656","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_opening_my_presents_now","meaning":"Şimdi hediyelerimi açıyorum.","provenance":{"source":"tatoeba:4914247","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.are_you_open_now","meaning":"Şu an açık mısınız?","context":"bir dükkâna","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_a_problem","meaning":"Bir sorunum var.","provenance":{"source":"tatoeba:630950","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.i_m_three_hours_away","meaning":"Üç saat uzaklıktayım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.come_back_in_a_month","meaning":"Bir ay sonra tekrar gel.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.you_re_a_real_friend","meaning":"Sen gerçek bir dostsun.","provenance":{"source":"tatoeba:2491108","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.they_ve_got_a_small_house","meaning":"Onların küçük bir evi var.","provenance":{"source":"tatoeba:5374244","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_have_a_large_family","meaning":"Geniş bir ailem var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.turn_left_at_the_corner","meaning":"Köşede sola dön.","provenance":{"source":"tatoeba:1278395","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_my_turn_now","meaning":"Şimdi sıra bende.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_m_watching_the_football_game","meaning":"Futbol maçını izliyorum.","provenance":{"source":"tatoeba:3599573","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.my_watch_isn_t_working_well","meaning":"Saatim iyi çalışmıyor.","provenance":{"source":"tatoeba:4755432","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.let_s_play_a_different_game","meaning":"Farklı bir oyun oynayalım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_not_too_hard","meaning":"Bu çok zor değil.","provenance":{"source":"tatoeba:4932259","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.they_don_t_work_very_hard","meaning":"Çok sıkı çalışmıyorlar.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.the_girl_goes_to_school","meaning":"Kız okula gidiyor.","provenance":{"source":"tatoeba:2673473","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.it_s_a_great_party","meaning":"Bu harika bir parti.","provenance":{"source":"tatoeba:3998680","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_a_question","meaning":"Bir sorunuz var mı?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_can_see_the_top_of_the_mountain","meaning":"Dağın tepesini görebiliyorum.","provenance":{"source":"tatoeba:1632974","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_has_a_nice_face","meaning":"Onun hoş bir yüzü var.","provenance":{"source":"tatoeba:6093504","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_a_good_person","meaning":"Ben iyi bir insanım.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_m_a_little_early","meaning":"Biraz erken geldim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.he_usually_feels_sleepy_in_the_early_afternoon","meaning":"Öğleden sonranın erken saatlerinde genelde uykusu gelir.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.what_do_you_think_caused_the_problem","meaning":"Probleme neyin sebep olduğunu düşünüyorsunuz?","provenance":{"source":"tatoeba:4298852","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_didn_t_know_you_were_a_member","meaning":"Senin bir üye olduğunu bilmiyordum.","provenance":{"source":"tatoeba:4417279","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_happy_with_the_result","meaning":"Sonuçtan memnunum.","provenance":{"source":"tatoeba:1346874","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_a_good_story","meaning":"O güzel bir hikaye.","provenance":{"source":"tatoeba:4172108","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.sit_on_the_other_side_of_the_table","meaning":"Masanın diğer tarafına otur.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_really_hope_you_re_right","meaning":"Gerçekten haklı olduğunu umuyorum.","provenance":{"source":"tatoeba:2861072","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.there_is_always_hope","meaning":"Her zaman umut vardır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_water_is_very_hot","meaning":"Su çok sıcak.","provenance":{"source":"tatoeba:13498622","license":"CC BY 2.0 FR","attribution":"vowelharmony"}}
+{"key":"en.sent.we_are_thinking_of_moving_back_home","meaning":"Eve geri taşınmayı düşünüyoruz.","provenance":{"source":"tatoeba:5144343","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_re_reading_the_same_book","meaning":"Aynı kitabı okuyoruz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.you_don_t_seem_to_be_having_fun","meaning":"Eğleniyor gibi görünmüyorsun.","provenance":{"source":"tatoeba:6854233","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.can_you_hear_me","meaning":"Beni duyabiliyor musun?","provenance":{"source":"tatoeba:1252839","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.just_wait_right_here","meaning":"Tam burada bekle.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_price_does_not_include_the_box","meaning":"Fiyata kutu dahil değil.","provenance":{"source":"tatoeba:1657520","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_a_car","meaning":"Bir arabam var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_not_free_today","meaning":"Bugün boş değilim.","provenance":{"source":"tatoeba:1257617","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_room_is_full_of_people","meaning":"Oda insanlarla dolu.","provenance":{"source":"tatoeba:1309542","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.this_class_is_too_easy_for_my_level","meaning":"Bu ders benim seviyem için fazla kolay.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_like_to_buy_clothes","meaning":"Kıyafet almayı severim.","provenance":{"source":"tatoeba:1762392","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.we_re_already_good_friends","meaning":"Zaten iyi arkadaşız.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.he_s_old_enough_to_go_to_school","meaning":"Okula gidecek yaşta.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_have_a_plan","meaning":"Bir planım var.","provenance":{"source":"tatoeba:2490857","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_re_free_to_leave","meaning":"Gitmekte özgürsün.","provenance":{"source":"tatoeba:3595522","license":"CC BY 2.0 FR","attribution":"vvv123"}}
+{"key":"en.sent.plants_die_without_water","meaning":"Bitkiler susuz ölür.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.now_s_a_bad_time","meaning":"Şu an kötü bir zaman.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_swim_once_a_week","meaning":"Haftada bir kez yüzerim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.add_it_to_the_list","meaning":"Onu listeye ekle.","provenance":{"source":"tatoeba:4071274","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.what_time_does_it_close","meaning":"Saat kaçta kapanır?","provenance":{"source":"tatoeba:867586","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_re_very_close_now","meaning":"Şimdi çok yakınsınız.","provenance":{"source":"tatoeba:4195675","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_little_flower_is_white","meaning":"Küçük çiçek beyaz.","provenance":{"source":"tatoeba:5055414","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.are_you_studying_languages_too","meaning":"Yabancı dil de çalışıyor musun?","provenance":{"source":"tatoeba:3523757","license":"CC BY 2.0 FR","attribution":"maydoo"}}
+{"key":"en.sent.let_s_meet_tomorrow","meaning":"Yarın buluşalım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_music_do_you_like","meaning":"Ne tür müzik seversin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_think_you_re_too_young","meaning":"Sanırım çok gençsin.","provenance":{"source":"tatoeba:6378020","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_want_to_send_a_message","meaning":"Bir mesaj göndermek ister misin?","provenance":{"source":"tatoeba:3598907","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.we_don_t_want_a_war","meaning":"Savaş istemiyoruz.","provenance":{"source":"tatoeba:10497561","license":"CC BY 2.0 FR","attribution":"shekitten"}}
+{"key":"en.sent.i_m_ready_to_pay_now","meaning":"Artık ödemeye hazırım.","provenance":{"source":"tatoeba:13448947","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.please_fill_in_this_form","meaning":"Lütfen bu formu doldurun.","provenance":{"source":"tatoeba:1295639","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_like_that_kind_of_work","meaning":"O tür işi severim.","provenance":{"source":"tatoeba:5795314","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_is_very_kind_just_like_you","meaning":"O aynı senin gibi çok nazik.","provenance":{"source":"tatoeba:5297162","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.that_s_not_too_far_away_is_it","meaning":"O çok uzak değil, değil mi?","provenance":{"source":"tatoeba:4177607","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_want_you_to_follow_me","meaning":"Beni takip etmeni istiyorum.","provenance":{"source":"tatoeba:1526545","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_cold_weather_killed_the_flowers","meaning":"Soğuk hava çiçekleri öldürdü.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_only_want_to_know_the_facts","meaning":"Sadece gerçekleri bilmek istiyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_never_actually_wanted_to_do_that","meaning":"Aslında bunu hiç yapmak istemedim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_programs_do_you_watch","meaning":"Hangi programları izlersin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.he_hit_the_ball","meaning":"Topa vurdu.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_girl_broke_the_window","meaning":"Kız camı kırdı.","provenance":{"source":"tatoeba:1283256","license":"CC BY 2.0 FR","attribution":"oxyii"}}
+{"key":"en.sent.i_m_going_to_take_a_short_break","meaning":"Kısa bir mola alacağım.","provenance":{"source":"tatoeba:3966676","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_the_kids_have_fun","meaning":"Bırakın çocuklar eğlensin.","context":"günlük dil","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.this_course_is_very_good","meaning":"Bu kurs çok iyi.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_ve_decided_not_to_continue_doing_that","meaning":"Onu yapmaya devam etmemeye karar verdim.","provenance":{"source":"tatoeba:6777414","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_have_a_black_dog","meaning":"Siyah bir köpeğim var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_d_like_to_stay_here","meaning":"Burada kalmak isterim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_an_open_mind","meaning":"Açık fikirli biriyim.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_don_t_mind_walking_in_the_rain","meaning":"Yağmurda yürümek beni rahatsız etmez.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.it_s_healthy_for_your_body","meaning":"Bu vücudunuz için sağlıklı.","provenance":{"source":"tatoeba:5273793","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.come_back_in_five_minutes","meaning":"Beş dakika sonra geri gel.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_ve_got_a_good_idea","meaning":"İyi bir fikrim var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_think_they_allow_that_here","meaning":"Burada buna izin verildiğini sanmıyorum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.it_really_doesn_t_matter_much_to_me","meaning":"Bu gerçekten benim için fazla önemli değil.","provenance":{"source":"tatoeba:5943485","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.what_s_the_matter","meaning":"Sorun nedir?","provenance":{"source":"tatoeba:1055757","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_love_the_sound_of_rain_falling","meaning":"Yağan yağmurun sesini severim.","provenance":{"source":"tatoeba:3290368","license":"CC BY 2.0 FR","attribution":"Lenin_1917"}}
+{"key":"en.sent.do_you_know_the_reason","meaning":"Sebebi biliyor musunuz?","provenance":{"source":"tatoeba:1272138","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_and_i_share_a_room","meaning":"Onunla aynı odayı paylaşıyoruz.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.don_t_you_want_to_learn_to_drive","meaning":"Araba kullanmayı öğrenmek istemiyor musun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.let_s_go_for_a_drive","meaning":"Arabayla gezintiye çıkalım.","provenance":{"source":"tatoeba:4729499","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_have_classes_today","meaning":"Bugün derslerim yok.","provenance":{"source":"tatoeba:1312882","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.have_you_been_here_the_whole_time","meaning":"Bunca zaman burada mıydın?","provenance":{"source":"tatoeba:4303664","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_children_work_well_together","meaning":"Çocuklar birlikte iyi çalışırlar.","provenance":{"source":"tatoeba:1426546","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.at_the_tone_please_record_your_message","meaning":"Lütfen sinyal sesinden sonra mesajınızı kaydedin.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_want_me_to_check_again","meaning":"Tekrar kontrol etmemi ister misin?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.can_i_have_the_check_please","meaning":"Hesabı alabilir miyim, lütfen?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_do_not_understand_you_very_well","meaning":"Seni pek iyi anlamıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_to_create_a_new_website","meaning":"Yeni bir web sitesi oluşturmam gerekiyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.my_name_s_on_the_list","meaning":"Adım listede.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_room_didn_t_have_a_single_window","meaning":"Odada tek bir pencere bile yoktu.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_speak_english","meaning":"İngilizce konuşuyor musun?","provenance":{"source":"tatoeba:516328","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.are_you_a_new_student","meaning":"Yeni öğrenci misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.maybe_you_guys_are_right","meaning":"Belki de haklısınız.","provenance":{"source":"tatoeba:1257593","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_a_room","meaning":"Odanız var mı?","context":"otelde","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.go_back_to_the_office","meaning":"Ofise geri git.","provenance":{"source":"tatoeba:3639155","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_want_to_offer_you_the_job","meaning":"Size bu işi teklif etmek istiyoruz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_ve_decided_to_accept_the_job_offer","meaning":"İş teklifini kabul etmeye karar verdim.","provenance":{"source":"tatoeba:2726095","license":"CC BY 2.0 FR","attribution":"freefighter"}}
+{"key":"en.sent.i_have_a_test_tomorrow","meaning":"Yarın bir sınavım var.","provenance":{"source":"tatoeba:866915","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.just_remember_to_have_fun","meaning":"Sadece eğlenmeyi aklında tut.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_number_of_working_women_is_increasing","meaning":"Çalışan kadın sayısı artıyor.","provenance":{"source":"tatoeba:3168834","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.the_food_was_very_good","meaning":"Yemek çok iyiydi.","provenance":{"source":"tatoeba:4346522","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.get_away_from_the_fire","meaning":"Ateşten uzaklaş.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_light_hurts_my_eyes","meaning":"Işık gözlerimi acıtıyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.this_box_is_light","meaning":"Bu kutu hafif.","provenance":{"source":"tatoeba:3107875","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_good_for_your_health","meaning":"Bu sağlığın için iyi.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_think_it_s_important","meaning":"Bunun önemli olduğunu düşünüyor musun?","provenance":{"source":"tatoeba:4187638","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_ve_got_really_good_news","meaning":"Gerçekten iyi bir haberim var.","provenance":{"source":"tatoeba:1304385","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_going_to_cost_around_thirty_dollars","meaning":"Bu yaklaşık otuz dolara mal olacak.","provenance":{"source":"tatoeba:5497256","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_cost_of_advertising_has_gone_up","meaning":"Reklamın maliyeti arttı.","provenance":{"source":"tatoeba:4047033","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_to_the_center_of_town","meaning":"Şehir merkezine gidiyorum.","provenance":{"source":"tatoeba:1061642","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.what_s_the_best_present_you_ve_ever_received","meaning":"Aldığın en güzel hediye neydi?","provenance":{"source":"tatoeba:13141413","license":"CC BY 2.0 FR","attribution":"futurk"}}
+{"key":"en.sent.i_don_t_have_that_information","meaning":"O bilgi bende yok.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.she_works_in_the_local_flower_shop","meaning":"O yerel bir çiçekçi dükkanında çalışıyor.","provenance":{"source":"tatoeba:4803214","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.don_t_you_see_the_sign","meaning":"İşareti görmüyor musun?","provenance":{"source":"tatoeba:6057015","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.these_cars_are_the_same_type","meaning":"Bu arabalar aynı tipte.","provenance":{"source":"tatoeba:5725054","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_have_very_pretty_eyes","meaning":"Gözlerin çok güzel.","provenance":{"source":"tatoeba:7906793","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.i_don_t_think_i_passed_the_test","meaning":"Testi geçtiğimi sanmıyorum.","provenance":{"source":"tatoeba:8404635","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.i_have_tickets_to_sell","meaning":"Satacak biletlerim var.","provenance":{"source":"tatoeba:4981146","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_first_day_was_easy","meaning":"İlk gün kolaydı.","provenance":{"source":"tatoeba:5960956","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.half_of_them_don_t_work","meaning":"Onların yarısı çalışmıyor.","provenance":{"source":"tatoeba:4838759","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_spend_all_weekend_together","meaning":"Tüm hafta sonunu birlikte geçirelim.","provenance":{"source":"tatoeba:3092344","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_provided_them_with_money_and_clothes","meaning":"Onlara para ve kıyafet sağladık.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_like_the_sound_of_children_laughing","meaning":"Çocukların gülme sesini severim.","provenance":{"source":"tatoeba:6197676","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.that_sounds_too_good_to_be_true","meaning":"Kulağa gerçek olamayacak kadar iyi geliyor.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_see_the_boy","meaning":"Oğlanı görüyor musun?","provenance":{"source":"tatoeba:5951383","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_is_a_nice_view_from_here","meaning":"Buradan güzel bir manzara var.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_don_t_think_that_s_true","meaning":"Bunun doğru olduğunu sanmıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_night_is_just_beginning","meaning":"Gece daha yeni başlıyor.","provenance":{"source":"tatoeba:3709949","license":"CC BY 2.0 FR","attribution":"vvv123"}}
+{"key":"en.sent.i_d_like_to_eat_now","meaning":"Şimdi yemek yemek isterim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.we_have_a_bit_of_time_now","meaning":"Şimdi biraz zamanımız var.","provenance":{"source":"tatoeba:4914131","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.look_at_the_mountains_covered_with_snow","meaning":"Karla kaplı dağlara bak.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.the_bed_was_too_short","meaning":"Yatak çok kısaydı.","provenance":{"source":"tatoeba:4713609","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_almost_time_to_go","meaning":"Neredeyse gitme zamanı.","provenance":{"source":"tatoeba:1166177","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_ve_got_the_wrong_number","meaning":"Yanlış numarayı aradınız.","context":"telefonda","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.here_s_a_present_for_you","meaning":"İşte sana bir hediye.","provenance":{"source":"tatoeba:6817497","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_very_sorry_for_my_actions","meaning":"Yaptıklarım için çok özür dilerim.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.you_have_a_pretty_garden","meaning":"Güzel bir bahçen var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_going_to_do_that_pretty_soon","meaning":"Bunu oldukça yakında yapacağım.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.age_is_just_a_number","meaning":"Yaş sadece bir sayı.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_d_like_to_open_an_account","meaning":"Bir hesap açmak isterim.","context":"bankada","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_people_here_are_nice","meaning":"Buradaki insanlar çok hoş.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_make_the_rules","meaning":"Kuralları ben yapmıyorum.","provenance":{"source":"tatoeba:4926499","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.cut_the_paper_in_half","meaning":"Kağıdı ikiye kes.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.she_goes_to_the_market_once_a_week","meaning":"Haftada bir kez pazara gider.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.the_chair_is_too_low_for_me","meaning":"Sandalye benim için çok alçak.","provenance":{"source":"tatoeba:1119889","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_hope_you_re_happy_too","meaning":"Umarım sen de mutlusundur.","provenance":{"source":"tatoeba:2774763","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.what_does_this_note_mean","meaning":"Bu not ne anlama geliyor?","provenance":{"source":"tatoeba:5259125","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.the_air_around_here_isn_t_very_good","meaning":"Buralarda hava pek temiz değil.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.don_t_play_in_the_street","meaning":"Sokakta oynama.","provenance":{"source":"tatoeba:1286551","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_built_a_new_house","meaning":"Yeni bir ev inşa ettim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_probably_never_going_to_do_that","meaning":"Muhtemelen bunu asla yapmayacağım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_going_to_be_a_great_experience","meaning":"Bu harika bir deneyim olacak.","provenance":{"source":"tatoeba:6552944","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_love_learning_new_things","meaning":"Yeni şeyler öğrenmeyi seviyorum.","provenance":{"source":"tatoeba:4580302","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_a_phone","meaning":"Telefonun var mı?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.don_t_phone_her_now","meaning":"Ona şimdi telefon etme.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_didn_t_know_that_it_was_possible","meaning":"Bunun mümkün olduğunu bilmiyordum.","provenance":{"source":"tatoeba:8092377","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.do_you_want_an_example","meaning":"Örnek istiyor musun?","provenance":{"source":"tatoeba:10263283","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.don_t_even_consider_giving_him_the_money","meaning":"Parayı ona vermeyi aklından bile geçirme.","provenance":{"source":"tatoeba:4444491","license":"CC BY 2.0 FR","attribution":"tornado"}}
+{"key":"en.sent.see_you_soon","meaning":"Yakında görüşürüz.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_have_the_picture","meaning":"Resim sende mi?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.this_is_an_excellent_site_for_learning_french","meaning":"Bu, Fransızca öğrenmek için mükemmel bir site.","provenance":{"source":"tatoeba:5201812","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_ve_got_a_bright_future","meaning":"Parlak bir geleceğin var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.does_that_answer_the_question","meaning":"Bu, soruyu yanıtlıyor mu?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_have_the_answer","meaning":"Cevabın var mı?","provenance":{"source":"tatoeba:4535852","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_never_late_for_school","meaning":"Okula asla geç kalmam.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.he_doesn_t_always_come_late","meaning":"Her zaman geç gelmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_a_very_special_place","meaning":"Bu çok özel bir yer.","provenance":{"source":"tatoeba:5069622","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_feeling_good_this_morning","meaning":"Bu sabah kendimi iyi hissediyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_have_a_red_car","meaning":"Kırmızı bir arabam var.","provenance":{"source":"tatoeba:4543639","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.pick_a_name_from_this_list","meaning":"Bu listeden bir isim seç.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_i_have_to_stand_in_line","meaning":"Sırada beklemek zorunda mıyım?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.come_here_for_a_moment","meaning":"Bir anlığına buraya gel!","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_want_to_make_that_very_clear","meaning":"Bunu çok açık bir şekilde belirtmek istiyorum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.do_you_think_you_re_strong","meaning":"Güçlü olduğunu düşünüyor musun?","provenance":{"source":"tatoeba:4341530","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_think_i_have_a_chance","meaning":"Şansım olduğunu düşünüyor musun?","provenance":{"source":"tatoeba:3854204","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.don_t_step_on_the_cat","meaning":"Kedinin üstüne basma.","provenance":{"source":"tatoeba:8357366","license":"CC BY 2.0 FR","attribution":"soliloquist"}}
+{"key":"en.sent.i_ve_got_to_go_to_the_police","meaning":"Polise gitmek zorundayım.","provenance":{"source":"tatoeba:4734705","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_have_to_decide_that_now","meaning":"Buna şimdi karar vermek zorunda değilim.","provenance":{"source":"tatoeba:7009928","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.i_m_just_sitting_here_thinking","meaning":"Sadece burada oturmuş düşünüyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.put_the_baby_to_sleep","meaning":"Bebeği uyutun.","provenance":{"source":"tatoeba:1270287","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.am_i_still_on_the_right_road","meaning":"Hâlâ doğru yolda mıyım?","provenance":{"source":"tatoeba:4152829","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.when_are_we_going_to_land","meaning":"Ne zaman iniş yapacağız?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.the_movie_was_too_long","meaning":"Film çok uzundu.","provenance":{"source":"tatoeba:3884072","license":"CC BY 2.0 FR","attribution":"carlosalberto"}}
+{"key":"en.sent.the_teacher_writes_on_the_board","meaning":"Öğretmen tahtaya yazar.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_going_to_college_now","meaning":"Şimdi üniversiteye gidiyorum.","provenance":{"source":"tatoeba:6839206","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_lost_my_keys","meaning":"Anahtarlarımı kaybettim.","provenance":{"source":"tatoeba:2004359","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.there_s_a_big_sale_at_the_shop_today","meaning":"Bugün dükkânda büyük bir indirim var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_saw_a_bear_yesterday","meaning":"Dün bir ayı gördüm.","provenance":{"source":"tatoeba:6293492","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.what_s_the_date_today","meaning":"Bugün ayın kaçı?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.we_had_a_fun_day","meaning":"Eğlenceli bir gün geçirdik.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.it_s_time_to_have_fun","meaning":"Eğlenme zamanı.","provenance":{"source":"tatoeba:5023958","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_parents_are_good_people","meaning":"Annemle babam iyi insanlar.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.it_s_a_very_small_town","meaning":"Burası çok küçük bir kasaba.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_fine_too_thank_you","meaning":"Ben de iyiyim, teşekkür ederim.","provenance":{"source":"tatoeba:1284477","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_enjoy_the_work","meaning":"İşten zevk alıyor musun?","provenance":{"source":"tatoeba:4848285","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_saving_money_for_a_car","meaning":"Araba için para biriktiriyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_just_finished_the_work","meaning":"Az önce işi bitirdim.","provenance":{"source":"tatoeba:1285233","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_mother_is_a_teacher","meaning":"Annem öğretmen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.do_you_want_to_sit_in_the_front","meaning":"Önde oturmak ister misin?","provenance":{"source":"tatoeba:1664236","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_s_too_heavy_to_carry","meaning":"Bu, taşımak için çok ağır.","provenance":{"source":"tatoeba:4535870","license":"CC BY 2.0 FR","attribution":"maydoo"}}
+{"key":"en.sent.i_think_you_dropped_this","meaning":"Sanırım bunu düşürdünüz.","provenance":{"source":"tatoeba:2437181","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_father_s_in_the_garden","meaning":"Babam bahçede.","provenance":{"source":"tatoeba:1074663","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_any_interest_in_sports","meaning":"Spora ilgin var mı?","provenance":{"source":"tatoeba:1647450","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.don_t_forget_the_party_tonight","meaning":"Bu gece partiyi unutma.","provenance":{"source":"tatoeba:3996039","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_wish_you_a_happy_birthday","meaning":"Sana mutlu bir doğum günü diliyorum.","provenance":{"source":"tatoeba:3769540","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_made_a_wish","meaning":"Bir dilek tuttum.","provenance":{"source":"tatoeba:5841441","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_gave_his_children_a_good_education","meaning":"Çocuklarına iyi bir eğitim verdi.","provenance":{"source":"tatoeba:1719317","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_ready_to_go_now","meaning":"Artık gitmeye hazırım.","provenance":{"source":"tatoeba:2710914","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.the_tree_grew_very_tall","meaning":"Ağaç çok uzadı.","provenance":{"source":"tatoeba:1278354","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.come_and_visit_us_again","meaning":"Yine gelip bizi ziyaret edin.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.is_this_your_first_visit","meaning":"Bu sizin ilk ziyaretiniz mi?","provenance":{"source":"tatoeba:1497907","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_always_walk_to_school","meaning":"Okula her zaman yürürüm.","provenance":{"source":"tatoeba:1278036","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_take_a_little_walk","meaning":"Biraz yürüyüş yapalım.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_like_wearing_shoes","meaning":"Ayakkabı giymeyi sevmiyorum.","provenance":{"source":"tatoeba:9958481","license":"CC BY 2.0 FR","attribution":"SSibelty"}}
+{"key":"en.sent.the_girl_likes_the_dog","meaning":"Kız köpekten hoşlanıyor.","provenance":{"source":"tatoeba:6317519","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.we_had_a_long_period_of_good_weather","meaning":"Uzun bir süre havalar güzel gitti.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.does_this_medicine_have_any_side_effects","meaning":"Bu ilacın herhangi bir yan etkisi var mı?","provenance":{"source":"tatoeba:6055102","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.it_s_really_hard_to_choose","meaning":"Seçmek gerçekten zor.","provenance":{"source":"tatoeba:5135359","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_know_my_wife","meaning":"Karımı tanıyor musun?","provenance":{"source":"tatoeba:6725412","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_have_to_pay_this_bill_today","meaning":"Bugün bu faturayı ödemek zorundayım.","provenance":{"source":"tatoeba:3009549","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_agree_with_you","meaning":"Sizinle aynı fikirde değilim.","provenance":{"source":"tatoeba:1272480","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.listen_i_have_good_news","meaning":"Dinle, iyi bir haberim var.","provenance":{"source":"tatoeba:3889883","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.go_outside_and_play_now","meaning":"Şimdi dışarı çıkıp oyna.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.our_country_produces_a_lot_of_sugar","meaning":"Ülkemiz çok şeker üretir.","provenance":{"source":"tatoeba:1676220","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.my_big_brother_likes_music","meaning":"Ağabeyim müzik sever.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.where_can_i_catch_a_bus","meaning":"Nereden otobüs yakalayabilirim?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_focusing_on_my_job","meaning":"İşime odaklanıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_ve_been_there_a_couple_of_times","meaning":"Oraya bir iki kez gittim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_had_a_great_summer","meaning":"Harika bir yaz geçirdim.","provenance":{"source":"tatoeba:6671531","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_m_going_to_the_park","meaning":"Parka gidiyorum.","provenance":{"source":"tatoeba:2123711","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_have_to_park_my_car_here","meaning":"Arabamı buraya park etmek zorundayım.","provenance":{"source":"tatoeba:4174413","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.would_you_like_to_do_that_instead","meaning":"Bunun yerine onu yapmak ister misin?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_read_the_first_page","meaning":"İlk sayfayı okudum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_really_miss_you_all","meaning":"Gerçekten hepinizi özlüyorum.","provenance":{"source":"tatoeba:5164574","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_cat_is_now_sleeping","meaning":"Kedi şimdi uyuyor.","provenance":{"source":"tatoeba:8783687","license":"CC BY 2.0 FR","attribution":"grindeldore"}}
+{"key":"en.sent.is_this_your_card","meaning":"Bu senin kartın mı?","provenance":{"source":"tatoeba:5942550","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_often_drink_milk","meaning":"Sık sık süt içer misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.can_i_have_a_cold_drink_please","meaning":"Soğuk bir içecek alabilir miyim, lütfen?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_hate_doing_this_kind_of_stuff","meaning":"Bu tür şeyleri yapmaktan nefret ediyorum.","provenance":{"source":"tatoeba:4747412","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.do_you_like_to_travel","meaning":"Seyahat etmekten hoşlanır mısınız?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_don_t_go_to_church","meaning":"Kiliseye gitmem.","provenance":{"source":"tatoeba:2499226","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.can_you_guess_my_age","meaning":"Yaşımı tahmin edebilir misin?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.don_t_be_afraid_to_raise_your_hand","meaning":"Elini kaldırmaktan korkma.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.here_s_a_piece_of_paper","meaning":"İşte bir parça kağıt.","provenance":{"source":"tatoeba:3755212","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_think_it_s_really_cool","meaning":"Bence bu gerçekten havalı.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.we_liked_the_food_especially_the_fish","meaning":"Yemekleri beğendik, özellikle balığı.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_like_this_color_too","meaning":"Ben de bu rengi severim.","provenance":{"source":"tatoeba:1276599","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_have_time_to_explain_it","meaning":"Bunu açıklamaya vaktim yok.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.don_t_throw_a_stone_at_the_dog","meaning":"Köpeğe taş atma.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.there_s_very_little_paper_left","meaning":"Çok az kağıt kaldı.","provenance":{"source":"tatoeba:1412996","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_made_me_sing_on_the_stage","meaning":"Bana sahnede şarkı söyletti.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_do_you_suggest","meaning":"Ne önerirsiniz?","provenance":{"source":"tatoeba:1259771","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_think_you_understand_the_situation","meaning":"Durumu anladığını sanmıyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_languages_do_you_speak","meaning":"Hangi dilleri konuşuyorsun?","provenance":{"source":"tatoeba:949135","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_don_t_have_a_middle_name","meaning":"Göbek adım yok.","provenance":{"source":"tatoeba:3054927","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.the_car_stopped_in_the_middle_of_the_road","meaning":"Araba yolun ortasında durdu.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.they_re_all_the_same_size","meaning":"Hepsi aynı boyda.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.you_have_to_make_the_right_choice","meaning":"Doğru seçimi yapmak zorundasın.","provenance":{"source":"tatoeba:3476540","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_m_going_to_apply_for_that_job","meaning":"O iş için başvuracağım.","provenance":{"source":"tatoeba:6853920","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.pull_the_door_don_t_push_it","meaning":"Kapıyı çek, itme.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_m_certain_that_you_can_do_that","meaning":"Bunu yapabileceğinden eminim.","provenance":{"source":"tatoeba:6379805","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_wonder_when_the_party_s_going_to_start","meaning":"Partinin ne zaman başlayacağını merak ediyorum.","provenance":{"source":"tatoeba:3979629","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_ve_got_stuff_i_want_to_do","meaning":"Yapmak istediğim şeyler var.","context":"günlük dil","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.thank_you_for_your_time_and_effort","meaning":"Zamanınız ve çabanız için teşekkür ederim.","provenance":{"source":"tatoeba:3058620","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.what_exactly_are_you_going_to_do","meaning":"Tam olarak ne yapacaksın?","provenance":{"source":"tatoeba:4249972","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_usually_get_up_at_seven","meaning":"Genellikle yedide kalkarım.","provenance":{"source":"tatoeba:1035254","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.these_products_are_of_the_same_quality","meaning":"Bu ürünler aynı kalitede.","provenance":{"source":"tatoeba:1750528","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_like_to_draw","meaning":"Resim çizmeyi sever misin?","provenance":{"source":"tatoeba:3974986","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_didn_t_realize_you_were_already_here","meaning":"Zaten burada olduğunu fark etmedim.","provenance":{"source":"tatoeba:3956411","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_re_the_first_person_to_mention_that","meaning":"Bundan bahseden ilk kişi sensin.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_didn_t_expect_to_see_you_here","meaning":"Seni burada görmeyi beklemiyordum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.she_runs_every_day_to_stay_fit","meaning":"Formda kalmak için her gün koşuyor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_see_the_difference","meaning":"Farkı göremiyorum.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_like_to_write_letters","meaning":"Mektup yazmayı severim.","provenance":{"source":"tatoeba:13704607","license":"CC BY 2.0 FR","attribution":"vowelharmony"}}
+{"key":"en.sent.my_name_has_five_letters","meaning":"Adımda beş harf var.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_didn_t_even_notice_you_were_there","meaning":"Senin orada olduğunu fark etmedim bile.","provenance":{"source":"tatoeba:2320887","license":"CC BY 2.0 FR","attribution":"Gulo_Luscus"}}
+{"key":"en.sent.do_you_know_that_lady","meaning":"O hanımı tanıyor musun?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.this_box_is_too_small","meaning":"Bu kutu çok küçük.","provenance":{"source":"tatoeba:6025534","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_ll_send_you_a_text","meaning":"Sana mesaj atarım.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.text_me_when_you_get_back_home","meaning":"Eve döndükten sonra bana mesaj at.","provenance":{"source":"tatoeba:5506933","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_had_an_opportunity_to_do_that","meaning":"Bunu yapmak için bir fırsatım vardı.","provenance":{"source":"tatoeba:6716587","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.he_pushed_the_door_open","meaning":"Kapıyı iterek açtı.","provenance":{"source":"tatoeba:8574896","license":"CC BY 2.0 FR","attribution":"Cumle_Kurucu"}}
+{"key":"en.sent.i_don_t_have_red_hair","meaning":"Saçım kızıl değil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_s_the_best_way_to_contact_you","meaning":"Sana ulaşmanın en iyi yolu ne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.what_s_your_address","meaning":"Adresin ne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.perhaps_you_would_like_to_go_first","meaning":"Belki önce gitmek istersin?","context":"kibar dil","provenance":{"source":"tatoeba:3887370","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.it_is_ten_degrees_below_zero_now","meaning":"Şu an hava sıfırın altında on derece.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_don_t_need_to_know_the_details","meaning":"Ayrıntıları bilmeme gerek yok.","provenance":{"source":"tatoeba:8094768","license":"CC BY 2.0 FR","attribution":"tulin"}}
+{"key":"en.sent.he_made_the_children_laugh","meaning":"Çocukları güldürdü.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.this_is_my_favorite_subject","meaning":"Bu benim en sevdiğim konu.","provenance":{"source":"tatoeba:3282425","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_went_straight_to_bed","meaning":"Doğruca yatağa gittim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.she_drew_a_straight_line_on_the_paper","meaning":"Kağıda düz bir çizgi çekti.","provenance":{"source":"tatoeba:8490718","license":"CC BY 2.0 FR","attribution":"Cumle_Kurucu"}}
+{"key":"en.sent.what_s_the_purpose_of_your_visit","meaning":"Ziyaretinizin amacı nedir?","provenance":{"source":"tatoeba:1035378","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.these_machines_aren_t_working_now","meaning":"Bu makineler şimdi çalışmıyor.","provenance":{"source":"tatoeba:1430926","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_ve_got_a_party_tonight","meaning":"Bu gece bir partim var.","provenance":{"source":"tatoeba:2929786","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.you_re_going_to_have_to_be_quick","meaning":"Hızlı olman gerekecek.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.teaching_young_children_isn_t_easy","meaning":"Küçük çocuklara öğretmek kolay değildir.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_don_t_think_that_s_fair","meaning":"Bunun adil olduğunu sanmıyorum.","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.go_straight_ahead_and_follow_the_signs","meaning":"Düz ilerleyin ve işaretleri takip edin.","provenance":{"source":"tatoeba:5954725","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.maybe_i_just_imagined_that","meaning":"Belki de sadece hayal ettim.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_certainly_don_t_see_it_that_way","meaning":"Kesinlikle o şekilde görmüyorum.","provenance":{"source":"tatoeba:5344304","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.i_ve_got_a_little_extra_time_right_now","meaning":"Şu anda biraz ekstra zamanım var.","provenance":{"source":"tatoeba:3956681","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.let_s_discuss_the_matter_here","meaning":"Meseleyi burada tartışalım.","provenance":{"source":"tatoeba:1529860","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.do_you_have_five_dollars","meaning":"Beş doların var mı?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.fill_the_bottle_with_water","meaning":"Şişeyi suyla doldur.","provenance":{"source":"tatoeba:1309543","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.just_then_the_phone_rang","meaning":"Tam o anda telefon çaldı.","provenance":{"source":"tatoeba:5023802","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.sent.i_d_like_to_see_that_ring_please","meaning":"O yüzüğü görmek isterim, lütfen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.sent.i_only_have_personal_items","meaning":"Yalnızca kişisel eşyalarım var.","provenance":{"source":"tatoeba:3319600","license":"CC BY 2.0 FR","attribution":"deyta"}}
+{"key":"en.sent.do_you_have_a_copy","meaning":"Sende bir kopyası var mı?","provenance":{"source":"dilbaz validation","license":"own"}}
+{"key":"en.sent.i_let_my_friend_copy_my_homework","meaning":"Arkadaşımın ev ödevimi kopyalamasına izin verdim.","provenance":{"source":"tatoeba:4613899","license":"CC BY 2.0 FR","attribution":"duran"}}
+{"key":"en.gp.be.present","meaning":"be: am / is / are","explanation":"İngilizcede \"-im, -sin, -dir\" ekleri yerine be fiili kullanılır: I am, you are, he/she/it is, we/they are. Türkçede bu ek çoğu zaman düşer, İngilizcede be hiç düşmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.be.negative","meaning":"be: olumsuz","explanation":"Olumsuz için be'den sonra not gelir: I am not, he is not. Konuşmada kısa biçimler yaygındır: isn't, aren't. \"I amn't\" diye bir biçim yoktur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.be.questions","meaning":"be: soru","explanation":"Soru sorarken am/is/are öznenin önüne geçer: You are → Are you…? Kısa cevapta be tekrar edilir: Yes, I am. / No, she isn't.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.pronouns.subject","meaning":"Özne zamirleri","explanation":"Türkçede tek \"o\" var, İngilizcede üç: erkek için he, kadın için she, eşya ve hayvan için it. Türkçede özne düşebilir, İngilizcede her cümlede özne bulunur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.articles.a_an","meaning":"a / an","explanation":"Tekil ve sayılabilir bir ismin önüne a ya da an gelir: a car, an apple. Türkçede \"bir\" çoğu zaman söylenmez, İngilizcede bu artikel düşmez. En sık yapılan hatalardan biridir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.nouns.plural","meaning":"Çoğul isimler","explanation":"Birden fazlası için isme -s ya da -es eklenir: books, boxes. Türkçede sayıdan sonra çoğul eki gelmez (iki kitap), İngilizcede gelir: two books. Bazı çoğullar düzensizdir: children, people.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.possessive.adjectives","meaning":"İyelik sözcükleri (my, your…)","explanation":"Türkçedeki -im, -in ekleri yerine ismin önüne bir sözcük gelir: my car (arabam), your name (adın). his erkek, her kadın için kullanılır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.age","meaning":"Yaş söyleme","explanation":"Yaş be ile söylenir: I am 30 (years old). Türkçedeki gibi \"have\" kullanılmaz. Yaş sorusu How old ile başlar.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.articles.the","meaning":"the","explanation":"Dinleyici hangisinden söz ettiğini biliyorsa ya da o şeyden bir tane varsa the gelir: the door, the sun. Türkçede karşılığı yoktur; bu yüzden the ile a arasındaki seçim zaman alır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.demonstratives","meaning":"this / that / these / those","explanation":"Yakındaki için this (tekil) ve these (çoğul), uzaktaki için that ve those. Türkçedeki bu/şu/o ayrımı gibi, ama tekil-çoğul ayrımı da vardır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.there_is_are","meaning":"there is / there are","explanation":"Bir yerde bir şeyin var olduğunu söylemek için there is (tekil) ve there are (çoğul) kullanılır. Türkçedeki \"var\" hem bunu hem de sahipliği karşılar; sahiplik için have kullanılır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.have_got","meaning":"have got / has got","explanation":"Sahiplik ve aile için have got de kullanılır: I've got a car. he, she ve it ile has got olur. Anlamı have ile aynıdır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_simple.affirmative","meaning":"Geniş zaman: olumlu","explanation":"Alışkanlıklar ve genel doğrular için fiilin yalın hâli kullanılır: I work. he, she ve it ile fiile -s ya da -es eklenir: she works. Türkçe konuşanlar bu -s'yi sık unutur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_simple.negative","meaning":"Geniş zaman: olumsuz","explanation":"Olumsuzda fiilden önce don't gelir; he, she ve it ile doesn't. doesn't'tan sonra fiile -s eklenmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_simple.questions","meaning":"Geniş zaman: soru","explanation":"Soru, özneden önce do ya da does ile kurulur: Do you…? Does she…? Fiil yalın kalır. \"Does he works?\" yaygın bir hatadır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.adverbs.frequency","meaning":"Sıklık zarfları","explanation":"always, usually, often, sometimes, never gibi sözcükler ana fiilden önce, be'den sonra gelir: I usually walk. She is never late.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.can.ability","meaning":"can / can't","explanation":"Yetenek ve izin için can kullanılır: I can swim. Her özneyle aynı kalır; he can, she can. Ardından fiil yalın gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.imperative","meaning":"Emir cümleleri","explanation":"Talimat verirken cümle fiille başlar, özne söylenmez: Open the window. Olumsuzu Don't ile yapılır: Don't be late. please eklemek kibar yapar.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.pronouns.object","meaning":"Nesne zamirleri","explanation":"Fiilden ya da edattan sonra me, you, him, her, it, us, them gelir: Help me. Türkçedeki \"onu\" üçüne birden karşılık gelir: erkek için him, kadın için her, şey için it.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.possessive.s","meaning":"İyelik 's","explanation":"Bir şeyin birine ait olduğunu söylemek için kişinin adına 's eklenir: Ali's car (Ali'nin arabası). Sıra Türkçedeki gibidir: önce sahip, sonra sahip olunan.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.prepositions.place","meaning":"Yer edatları","explanation":"Türkçedeki -de ekinin karşılığı birkaç edata bölünür: içinde in, üstünde on, bir noktada at. Edat ismin önüne gelir: in the kitchen.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.prepositions.time","meaning":"Zaman edatları: in / on / at","explanation":"Saatler için at, günler ve tarihler için on, aylar, yıllar ve günün bölümleri için in: at seven, on Monday, in the morning.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.questions.wh","meaning":"Soru sözcükleriyle sorular","explanation":"what, where, when, who, why, how gibi soru sözcükleri cümlenin başına gelir. Ardından soru sırası gelir: Where do you work? Türkçede soru sözcüğü cümlenin içinde durabilir, İngilizcede başa geçer.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.conjunctions.basic","meaning":"and, but, because","explanation":"and ekler (ve), but karşıtlık bildirir (ama), because sebep verir (çünkü). because'dan sonra tam bir cümle gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_continuous.now","meaning":"Şimdiki zaman","explanation":"Şu anda olan işler için am/is/are + fiil-ing kullanılır: I'm cooking. be düşmez; \"I cooking\" yaygın bir hatadır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.like_ing","meaning":"like / love / hate + -ing","explanation":"like, love, enjoy ve hate'ten sonra gelen fiil genellikle -ing alır: I like reading (okumayı severim).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.would_like","meaning":"would like","explanation":"Bir şeyi kibarca istemek ya da teklif etmek için would like kullanılır: I'd like a coffee. want'tan daha naziktir. Ardından isim ya da to + fiil gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.past_simple.be","meaning":"Geçmiş zaman: was / were","explanation":"be'nin geçmiş hâli: I, he, she ve it ile was; you, we ve they ile were. \"Evdeydim\" gibi \"-di\" ekli isim cümleleri böyle kurulur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.past_simple.regular","meaning":"Geçmiş zaman: düzenli fiiller","explanation":"Biten işler için düzenli fiillere -ed eklenir: work → worked. Her özneyle aynı biçim kullanılır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.past_simple.irregular","meaning":"Geçmiş zaman: düzensiz fiiller","explanation":"Sık kullanılan birçok fiilin geçmiş hâli kendine özgüdür: go → went, have → had, see → saw. Bunlar tek tek öğrenilir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.past_simple.negative_questions","meaning":"Geçmiş zaman: olumsuz ve soru","explanation":"Olumsuzda didn't, soruda did kullanılır ve fiil yalın kalır: I didn't go. Did you see? \"Did you went?\" yaygın bir hatadır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.future.going_to","meaning":"be going to","explanation":"Planlar ve niyetler için am/is/are going to + yalın fiil kullanılır: I'm going to visit my parents.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.future.will","meaning":"will","explanation":"Tahminler ve o anda verilen kararlar için will + yalın fiil kullanılır: I'll call you. will her özneyle aynı kalır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.comparatives","meaning":"Karşılaştırma (-er, more)","explanation":"İki şeyi karşılaştırırken kısa sıfatlara -er, uzun sıfatlara more eklenir ve ardından than gelir: older than, more expensive than. good → better, bad → worse düzensizdir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.superlatives","meaning":"En üstünlük (-est, most)","explanation":"Bir grubun en … olanı için the + sıfat-est ya da the most + sıfat kullanılır: the biggest, the most famous. good → the best.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.countable_uncountable","meaning":"some / any, much / many, a lot of","explanation":"Olumlu cümlede some, olumsuz cümlede ve soruda any kullanılır. Sayılabilir isimle many, sayılamayanla much gelir; a lot of ikisiyle de olur.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.modals.obligation","meaning":"have to / must / should","explanation":"Gereklilik için have to ya da must, tavsiye için should kullanılır. Ardından fiil yalın gelir: You should see a doctor.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_simple_vs_continuous","meaning":"Geniş zaman mı, şimdiki zaman mı?","explanation":"Alışkanlık ve genel doğru için geniş zaman (I work), şu an olan iş için şimdiki zaman (I'm working) kullanılır. Türkçedeki \"-iyor\" ikisini de karşılayabildiği için karışır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.present_perfect.experience","meaning":"Present perfect: deneyim","explanation":"Hayatta bir şeyi yapıp yapmadığını söylemek için have/has + fiilin üçüncü hâli kullanılır: I've been to London. Türkçede doğrudan karşılığı yoktur; ever ve never ile sık gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.gp.verb_patterns.to_ing","meaning":"Fiil + to ya da -ing","explanation":"Bazı fiillerden sonra to + fiil gelir (want, need, decide), bazılarından sonra fiil-ing (enjoy, finish). Hangisinin geldiği fiile göre değişir.","provenance":{"source":"dilbaz curation","license":"own"}}

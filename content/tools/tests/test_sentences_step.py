@@ -72,7 +72,10 @@ def test_each_sense_gets_its_best_candidate_or_the_curated_carriers(tmp_path: Pa
         json.loads(line)
         for line in (root / "work" / "sentences.en.turkish.jsonl").read_text("utf-8").splitlines()
     ]
-    assert {"key": "en.sent.you_are_right", "turkish": ["Haklısın."]} in turkish
+    assert {
+        "key": "en.sent.you_are_right",
+        "turkish": [{"id": 103, "text": "Haklısın."}],
+    } in turkish
     assert len(turkish) == 3
     saved = json.loads((root / "work" / "sentences.en.report.json").read_text(encoding="utf-8"))
     assert saved["sentences"] == 4

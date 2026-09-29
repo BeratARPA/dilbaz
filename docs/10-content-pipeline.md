@@ -50,6 +50,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `select [--max-level A2] [--limit 600]` (S2).
   - `carriers [--per-target 3]` (S3: Tatoeba taşıyıcı adayları).
   - `sentences` (S4: taşıyıcı cümleler, kontroller; engelleyici sorun varsa çıkış kodu 1).
+  - `pair [--l1 tr] [--l2 en]` (S5: çift paketi, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -68,7 +69,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 | S2 | `select --max-level A2` | Sözlük + `curation/<l2>/` → `packs/<l2>/items/` (ayrıntı: §4.2) | Kelime anlamları (lemma başına en sık 1–2 anlam), kalıplar (NGSL-Spoken + Claude Code oturumu önerileri), gramer noktaları (`02` §5 kodları), sesler ve minimal çiftler (CMUdict + sıklık filtresi) |
 | S3 | `carriers` | Kelime anlamları + Tatoeba → `work/carriers.en.candidates.jsonl` (ayrıntı: §4.3) | Seviye ve gramer filtresinden geçen Tatoeba adayları, anlam başına en iyi 3 |
 | S4 | `sentences` | Adaylar + `curation/<l2>/sentences.yaml` → `packs/<l2>/items/sentences.jsonl` (ayrıntı: §4.4, §5) | Seçim; eksik ya da kötü adayların yerine Claude Code oturumunda yazılan cümleler; deterministik kontroller; ayrı oturumda doğrulama geçişi; 👤 örneklem |
-| S5 | `pair --l1 tr` | Kabul edilen öğeler → tr-en paketi | Türkçe karşılıklar, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, hata etiketi kataloğu |
+| S5 | `pair --l1 tr` | Hedef paket + `curation/tr-en/` + S4 çevirileri → `packs/tr-en/` (ayrıntı: §6) | Türkçe karşılıklar ve istemler, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, H3 kural notları, hata etiketi kataloğu |
 | S6 | `audio` | Metinler → ses dosyaları | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
 | S8 | `placement` | Sözlük → X_Lex bankası | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
@@ -151,7 +152,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - **Havuz:** Tatoeba'nın Türkçe çevirisi olan ve en fazla 12 kelimelik İngilizce cümleleri. 2026-09 dökümünde 647 bin cümle var; 523 binini anadili İngilizce olan kullanıcılar yazmış (`eng_user_languages`, beceri 5).
 - **Analiz:** spaCy `en_core_web_md` (ayrıştırıcı ve NER kapalı) her cümle için lemma, sözcük türü ve etiket çıkarır. Sonuç `work/tatoeba.en.analysis.jsonl.gz` dosyasında önbellekte tutulur. Anlık görüntü, çözümleyici ya da biçim değişmedikçe yeniden hesaplanmaz; ilk çalıştırma ~6 dakika sürer.
 - **Aday koşulları:**
-  - **Eşleşme:** Cümle hedef anlamın lemmasını aynı sözcük türüyle içerir. spaCy'nin AUX etiketi fiil sayılır, özel isim etiketi (günler) isim sayılır. Pakette tek anlamı seçilmiş bir lemma isimle zarf arasında geçebilir, çünkü spaCy "today, tomorrow" için isim diyor, listeler zarf diyor. Lemma tanınmazsa yüzey biçimi denenir: spaCy "clothes" için "clothe" veriyor.
+  - **Eşleşme:** Cümle hedef anlamın lemmasını aynı sözcük türüyle içerir. spaCy'nin AUX etiketi fiil sayılır, özel isim etiketi (günler) isim sayılır. Pakette tek anlamı seçilmiş bir lemma isimle zarf arasında geçebilir, çünkü spaCy "today, tomorrow" için isim diyor, listeler zarf diyor. Lemma tanınmazsa yüzey biçimi denenir: spaCy "clothes" için "clothe" veriyor. Çoğul özel isimlerde sondaki s atılarak denenir, çünkü spaCy "Mondays" kelimesini lemmalaştırmıyor.
   - **Kelime seviyesi:** Hedef dışındaki her kelime hedefin seviyesinde ya da altındadır. A0 hedefler A1 kelime kullanabilir, çünkü A0'ın kelimesi doğal cümle için çok az. Sözlükte olmayan kelime cümleyi eler; özel isimler, sayılar ve noktalama seviyeye katılmaz.
   - **Gramer seviyesi:** Kural tabanlı etiketleyicinin (§4.4) bulduğu gramer noktaları da hedefin seviyesini aşamaz. Bu, A1 bir kelimeye present perfect cümlesi gelmesini önler. Hedefin kendisiyle tetiklenen nokta sayılmaz: "much" sayılabilir/sayılamaz noktasını (A2) tetikler ama bu, "much"u geri tutmaz.
   - **Paket dışı yapılar:** en@1'in öğretmediği yapılar da `02` §5'teki seviyeleriyle sayılır: edilgen, used to, past continuous, might/may/could, would (would like hariç), if, yan cümleler (who, which, that, what…) B1; perfect continuous, past perfect ve "must have" türü kipler B2; when yan cümlesi ve ", so" A2. Bunlar paket kodu değildir, yalnızca seviyeyi belirler.
@@ -227,7 +228,8 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 
 ## 6. Tr-en paketi içeriği (S5)
 
-- **Karşılıklar (`glosses`):** anlam, kısa açıklama (A seviyeleri Türkçe), kullanım notu, karşıtlık notu.
+- **Karşılıklar (`glosses`):** anlam, kısa açıklama (A seviyeleri Türkçe), kullanım notu. Cümle ve kalıplarda anlam kartın istemidir; isteğe bağlı bağlam (`context`: "otelde", "günlük dil") istemle gösterilir ve cevabı söylemez.
+- **Karşıtlık notları (`contrast_notes`):** Türkçe konuşanların karıştırdığı öğeler (aynı Türkçe kelime: say/tell, work/study, tall/long; yanıltıcı benzerlik: market, college) ve tek cümlelik Türkçe not. A00 tanıtımında ve A08 denemesinden sonra gösterilir.
 - **Hata etiketi kataloğu (`error_tags`):**
   - Elle hazırlanır, Claude Code oturumlarında genişletilir.
   - Kaynak: Swan & Smith (2001), Türkçe konuşanlar bölümü kategorileri.
@@ -251,6 +253,28 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - **Kural notları (H3):** her gramer kodu için Türkçe, kısa bir kural notu. Cevabı içermediği derlemede test edilir (I-02).
 - **Can-do özetleri:** kendi kısa Türkçe özetlerimiz (resmî metin kopyalanmaz).
 - **Görev yönergeleri ve öğrenme notu şablonları** (Türkçe).
+- Can-do özetleri, görev yönergeleri ve öğrenme notu şablonları görevlerle (S7) birlikte eklenir. `tr-en@1` karşılıklar, karşıtlık notları, hata kataloğu, varyantlar ve kural notlarıyla başlar.
+
+### 6.1 S5 kuralları
+
+- **Küratörlük dosyaları** (`curation/tr-en/`, Claude Code oturumlarında yazılır):
+  - `word_senses.yaml`: anlam başına Türkçe karşılıklar (`meaning`, olağan olan önce) ve isteğe bağlı kullanım notu (`note`).
+  - `chunks.yaml`: kalıbın Türkçesi (kartın istemi), bağlam, not ve varyantlar.
+  - `sentences.yaml`: cümlenin istemi (`turkish`; kendi cümlelerimizde zorunlu), bağlam ve varyantlar.
+  - `grammar.yaml`: gramer kodu başına Türkçe ad, açıklama ve H3 kural notu (`rule`).
+  - `contrasts.yaml`, `error_tags.yaml`.
+- **Cümle istemi sırası:** küratörlüğün Türkçesi → doğrulamanın düzeltmesi (`turkish_fix`, Tatoeba çevirisi yanlışsa; §5.2) → ilk Tatoeba çevirisi (kimliği, CC BY 2.0 FR lisansı ve çevirmen atfıyla).
+- **Normalizasyon:** Varyantlar, cevaplar gibi `packs/<l2>/normalization.yaml` kurallarıyla karşılaştırılır (`03` §0.5). Motor aynı dosyayı kullanır (F1-07); dosyadaki `tests` örneklerini iki uygulama da geçmelidir.
+- **Engelleyici kontroller** (çıkış kodu 1):
+  - `missing_gloss`: Hedef paketteki her anlamın, kalıbın ve gramer noktasının karşılığı vardır.
+  - `unknown_key`: Küratörlük pakette olmayan bir öğeyi anmaz.
+  - `missing_prompt`: Her cümlenin istemi vardır.
+  - `variant_missing_target`: Varyant, cümlenin taşıyıcısı olduğu her anlamın kelimesini hâlâ içerir ("The film was too long.", `movie` kartında reddedilir). Etiketleyici kelimeyi başka bir sözcük türü sayarsa ("I don't feel well." içinde well zarf) lemma eşleşmesi yeter.
+  - `prompt_clash`: Aynı istemi paylaşan kartlar birbirinin referans cevabını kabul eder. Büyük/küçük harf ve noktalama istemleri ayırmaz, bağlam ayırır. Aksi hâlde öğrenci hangi cevabın beklendiğini bilemez ve LLM'siz değerlendirme doğru cevabı reddeder.
+  - `rule_note_leak`: H3 notu, o gramer noktasını kullanan hiçbir kartın cevabını (normalize edilmiş hâliyle) içermez (I-02).
+  - `unknown_grammar_code`: Hata etiketlerinin gramer kodları pakette vardır.
+- **Uyarı:** `duplicate_variant`, yani normalizasyondan sonra referansla ya da başka bir varyantla aynı olan varyant. Atılır.
+- **Çıktılar:** `packs/tr-en/{glosses,variants,rule_notes,contrast_notes,error_tags}.jsonl`, `work/pair.tr-en.report.json`.
 
 ## 7. Kişisel öğeler
 

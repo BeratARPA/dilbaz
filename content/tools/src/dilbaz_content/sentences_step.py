@@ -25,7 +25,7 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from dilbaz_content.analysis import Analyzer, Token, read_analysis
+from dilbaz_content.analysis import Analyzer, Token, Translation, read_analysis
 from dilbaz_content.carriers import (
     MAX_WORDS,
     UNLEVELLED_POS,
@@ -186,7 +186,7 @@ class _Draft:
     text: str
     tokens: tuple[Token, ...]
     provenance: Provenance
-    turkish: tuple[str, ...]
+    turkish: tuple[Translation, ...]
     chosen_for: tuple[str, ...]
 
 
@@ -274,10 +274,12 @@ def _drafts(
     }
     wanted_ids = {c.tatoeba for picks in chosen.values() for c in picks if c.tatoeba is not None}
     tokens_by_id: dict[int, tuple[Token, ...]] = {}
+    turkish_by_id: dict[int, tuple[Translation, ...]] = {}
     extra: dict[int, Candidate] = {}
     for record in read_analysis(cache):
         if record.id in wanted_ids:
             tokens_by_id[record.id] = record.tokens
+            turkish_by_id[record.id] = record.turkish
             if record.id not in by_id:
                 extra[record.id] = Candidate(
                     target="",
@@ -306,7 +308,8 @@ def _drafts(
             if pick.tatoeba is not None:
                 candidate = by_id.get(pick.tatoeba) or extra[pick.tatoeba]
                 text, tokens = candidate.text, tokens_by_id[pick.tatoeba]
-                provenance, turkish = _tatoeba_provenance(candidate), candidate.turkish
+                provenance = _tatoeba_provenance(candidate)
+                turkish = turkish_by_id[pick.tatoeba]
             else:
                 text = pick.text or ""
                 tokens, provenance, turkish = own_tokens[text], _OWN, ()
@@ -458,10 +461,16 @@ def run_sentences(
             carriers = tuple(dict.fromkeys(k for k in chosen_keys if k is not None))
             with_carriers = sense.model_copy(update={"carriers": carriers})
             sink.write(with_carriers.model_dump_json(exclude_defaults=True) + "\n")
-    turkish = {f"{l2}.sent.{slug(d.text)}": d.turkish for d in drafts if d.turkish}
+    # The translations keep their Tatoeba id and author for S5's provenance.
+    turkish = {
+        f"{l2}.sent.{slug(d.text)}": [t.model_dump(exclude_defaults=True) for t in d.turkish]
+        for d in drafts
+        if d.turkish
+    }
     with (work / TURKISH_FILE.format(l2=l2)).open("w", encoding="utf-8", newline="\n") as sink:
-        for key, texts in turkish.items():
-            sink.write(json.dumps({"key": key, "turkish": list(texts)}, ensure_ascii=False) + "\n")
+        for key, translations in turkish.items():
+            line = {"key": key, "turkish": translations}
+            sink.write(json.dumps(line, ensure_ascii=False) + "\n")
     grammar = Counter(code for sentence in sentences for code in sentence.grammar)
     report = SentencesReport(
         sentences=len(sentences),
