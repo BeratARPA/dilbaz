@@ -32,13 +32,16 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | Again (1) | 3 denemede doğru yok, ya da H4 (cevap) açıldı |
 | Hard (2) | Doğru, ama H1–H3 kullanıldı ya da ikinci/üçüncü denemede |
 | Good (3) | İlk denemede, ipucusuz doğru ya da kabul edilebilir varyant |
-| Easy (4) | Good koşulu + cevap gecikmesi, kişinin bu moddaki son 200 denemesinin 25. yüzdelik diliminin altında |
+| Easy (4) | Good koşulu + cevap gecikmesi, kişinin bu moddaki son 200 denemesinin 25. yüzdelik diliminin altında. Bu modda 20'den az deneme varsa Easy verilmez. |
+
+Puan tek bir denemeye değil, kartın o gösterimine verilir. Gösterim doğru cevapla, deneme hakkı bitince ya da H4 açılınca biter. Her yanlış cevap bir deneme hakkı harcar ve bir üst ipucunu açar. Kullanıcı ipucu merdiveninde kendisi de ilerleyebilir, ama ilk yanlıştan önce ipucu yoktur. H3'ten sonraki yanlış H4'ü açar. Motorda: `CardReview` → `ReviewOutcome.rating`.
 
 **LLM'siz `uncertain`** (§0.5, adım 4) her zaman **Hard** alır: ceza da şişirme de yoktur. Sonradan gelen LLM sonucu (`llm_resolved`) kanıtı düzeltir, FSRS geçmişini değiştirmez (I-03).
 
 **Hedefsiz doğru cevap** (§0.2) deneme hakkı ve ipucu harcamaz; istem bir kez yeniden sorulur:
 - Hedefle doğru cevap gelirse kart **Hard** alır (ikinci deneme sayılır) ve üretim kanıtı yazılır.
 - Yine hedefsiz doğru cevap gelirse hedef cümle gösterilir (H4), kart **Hard** alır ve üretim kanıtı yazılmaz. `uncertain` gibi burada da ceza ya da şişirme yoktur.
+- Yeniden sorulunca kullanıcı "göster" derse sonuç aynıdır (**Hard**, kanıt yok). Arada yanlış cevap varsa "göster" her zamanki gibi **Again**'dir.
 
 Ses tanımanın yanlış duyduğu durumlar için kullanıcı "yanlış duyuldu" deyip cevabını yazabilir. Yazılı cevap aynı denemenin parçası olarak değerlendirilir ve `asr_override=true` loglanır.
 

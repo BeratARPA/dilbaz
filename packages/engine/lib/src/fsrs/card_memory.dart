@@ -8,7 +8,9 @@ part 'card_memory.g.dart';
 ///
 /// This is the engine's own type; `package:fsrs` types never leave the
 /// `fsrs` module. The JSON form is stored as `attempts.card_state_after`
-/// so that sync stays deterministic (docs/12-architecture.md §5).
+/// so that sync stays deterministic (docs/12-architecture.md §5), and it
+/// holds every FSRS column of `cards`. `package:fsrs` keeps no review
+/// counts, so the scheduler counts [reps] and [lapses] itself.
 /// All timestamps are UTC.
 @freezed
 abstract class CardMemory with _$CardMemory {
@@ -34,6 +36,12 @@ abstract class CardMemory with _$CardMemory {
 
     /// Time of the last review (UTC); null before the first review.
     DateTime? lastReview,
+
+    /// Reviews so far.
+    @Default(0) int reps,
+
+    /// Times the card was forgotten after graduating (Again in review).
+    @Default(0) int lapses,
   }) = _CardMemory;
 
   /// Reads a card memory from its `card_state_after` JSON form.

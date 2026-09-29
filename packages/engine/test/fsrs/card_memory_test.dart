@@ -13,6 +13,8 @@ void main() {
       stability: 1.25,
       difficulty: 6.5,
       lastReview: DateTime.utc(2026, 9, 29, 8),
+      reps: 5,
+      lapses: 1,
     );
 
     test('round-trips through JSON text', () {
@@ -29,7 +31,34 @@ void main() {
         'stability': 1.25,
         'difficulty': 6.5,
         'last_review': '2026-09-29T08:00:00.000Z',
+        'reps': 5,
+        'lapses': 1,
       });
+    });
+
+    test('covers every FSRS column of cards', () {
+      // docs/13-data-model.md §2.3; the rest of a row is identity.
+      const columns = {
+        'fsrs_card_id',
+        'state',
+        'step',
+        'stability',
+        'difficulty',
+        'due',
+        'last_review',
+        'reps',
+        'lapses',
+      };
+      expect(reviewed.toJson().keys.toSet(), columns);
+    });
+
+    test('counts start at zero when missing', () {
+      final json = reviewed.toJson()
+        ..remove('reps')
+        ..remove('lapses');
+      final card = CardMemory.fromJson(json);
+      expect(card.reps, 0);
+      expect(card.lapses, 0);
     });
 
     test('reads timestamps back as UTC', () {
@@ -65,6 +94,34 @@ void main() {
 
     test('ratings use FSRS rating codes', () {
       expect(ReviewRating.values.map((r) => r.code), [1, 2, 3, 4]);
+    });
+
+    test('card modes are the cards.mode check list', () {
+      expect(CardMode.values.map((m) => m.code), [
+        'speak',
+        'type',
+        'cloze',
+        'contrast',
+        'recognize_audio',
+        'dictation',
+      ]);
+    });
+
+    test('modes share weights by group (docs/04-learner-model.md §2)', () {
+      final groups = {for (final mode in CardMode.values) mode: mode.group};
+      expect(groups, {
+        CardMode.speak: ModeGroup.production,
+        CardMode.type: ModeGroup.production,
+        CardMode.cloze: ModeGroup.production,
+        CardMode.contrast: ModeGroup.production,
+        CardMode.recognizeAudio: ModeGroup.receptive,
+        CardMode.dictation: ModeGroup.dictation,
+      });
+      expect(ModeGroup.values.map((g) => g.code), [
+        'production',
+        'receptive',
+        'dictation',
+      ]);
     });
   });
 }

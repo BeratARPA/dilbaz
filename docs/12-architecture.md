@@ -128,9 +128,12 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - `fsrs.Card.cardId` bir `int`'tir. Dilbaz kartı UUID ile tanınır, FSRS kimliği ayrı alanda (`fsrs_card_id`) tutulur.
 - İnceleme: `scheduler.reviewCard(card, rating, reviewDateTime: nowUtc)` → `(card, reviewLog)`. Hatırlama olasılığı: `scheduler.getCardRetrievability(card, currentDateTime: nowUtc)`.
 - Aralık bulanıklaştırma (fuzz) canlıda açıktır. Sonuç `attempts.card_state_after` olarak saklanır (senkron deterministik).
+- Motorun dışa açtığı tipler:
+  - `fsrs/`: `SrsScheduler` (`newCard`, `review`, `replay`, `retrievability`), `SrsConfig` (`forCourse`: mod grubunun kişisel ağırlıkları), `CardMemory` (JSON'u `card_state_after`), `CardMode` ve `ModeGroup`.
+  - `scoring/`: otomatik puan (`03` §0.2–0.3). `Evaluation` (verdict + `target_ok`) → `AnswerEffect` → `CardReview` (deneme, ipucu, yeniden sorma) → `ReviewOutcome.rating`. Easy eşiği için `LatencyProfile` kullanılır.
 - **Dart paketinde optimizasyon ve yeniden zamanlama yok:**
   - Kişisel parametreler `tools/fsrs/optimize.py` ile hesaplanır (py-fsrs 6.x, `fsrs[optimizer]`). py-fsrs, farklı günlere yayılmış 512'den az tekrarda varsayılan parametreleri döndürür.
-  - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır.
+  - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır (`SrsScheduler.replay`).
 
 ## 6. Yerel öncelikli veri ve senkron (ADR-0003)
 

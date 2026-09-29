@@ -1,5 +1,6 @@
 import 'package:dilbaz_engine/src/fsrs/card_memory.dart';
 import 'package:dilbaz_engine/src/fsrs/memory_state.dart';
+import 'package:dilbaz_engine/src/fsrs/rated_review.dart';
 import 'package:dilbaz_engine/src/fsrs/review_rating.dart';
 import 'package:dilbaz_engine/src/fsrs/srs_config.dart';
 // The prefix is mandatory: fsrs `Card` and `State` clash with Flutter names.
@@ -36,6 +37,8 @@ final class SrsScheduler {
   }
 
   /// Applies one review with an engine-computed [rating] at time [at].
+  ///
+  /// The result is the card's `card_state_after`.
   CardMemory review(
     CardMemory card,
     ReviewRating rating, {
@@ -47,7 +50,35 @@ final class SrsScheduler {
       fsrs.Rating.fromValue(rating.code),
       reviewDateTime: at,
     );
-    return _fromFsrs(result.card);
+    final lapsed =
+        card.state == MemoryState.review && rating == ReviewRating.again;
+    return _fromFsrs(
+      result.card,
+      reps: card.reps + 1,
+      lapses: card.lapses + (lapsed ? 1 : 0),
+    );
+  }
+
+  /// Rebuilds a card from its rated [reviews], oldest first
+  /// (docs/04-learner-model.md §2: after a parameter change or corruption).
+  ///
+  /// Needs a scheduler with fuzzing off, so that the result depends on the
+  /// reviews alone. Without reviews the card is new and due at [createdAt].
+  CardMemory replay({
+    required int fsrsCardId,
+    required DateTime createdAt,
+    required Iterable<RatedReview> reviews,
+  }) {
+    if (config.enableFuzzing) throw StateError('replay_needs_fuzzing_off');
+    var card = newCard(fsrsCardId: fsrsCardId, now: createdAt);
+    for (final (:rating, :at) in reviews) {
+      final last = card.lastReview;
+      if (last != null && at.isBefore(last)) {
+        throw ArgumentError.value(at, 'reviews', 'out_of_order');
+      }
+      card = review(card, rating, at: at);
+    }
+    return card;
   }
 
   /// Predicted probability of recalling [card] at [at]; 0 before any review.
@@ -85,13 +116,16 @@ final class SrsScheduler {
     );
   }
 
-  static CardMemory _fromFsrs(fsrs.Card card) => CardMemory(
-    fsrsCardId: card.cardId,
-    state: MemoryState.values.firstWhere((s) => s.code == card.state.value),
-    due: card.due,
-    step: card.step,
-    stability: card.stability,
-    difficulty: card.difficulty,
-    lastReview: card.lastReview,
-  );
+  static CardMemory _fromFsrs(fsrs.Card card, {int reps = 0, int lapses = 0}) =>
+      CardMemory(
+        fsrsCardId: card.cardId,
+        state: MemoryState.values.firstWhere((s) => s.code == card.state.value),
+        due: card.due,
+        step: card.step,
+        stability: card.stability,
+        difficulty: card.difficulty,
+        lastReview: card.lastReview,
+        reps: reps,
+        lapses: lapses,
+      );
 }

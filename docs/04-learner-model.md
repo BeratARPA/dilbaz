@@ -29,13 +29,15 @@
   | `dictation` | dinleme | A05 |
 
 - Her deneme sonunda FSRS zamanlayıcısı otomatik puanla (bkz. `03-activities.md` §0.3) çalışır. Kartın **yeni durumu denemeyle birlikte** saklanır (`attempts.card_state_after`).
-- **Tekrar oynatma (replay):** Parametre değişikliği ya da bozulma durumunda kart durumları denemelerden baştan hesaplanır. Aralık bulanıklaştırma (fuzz) tekrar oynatmada **kapalıdır**. Canlı kullanımda açıktır ve sonucu `card_state_after` olarak saklandığı için senkron deterministiktir.
+- **Sayaçlar:** `package:fsrs` tekrar saymaz, sayaçları motor tutar. `reps` her tekrarda artar. `lapses` yalnızca review durumundaki kart Again aldığında artar; öğrenme adımlarındaki Again unutma sayılmaz.
+- **Tekrar oynatma (replay):** Parametre değişikliği ya da bozulma durumunda kart durumları denemelerden baştan hesaplanır (`SrsScheduler.replay`). Aralık bulanıklaştırma (fuzz) tekrar oynatmada **kapalıdır**. Canlı kullanımda açıktır ve sonucu `card_state_after` olarak saklandığı için senkron deterministiktir.
+  - Fuzz yalnızca vade tarihini kaydırır. Sonraki tekrar vadeye değil tekrar zamanlarına bakar. Bu yüzden aynı parametrelerle yeniden oynatılan kartın S, D, durum ve sayaçları canlıdakiyle aynıdır, yalnızca `due` farklı olabilir (motor testi).
 - **Varsayılanlar:**
   - Hedef hatırlama: 0,90. Gelişmiş ayarlarda 0,85–0,95 arası seçilebilir; seçilirken tahmini günlük tekrar süresi gösterilir.
   - Parametreler: paketin FSRS varsayılanları.
 - **Kişisel optimizasyon:**
   - Bir mod grubunda (üretim / alıcı / dikte) yeterli veri birikince parametreler optimize edilir. py-fsrs, **farklı günlere yayılmış en az 512 tekrar** olmadan varsayılan parametreleri döndürür; bu yüzden eşik budur.
-  - Nasıl: `tools/fsrs/optimize.py` (py-fsrs Optimizer) dışa aktarılan tekrar günlüğüyle çalışır, sonuç `courses.fsrs_params[mod_grubu]` alanına yazılır. Dart paketinde optimize edici yoktur.
+  - Nasıl: `tools/fsrs/optimize.py` (py-fsrs Optimizer) dışa aktarılan tekrar günlüğüyle çalışır, sonuç `courses.fsrs_params[mod_grubu]` alanına yazılır. Dart paketinde optimize edici yoktur. Motor bu alanı `SrsConfig.forCourse` ile okur; ağırlığı olmayan grup varsayılanları kullanır.
   - Ayda bir ya da tekrar sayısı iki katına çıktığında yeniden optimize edilir. Değişiklik deney olarak izlenir (`16-experiments.md` E5).
 
 ## 3. L2 — Öğe kanıt düzeyleri

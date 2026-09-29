@@ -141,6 +141,8 @@ create table attempt_amendments (        -- değişmez denemelere sonradan gelen
 );
 ```
 
+- `attempts.card_state_after` motorun `CardMemory` JSON'udur: `{fsrs_card_id, state, step, stability, difficulty, due, last_review, reps, lapses}`. Bu alanlar `cards` satırının FSRS sütunlarının tamamıdır, bu yüzden kart satırı son puanlı denemeden yeniden kurulabilir (I-03).
+
 ### 2.4 Kişisel içerik, kayıtlar, değerlendirme
 
 ```sql
