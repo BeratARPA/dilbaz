@@ -18,7 +18,12 @@ const _sentinelWords = {
 };
 
 /// Literal values allowed despite the rules above, each with a reason.
-const _allowlist = <String>{};
+const _allowlist = <String>{
+  // Normalizer.space: the `space` value of `script.word_separator`.
+  ' ',
+  // The canonical apostrophe of the normalization steps (normalization.yaml).
+  "'",
+};
 
 void main() {
   test('lib has no natural-language string literals (I-15)', () {
