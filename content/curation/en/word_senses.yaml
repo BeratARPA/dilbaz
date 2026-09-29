@@ -401,7 +401,11 @@ senses:
   poor: [{pos: ADJ, sense: "having very little money"}]
   strong: [{pos: ADJ, sense: "having a lot of power; not weak"}]
   slow: [{pos: ADJ, sense: "not fast"}]
-  close: [{pos: VERB, sense: "to shut something"}, {pos: ADJ, sense: "near"}]
+  # Heteronyms: the sources give one transcription per word, often that of another
+  # part of speech (CMUdict lists close /kloʊs/ first); the sense's own is set here.
+  close:
+    - {pos: VERB, sense: "to shut something", ipa_us: "/ˈkloʊz/"}
+    - {pos: ADJ, sense: "near", ipa_uk: "/ˈkləʊs/"}
   open: [{pos: VERB, sense: "to move something so that it is not closed"}, {pos: ADJ, sense: "not closed"}]
   white: [{pos: ADJ, sense: "of the colour of snow or milk"}]
   black: [{pos: ADJ, sense: "of the darkest colour, like the night sky"}]
@@ -454,7 +458,7 @@ senses:
   mean: [{pos: VERB, sense: "to have a meaning (What does this word mean?)"}]
   learn: [{pos: VERB, sense: "to get knowledge or a skill"}]
   study: [{pos: VERB, sense: "to learn about a subject"}]
-  read: [{pos: VERB, sense: "to look at words and understand them"}]
+  read: [{pos: VERB, sense: "to look at words and understand them", ipa_us: "/ˈɹid/"}]
   write: [{pos: VERB, sense: "to put words on paper or a screen"}]
   want: [{pos: VERB, sense: "to wish to have or do something"}]
   need: [{pos: VERB, sense: "to require something because it is necessary"}]
@@ -471,7 +475,9 @@ senses:
   job: [{pos: NOUN, sense: "the work that you are paid for"}]
   business: [{pos: NOUN, sense: "buying and selling; a company"}]
   company: [{pos: NOUN, sense: "a business that sells goods or services"}]
-  use: [{pos: VERB, sense: "to do something with a tool, a machine or a thing"}]
+  use:
+    - {pos: VERB, sense: "to do something with a tool, a machine or a thing", ipa_us: "/ˈjuz/",
+       ipa_uk: "/juːz/"}
   help: [{pos: VERB, sense: "to make things easier for someone"}, {pos: NOUN, sense: "support that you give someone"}]
   try: [{pos: VERB, sense: "to make an effort to do something", level: A1}]
   start: [{pos: VERB, sense: "to begin"}, {pos: NOUN, sense: "the beginning"}]
@@ -489,7 +495,7 @@ senses:
   wait: [{pos: VERB, sense: "to stay until something happens or someone comes"}]
   stay: [{pos: VERB, sense: "to remain in a place; to live somewhere for a short time"}]
   leave: [{pos: VERB, sense: "to go away from a place"}]
-  live: [{pos: VERB, sense: "to have your home in a place; to be alive"}]
+  live: [{pos: VERB, sense: "to have your home in a place; to be alive", ipa_us: "/ˈlɪv/"}]
   die: [{pos: VERB, sense: "to stop living"}]
   meet: [{pos: VERB, sense: "to see and talk to someone, by plan or by chance"}]
   visit: [{pos: VERB, sense: "to go to see a person or a place"}, {pos: NOUN, sense: "a short stay with a person or in a place"}]
@@ -540,7 +546,9 @@ senses:
   include: [{pos: VERB, sense: "to have something as a part"}]
   provide: [{pos: VERB, sense: "to give something that is needed"}]
   increase: [{pos: VERB, sense: "to become or make bigger in number or amount"}]
-  record: [{pos: VERB, sense: "to store sound or pictures so you can play them later"}]
+  record:
+    - {pos: VERB, sense: "to store sound or pictures so you can play them later",
+       ipa_uk: "/ɹɪˈkɔːd/"}
   focus: [{pos: VERB, sense: "to give all your attention to something"}]
   consider: [{pos: VERB, sense: "to think carefully about something"}]
   cause: [{pos: VERB, sense: "to make something happen"}]
@@ -679,7 +687,7 @@ senses:
   degree: [{pos: NOUN, sense: "a unit for measuring temperature (20 degrees)"}]
   detail: [{pos: NOUN, sense: "a small fact or piece of information"}]
   laugh: [{pos: VERB, sense: "to make sounds because something is funny"}]
-  subject: [{pos: NOUN, sense: "a topic; a school subject like maths"}]
+  subject: [{pos: NOUN, sense: "a topic; a school subject like maths", ipa_us: "/ˈsʌbd͡ʒɪkt/"}]
   straight: [{pos: ADV, sense: "directly, without turning (go straight on)"}, {pos: ADJ, sense: "not bent or curved"}]
   purpose: [{pos: NOUN, sense: "the reason why you do something"}]
   machine: [{pos: NOUN, sense: "a piece of equipment that does a job, like a washing machine"}]
