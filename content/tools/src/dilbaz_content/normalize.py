@@ -35,7 +35,11 @@ class NormalizationRules(BaseModel):
     punctuation: str = ""
     words: dict[str, str] = Field(default_factory=dict)
     endings: dict[str, str] = Field(default_factory=dict)
+    # Sign → (singular, plural) word: "$30" is "30 dollars".
+    currency: dict[str, tuple[str, str]] = Field(default_factory=dict)
     spellings: dict[str, str] = Field(default_factory=dict)
+    # Whole phrases after the words are expanded ("he's got" → "he is got" → "he has got").
+    phrases: dict[str, str] = Field(default_factory=dict)
     numbers: NumberWords | None = None
     tests: tuple[tuple[str, str], ...] = ()
 
@@ -59,9 +63,13 @@ class Normalizer:
         cleaned = text.lower().translate(self._apostrophes).translate(self._punctuation)
         expanded = " ".join(self._expand(word) for word in cleaned.split())
         spelled = " ".join(self._spell(word) for word in expanded.split())
-        return " ".join(self._number(word) for word in spelled.split())
+        return " ".join(self._number(word) for word in self._phrase(spelled).split())
 
     def _expand(self, word: str) -> str:
+        sign, amount = word[:1], word[1:]
+        if sign in self.rules.currency and amount.isdigit():
+            one, many = self.rules.currency[sign]
+            return f"{amount} {one if amount == '1' else many}"
         if word in self.rules.words:
             return self.rules.words[word]
         for ending, replacement in self.rules.endings.items():
@@ -72,6 +80,12 @@ class Normalizer:
     def _spell(self, word: str) -> str:
         word = self.rules.spellings.get(word, word)
         return word.replace("'", "").replace("-", " ")
+
+    def _phrase(self, text: str) -> str:
+        padded = f" {text} "
+        for phrase, replacement in self.rules.phrases.items():
+            padded = padded.replace(f" {phrase} ", f" {replacement} ")
+        return padded.strip()
 
     def _number(self, word: str) -> str:
         if not word.isdigit() or self.rules.numbers is None:

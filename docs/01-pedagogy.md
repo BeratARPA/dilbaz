@@ -104,6 +104,7 @@ Her ilke: **ne diyor → kanıt → Dilbaz'da nasıl uygulanır → ilgili kural
   | H4 | Doğru cevap | "I have a problem with my key." |
 
   Merdiven tek bir LLM çağrısıyla üretilir, istemci adım adım açar. H4 ancak son adımda ya da kullanıcı açıkça "göster" derse görünür. Akıcılık ve konuşma görevlerinde geri bildirim **görev bitince** verilir (araya girilmez) ve en fazla 3 düzeltmeyle sınırlıdır.
+- **Doğru ama hedef değil:** Türkçede tek kelimeyle karşılanan eş anlamlıları istem ayıramaz (hediye: present/gift, emin: sure/certain). Böyle bir cevabı reddetmek adaletsiz olur (I-17). Hedefi kanıtsız doğru saymak ise ilerlemeyi şişirir (I-04, I-05). Bu yüzden cevap hata sayılmaz, hedefin kanıtı da sayılmaz. Öğrenciye "Doğru! Bu kart başka bir kelimeyi çalışıyor, başka nasıl söylersin?" denir (`03` §0.2). Kullanıcı kararı, 2026-09-29.
 - **Kurallar:** I-01, I-02, I-11, I-17.
 
 ### P10 — Doğru zorluk (~%80–85 başarı)
@@ -222,7 +223,7 @@ Bu kurallar kod incelemesinde ve testlerde kontrol edilir. Bir kuralı esnetmek 
 | **I-14** | **Özerklik.** Planlayıcı önerir, kullanıcı seçer (en az 2 seçenek). Zorunlu etkinlik yoktur; aylık test dahil her şey davettir. |
 | **I-15** | **Dilden bağımsız motor.** `dilbaz_engine` içinde dile özgü kelime, kural, liste ya da metin yoktur. Hepsi paketlerden gelir. |
 | **I-16** | **Doğrulanmış içerik.** Pakete giren her öğe otomatik kontrollerden geçer ve kaynağı/lisansı kayıtlıdır. Kullanıcı hatalı içeriği bildirebilir. |
-| **I-17** | **Adil değerlendirme.** Doğru cevabın geçerli varyantları (başka ifade, kısaltma, eş anlamlı) kabul edilir. Referans cümleye birebir uyma zorlanmaz. |
+| **I-17** | **Adil değerlendirme.** Doğru cevabın geçerli varyantları (başka ifade, kısaltma, eş anlamlı) kabul edilir. Referans cümleye birebir uyma zorlanmaz. Hedef kelimenin eş anlamlısıyla kurulan doğru cevap da yanlış sayılmaz. Ama hedefin üretim kanıtı sayılmaz ve istem hedef için yeniden sorulur (`03` §0.2). |
 | **I-18** | **Ses verisi mahremiyeti.** Kayıtlar yalnızca sahibine açıktır. Partner yalnızca özet bilgileri görür (`14-security-privacy.md`). |
 
 ---

@@ -176,7 +176,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - `carriers`: anlam → taşıyıcılar. Her taşıyıcı ya bir Tatoeba kimliğidir (adaylar dışından da olabilir; analiz önbelleğinden okunur) ya da Claude Code oturumunda yazılmış kendi cümlemizdir (`license: own`).
 - **Belirsiz anlamlar:** Aynı lemma ve sözcük türünde birden çok seçili anlam varsa (right: doğru/sağ, too: de/fazla, free: bedava/boş, letter: mektup/harf) etiketleyici ikisini ayıramaz. Bu anlamlar otomatik taşıyıcı almaz; küratörlük seçer, seçilmezse derleme durur. Böyle bir kelime cümlede yalnızca seçildiği anlama bağlanır.
 - **Cümle kaydı:** Her cümle analiz edilir; seviye (kelimeler, paket kodları, paket dışı yapılar), lemmalar, içerdiği bütün seçili anlamlar (`targets`), gramer kodları ve kaynak (Tatoeba kimliği, lisans, yazar) yazılır. Anahtar metinden türetilir; aynı anahtara düşen ikinci metin yakın tekrar sayılır.
-- **Gramer etiketleyici:** spaCy'nin Penn etiketleri ve lemmalarıyla çalışan kurallar. Kural emin değilse kod vermez. "I've got to go" zorunluluk sayılır (`gp.modals.obligation`), "have got" değil.
+- **Gramer etiketleyici:** spaCy'nin Penn etiketleri ve lemmalarıyla çalışan kurallar. Kural emin değilse kod vermez. "I've got to go" zorunluluk sayılır (`gp.modals.obligation`), "have got" değil. Cümle başındaki "Don't …" soru değilse emirdir, geniş zaman olumsuzu değil. "in the afternoon", "on Sundays" zaman edatıdır.
 - **Kontroller (§5.1):**
   - Engelleyici: sözlükte olmayan kelime, paket seviyesini aşma, hedefin seviyesini aşma, uzunluk, hedef anlamın cümlede olmaması, uygunsuz kelime, biçim (tırnak, iki cümle), seçilmemiş belirsiz anlam.
   - Uyarı: yakın tekrar; bağımsız doğrulamadan geçmemiş cümle (§5.2).
@@ -259,22 +259,38 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 
 - **Küratörlük dosyaları** (`curation/tr-en/`, Claude Code oturumlarında yazılır):
   - `word_senses.yaml`: anlam başına Türkçe karşılıklar (`meaning`, olağan olan önce) ve isteğe bağlı kullanım notu (`note`).
-  - `chunks.yaml`: kalıbın Türkçesi (kartın istemi), bağlam, not ve varyantlar.
-  - `sentences.yaml`: cümlenin istemi (`turkish`; kendi cümlelerimizde zorunlu), bağlam ve varyantlar.
+  - `chunks.yaml`: kalıbın Türkçesi (kartın istemi), bağlam, not, varyantlar ve alternatifler.
+  - `sentences.yaml`: cümlenin istemi (`turkish`; kendi cümlelerimizde zorunlu), bağlam, varyantlar ve alternatifler.
+  - **Varyant ile alternatifin farkı** (`03` §0.2): Varyant, hedefi söyleyen başka bir doğru cevaptır ("I've got a job."). Alternatif, hedefi söylemeyen doğru cevaptır ("Here's a gift for you.", present kartında): hata sayılmaz, hedef için yeniden sorulur. Kalıplarda kalıbın kendi kelimelerini koruyan küçük farklar (kısaltma, please/so/very, sıra, it/this/that, can/could/may) varyanttır. Aynı işi başka kelimelerle gören ifade alternatiftir ("My pleasure.", You're welcome kartında).
   - `grammar.yaml`: gramer kodu başına Türkçe ad, açıklama ve H3 kural notu (`rule`).
   - `contrasts.yaml`, `error_tags.yaml`.
 - **Cümle istemi sırası:** küratörlüğün Türkçesi → doğrulamanın düzeltmesi (`turkish_fix`, Tatoeba çevirisi yanlışsa; §5.2) → ilk Tatoeba çevirisi (kimliği, CC BY 2.0 FR lisansı ve çevirmen atfıyla).
-- **Normalizasyon:** Varyantlar, cevaplar gibi `packs/<l2>/normalization.yaml` kurallarıyla karşılaştırılır (`03` §0.5). Motor aynı dosyayı kullanır (F1-07); dosyadaki `tests` örneklerini iki uygulama da geçmelidir.
+- **Normalizasyon:** Varyantlar, cevaplar gibi `packs/<l2>/normalization.yaml` kurallarıyla karşılaştırılır (`03` §0.5). Motor aynı dosyayı kullanır (F1-07); dosyadaki `tests` örneklerini iki uygulama da geçmelidir. Kelime kurallarından sonra kalıp ifadeler düzeltilir ("he's got" → "he has got"), para birimi yazıya çevrilir ("$30" → "thirty dollars").
 - **Engelleyici kontroller** (çıkış kodu 1):
   - `missing_gloss`: Hedef paketteki her anlamın, kalıbın ve gramer noktasının karşılığı vardır.
   - `unknown_key`: Küratörlük pakette olmayan bir öğeyi anmaz.
   - `missing_prompt`: Her cümlenin istemi vardır.
-  - `variant_missing_target`: Varyant, cümlenin taşıyıcısı olduğu her anlamın kelimesini hâlâ içerir ("The film was too long.", `movie` kartında reddedilir). Etiketleyici kelimeyi başka bir sözcük türü sayarsa ("I don't feel well." içinde well zarf) lemma eşleşmesi yeter.
-  - `prompt_clash`: Aynı istemi paylaşan kartlar birbirinin referans cevabını kabul eder. Büyük/küçük harf ve noktalama istemleri ayırmaz, bağlam ayırır. Aksi hâlde öğrenci hangi cevabın beklendiğini bilemez ve LLM'siz değerlendirme doğru cevabı reddeder.
-  - `rule_note_leak`: H3 notu, o gramer noktasını kullanan hiçbir kartın cevabını (normalize edilmiş hâliyle) içermez (I-02).
+  - `variant_missing_target`: Varyant, cümlenin taşıyıcısı olduğu her anlamın kelimesini hâlâ içerir ("The film was too long.", `movie` kartında reddedilir; bu cevap alternatiftir).
+    - Kelime herhangi bir biçimde olabilir. Biçimler S1 sözlüğünden gelir, çalışma anındaki biçim tablosu gibi ("good at singing" → sing).
+    - Etiketleyici kelimeyi başka bir sözcük türü sayarsa lemma eşleşmesi yeter ("I don't feel well." içinde well zarf).
+    - Tireli kelimenin parçası sayılmaz ("snow-covered").
+  - `alternative_has_target`: Alternatif, hedeflerden en az birini söylemez. Aynı ölçüyle hedefi söyleyen cevap varyanttır; öğrenciye söylediği kelime yeniden sorulmaz.
+  - `prompt_clash`: Aynı istemi paylaşan kartlar birbirinin referans cevabını varyant ya da alternatif olarak kabul eder. Büyük/küçük harf ve noktalama istemleri ayırmaz, bağlam ayırır. Aksi hâlde öğrenci hangi cevabın beklendiğini bilemez ve LLM'siz değerlendirme doğru cevabı reddeder.
+  - `rule_note_leak`: H3 notu, o gramer noktasını kullanan hiçbir kartın cevabını içermez. Notun "a → b" örneklerinin sağ tarafı da bu kartların cevabında geçmez: "go → went", "I went to see a show today." kartının fiilini verir (I-02).
   - `unknown_grammar_code`: Hata etiketlerinin gramer kodları pakette vardır.
-- **Uyarı:** `duplicate_variant`, yani normalizasyondan sonra referansla ya da başka bir varyantla aynı olan varyant. Atılır.
+- **Uyarı:** `duplicate_variant`, yani normalizasyondan sonra referansla, başka bir varyantla ya da alternatifle aynı olan cevap. Atılır.
 - **Çıktılar:** `packs/tr-en/{glosses,variants,rule_notes,contrast_notes,error_tags}.jsonl`, `work/pair.tr-en.report.json`.
+- **Bağımsız inceleme:** Yazan oturumdan ayrı beş ajan oturumu içeriği yazım gerekçelerini görmeden inceledi. Bir oturum 600 anlamı, üçü 588 cümleyi, biri kalıpları, gramer notlarını, karşıtlıkları ve etiketleri aldı. Her oturum şunlara baktı:
+  - Türkçenin doğruluğu
+  - istemin hedef kelimeye götürüp götürmediği
+  - yanlış ve eksik varyantlar
+  - notların doğruluğu
+  - H3 sızıntısı
+
+  Öneriler tek tek değerlendirildi (`content/reports/2026-09-29-tr-en1-pair-qa.md`).
+- **İlk sonuç (2026-09-29):**
+  - Karşılıklar: 600 anlam, 120 kalıp, 588 cümle istemi, 40 gramer noktası. İstemlerin kaynağı: 364 Tatoeba, 166 küratörlük, 58 doğrulama düzeltmesi.
+  - 601 kartta varyant, 274 alternatif, 34 karşıtlık notu, 45 hata etiketi. Engelleyici sorun yok.
 
 ## 7. Kişisel öğeler
 

@@ -139,6 +139,14 @@ OWN_TOKENS: dict[str, tuple[Token, ...]] = {
         ("TV", "tv", "NOUN", "NN"),
         PERIOD,
     ),
+    # A tagger slip: "watching" read as a noun, with itself as lemma.
+    "We love watching TV.": (
+        ("We", "we", "PRON", "PRP"),
+        ("love", "love", "VERB", "VBP"),
+        ("watching", "watching", "NOUN", "NN"),
+        ("TV", "tv", "NOUN", "NN"),
+        PERIOD,
+    ),
     # A tagger slip: "watch" read as a noun.
     "We all watch TV.": (
         ("We", "we", "PRON", "PRP"),

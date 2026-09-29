@@ -71,7 +71,7 @@ Dal: `faz-1`
   - Tatoeba adayları + Claude Code oturumlarında üretim (ADR-0009)
   - Üretenden ayrı oturumda doğrulama geçişi (`10` §5.2)
   - QA raporu; 👤 20 örneklik inceleme
-- [ ] **F1-04** S5 tr-en:
+- [x] **F1-04** S5 tr-en:
   - Karşılıklar, açıklamalar, karşıtlık notları
   - Geniş varyant listeleri ve H3 kural notları (LLM'siz değerlendirmenin temeli, ADR-0009 §2)
   - ~30 etiketlik hata kataloğu (`10` §6)
@@ -84,7 +84,7 @@ Dal: `faz-1`
 
 ### Motor
 - [ ] **F1-06** FSRS adaptörü + otomatik puan (`03` §0.3) + `card_state_after`.
-- [ ] **F1-07** `LanguageServices` (normalize/tokenize/lemma) + deterministik değerlendirme (`03` §0.5: eşleşme, hizalama, şablonlu merdiven) + varyantlar. Sentetik dil testleri.
+- [ ] **F1-07** `LanguageServices` (normalize/tokenize/lemma; `normalization.yaml`'ın `tests` örnekleri dahil) + deterministik değerlendirme (`03` §0.5: eşleşme, hizalama, şablonlu merdiven) + varyantlar ve alternatifler (hedefsiz doğru cevap → yeniden sorma, `03` §0.2–0.3). Sentetik dil testleri.
 - [ ] **F1-08** Öğrenci modeli v1:
   - L1 kart hafızası; L2 düzeyleri (new/learning/recallable/durable)
   - X_Lex puanlama, bant olasılıkları, kişisel kapsama (`06` §2)
@@ -298,3 +298,4 @@ Dal: `faz-7`
 | 2026-09-27 | 1 | F1-02 | 👤 Sohbet çantası onaylandı: 120 kalıp, değişiklik yok. Gramer noktaları CEFR-J Grammar Profile (Core Inventory ve EGP sütunlarıyla) karşılaştırılarak yeniden seviyelendi: A0 8, A1 22, A2 10 (`02` §5). `check` isminin açıklaması A1'deki gündelik kullanımına (restoran hesabı) çevrildi. Kelime anlamları S4'ten sonra taşıyıcılarını (`carriers`) taşıyor. |
 | 2026-09-27 | 1 | F1-01 (düzeltme) | S1 İngiltere IPA'sı: Wiktextract ses notları alt kümede tutuluyor (`SLIM_VERSION` 5). Niteleyici etiketli ya da notlu söyleyişler (spelling pronunciation, in fast speech, weak form…) son çare; ses değişimi notları olağan biçim sayılıyor. Sözlükte 31 İngiltere değeri değişti (işlev sözcüklerinde güçlü biçim, 9 yeni değer), 600 anlamda 2 (breakfast, there). "breakfast"ın yazılışa göre söylenişi dökümde işaretsiz olduğundan S2 küratörlüğüne `ipa_uk`/`ipa_us` alanları eklendi. Cümleler değişmedi, S4 sorunsuz. pytest 189. |
 | 2026-09-27 | 1 | F1-03 (doğrulama) | Bağımsız doğrulama (`10` §5.2): üretim gerekçelerini görmeyen ayrı ajan oturumları 587 cümleyi puanladı, 523'ü kabul edildi. Reddedilen 64'ün yerine gelenler 2. ve 3. turda doğrulandı (69'da 65 kabul). Paketteki 588 cümlenin hepsi doğrulanmış (`curation/en/sentences.validation.jsonl`); S4, kabul kaydı olmayan cümleyi raporluyor (I-16). `wish` ve `need` açıklamaları düzeltildi. 65 Tatoeba çevirisinin düzeltmesi S5'e kaldı. QA raporu: `content/reports/2026-09-27-en1-sentences-qa.md`. pytest 190. 👤 20 örneklik inceleme bekleniyor. |
+| 2026-09-29 | 1 | F1-04 | S5 `pair`: 600 anlam, 120 kalıp, 40 gramer noktası ve 588 cümle istemi Türkçeleştirildi (istemler: 364 Tatoeba, 166 küratörlük, 58 doğrulama düzeltmesi). Varyantlar hedef kelimeyi içeriyor (cümlelerde 1.206, kalıplarda 153). Hedefsiz doğru cevaplar `alternatives` listesinde (274): 👤 kararıyla hata sayılmaz, hedef için yeniden sorulur (`01` I-17, `03` §0.2). 40 H3 notu, 34 karşıtlık notu, 45 hata etiketi var. Normalizasyon veri olarak tutuluyor (`packs/en/normalization.yaml`: kısaltma, yazım, sayı, para birimi, "he's got"). Kontroller: karşılık eksikliği, hedefsiz varyant, hedefli alternatif, aynı istemde ortak cevap, H3 sızıntısı ("go → went" dahil). Beş ayrı ajan oturumunun bağımsız incelemesi uygulandı. Yan düzeltmeler: ride taşıyıcısı "Can you ride a bike?" oldu (4. tur doğrulama); etiketleyici olumsuz emri ve zaman edatını doğru tanıyor; eşleştirici "Mondays"ı buluyor. QA raporu: `content/reports/2026-09-29-tr-en1-pair-qa.md`. pytest 238. |

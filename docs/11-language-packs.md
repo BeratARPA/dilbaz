@@ -42,7 +42,7 @@ content/packs/tr-en/
   glosses.jsonl            # item_key → meaning, explanation, usage_note, context (cümle/kalıp istemi)
   contrast_notes.jsonl
   error_tags.jsonl         # code, category, severity, description, examples, grammar_codes, pron_map
-  variants.jsonl           # item_key → kabul edilebilir varyantlar
+  variants.jsonl           # item_key → varyantlar (hedefi söyleyen doğru cevaplar) ve alternatifler (hedefsiz doğru cevaplar, `03` §0.2)
   rule_notes.jsonl         # gramer kodu → H3 kural notu (cevabı içermez, I-02)
   can_do_summaries.jsonl
   task_instructions.jsonl
@@ -93,8 +93,11 @@ created_at: 2026-10-…
 { "key": "en.sent.do_you_have_a_room", "meaning": "Odanız var mı?", "context": "otelde",
   "provenance": { "source": "dilbaz curation", "license": "own" } }
 
-// tr-en/variants.jsonl: normalizasyondan sonra referanstan farklı, hedef kelimeyi içeren cevaplar
+// tr-en/variants.jsonl: normalizasyondan sonra referanstan farklı cevaplar.
+// variants hedef kelimeyi içerir; alternatives içermez: doğru sayılır, hedef için yeniden sorulur.
 { "key": "en.sent.i_have_a_job", "variants": ["I've got a job."], "provenance": { … } }
+{ "key": "en.sent.here_s_a_present_for_you", "variants": ["This is a present for you."],
+  "alternatives": ["Here's a gift for you."], "provenance": { … } }
 
 // tr-en/rule_notes.jsonl
 { "code": "gp.be.present", "note": "Cümlede be olmalı: I ile am, he/she/it ile is, you/we/they ile are.",

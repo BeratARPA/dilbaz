@@ -113,11 +113,11 @@ Input = { ctx, item: { key, prompt_l1, reference_l2, variants: string[], target_
 
 Output = {
   verdict: "correct"|"acceptable_variant"|"minor_error"|"wrong"|"off_target"|"unintelligible"|"uncertain",
-  target_ok: boolean,                      // hata hedef öğeye mi dokunuyor?
+  target_ok: boolean,                      // hata hedef öğeye mi dokunuyor? acceptable_variant'ta: hedef kelime cevapta mı?
   error_tags: string[],                    // kapalı listeden
   error_spans: { start: number, end: number, tag: string }[],   // response.text içinde karakter aralığı
   ladder: { h1: string, h2: string, h3: string, h4: string },   // h4 = düzeltilmiş tam cümle
-  variant_to_learn: string | null,         // acceptable_variant ise kişisel varyant olarak eklenir
+  variant_to_learn: string | null,         // acceptable_variant ise kişisel varyant (target_ok=false ise kişisel alternatif) olarak eklenir
   confidence: number                       // 0..1
 }
 ```
@@ -127,6 +127,7 @@ Output = {
 - h1: yalnızca hata türü. h2: yalnızca yer. h3: kural. **h1–h3, düzeltilmiş hedef parçayı içeremez.** Sunucu normalize edilmiş dize kontrolü yapar; ihlalde merdiven yeniden istenir ya da h1–h3 genel şablonlarla değiştirilir.
 - A seviyelerinde açıklamalar Türkçe ve en fazla 20 kelimedir.
 - Anlamı koruyan doğal ifadeler reddedilmez (I-17). Emin değilse `uncertain` döner.
+- Hedef kelimenin yerine eş anlamlısını kullanan doğru cevap `acceptable_variant` ve `target_ok=false` döner. Bu durumda merdiven boştur ve istemci hedef için yeniden sorar (`03` §0.2).
 
 ### 4.2 `speaking_annotate` — konuşma transkripti işaretleme (A11, A13 debrief girişi, A15, A21, A23)
 

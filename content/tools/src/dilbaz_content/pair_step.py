@@ -9,11 +9,13 @@ sessions into `curation/<l1>-<l2>/` and checked here before they become
 - a sentence's prompt is its curated translation, else the validated Tatoeba
   translation, or the validation's fix when that translation was wrong;
 - variants are normalized as answers are (docs/03 §0.5), deduplicated, and
-  still contain every sense the sentence is a carrier of;
+  still contain the word of every sense the sentence is a carrier of;
+- alternatives are correct answers without a target word ("gift" for
+  "present"): not an error, but the learner is asked again (docs/03 §0.2);
 - cards with the same prompt accept each other's answer, or the learner
   cannot know which one is meant;
 - a grammar point's rule note (the H3 hint) holds no answer of a sentence that
-  uses the point (I-02);
+  uses the point, nor the result of one of its "a → b" examples (I-02);
 - contrast notes and error tags name existing items and grammar codes.
 """
 
@@ -30,10 +32,11 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from dilbaz_content.analysis import Analyzer, Translation
-from dilbaz_content.carriers import SenseMatcher
+from dilbaz_content.carriers import SenseMatcher, hyphenated
 from dilbaz_content.carriers_step import read_word_senses
 from dilbaz_content.items import Chunk, GrammarPoint, Provenance, Sentence
 from dilbaz_content.normalize import NORMALIZATION_FILE, Normalizer
+from dilbaz_content.select_step import read_lexicon
 from dilbaz_content.sentences_step import TURKISH_FILE, VALIDATION_FILE, read_validation
 
 REPORT_FILE = "pair.{pair}.report.json"
@@ -61,7 +64,11 @@ class ChunkEntry(BaseModel):
     note: str | None = None
     # Shown with the prompt ("to a friend", "formal").
     context: str | None = None
+    # The chunk's own words with small changes ("Thank you so much.").
     variants: tuple[str, ...] = ()
+    # The same function in other words ("My pleasure." for "You're welcome."):
+    # not an error, but asked again for the chunk (docs/03 §0.2).
+    alternatives: tuple[str, ...] = ()
 
 
 class SentenceEntry(BaseModel):
@@ -73,6 +80,9 @@ class SentenceEntry(BaseModel):
     turkish: str | None = Field(default=None, min_length=1)
     context: str | None = None
     variants: tuple[str, ...] = ()
+    # Correct answers without a target word ("Here's a gift for you." on the
+    # "present" card): not an error, but asked again for the target.
+    alternatives: tuple[str, ...] = ()
 
 
 class GrammarEntry(BaseModel):
@@ -133,7 +143,9 @@ class Variants(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     key: str
-    variants: tuple[str, ...]
+    variants: tuple[str, ...] = ()
+    # Correct, but without a target word: asked again for it (docs/03 §0.2).
+    alternatives: tuple[str, ...] = ()
     provenance: Provenance
 
 
@@ -168,6 +180,7 @@ IssueKind = Literal[
     "unknown_key",
     "missing_prompt",
     "variant_missing_target",
+    "alternative_has_target",
     "prompt_clash",
     "rule_note_leak",
     "unknown_grammar_code",
@@ -180,6 +193,7 @@ BLOCKING: frozenset[str] = frozenset(
         "unknown_key",
         "missing_prompt",
         "variant_missing_target",
+        "alternative_has_target",
         "prompt_clash",
         "rule_note_leak",
         "unknown_grammar_code",
@@ -204,6 +218,7 @@ class PairReport(BaseModel):
 
     glosses: dict[str, int]
     variants: int
+    alternatives: int
     rule_notes: int
     contrast_notes: int
     error_tags: int
@@ -228,6 +243,17 @@ def _jsonl[T: BaseModel](path: Path, model: type[T]) -> tuple[T, ...]:
         raise FileNotFoundError(f"{path} is missing")
     with path.open(encoding="utf-8") as stream:
         return tuple(model.model_validate_json(line) for line in stream if line.strip())
+
+
+def lemmas_of_forms(path: Path) -> dict[str, set[str]]:
+    """Inflected form → lemmas from S1's lexicon, as the runtime's forms table (docs/11 §6)."""
+    if not path.is_file():
+        return {}
+    found: dict[str, set[str]] = {}
+    for entry in read_lexicon(path):
+        for form in entry.forms:
+            found.setdefault(form.lower(), set()).add(entry.lemma)
+    return found
 
 
 def read_translations(path: Path) -> dict[str, tuple[Translation, ...]]:
@@ -295,9 +321,10 @@ def _variants(
     reference: str,
     given: Iterable[str],
     normalize: Normalizer,
+    taken: Iterable[str] = (),
 ) -> tuple[tuple[str, ...], list[Issue]]:
-    """Variants without duplicates (after normalization) of each other and the reference."""
-    seen = {normalize(reference)}
+    """Answers without duplicates (after normalization) of each other, the reference and [taken]."""
+    seen = {normalize(reference), *map(normalize, taken)}
     kept: list[str] = []
     issues: list[Issue] = []
     for variant in given:
@@ -310,12 +337,28 @@ def _variants(
     return tuple(kept), issues
 
 
+class _Check(NamedTuple):
+    key: str
+    text: str
+    targets: tuple[str, ...]
+    alternative: bool
+
+
 class _Card(NamedTuple):
     key: str
     reference: str
+    # Every accepted answer: variants and alternatives.
     variants: tuple[str, ...]
     # As the learner reads it: case and punctuation do not tell cards apart.
     prompt: tuple[str, str]
+
+
+_EXAMPLE = re.compile(r"→\s*([^,;:.()→]+)")
+
+
+def _shown_forms(rule: str) -> list[str]:
+    """What the rule's "a → b" examples show: "go → went" shows "went"."""
+    return [form.strip() for form in _EXAMPLE.findall(rule) if form.strip()]
 
 
 def _prompt_key(meaning: str, context: str | None) -> tuple[str, str]:
@@ -380,6 +423,7 @@ def run_pair(
     variants: list[Variants] = []
     counts: Counter[str] = Counter()
     cards: list[_Card] = []
+    alternatives = 0
     for sense in senses:
         entry = curation.senses.get(sense.key)
         if entry is not None:
@@ -403,17 +447,24 @@ def run_pair(
         counts["chunks"] += 1
         kept, found = _variants(chunk.key, chunk.text, chunk_entry.variants, normalize)
         issues += found
-        if kept:
-            variants.append(Variants(key=chunk.key, variants=kept, provenance=_OWN))
+        others, found = _variants(
+            chunk.key, chunk.text, chunk_entry.alternatives, normalize, taken=kept
+        )
+        issues += found
+        if kept or others:
+            variants.append(
+                Variants(key=chunk.key, variants=kept, alternatives=others, provenance=_OWN)
+            )
+            alternatives += len(others)
         prompt = _prompt_key(chunk_entry.meaning, chunk_entry.context)
-        cards.append(_Card(chunk.key, chunk.text, kept, prompt))
+        cards.append(_Card(chunk.key, chunk.text, (*kept, *others), prompt))
 
     carriers_of: dict[str, list[str]] = {}
     for sense in senses:
         for sentence_key in sense.carriers:
             carriers_of.setdefault(sentence_key, []).append(sense.key)
     prompts: Counter[str] = Counter()
-    pending_checks: list[tuple[str, str, tuple[str, ...]]] = []
+    checks: list[_Check] = []
     for sentence in sentences:
         sentence_entry = curation.sentences.get(sentence.key) or SentenceEntry()
         decision = decisions.get(sentence.key)
@@ -443,28 +494,47 @@ def run_pair(
         counts["sentences"] += 1
         kept, found = _variants(sentence.key, sentence.text, sentence_entry.variants, normalize)
         issues += found
+        others, found = _variants(
+            sentence.key, sentence.text, sentence_entry.alternatives, normalize, taken=kept
+        )
+        issues += found
         prompt = _prompt_key(meaning, sentence_entry.context)
-        cards.append(_Card(sentence.key, sentence.text, kept, prompt))
-        if kept:
-            variants.append(Variants(key=sentence.key, variants=kept, provenance=_OWN))
-            required = tuple(carriers_of.get(sentence.key, ()))
-            pending_checks.extend((sentence.key, variant, required) for variant in kept)
+        cards.append(_Card(sentence.key, sentence.text, (*kept, *others), prompt))
+        if kept or others:
+            variants.append(
+                Variants(key=sentence.key, variants=kept, alternatives=others, provenance=_OWN)
+            )
+            alternatives += len(others)
+        targets = tuple(carriers_of.get(sentence.key, ()))
+        if targets:
+            checks += [_Check(sentence.key, text, targets, alternative=False) for text in kept]
+            checks += [_Check(sentence.key, text, targets, alternative=True) for text in others]
     issues += _clashes(cards, normalize)
 
-    # A variant must still say what the card teaches: the target's word, also
-    # where the tagger reads it as another part of speech ("I don't feel well").
-    if any(required for _, _, required in pending_checks):
+    # A variant must still say every target's word, in any form and also where
+    # the tagger reads it as another part of speech ("I don't feel well", "good
+    # at singing"); an alternative must lack one of them, or the learner is
+    # asked again for a word already said.
+    if checks:
         matcher = SenseMatcher(senses)
         lemma_of = {s.key: s.lemma for s in senses}
-        checked = [(key, text, required) for key, text, required in pending_checks if required]
-        analyzed = analyzer().analyze(text for _, text, _ in checked)
-        for (key, text, required), tokens in zip(checked, analyzed, strict=True):
+        forms = lemmas_of_forms(content_dir / "work" / f"lexicon.{l2}.jsonl")
+        analyzed = analyzer().analyze(check.text for check in checks)
+        for check, tokens in zip(checks, analyzed, strict=True):
             hits = matcher.hits(tokens)
-            words = {word for token in tokens for word in (token[0].lower(), token[1])}
-            missing = sorted(k for k in set(required) if k not in hits and lemma_of[k] not in words)
-            if missing:
-                detail = f"{text} (lacks {', '.join(missing)})"
-                issues.append(Issue(key=key, kind="variant_missing_target", detail=detail))
+            words = {
+                word
+                for index, (text, lemma, _, _) in enumerate(tokens)
+                if not hyphenated(tokens, index)
+                for word in (text.lower(), lemma, *forms.get(text.lower(), ()))
+            }
+            said = {k for k in check.targets if k in hits or lemma_of[k] in words}
+            if check.alternative and said == set(check.targets):
+                detail = f"{check.text} (has {', '.join(sorted(said))})"
+                issues.append(Issue(key=check.key, kind="alternative_has_target", detail=detail))
+            elif not check.alternative and said != set(check.targets):
+                detail = f"{check.text} (lacks {', '.join(sorted(set(check.targets) - said))})"
+                issues.append(Issue(key=check.key, kind="variant_missing_target", detail=detail))
 
     rule_notes: list[RuleNote] = []
     for point in points:
@@ -482,10 +552,19 @@ def run_pair(
         counts["grammar_points"] += 1
         rule_notes.append(RuleNote(code=point.code, note=grammar_entry.rule, provenance=_OWN))
         padded = f" {normalize(grammar_entry.rule)} "
+        shown = [(form, f" {normalize(form)} ") for form in _shown_forms(grammar_entry.rule)]
         for sentence in sentences:
-            if point.code in sentence.grammar and f" {normalize(sentence.text)} " in padded:
+            if point.code not in sentence.grammar:
+                continue
+            answer = f" {normalize(sentence.text)} "
+            if answer in padded:
                 detail = f"the note contains the answer {sentence.text!r}"
                 issues.append(Issue(key=point.code, kind="rule_note_leak", detail=detail))
+            # "go → went" gives away the verb of "I went to see a show today."
+            for form, normal in shown:
+                if normal in answer:
+                    detail = f"the example form {form!r} is in the answer {sentence.text!r}"
+                    issues.append(Issue(key=point.code, kind="rule_note_leak", detail=detail))
 
     item_keys = sense_keys | chunk_keys | sentence_keys | {p.key for p in points}
     contrast_notes: list[ContrastNote] = []
@@ -507,6 +586,7 @@ def run_pair(
     report = PairReport(
         glosses=dict(counts),
         variants=_write(out / "variants.jsonl", variants),
+        alternatives=alternatives,
         rule_notes=_write(out / "rule_notes.jsonl", rule_notes),
         contrast_notes=_write(out / "contrast_notes.jsonl", contrast_notes),
         error_tags=_write(out / "error_tags.jsonl", error_tags),

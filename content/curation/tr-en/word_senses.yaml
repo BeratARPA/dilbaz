@@ -8,7 +8,7 @@
 # session (ADR-0009); license: own.
 
 # food and drink
-en.ws.breakfast.n.1: {meaning: "kahvaltı"}
+en.ws.breakfast.n.1: {meaning: "kahvaltı", note: "Kahvaltı yapmak: have breakfast; make breakfast kahvaltı hazırlamaktır."}
 en.ws.lunch.n.1: {meaning: "öğle yemeği"}
 en.ws.dinner.n.1: {meaning: "akşam yemeği", note: "Günün ana yemeği; genelde akşam yenir."}
 en.ws.coffee.n.1: {meaning: "kahve"}
@@ -17,13 +17,13 @@ en.ws.bread.n.1: {meaning: "ekmek", note: "Sayılamaz: a bread değil, some brea
 en.ws.milk.n.1: {meaning: "süt"}
 en.ws.egg.n.1: {meaning: "yumurta"}
 en.ws.apple.n.1: {meaning: "elma"}
-en.ws.fruit.n.1: {meaning: "meyve"}
+en.ws.fruit.n.1: {meaning: "meyve", note: "Genel anlamda çoğunlukla sayılamaz: I eat a lot of fruit."}
 en.ws.vegetable.n.1: {meaning: "sebze"}
 en.ws.chicken.n.1: {meaning: "tavuk", note: "Hem hayvan hem et; yemek olarak a olmadan: I eat chicken."}
 en.ws.meat.n.1: {meaning: "et"}
 en.ws.fish.n.1: {meaning: "balık", note: "Çoğulu da çoğunlukla fish'tir."}
 en.ws.rice.n.1: {meaning: "pirinç, pilav"}
-en.ws.cake.n.1: {meaning: "kek, pasta"}
+en.ws.cake.n.1: {meaning: "kek, pasta", note: "İngilizcedeki pasta makarnadır; doğum günü pastası birthday cake."}
 en.ws.juice.n.1: {meaning: "meyve suyu"}
 en.ws.cup.n.1: {meaning: "fincan, bardak", note: "Kulplu, sıcak içecek için: a cup of coffee."}
 en.ws.glass.n.1: {meaning: "bardak", note: "Soğuk içecek için: a glass of water. glasses çoğu zaman gözlük demektir."}
@@ -49,22 +49,22 @@ en.ws.thursday.n.1: {meaning: "perşembe"}
 en.ws.friday.n.1: {meaning: "cuma"}
 en.ws.saturday.n.1: {meaning: "cumartesi"}
 en.ws.sunday.n.1: {meaning: "pazar", note: "Gün adı; pazar yeri market'tir."}
-en.ws.weekend.n.1: {meaning: "hafta sonu"}
+en.ws.weekend.n.1: {meaning: "hafta sonu", note: "Hafta sonunda: at the weekend (ABD'de on the weekend); in kullanılmaz."}
 en.ws.afternoon.n.1: {meaning: "öğleden sonra", note: "in the afternoon: öğleden sonra."}
 en.ws.evening.n.1: {meaning: "akşam", note: "in the evening: akşamları, akşam."}
 en.ws.tomorrow.adv.1: {meaning: "yarın"}
-en.ws.yesterday.adv.1: {meaning: "dün"}
+en.ws.yesterday.adv.1: {meaning: "dün", note: "Dün gece, dün akşam: last night (yesterday night değil)."}
 en.ws.birthday.n.1: {meaning: "doğum günü"}
-en.ws.holiday.n.1: {meaning: "tatil, bayram"}
+en.ws.holiday.n.1: {meaning: "tatil, bayram", note: "Tatilde: on holiday (in holiday değil); ABD'de vacation denir."}
 en.ws.winter.n.1: {meaning: "kış"}
 en.ws.spring.n.1: {meaning: "ilkbahar, bahar"}
 en.ws.autumn.n.1: {meaning: "sonbahar", note: "Amerikan İngilizcesinde fall."}
-en.ws.weather.n.1: {meaning: "hava (durumu)", note: "Soluduğumuz hava air'dir."}
+en.ws.weather.n.1: {meaning: "hava (durumu)", note: "Soluduğumuz hava air'dir. Sayılamaz: What nice weather! (a nice weather değil)."}
 en.ws.rain.n.1: {meaning: "yağmur"}
 en.ws.rain.v.1: {meaning: "yağmur yağmak", note: "Özne it: It is raining."}
 en.ws.sun.n.1: {meaning: "güneş"}
 en.ws.hot.adj.1: {meaning: "sıcak"}
-en.ws.cold.adj.1: {meaning: "soğuk"}
+en.ws.cold.adj.1: {meaning: "soğuk", note: "Üşüyorum: I'm cold. I have a cold ise nezleyim demektir."}
 en.ws.cold.n.1: {meaning: "soğuk algınlığı, nezle", note: "have a cold: nezle olmak."}
 en.ws.warm.adj.1: {meaning: "ılık, sıcak", note: "hot'tan hafif, hoş bir sıcaklık."}
 
@@ -103,7 +103,7 @@ en.ws.husband.n.1: {meaning: "koca, eş"}
 en.ws.daughter.n.1: {meaning: "kız evlat, kızı"}
 en.ws.sister.n.1: {meaning: "kız kardeş, abla"}
 en.ws.boyfriend.n.1: {meaning: "erkek arkadaş, sevgili"}
-en.ws.girlfriend.n.1: {meaning: "kız arkadaş, sevgili", note: "Arkadaşlık için çoğunlukla friend denir."}
+en.ws.girlfriend.n.1: {meaning: "kız arkadaş, sevgili", note: "Sevgili değil de yalnızca arkadaşsa friend denir."}
 en.ws.teacher.n.1: {meaning: "öğretmen"}
 en.ws.boss.n.1: {meaning: "patron, müdür"}
 
@@ -123,8 +123,8 @@ en.ws.afraid.adj.1: {meaning: "korkmuş, korkan", note: "be afraid of: -den kork
 en.ws.bored.adj.1: {meaning: "sıkılmış", note: "I'm bored: sıkıldım. boring ise sıkıcı olan şeydir."}
 en.ws.busy.adj.1: {meaning: "meşgul, yoğun"}
 en.ws.difficult.adj.1: {meaning: "zor"}
-en.ws.interesting.adj.1: {meaning: "ilginç"}
-en.ws.boring.adj.1: {meaning: "sıkıcı", note: "Sıkılan kişi bored'dır."}
+en.ws.interesting.adj.1: {meaning: "ilginç", note: "İlgilenen kişi interested'dir: I'm interested in music."}
+en.ws.boring.adj.1: {meaning: "sıkıcı", note: "Sıkılan kişi bored'dur."}
 en.ws.favorite.adj.1: {meaning: "en sevdiği, favori", note: "İngiliz yazımı favourite."}
 en.ws.funny.adj.1: {meaning: "komik", note: "Güldüren şey funny; eğlenceli olan fun."}
 en.ws.quiet.adj.1: {meaning: "sessiz, sakin"}
@@ -146,10 +146,10 @@ en.ws.fly.v.1: {meaning: "uçmak, uçakla gitmek"}
 
 # school, free time, nature
 en.ws.homework.n.1: {meaning: "ödev", note: "Sayılamaz ve do ile: do homework."}
-en.ws.exam.n.1: {meaning: "sınav"}
+en.ws.exam.n.1: {meaning: "sınav", note: "Sınava girmek: take an exam (enter değil)."}
 en.ws.lesson.n.1: {meaning: "ders"}
 en.ws.hobby.n.1: {meaning: "hobi, uğraş"}
-en.ws.sport.n.1: {meaning: "spor"}
+en.ws.sport.n.1: {meaning: "spor", note: "Spor yapmak: do sport ya da play sports (make değil)."}
 en.ws.football.n.1: {meaning: "futbol"}
 en.ws.animal.n.1: {meaning: "hayvan"}
 en.ws.cat.n.1: {meaning: "kedi"}
@@ -161,10 +161,10 @@ en.ws.flower.n.1: {meaning: "çiçek"}
 en.ws.have.v.1: {meaning: "sahip olmak, -si olmak; yemek, içmek", note: "I have a car: arabam var. have lunch: öğle yemeği yemek."}
 en.ws.do.v.1: {meaning: "yapmak", note: "İşler ve görevler için do (do homework); bir şey üretmek için make."}
 en.ws.get.v.1: {meaning: "almak, edinmek; olmak", note: "get a ticket: bilet almak. get tired: yorulmak."}
-en.ws.like.v.1: {meaning: "sevmek, hoşlanmak", note: "Beğenilen şey fiilden sonra gelir: I like coffee."}
+en.ws.like.v.1: {meaning: "sevmek, hoşlanmak", note: "Türkçedeki sevmek hem like hem love olabilir; like daha hafiftir."}
 en.ws.just.adv.1: {meaning: "az önce, yeni; sadece", note: "I just got here: az önce geldim."}
 en.ws.make.v.1: {meaning: "yapmak, hazırlamak", note: "Bir şey üretirken make (make tea, make a cake); işler için do."}
-en.ws.go.v.1: {meaning: "gitmek"}
+en.ws.go.v.1: {meaning: "gitmek", note: "Geçmiş biçimi düzensizdir: went."}
 en.ws.up.adv.1: {meaning: "yukarı, yukarıya"}
 en.ws.out.adv.1: {meaning: "dışarı, dışarıda", note: "go out: dışarı çıkmak."}
 en.ws.say.v.1: {meaning: "söylemek, demek", note: "say'den sonra kişi gelmez; kişiye söylerken tell me."}
@@ -178,7 +178,7 @@ en.ws.see.v.1: {meaning: "görmek", note: "Bakmak look at, izlemek watch."}
 en.ws.know.v.1: {meaning: "bilmek, tanımak"}
 
 # frequent words (NGSL-Spoken order)
-en.ws.also.adv.1: {meaning: "de, da, ayrıca", note: "Fiilden önce gelir: I also have a brother."}
+en.ws.also.adv.1: {meaning: "de, da, ayrıca", note: "Ana fiilden önce, be'den sonra gelir: I also have a car / I'm also tired."}
 en.ws.want.v.1: {meaning: "istemek", note: "Fiille: want to go (gitmek istemek)."}
 en.ws.now.adv.1: {meaning: "şimdi, şu an"}
 en.ws.think.v.1: {meaning: "düşünmek, sanmak", note: "I think so: sanırım öyle."}
@@ -205,13 +205,13 @@ en.ws.use.v.1: {meaning: "kullanmak"}
 en.ws.very.adv.1: {meaning: "çok", note: "Sıfat ve zarftan önce: very good. Fiille a lot: I like it a lot."}
 en.ws.much.adv.1: {meaning: "çok, fazla", note: "Çoğunlukla olumsuz cümlede ve soruda: I don't go out much."}
 en.ws.man.n.1: {meaning: "adam, erkek", note: "Çoğulu men."}
-en.ws.even.adv.1: {meaning: "bile, hatta"}
+en.ws.even.adv.1: {meaning: "bile, hatta", note: "Türkçedeki bile'nin tersine önce gelir: even on Mondays (pazartesileri bile)."}
 en.ws.give.v.1: {meaning: "vermek", note: "give me the book = give the book to me."}
 en.ws.here.adv.1: {meaning: "burada, buraya"}
 en.ws.really.adv.1: {meaning: "gerçekten, çok"}
 en.ws.too.adv.1: {meaning: "de, da", note: "Cümle sonunda: I want to go, too."}
 en.ws.too.adv.2: {meaning: "fazla, gereğinden çok", note: "Olumsuz bir anlamla: too big (fazla büyük). very ise yalnızca çok demektir."}
-en.ws.call.v.1: {meaning: "aramak (telefonla); adlandırmak", note: "call me: beni ara."}
+en.ws.call.v.1: {meaning: "aramak (telefonla); adlandırmak", note: "call me: beni ara. Kayıp bir şeyi aramak look for'dur."}
 en.ws.call.n.1: {meaning: "telefon görüşmesi, arama"}
 en.ws.play.v.1: {meaning: "oynamak; çalmak (çalgı)", note: "play football: futbol oynamak. play the guitar: gitar çalmak."}
 en.ws.show.v.1: {meaning: "göstermek"}
@@ -220,7 +220,7 @@ en.ws.life.n.1: {meaning: "hayat, yaşam"}
 en.ws.love.v.1: {meaning: "sevmek, çok sevmek, bayılmak"}
 en.ws.love.n.1: {meaning: "aşk, sevgi", note: "be in love: âşık olmak."}
 en.ws.still.adv.1: {meaning: "hâlâ"}
-en.ws.tell.v.1: {meaning: "söylemek, anlatmak", note: "tell'den sonra kişi gelir: tell me. Kişi yoksa say."}
+en.ws.tell.v.1: {meaning: "söylemek, anlatmak", note: "Ardından çoğunlukla kişi gelir (tell me); kişisiz kalıplar: tell the truth, tell a story."}
 en.ws.great.adj.1: {meaning: "harika, çok iyi; büyük"}
 en.ws.never.adv.1: {meaning: "asla, hiç", note: "Cümle zaten olumsuzdur; not eklenmez."}
 en.ws.long.adj.1: {meaning: "uzun"}
@@ -228,7 +228,7 @@ en.ws.game.n.1: {meaning: "oyun; maç"}
 en.ws.world.n.1: {meaning: "dünya"}
 en.ws.start.v.1: {meaning: "başlamak, başlatmak"}
 en.ws.start.n.1: {meaning: "başlangıç"}
-en.ws.high.adj.1: {meaning: "yüksek", note: "Fiyat, dağ ve bina için; insan boyu için tall."}
+en.ws.high.adj.1: {meaning: "yüksek", note: "Fiyat ve dağ için high; insan boyu için tall (bina için ikisi de olur)."}
 en.ws.down.adv.1: {meaning: "aşağı, aşağıya"}
 en.ws.help.v.1: {meaning: "yardım etmek", note: "Kişi doğrudan gelir: help me (bana yardım et)."}
 en.ws.help.n.1: {meaning: "yardım"}
@@ -236,7 +236,7 @@ en.ws.part.n.1: {meaning: "parça, bölüm, kısım"}
 en.ws.place.n.1: {meaning: "yer, mekân"}
 en.ws.home.n.1: {meaning: "ev, yuva", note: "Yaşanılan yer; bina olarak ev house."}
 en.ws.home.adv.1: {meaning: "eve, evde", note: "go home: eve gitmek (to gelmez)."}
-en.ws.feel.v.1: {meaning: "hissetmek"}
+en.ws.feel.v.1: {meaning: "hissetmek", note: "Kendimi … hissediyorum: I feel tired (myself kullanılmaz)."}
 en.ws.old.adj.1: {meaning: "eski; yaşlı"}
 en.ws.keep.v.1: {meaning: "tutmak, saklamak; devam etmek", note: "keep going: devam etmek."}
 en.ws.change.v.1: {meaning: "değişmek, değiştirmek"}
@@ -262,10 +262,10 @@ en.ws.win.v.1: {meaning: "kazanmak", note: "Oyun ve yarışma için win; para ka
 en.ws.family.n.1: {meaning: "aile"}
 en.ws.talk.v.1: {meaning: "konuşmak", note: "talk to someone: biriyle konuşmak."}
 en.ws.ask.v.1: {meaning: "sormak; istemek", note: "ask a question: soru sormak."}
-en.ws.become.v.1: {meaning: "olmak (bir şeye dönüşmek)"}
+en.ws.become.v.1: {meaning: "olmak, hâline gelmek"}
 en.ws.week.n.1: {meaning: "hafta"}
 en.ws.number.n.1: {meaning: "sayı, rakam; numara"}
-en.ws.guy.n.1: {meaning: "adam, çocuk (günlük dilde)"}
+en.ws.guy.n.1: {meaning: "adam (günlük dilde)"}
 en.ws.group.n.1: {meaning: "grup"}
 en.ws.friend.n.1: {meaning: "arkadaş, dost"}
 en.ws.again.adv.1: {meaning: "yine, tekrar, bir daha"}
@@ -286,7 +286,7 @@ en.ws.stop.v.1: {meaning: "durmak, durdurmak"}
 en.ws.stop.n.1: {meaning: "durak"}
 en.ws.free.adj.1: {meaning: "bedava, ücretsiz", note: "for free: bedavaya."}
 en.ws.free.adj.2: {meaning: "boş, müsait", note: "Are you free?: Müsait misin?"}
-en.ws.money.n.1: {meaning: "para", note: "Sayılamaz: much money, some money."}
+en.ws.money.n.1: {meaning: "para", note: "Sayılamaz: How much money? a lot of money."}
 en.ws.country.n.1: {meaning: "ülke"}
 en.ws.head.n.1: {meaning: "baş, kafa"}
 en.ws.night.n.1: {meaning: "gece", note: "at night: geceleri."}
@@ -294,9 +294,9 @@ en.ws.hand.n.1: {meaning: "el"}
 en.ws.area.n.1: {meaning: "bölge, alan, semt"}
 en.ws.order.v.1: {meaning: "sipariş vermek, ısmarlamak"}
 en.ws.order.n.1: {meaning: "sipariş"}
-en.ws.mean.v.1: {meaning: "anlamına gelmek, demek istemek", note: "What does it mean?: Ne demek?"}
+en.ws.mean.v.1: {meaning: "anlamına gelmek, demek", note: "What does it mean?: Ne demek?"}
 en.ws.bring.v.1: {meaning: "getirmek", note: "Buraya getirmek bring; oraya götürmek take."}
-en.ws.believe.v.1: {meaning: "inanmak"}
+en.ws.believe.v.1: {meaning: "inanmak", note: "Birine inanmak: believe me (to gelmez); varlığına inanmak: believe in."}
 en.ws.book.n.1: {meaning: "kitap"}
 en.ws.line.n.1: {meaning: "çizgi"}
 en.ws.away.adv.1: {meaning: "uzakta, uzağa", note: "five minutes away: beş dakika uzaklıkta."}
@@ -316,7 +316,7 @@ en.ws.watch.v.1: {meaning: "izlemek, seyretmek", note: "Hareketli şeyler için 
 en.ws.watch.n.1: {meaning: "kol saati", note: "Duvar saati clock'tur."}
 en.ws.different.adj.1: {meaning: "farklı"}
 en.ws.hard.adj.1: {meaning: "zor; sert"}
-en.ws.hard.adv.1: {meaning: "sıkı, çok (çalışmak)", note: "work hard: sıkı çalışmak."}
+en.ws.hard.adv.1: {meaning: "sıkı, çok (çalışmak)", note: "work hard: sıkı çalışmak. hardly ise neredeyse hiç demektir."}
 en.ws.girl.n.1: {meaning: "kız, kız çocuğu"}
 en.ws.party.n.1: {meaning: "parti, eğlence"}
 en.ws.question.n.1: {meaning: "soru", note: "ask a question: soru sormak."}
@@ -338,17 +338,17 @@ en.ws.read.v.1: {meaning: "okumak", note: "Geçmişi yazılışı aynı, söylen
 en.ws.seem.v.1: {meaning: "gibi görünmek", note: "You seem tired: yorgun görünüyorsun."}
 en.ws.hear.v.1: {meaning: "duymak", note: "Dikkatle dinlemek listen to."}
 en.ws.wait.v.1: {meaning: "beklemek", note: "Birini beklerken for gelir: wait for me."}
-en.ws.include.v.1: {meaning: "içermek, dahil etmek"}
+en.ws.include.v.1: {meaning: "içermek, dâhil etmek"}
 en.ws.word.n.1: {meaning: "kelime, sözcük"}
 en.ws.car.n.1: {meaning: "araba"}
 en.ws.today.adv.1: {meaning: "bugün"}
 en.ws.full.adj.1: {meaning: "dolu; tok", note: "I'm full: doydum."}
 en.ws.level.n.1: {meaning: "seviye, düzey"}
-en.ws.buy.v.1: {meaning: "satın almak, almak"}
+en.ws.buy.v.1: {meaning: "satın almak, almak", note: "Geçmiş biçimi bought; bring'in geçmişi brought ile karıştırmayın."}
 en.ws.already.adv.1: {meaning: "zaten, çoktan, şimdiden"}
 en.ws.enough.adv.1: {meaning: "yeterince", note: "Sıfattan sonra gelir: old enough."}
 en.ws.plan.n.1: {meaning: "plan"}
-en.ws.leave.v.1: {meaning: "ayrılmak, gitmek; bırakmak"}
+en.ws.leave.v.1: {meaning: "ayrılmak, gitmek; bırakmak", note: "Ayrılınan yer doğrudan gelir: leave the office (from gelmez)."}
 en.ws.die.v.1: {meaning: "ölmek"}
 en.ws.bad.adj.1: {meaning: "kötü"}
 en.ws.once.adv.1: {meaning: "bir kez, bir kere", note: "once a week: haftada bir."}
@@ -370,7 +370,7 @@ en.ws.far.adv.1: {meaning: "uzak, uzakta", note: "How far is it?: Ne kadar uzak?
 en.ws.follow.v.1: {meaning: "takip etmek, izlemek (arkasından gitmek)"}
 en.ws.kill.v.1: {meaning: "öldürmek"}
 en.ws.fact.n.1: {meaning: "gerçek, olgu", note: "in fact: aslında."}
-en.ws.actually.adv.1: {meaning: "aslında", note: "Anlamı güncel değil, aslında: actually ≠ aktüel."}
+en.ws.actually.adv.1: {meaning: "aslında", note: "Güncel (aktüel) anlamına gelmez; aslında demektir."}
 en.ws.program.n.1: {meaning: "program", note: "İngiliz yazımı programme (TV için)."}
 en.ws.hit.v.1: {meaning: "vurmak, çarpmak"}
 en.ws.break.v.1: {meaning: "kırmak, kırılmak; bozmak"}
@@ -388,7 +388,7 @@ en.ws.idea.n.1: {meaning: "fikir"}
 en.ws.allow.v.1: {meaning: "izin vermek"}
 en.ws.matter.v.1: {meaning: "önemli olmak", note: "It doesn't matter: önemli değil, fark etmez."}
 en.ws.matter.n.1: {meaning: "sorun, mesele", note: "What's the matter?: Ne oldu? Sorun ne?"}
-en.ws.fall.v.1: {meaning: "düşmek; (yağmur, kar) yağmak"}
+en.ws.fall.v.1: {meaning: "düşmek; (yağmur, kar) yağmak", note: "Geçmiş biçimi fell; feel'in geçmişi felt ile karıştırmayın."}
 en.ws.reason.n.1: {meaning: "sebep, neden"}
 en.ws.share.v.1: {meaning: "paylaşmak"}
 en.ws.drive.v.1: {meaning: "araba kullanmak, sürmek"}
@@ -396,9 +396,9 @@ en.ws.drive.n.1: {meaning: "araba gezintisi, yolculuk", note: "go for a drive: a
 en.ws.class.n.1: {meaning: "sınıf; ders"}
 en.ws.whole.adj.1: {meaning: "bütün, tüm"}
 en.ws.together.adv.1: {meaning: "birlikte, beraber"}
-en.ws.record.v.1: {meaning: "kaydetmek"}
-en.ws.check.v.1: {meaning: "kontrol etmek"}
-en.ws.check.n.1: {meaning: "hesap (restoranda)", note: "Amerikan İngilizcesi; İngilizler bill der. Banka çeki anlamına gelmez."}
+en.ws.record.v.1: {meaning: "kaydetmek", note: "Bilgisayarda dosya kaydetmek save'dir: save the file."}
+en.ws.check.v.1: {meaning: "kontrol etmek", note: "Kontrol etmek çoğunlukla check'tir; control yönetmek, hâkim olmak demektir."}
+en.ws.check.n.1: {meaning: "hesap (restoranda)", note: "Amerikan İngilizcesi; İngiliz İngilizcesinde bill denir."}
 en.ws.understand.v.1: {meaning: "anlamak"}
 en.ws.create.v.1: {meaning: "oluşturmak, yaratmak"}
 en.ws.list.n.1: {meaning: "liste"}
@@ -408,18 +408,18 @@ en.ws.student.n.1: {meaning: "öğrenci"}
 en.ws.maybe.adv.1: {meaning: "belki"}
 en.ws.room.n.1: {meaning: "oda"}
 en.ws.office.n.1: {meaning: "ofis, büro"}
-en.ws.offer.v.1: {meaning: "teklif etmek, önermek"}
+en.ws.offer.v.1: {meaning: "teklif etmek, önermek", note: "Fikir önermek, tavsiye etmek suggest'tir."}
 en.ws.offer.n.1: {meaning: "teklif"}
 en.ws.test.n.1: {meaning: "sınav, test"}
 en.ws.remember.v.1: {meaning: "hatırlamak, unutmamak"}
 en.ws.increase.v.1: {meaning: "artmak, artırmak"}
-en.ws.food.n.1: {meaning: "yemek, yiyecek"}
+en.ws.food.n.1: {meaning: "yemek, yiyecek", note: "Genel anlamda çoğunlukla sayılamaz: I love Turkish food."}
 en.ws.fire.n.1: {meaning: "ateş; yangın"}
 en.ws.light.n.1: {meaning: "ışık"}
 en.ws.light.adj.1: {meaning: "hafif"}
 en.ws.health.n.1: {meaning: "sağlık"}
 en.ws.important.adj.1: {meaning: "önemli"}
-en.ws.news.n.1: {meaning: "haber, haberler", note: "Sonu -s ile biter ama tekildir: the news is…"}
+en.ws.news.n.1: {meaning: "haber, haberler", note: "Sonu -s ile biter ama tekildir ve sayılamaz: the news is… (a news denmez)."}
 en.ws.cost.v.1: {meaning: "tutmak, (fiyatı) olmak", note: "It costs ten euros: on avro tutuyor."}
 en.ws.cost.n.1: {meaning: "maliyet, fiyat"}
 en.ws.center.n.1: {meaning: "merkez, orta", note: "İngiliz yazımı centre."}
@@ -437,7 +437,7 @@ en.ws.half.n.1: {meaning: "yarı, yarım"}
 en.ws.spend.v.1: {meaning: "harcamak; geçirmek (zaman)", note: "spend money: para harcamak. spend the weekend: hafta sonunu geçirmek."}
 en.ws.often.adv.1: {meaning: "sık sık, çoğu zaman"}
 en.ws.provide.v.1: {meaning: "sağlamak, vermek"}
-en.ws.sound.n.1: {meaning: "ses"}
+en.ws.sound.n.1: {meaning: "ses", note: "İnsan sesi voice'tur: She has a beautiful voice."}
 en.ws.sound.v.1: {meaning: "gibi gelmek, kulağa … gelmek", note: "That sounds good: kulağa hoş geliyor."}
 en.ws.boy.n.1: {meaning: "oğlan, erkek çocuk"}
 en.ws.view.n.1: {meaning: "manzara, görünüm"}
@@ -451,7 +451,7 @@ en.ws.almost.adv.1: {meaning: "neredeyse, hemen hemen"}
 en.ws.wrong.adj.1: {meaning: "yanlış"}
 en.ws.present.n.1: {meaning: "hediye"}
 en.ws.action.n.1: {meaning: "davranış, hareket, eylem", note: "Yapılan şey; my actions: yaptıklarım."}
-en.ws.pretty.adj.1: {meaning: "güzel, hoş", note: "Görünüş için; insan, yer ve eşya için kullanılır."}
+en.ws.pretty.adj.1: {meaning: "güzel, hoş", note: "Görünüş için; çoğunlukla kadın, çocuk, yer ve eşya için (erkek için handsome)."}
 en.ws.pretty.adv.1: {meaning: "oldukça, epey", note: "pretty good: oldukça iyi."}
 en.ws.age.n.1: {meaning: "yaş"}
 en.ws.account.n.1: {meaning: "hesap (banka, site)"}
@@ -462,7 +462,7 @@ en.ws.market.n.1: {meaning: "pazar", note: "Açık hava pazarı; Türkçedeki ma
 en.ws.write.v.1: {meaning: "yazmak"}
 en.ws.low.adj.1: {meaning: "alçak, düşük"}
 en.ws.happy.adj.1: {meaning: "mutlu"}
-en.ws.note.n.1: {meaning: "not, pusula"}
+en.ws.note.n.1: {meaning: "not", note: "Okul notu note değil, grade ya da mark'tır."}
 en.ws.air.n.1: {meaning: "hava (soluduğumuz)", note: "Hava durumu weather."}
 en.ws.street.n.1: {meaning: "sokak, cadde"}
 en.ws.build.v.1: {meaning: "inşa etmek, yapmak"}
@@ -470,7 +470,7 @@ en.ws.probably.adv.1: {meaning: "muhtemelen, büyük ihtimalle"}
 en.ws.experience.n.1: {meaning: "deneyim, tecrübe"}
 en.ws.learn.v.1: {meaning: "öğrenmek", note: "Öğretmek teach."}
 en.ws.phone.n.1: {meaning: "telefon"}
-en.ws.phone.v.1: {meaning: "telefon etmek, aramak"}
+en.ws.phone.v.1: {meaning: "telefon etmek, aramak", note: "Kişi doğrudan gelir: phone me (to gelmez)."}
 en.ws.possible.adj.1: {meaning: "mümkün, olası"}
 en.ws.example.n.1: {meaning: "örnek", note: "for example: örneğin."}
 en.ws.consider.v.1: {meaning: "düşünmek, göz önünde bulundurmak"}
@@ -478,11 +478,11 @@ en.ws.soon.adv.1: {meaning: "yakında, birazdan"}
 en.ws.picture.n.1: {meaning: "resim, fotoğraf"}
 en.ws.site.n.1: {meaning: "site, internet sitesi", note: "Türkçedeki konut sitesi anlamı yoktur."}
 en.ws.future.n.1: {meaning: "gelecek"}
-en.ws.answer.v.1: {meaning: "cevap vermek, yanıtlamak", note: "answer the phone: telefonu açmak."}
+en.ws.answer.v.1: {meaning: "cevap vermek, yanıtlamak", note: "answer the phone: telefonu açmak. Soruya cevap vermek: answer the question (to gelmez)."}
 en.ws.answer.n.1: {meaning: "cevap, yanıt"}
 en.ws.late.adj.1: {meaning: "geç kalmış, geç", note: "I'm late: geç kaldım."}
 en.ws.late.adv.1: {meaning: "geç"}
-en.ws.special.adj.1: {meaning: "özel"}
+en.ws.special.adj.1: {meaning: "özel", note: "Özel okul, özel ders gibi anlamlarda private: a private school."}
 en.ws.morning.n.1: {meaning: "sabah", note: "in the morning: sabahleyin."}
 en.ws.red.adj.1: {meaning: "kırmızı"}
 en.ws.pick.v.1: {meaning: "seçmek; koparmak, toplamak"}
@@ -490,9 +490,9 @@ en.ws.stand.v.1: {meaning: "ayakta durmak, ayağa kalkmak", note: "stand up: aya
 en.ws.moment.n.1: {meaning: "an", note: "for a moment: bir anlığına. Wait a moment: Bir dakika."}
 en.ws.clear.adj.1: {meaning: "açık, net, anlaşılır"}
 en.ws.strong.adj.1: {meaning: "güçlü, kuvvetli; sert (kahve, çay)"}
-en.ws.chance.n.1: {meaning: "şans, olasılık, fırsat"}
+en.ws.chance.n.1: {meaning: "şans, olasılık, fırsat", note: "Talih anlamındaki şans luck'tır: Good luck! (Good chance değil)."}
 en.ws.step.v.1: {meaning: "basmak, adım atmak"}
-en.ws.police.n.1: {meaning: "polis", note: "Çoğul fiil alır: the police are…"}
+en.ws.police.n.1: {meaning: "polis", note: "Çoğul fiil alır: the police are… Tek polis: a police officer."}
 en.ws.decide.v.1: {meaning: "karar vermek"}
 en.ws.sit.v.1: {meaning: "oturmak", note: "sit down: oturmak. Bir yerde yaşamak live."}
 en.ws.baby.n.1: {meaning: "bebek"}
@@ -500,17 +500,17 @@ en.ws.road.n.1: {meaning: "yol"}
 en.ws.land.v.1: {meaning: "inmek (uçak)"}
 en.ws.movie.n.1: {meaning: "film", note: "İngiliz İngilizcesinde film de denir."}
 en.ws.board.n.1: {meaning: "tahta, yazı tahtası"}
-en.ws.college.n.1: {meaning: "yüksekokul, üniversite"}
+en.ws.college.n.1: {meaning: "yüksekokul, üniversite", note: "Türkçedeki kolej (özel lise) değildir; college lise sonrası eğitimdir."}
 en.ws.lose.v.1: {meaning: "kaybetmek"}
 en.ws.sale.n.1: {meaning: "indirim, indirimli satış", note: "on sale: indirimde (ABD) ya da satışta."}
 en.ws.bear.n.1: {meaning: "ayı"}
-en.ws.date.n.1: {meaning: "tarih", note: "Randevu anlamı da vardır: a date."}
+en.ws.date.n.1: {meaning: "tarih", note: "Romantik buluşma anlamı da vardır (go on a date); doktor randevusu appointment'tır."}
 en.ws.fun.adj.1: {meaning: "eğlenceli"}
 en.ws.fun.n.1: {meaning: "eğlence", note: "have fun: eğlenmek. Komik olan funny."}
 en.ws.parent.n.1: {meaning: "ebeveyn, anne ya da baba", note: "my parents: annemle babam."}
-en.ws.town.n.1: {meaning: "kasaba, şehir"}
-en.ws.fine.adj.1: {meaning: "iyi, idare eder", note: "I'm fine: iyiyim."}
-en.ws.enjoy.v.1: {meaning: "keyif almak, sevmek", note: "Ardından fiil -ing alır: enjoy swimming."}
+en.ws.town.n.1: {meaning: "kasaba, küçük şehir"}
+en.ws.fine.adj.1: {meaning: "iyi", note: "I'm fine: iyiyim."}
+en.ws.enjoy.v.1: {meaning: "keyif almak, sevmek", note: "Ardından fiil -ing alır: enjoy swimming. Nesnesiz kullanılmaz: I enjoyed it."}
 en.ws.save.v.1: {meaning: "biriktirmek (para); kurtarmak"}
 en.ws.finish.v.1: {meaning: "bitirmek"}
 en.ws.quite.adv.1: {meaning: "oldukça, epey"}
@@ -519,18 +519,18 @@ en.ws.front.n.1: {meaning: "ön, ön taraf", note: "in front of: önünde."}
 en.ws.carry.v.1: {meaning: "taşımak"}
 en.ws.drop.v.1: {meaning: "düşürmek, bırakmak"}
 en.ws.father.n.1: {meaning: "baba"}
-en.ws.interest.n.1: {meaning: "ilgi"}
+en.ws.interest.n.1: {meaning: "ilgi; ilgi alanı", note: "Bir şeye ilgi: interest in sports (to değil)."}
 en.ws.forget.v.1: {meaning: "unutmak"}
 en.ws.wish.v.1: {meaning: "dilemek", note: "I wish you luck: sana şans dilerim."}
 en.ws.wish.n.1: {meaning: "dilek", note: "make a wish: dilek tutmak."}
 en.ws.education.n.1: {meaning: "eğitim"}
 en.ws.ready.adj.1: {meaning: "hazır"}
-en.ws.grow.v.1: {meaning: "büyümek"}
+en.ws.grow.v.1: {meaning: "büyümek", note: "İnsanın büyümesi grow up'tır: I grew up in Izmir."}
 en.ws.visit.v.1: {meaning: "ziyaret etmek, gezmek"}
 en.ws.visit.n.1: {meaning: "ziyaret"}
 en.ws.walk.v.1: {meaning: "yürümek"}
 en.ws.walk.n.1: {meaning: "yürüyüş", note: "take a walk / go for a walk: yürüyüşe çıkmak."}
-en.ws.wear.v.1: {meaning: "giymek, takmak (üstünde olmak)", note: "Giyinik olmayı anlatır; giyinmek eylemi put on."}
+en.ws.wear.v.1: {meaning: "giymek, takmak (üstünde olmak)", note: "Üstünde olmayı anlatır; giyme eylemi put on: Put on your coat."}
 en.ws.dog.n.1: {meaning: "köpek"}
 en.ws.period.n.1: {meaning: "dönem, süre"}
 en.ws.effect.n.1: {meaning: "etki", note: "side effect: yan etki."}
@@ -553,10 +553,10 @@ en.ws.page.n.1: {meaning: "sayfa"}
 en.ws.miss.v.1: {meaning: "özlemek; kaçırmak (otobüs, tren)"}
 en.ws.sleep.v.1: {meaning: "uyumak"}
 en.ws.card.n.1: {meaning: "kart"}
-en.ws.drink.v.1: {meaning: "içmek"}
+en.ws.drink.v.1: {meaning: "içmek", note: "Sigara içmek smoke, çorba içmek eat soup, ilaç içmek take medicine."}
 en.ws.drink.n.1: {meaning: "içecek", note: "a drink tek başına çoğu zaman içki (alkollü) anlamına gelir."}
 en.ws.hate.v.1: {meaning: "nefret etmek, hiç sevmemek"}
-en.ws.travel.v.1: {meaning: "seyahat etmek, yolculuk etmek"}
+en.ws.travel.v.1: {meaning: "seyahat etmek, yolculuk etmek", note: "Tek bir yolculuk (isim) için çoğunlukla trip: a nice trip (a travel değil)."}
 en.ws.church.n.1: {meaning: "kilise"}
 en.ws.guess.v.1: {meaning: "tahmin etmek"}
 en.ws.raise.v.1: {meaning: "kaldırmak, yükseltmek", note: "raise your hand: elini kaldırmak."}
@@ -564,11 +564,11 @@ en.ws.piece.n.1: {meaning: "parça, tane", note: "a piece of paper: bir kâğıt
 en.ws.cool.adj.1: {meaning: "serin; havalı, harika (günlük dilde)"}
 en.ws.especially.adv.1: {meaning: "özellikle"}
 en.ws.color.n.1: {meaning: "renk", note: "İngiliz yazımı colour."}
-en.ws.explain.v.1: {meaning: "açıklamak, anlatmak"}
+en.ws.explain.v.1: {meaning: "açıklamak, anlatmak", note: "Kişiye açıklamak: explain it to me (explain me değil)."}
 en.ws.throw.v.1: {meaning: "atmak, fırlatmak"}
 en.ws.paper.n.1: {meaning: "kâğıt", note: "Sayılamaz: some paper, a piece of paper."}
 en.ws.stage.n.1: {meaning: "sahne"}
-en.ws.suggest.v.1: {meaning: "önermek"}
+en.ws.suggest.v.1: {meaning: "önermek", note: "Kişi + to ile kurulmaz: I suggest you go (suggest you to go değil)."}
 en.ws.situation.n.1: {meaning: "durum"}
 en.ws.language.n.1: {meaning: "dil (lisan)"}
 en.ws.middle.adj.1: {meaning: "orta", note: "middle name: göbek adı, ikinci ad."}
@@ -588,7 +588,7 @@ en.ws.accept.v.1: {meaning: "kabul etmek"}
 en.ws.draw.v.1: {meaning: "(resim) çizmek"}
 en.ws.realize.v.1: {meaning: "fark etmek, anlamak", note: "Gerçekleştirmek anlamına pek gelmez."}
 en.ws.mention.v.1: {meaning: "söz etmek, bahsetmek", note: "Ardından about gelmez: mention it."}
-en.ws.expect.v.1: {meaning: "beklemek (olacağını düşünmek)", note: "Birini ya da bir şeyi beklerken wait for."}
+en.ws.expect.v.1: {meaning: "beklemek (olacağını düşünmek)", note: "Bir yerde durup beklemek wait for'dur: wait for the bus."}
 en.ws.fit.adj.1: {meaning: "formda, zinde"}
 en.ws.difference.n.1: {meaning: "fark"}
 en.ws.letter.n.1: {meaning: "mektup"}
@@ -597,11 +597,11 @@ en.ws.notice.v.1: {meaning: "fark etmek"}
 en.ws.lady.n.1: {meaning: "hanım, bayan"}
 en.ws.box.n.1: {meaning: "kutu"}
 en.ws.text.n.1: {meaning: "mesaj (telefon)", note: "Yazılı metin anlamı da vardır."}
-en.ws.text.v.1: {meaning: "mesaj atmak"}
+en.ws.text.v.1: {meaning: "mesaj atmak", note: "Kişi doğrudan gelir: text me (to gelmez)."}
 en.ws.opportunity.n.1: {meaning: "fırsat"}
 en.ws.push.v.1: {meaning: "itmek"}
 en.ws.hair.n.1: {meaning: "saç", note: "Sayılamaz: my hair is long."}
-en.ws.contact.v.1: {meaning: "iletişime geçmek, ulaşmak"}
+en.ws.contact.v.1: {meaning: "iletişime geçmek, ulaşmak", note: "Kişi doğrudan gelir: contact me (contact with me değil)."}
 en.ws.address.n.1: {meaning: "adres"}
 en.ws.perhaps.adv.1: {meaning: "belki"}
 en.ws.degree.n.1: {meaning: "derece"}
@@ -620,10 +620,10 @@ en.ws.ahead.adv.1: {meaning: "ileride, ileri, önde"}
 en.ws.imagine.v.1: {meaning: "hayal etmek"}
 en.ws.certainly.adv.1: {meaning: "kesinlikle, tabii ki"}
 en.ws.extra.adj.1: {meaning: "ekstra, fazladan"}
-en.ws.discuss.v.1: {meaning: "tartışmak, görüşmek", note: "Ardından about gelmez: discuss the plan."}
+en.ws.discuss.v.1: {meaning: "tartışmak, görüşmek", note: "Ardından about gelmez: discuss the plan. Kavga etmek anlamında tartışmak argue'dur."}
 en.ws.dollar.n.1: {meaning: "dolar"}
 en.ws.fill.v.1: {meaning: "doldurmak"}
-en.ws.ring.v.1: {meaning: "çalmak (zil, telefon)"}
+en.ws.ring.v.1: {meaning: "çalmak (zil, telefon); aramak (telefonla)"}
 en.ws.ring.n.1: {meaning: "yüzük"}
 en.ws.item.n.1: {meaning: "eşya, madde, parça"}
 en.ws.copy.n.1: {meaning: "kopya, nüsha"}

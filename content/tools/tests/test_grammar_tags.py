@@ -50,6 +50,11 @@ def test_every_grammar_point_is_found_in_one_of_its_examples(analyzer: SpacyAnal
         ("I've got a car.", "gp.have_got", "gp.modals.obligation"),
         ("It's been too long.", "gp.present_perfect.experience", "gp.be.present"),
         ("Would you like some tea?", "gp.would_like", "gp.questions.wh"),
+        ("Don't forget the party tonight.", "gp.imperative", "gp.present_simple.negative"),
+        ("Don't you want to learn to drive?", "gp.present_simple.negative", "gp.imperative"),
+        ("I have lessons in the afternoon.", "gp.prepositions.time", "gp.prepositions.place"),
+        ("He works even on Sundays.", "gp.prepositions.time", "gp.prepositions.place"),
+        ("Put it on the table.", "gp.prepositions.place", "gp.prepositions.time"),
     ],
 )
 def test_rules_do_not_overreach(

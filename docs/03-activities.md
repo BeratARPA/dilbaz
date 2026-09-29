@@ -17,7 +17,7 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | Verdict | Anlam | Hedef öğe için sonuç |
 |---|---|---|
 | `correct` | Referansla eşleşti | doğru |
-| `acceptable_variant` | Başka ama doğal ve doğru bir ifade (I-17) | doğru |
+| `acceptable_variant` | Başka ama doğal ve doğru bir ifade (I-17) | doğru. Hedef kelime cevapta yoksa (`target_ok=false`; ör. present kartında "gift") **hedefsiz doğru cevaptır**: hata sayılmaz, hedefin kanıtı da sayılmaz. "Doğru! Bu kart başka bir kelimeyi çalışıyor, başka nasıl söylersin?" denir ve istem yeniden sorulur. |
 | `minor_error` | Anlam korunmuş, küçük biçim hatası | Hata hedef öğedeyse (`target_ok=false`) yanlış; değilse doğru. Hata etiketi her durumda profile yazılır. |
 | `wrong` | Hedef yapı/anlam yanlış | yanlış |
 | `off_target` | Başka bir şey söylenmiş | yanlış (ipucu: "istenen anlam bu değil") |
@@ -35,6 +35,10 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | Easy (4) | Good koşulu + cevap gecikmesi, kişinin bu moddaki son 200 denemesinin 25. yüzdelik diliminin altında |
 
 **LLM'siz `uncertain`** (§0.5, adım 4) her zaman **Hard** alır: ceza da şişirme de yoktur. Sonradan gelen LLM sonucu (`llm_resolved`) kanıtı düzeltir, FSRS geçmişini değiştirmez (I-03).
+
+**Hedefsiz doğru cevap** (§0.2) deneme hakkı ve ipucu harcamaz; istem bir kez yeniden sorulur:
+- Hedefle doğru cevap gelirse kart **Hard** alır (ikinci deneme sayılır) ve üretim kanıtı yazılır.
+- Yine hedefsiz doğru cevap gelirse hedef cümle gösterilir (H4), kart **Hard** alır ve üretim kanıtı yazılmaz. `uncertain` gibi burada da ceza ya da şişirme yoktur.
 
 Ses tanımanın yanlış duyduğu durumlar için kullanıcı "yanlış duyuldu" deyip cevabını yazabilir. Yazılı cevap aynı denemenin parçası olarak değerlendirilir ve `asr_override=true` loglanır.
 
@@ -89,7 +93,8 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - normalize edilmiş referans
    - paketteki `variants` listesi
    - kişisel varyantlar
-3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse, bu varyant kişisel varyant listesine eklenir; bir sonraki sefer deterministik eşleşir.
+   Paketin `alternatives` listesiyle (hedefi içermeyen doğru cevaplar) ya da kişisel alternatiflerle eşleşirse **hedefsiz doğru cevaptır** (§0.2).
+3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir.
 4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, en yakın referans ya da varyantla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
    - **Küçük ve sınıflanabilir fark** (eksik ya da fazla kelime, aynı lemmanın yanlış biçimi, sıra) → `minor_error` ya da `wrong`.
      - Yalnızca kuralla kesin bulunabilen hata etiketleri eklenir.

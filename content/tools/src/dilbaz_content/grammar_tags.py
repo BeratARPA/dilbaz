@@ -64,6 +64,10 @@ _PLACE_PREPOSITIONS = frozenset({"in", "on", "at", "under", "between", "behind"}
 _NOUN_STARTS = frozenset({"the", "a", "an", "my", "your", "his", "her", "our", "their"})
 
 
+def _is_time(word: str) -> bool:
+    return word in _TIME_WORDS or word.removesuffix("s") in _TIME_WORDS
+
+
 def _words(tokens: tuple[Token, ...]) -> list[tuple[str, str, str]]:
     """(lowercased text, lemma, tag) of the tokens that are not punctuation."""
     return [(text.lower(), lemma, tag) for text, lemma, pos, tag in tokens if pos != "PUNCT"]
@@ -92,7 +96,8 @@ def _verb_codes(words: list[tuple[str, str, str]], question: bool) -> set[str]:
         if text in _BE_PAST and lemma == "be":
             codes.add("gp.past_simple.be")
         if lemma == "do" and tag in {"VBZ", "VBP"} and _followed_by(words, i, {"VB"}, 3):
-            if nxt in {"not", "n't"}:
+            # "Don't forget!" opens an imperative; "Don't you know?" is a question.
+            if nxt in {"not", "n't"} and (i > 0 or question):
                 codes.add("gp.present_simple.negative")
             elif i == 0 and question:
                 codes.add("gp.present_simple.questions")
@@ -128,7 +133,8 @@ def _verb_codes(words: list[tuple[str, str, str]], question: bool) -> set[str]:
         ):
             codes.add("gp.verb_patterns.to_ing")
     _, first_lemma, first_tag = words[0]
-    if first_tag == "VB" or (first_lemma == "do" and len(words) > 1 and words[1][0] == "n't"):
+    negative = first_lemma == "do" and len(words) > 1 and words[1][0] == "n't"
+    if not question and (first_tag == "VB" or negative):
         codes.add("gp.imperative")
     return codes
 
@@ -169,9 +175,9 @@ def _noun_phrase_codes(words: list[tuple[str, str, str]]) -> set[str]:
         if (text == "years" and nxt == "old") or (text == "how" and nxt == "old"):
             codes.add("gp.age")
         next_tag = words[i + 1][2] if i + 1 < len(words) else ""
-        if text in {"in", "on", "at"} and (
-            nxt in _TIME_WORDS or (text == "at" and next_tag == "CD")
-        ):
+        # The head of "in the afternoon", "on Sundays".
+        head = texts[i + 2] if nxt in _NOUN_STARTS and i + 2 < len(texts) else nxt
+        if text in {"in", "on", "at"} and (_is_time(head) or (text == "at" and next_tag == "CD")):
             codes.add("gp.prepositions.time")
         elif text in _PLACE_PREPOSITIONS and tag == "IN" and nxt in _NOUN_STARTS:
             codes.add("gp.prepositions.place")

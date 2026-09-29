@@ -6,13 +6,14 @@ Tarih: 2026-09-27 · Görev: F1-03 (S3–S4) · Çıktı: `content/packs/en/item
 
 | | |
 |---|---|
-| Cümle | 588 (Tatoeba 560, kendi 28) |
+| Cümle | 588 (Tatoeba 559, kendi 29) |
 | Seviye | A0 42 · A1 411 · A2 135 |
 | Ortalama uzunluk | 5.4 kelime (en uzun 9) |
 | Taşıyıcısı olan anlam | 600/600 |
-| Küratörlükle değişen seçim | 373 anlam (28 kendi cümle) |
+| Küratörlükle değişen seçim | 374 anlam (29 kendi cümle) |
 | Bağımsız doğrulama, 1. tur | 587 cümle, 523 kabul |
 | Bağımsız doğrulama, 2.–3. tur (yeni cümleler) | 69 cümle, 65 kabul |
+| Bağımsız doğrulama, 4. tur (S5 incelemesinden sonra) | 1 cümle, 1 kabul |
 | Paketteki doğrulanmış cümle | 588/588 |
 | Düzeltilecek Türkçe çeviri (S5) | 65/560 Tatoeba çevirisi |
 | Engelleyici sorun (S4) | 0 |
@@ -62,7 +63,7 @@ Her satır için: cümle doğal mı, hedef kelime o anlamda mı, Türkçe doğru
 | 4 | A1 | What's the matter? | **matter** (a problem or subject (What's the matter?)) | Sorun nedir? |
 | 5 | A1 | The movie was too long. | **movie** (a film) | Film çok uzundu. |
 | 6 | A1 | The house is too cold. | **cold** (having a low temperature) | Ev çok soğuk. |
-| 7 | A1 | You can ride with me. | **ride** (to travel on a bike or a horse, or in a vehicle) | Benimle binebilirsin. |
+| 7 | A1 | Can you ride a bike? | **ride** (to travel on a bike or a horse, or in a vehicle) | Bisiklete binebilir misin? *(kendi cümle, 2026-09-29)* |
 | 8 | A1 | What does this note mean? | **note** (a short written message) | Bu not ne anlama geliyor? |
 | 9 | A1 | Does that answer the question? | **answer** (to reply to a question or a call) | Bu, soruyu yanıtlıyor mu? *(düzeltilmiş)* |
 | 10 | A1 | I don't have that information. | **information** (facts about something) | O bilgi bende yok. *(düzeltilmiş)* |
@@ -76,3 +77,11 @@ Her satır için: cümle doğal mı, hedef kelime o anlamda mı, Türkçe doğru
 | 18 | A2 | I'm going to the center of town. | **center** (the middle of something; a building for an activity) | Şehir merkezine gidiyorum. |
 | 19 | A2 | My brother lives in a small village. | **village** (a very small town in the countryside) | Erkek kardeşim küçük bir köyde yaşıyor. |
 | 20 | A2 | What are you going to do next? | **next** (after this, then) | Daha sonra ne yapacaksın? |
+
+## Ek (2026-09-29)
+
+S5 incelemesinde (`2026-09-29-tr-en1-pair-qa.md`) "You can ride with me." cümlesinin Türkçesinin hedef kelimeye götürmediği görüldü ("Benimle binebilirsin." doğal değil). ride anlamının taşıyıcısı kendi cümlemiz "Can you ride a bike?" oldu. Cümle 4. turda bağımsız olarak doğrulandı (doğallık 5, kabul). 7. örnek buna göre güncellendi.
+
+Gramer etiketleyicisindeki iki hata da düzeltildi. Cümleler değişmedi, yalnızca gramer kodları değişti:
+- Cümle başındaki "Don't …" artık emir sayılıyor, geniş zaman olumsuzu değil (10 cümle).
+- "in the afternoon", "on Sundays" artık zaman edatı sayılıyor (6 cümle).

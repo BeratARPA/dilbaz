@@ -141,7 +141,8 @@ def is_well_formed(text: str) -> bool:
     return not _ODD_CHARACTERS.intersection(text) and not _INNER_BOUNDARY.search(text)
 
 
-def _hyphenated(tokens: tuple[Token, ...], index: int) -> bool:
+def hyphenated(tokens: tuple[Token, ...], index: int) -> bool:
+    """The token is part of a hyphenated word ("well-known", "open-minded")."""
     before = index > 0 and tokens[index - 1][0] == "-"
     after = index + 1 < len(tokens) and tokens[index + 1][0] == "-"
     return before or after
@@ -174,7 +175,7 @@ class SenseMatcher:
         """
         found: dict[str, tuple[int, WordSense]] = {}
         for index, (text, lemma, pos, _) in enumerate(tokens):
-            if _hyphenated(tokens, index):
+            if hyphenated(tokens, index):
                 continue
             for sense in self(text, lemma, pos):
                 found.setdefault(sense.key, (index, sense))

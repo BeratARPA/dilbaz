@@ -6,14 +6,19 @@
 #   2. apostrophes: every character in `apostrophes` becomes '
 #   3. every character in `punctuation` becomes a space
 #   4. split on spaces; per word, the first rule that applies:
-#      a. `words`: whole-word replacements (contractions such as "can't")
-#      b. `endings`: a word ending in one of these keys loses it and gets the
+#      a. `currency`: a sign before digits becomes the digits and the
+#         currency's word ("$30" → "30 dollars", "$1" → "1 dollar")
+#      b. `words`: whole-word replacements (contractions such as "can't")
+#      c. `endings`: a word ending in one of these keys loses it and gets the
 #         value ("didn't" → "did not")
 #   5. per word again: `spellings` (British → American, variants); then any
 #      remaining apostrophe is removed ("tom's" → "toms") and a hyphen becomes
 #      a space ("twenty-one" → "twenty one")
-#   6. a word of digits (0-999) is written in words ("35" → "thirty five")
-#   7. words are joined by single spaces
+#   6. `phrases`: whole-word phrases are replaced, left to right in the file's
+#      order; they fix what the word rules cannot know ("he's got" → "he is
+#      got" → "he has got")
+#   7. a word of digits (0-999) is written in words ("35" → "thirty five")
+#   8. words are joined by single spaces
 # `tests` hold examples both implementations must pass.
 
 version: 1
@@ -55,11 +60,17 @@ endings:
   "'d": " would"
   "'m": " am"
 
+currency:
+  "$": [dollar, dollars]
+  "£": [pound, pounds]
+  "€": [euro, euros]
+
 spellings:
   aeroplane: airplane
   analyse: analyze
   behaviour: behavior
   centre: center
+  centres: centers
   cheque: check
   colour: color
   colours: colors
@@ -69,6 +80,7 @@ spellings:
   e-mails: emails
   favourite: favorite
   favourites: favorites
+  goodnight: good night
   flavour: flavor
   grey: gray
   harbour: harbor
@@ -80,6 +92,7 @@ spellings:
   labour: labor
   licence: license
   litre: liter
+  litres: liters
   metre: meter
   metres: meters
   mum: mom
@@ -89,12 +102,25 @@ spellings:
   organise: organize
   practise: practice
   programme: program
+  programmes: programs
   pyjamas: pajamas
   realise: realize
   theatre: theater
+  theatres: theaters
   travelled: traveled
   travelling: traveling
+  turkiye: turkey
+  türkiye: turkey
   tyre: tire
+
+# 's and 'd stand for has and had before these words, where is and would are
+# never right.
+phrases:
+  "is got": "has got"
+  "is been": "has been"
+  "is happened": "has happened"
+  "would better": "had better"
+  "would been": "had been"
 
 numbers:
   units: [zero, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve,
@@ -122,3 +148,12 @@ tests:
   - ["You're right, aren't you?", "you are right are not you"]
   - ["\"Hello\", she said.", "hello she said"]
   - ["I'm gonna call you.", "i am going to call you"]
+  - ["He's got a black shirt.", "he has got a black shirt"]
+  - ["She's been there.", "she has been there"]
+  - ["What's happened?", "what has happened"]
+  - ["You'd better go.", "you had better go"]
+  - ["It costs $30.", "it costs thirty dollars"]
+  - ["Only $1!", "only one dollar"]
+  - ["What programmes do you watch?", "what programs do you watch"]
+  - ["Goodnight!", "good night"]
+  - ["I'm from Türkiye.", "i am from turkey"]

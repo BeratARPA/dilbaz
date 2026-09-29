@@ -8,6 +8,7 @@ from dilbaz_content.cli import app
 from dilbaz_content.items import Chunk, Provenance
 from dilbaz_content.normalize import NORMALIZATION_FILE
 from dilbaz_content.pair_step import load_pair_curation, read_translations, run_pair
+from dilbaz_content.select_step import read_lexicon
 from dilbaz_content.sentences_step import Validation, run_sentences
 
 from sample_sentences import OwnAnalyzer, write_s4_inputs
@@ -172,6 +173,49 @@ en.sent.my_right_hand_is_cold: {turkish: "Sağ elim soğuk."}
     assert [i.kind for i in report.blocking] == ["variant_missing_target"]
 
 
+def test_a_variant_may_say_the_target_in_another_form(tmp_path: Path) -> None:
+    sentences = """
+en.sent.we_watch_tv: {variants: ["We love watching TV."]}
+en.sent.my_right_hand_is_cold: {turkish: "Sağ elim soğuk."}
+"""
+    root = build(tmp_path, **{"sentences.yaml": sentences})
+    lexicon = root / "work" / "lexicon.en.jsonl"
+
+    # The tagger calls "watching" a noun of its own: without the forms it is lost.
+    report = run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer)
+    assert [i.kind for i in report.blocking] == ["variant_missing_target"]
+
+    entries = [
+        e.model_copy(update={"forms": ("watches", "watching")}) if e.lemma == "watch" else e
+        for e in read_lexicon(lexicon)
+    ]
+    lexicon.write_text("".join(e.model_dump_json() + "\n" for e in entries), encoding="utf-8")
+    assert run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer).blocking == ()
+
+
+def test_alternatives_are_right_answers_without_the_target(tmp_path: Path) -> None:
+    sentences = """
+en.sent.we_watch_tv:
+  variants: ["We watch television."]
+  alternatives: ["We see TV.", "We all watch TV.", "we watch television!"]
+en.sent.my_right_hand_is_cold: {turkish: "Sağ elim soğuk."}
+"""
+    root = build(tmp_path, **{"sentences.yaml": sentences})
+
+    report = run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer)
+
+    # "We all watch TV." says "watch": a variant, never an alternative.
+    assert {(i.kind, i.detail) for i in report.issues} == {
+        ("duplicate_variant", "thank you!"),
+        ("duplicate_variant", "we watch television!"),
+        ("alternative_has_target", "We all watch TV. (has en.ws.watch.v.1)"),
+    }
+    assert report.alternatives == 2
+    variants = {v["key"]: v for v in lines(root / "packs" / "tr-en" / "variants.jsonl")}
+    assert variants["en.sent.we_watch_tv"]["variants"] == ["We watch television."]
+    assert variants["en.sent.we_watch_tv"]["alternatives"] == ["We see TV.", "We all watch TV."]
+
+
 def test_cards_with_the_same_prompt_accept_each_others_answer(tmp_path: Path) -> None:
     same = """
 en.sent.we_watch_tv: {turkish: "teşekkür ederim!"}
@@ -202,6 +246,40 @@ def test_a_rule_note_must_not_hold_an_answer(tmp_path: Path) -> None:
 
     (issue,) = report.blocking
     assert (issue.key, issue.kind) == ("gp.present_simple.affirmative", "rule_note_leak")
+
+
+def test_a_rule_example_must_not_give_a_cards_form(tmp_path: Path) -> None:
+    grammar = GRAMMAR.replace(
+        'rule: "he/she/it ile -s."', 'rule: "he/she/it ile -s; öbürleri yalın: see → watch."'
+    )
+    root = build(tmp_path, **{"grammar.yaml": grammar})
+
+    report = run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer)
+
+    assert {(i.key, i.kind, i.detail) for i in report.blocking} == {
+        (
+            "gp.present_simple.affirmative",
+            "rule_note_leak",
+            f"the example form 'watch' is in the answer {text!r}",
+        )
+        for text in ("We watch TV.", "I watch TV every evening.")
+    }
+
+
+def test_chunk_alternatives_are_the_function_in_other_words(tmp_path: Path) -> None:
+    chunks = """
+en.chunk.thank_you:
+  {meaning: "Teşekkür ederim.", variants: ["Thanks."], alternatives: ["Cheers.", "thanks!"]}
+"""
+    root = build(tmp_path, **{"chunks.yaml": chunks})
+
+    report = run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer)
+
+    assert [(i.kind, i.detail) for i in report.issues] == [("duplicate_variant", "thanks!")]
+    assert report.alternatives == 1
+    variants = {v["key"]: v for v in lines(root / "packs" / "tr-en" / "variants.jsonl")}
+    assert variants["en.chunk.thank_you"]["variants"] == ["Thanks."]
+    assert variants["en.chunk.thank_you"]["alternatives"] == ["Cheers."]
 
 
 def test_missing_and_unknown_entries_block_the_build(tmp_path: Path) -> None:

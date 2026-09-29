@@ -256,7 +256,8 @@ def pair(
         raise typer.Exit(code=1) from error
     console.print(
         f"glosses {report.glosses}; prompts {report.prompts}; variants {report.variants}; "
-        f"rule notes {report.rule_notes}; contrast notes {report.contrast_notes}; "
+        f"alternatives {report.alternatives}; rule notes {report.rule_notes}; "
+        f"contrast notes {report.contrast_notes}; "
         f"error tags {report.error_tags}"
     )
     kinds = Counter(issue.kind for issue in report.issues)

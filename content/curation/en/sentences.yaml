@@ -83,6 +83,7 @@ carriers:
   # daily actions
   en.ws.wake.v.1: [{tatoeba: 3818968}]
   en.ws.swim.v.1: [{tatoeba: 6271833}]
+  en.ws.ride.v.1: [{text: "Can you ride a bike?"}]
   # school, free time, nature
   en.ws.sport.n.1: [{tatoeba: 51626}]
   en.ws.football.n.1: [{tatoeba: 6049059}]
