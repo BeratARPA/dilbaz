@@ -187,3 +187,37 @@ def test_the_report_gathers_what_the_steps_recorded(tmp_path: Path) -> None:
     assert "- 1. tur: 4 karar, 4 kabul" in text
     assert "- Ses raporu yok." in text
     assert "`reports/2026-09-29-qa.md`" in text
+
+
+def test_the_report_writes_numbers_the_turkish_way(tmp_path: Path) -> None:
+    root = ready(tmp_path)
+    assert run_build(root, l1="tr", l2="en").issues == ()
+    work = root / "work"
+    audio = {
+        "clips": 3637,
+        "files": 3629,
+        "made": 0,
+        "by_voice": {"v1": 1169, "v2": 1160, "v3": 654},
+        "slow": 1021,
+        "minutes": 78.44,
+        "megabytes": 23.5,
+    }
+    (work / "audio.en.report.json").write_text(json.dumps(audio), encoding="utf-8")
+    placement = {
+        "items": 360,
+        "eligible_by_band": {"2": 918, "1": 796},
+        "excluded": {"name": 40, "curated": 165},
+        "pseudo_tried": 0,
+        "pseudo_rejected": {},
+    }
+    (work / "placement.en.report.json").write_text(json.dumps(placement), encoding="utf-8")
+
+    result = CliRunner().invoke(app, ["report", "--content-dir", str(root)])
+
+    assert result.exit_code == 0, result.output
+    text = (root / "build" / "en@1.report.md").read_text(encoding="utf-8")
+    assert "- 3.637 klip, 3.629 dosya; 78,4 dakika, 23,5 MB; yavaş 1.021" in text
+    assert "- Ses başına klip: v1 1.169, v2 1.160, v3 654" in text
+    assert "- Uygun kelime: 1. bant 796, 2. bant 918" in text
+    assert "- Dışlanan: küratörlükle dışlanan 165, özel ad 40" in text
+    assert "{" not in text.split("## Sesler")[1]

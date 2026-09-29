@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter
+from collections.abc import Mapping
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -33,6 +34,30 @@ _KINDS = {
     "lemma": "sözlük lemması",
     "xlex": "X_Lex maddesi",
 }
+# Why a word cannot be an X_Lex item (placement_step).
+_EXCLUSIONS = {
+    "curated": "küratörlükle dışlanan",
+    "function word": "işlev kelimesi",
+    "name": "özel ad",
+    "short or not a word": "kısa ya da kelime değil",
+    "blocked": "engelli",
+}
+
+
+def _count(value: int) -> str:
+    """A count with Turkish digit grouping: 3.637."""
+    return f"{value:,}".replace(",", ".")
+
+
+def _decimal(value: float) -> str:
+    """One decimal with a Turkish decimal comma: 78,4."""
+    return f"{value:.1f}".replace(".", ",")
+
+
+def _counts(counts: Mapping[str, int] | Mapping[int, int], names: Mapping[str, str]) -> str:
+    """`name count` pairs, largest first: "v1 1.169, v2 1.160"."""
+    ordered = sorted(counts.items(), key=lambda item: (-item[1], str(item[0])))
+    return ", ".join(f"{names.get(str(key), str(key))} {_count(value)}" for key, value in ordered)
 
 
 def _report[T: BaseModel](path: Path, model: type[T]) -> T | None:
@@ -73,9 +98,9 @@ def build_report(content_dir: Path, *, l1: str, l2: str) -> Path:
     lines += ["## Dosyalar", "", "| Paket | Satırlar | Boyut | sha256 |", "|---|---|---|---|"]
     packs = built.packs if built else ()
     for pack in packs:
-        rows = ", ".join(f"{table} {count:,}" for table, count in pack.rows.items())
-        size = pack.bytes / 1_048_576
-        lines.append(f"| {pack.id} | {rows} | {size:.1f} MB | `{pack.sha256[:16]}…` |")
+        rows = ", ".join(f"{table} {_count(count)}" for table, count in pack.rows.items())
+        size = _decimal(pack.bytes / 1_048_576)
+        lines.append(f"| {pack.id} | {rows} | {size} MB | `{pack.sha256[:16]}…` |")
     if not packs:
         lines.append("| — | derleme raporu yok | | |")
 
@@ -101,19 +126,24 @@ def build_report(content_dir: Path, *, l1: str, l2: str) -> Path:
     lines += ["", "## Sesler (S6)", ""]
     if audio:
         lines.append(
-            f"- {audio.clips:,} klip, {audio.files:,} dosya; {audio.minutes} dakika, "
-            f"{audio.megabytes} MB; yavaş {audio.slow:,}; ses başına {audio.by_voice}"
+            f"- {_count(audio.clips)} klip, {_count(audio.files)} dosya; "
+            f"{_decimal(audio.minutes)} dakika, {_decimal(audio.megabytes)} MB; "
+            f"yavaş {_count(audio.slow)}"
         )
+        lines.append(f"- Ses başına klip: {_counts(audio.by_voice, {})}")
     else:
         lines.append("- Ses raporu yok.")
 
     placement = _report(work / PLACEMENT_REPORT.format(l2=l2), PlacementReport)
     lines += ["", "## X_Lex bankası (S8)", ""]
     if placement:
-        lines.append(
-            f"- {placement.items} madde; bant başına uygun kelime "
-            f"{placement.eligible_by_band}; dışlanan {placement.excluded}"
+        bands = ", ".join(
+            f"{band}. bant {_count(count)}"
+            for band, count in sorted(placement.eligible_by_band.items())
         )
+        lines.append(f"- {_count(placement.items)} madde")
+        lines.append(f"- Uygun kelime: {bands}")
+        lines.append(f"- Dışlanan: {_counts(placement.excluded, _EXCLUSIONS)}")
     else:
         lines.append("- X_Lex raporu yok.")
 
