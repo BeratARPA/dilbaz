@@ -39,7 +39,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `spacy` + `en_core_web_md` (lemma, sözcük türü)
   - `wordfreq`
   - Çalışma anı LLM SDK'sı yok: LLM işleri Claude Code oturumlarında yapılır (ADR-0009)
-  - `kokoro` (paket sesleri; Python < 3.13 istediği için ayrı bir uv ortamında)
+  - Paket sesleri ayrı bir uv ortamındadır: `content/tts` (Python 3.12; `kokoro-onnx`, `misaki`, `soundfile`). misaki, Kokoro'nun eğitildiği G2P'dir ve Python < 3.13 istiyor (ADR-0009).
   - `pydantic`, `typer` (CLI), `rich`, `pytest`
   - `fsrs[optimizer]` (FSRS optimizasyonu; ayrı araç)
 - **Başka hedef diller:** spaCy'nin resmî modeli olmayan diller için Stanza. Örneğin Türkçe hedef dil olursa Stanza'nın Türkçe modelleri kullanılır.
@@ -51,6 +51,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `carriers [--per-target 3]` (S3: Tatoeba taşıyıcı adayları).
   - `sentences` (S4: taşıyıcı cümleler, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - `pair [--l1 tr] [--l2 en]` (S5: çift paketi, kontroller; engelleyici sorun varsa çıkış kodu 1).
+  - `audio [--l2 en]` (S6: paket sesleri; `content/tts` işçisini çağırır).
   - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
@@ -71,7 +72,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 | S3 | `carriers` | Kelime anlamları + Tatoeba → `work/carriers.en.candidates.jsonl` (ayrıntı: §4.3) | Seviye ve gramer filtresinden geçen Tatoeba adayları, anlam başına en iyi 3 |
 | S4 | `sentences` | Adaylar + `curation/<l2>/sentences.yaml` → `packs/<l2>/items/sentences.jsonl` (ayrıntı: §4.4, §5) | Seçim; eksik ya da kötü adayların yerine Claude Code oturumunda yazılan cümleler; deterministik kontroller; ayrı oturumda doğrulama geçişi; 👤 örneklem |
 | S5 | `pair --l1 tr` | Hedef paket + `curation/tr-en/` + S4 çevirileri → `packs/tr-en/` (ayrıntı: §6) | Türkçe karşılıklar ve istemler, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, H3 kural notları, hata etiketi kataloğu |
-| S6 | `audio` | Metinler → ses dosyaları | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
+| S6 | `audio` | Öğeler + `packs/<l2>/voices.yaml` → `build/audio/<l2>/<sürüm>/` + `packs/<l2>/audio.jsonl` (ayrıntı: §4.5) | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
 | S8 | `placement` | Sözlük + `curation/<l2>/xlex.yaml` → `packs/<l2>/placement/xlex.jsonl` (ayrıntı: §5.3) | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
 | S9 | `build` | Tümü → `build/en@N.sqlite` + ses manifesti | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
@@ -135,6 +136,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 - **Açıklamalar:** Wiktionary'nin ilk anlamı öğrenci için sık sık yanlış ("pen" = ağıl, "tell" = saymak). Bu yüzden seçilen her anlamın İngilizce açıklaması küratörlük dosyasında kendi sözlerimizle yazılır (lisans: `own`). `select` çıktısında otomatik açıklama kalmamalıdır.
 - **Anahtar:** `en.ws.<lemma>.<tür>.<n>` (ör. `en.ws.watch.v.1`); anahtar hiç değişmez.
 - **Söyleniş düzeltmesi:** `senses` içindeki `ipa_uk`/`ipa_us`, S1'in kaynaktan doğru seçemediği değerin yerine geçer (breakfast, §4.1).
+  - Eş yazımlılarda kaynaklar kelime başına tek söyleniş verir, bu da çoğu zaman başka bir sözcük türününkidir: CMUdict'te close önce /kloʊs/. en@1'de 7 anlam böyle düzeltildi: use, live, read, close (fiil ve sıfat), record, subject. Taramayı CMUdict'te birden çok söylenişi olan kelimeler üzerinde yaptık.
 - **İlk seçim (2026-09-27):** 546 lemma, 600 anlam (A0 167, A1 299, A2 134).
 
 **Sohbet çantası (`chunks.jsonl`):**
@@ -190,6 +192,28 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - 600 anlamın 344'ünde otomatik seçim değiştirildi: 320'sinde başka bir Tatoeba cümlesi, 24'ünde kendi cümlemiz.
   - 587 cümle (563 Tatoeba, 24 kendi). Seviyeler: A0 44, A1 408, A2 135. Ortalama 5,4 kelime. Engelleyici sorun yok.
   - Otomatik seçimin sık hataları şunlardı: deyimler ("a tall order", "right on the money"), yanlış anlam ("glasses" = gözlük), karamsar ton ("I don't have a family."), "I've got to …" yığılması ve etiketleyicinin kaçırdığı yapılar (edilgen, used to). Son ikisi kurallara eklendi.
+
+### 4.5 S6 paket sesleri
+- **Model:** Kokoro-82M v1.0, ONNX sürümü (Apache-2.0). Model ve ses dosyaları `sources.yaml`'da bir kaynak olarak kayıtlıdır ve sha256 ile sabitlenmiştir (`ingest kokoro`).
+- **İşçi:** `content/tts` ortamı (Python 3.12). `audio` komutu iş listesini yazar ve işçiyi alt süreç olarak çalıştırır. İşçi her iş için MP3 üretir ve süresini döndürür.
+- **Sesler (`packs/<l2>/voices.yaml`):**
+  - en@1'in sesleri örnekler dinlenerek seçildi (👤, 2026-09-29): af_heart, am_michael (ABD), bf_emma, bm_george (İngiltere).
+  - Her öğeyi bir ABD ve bir İngiliz sesi okur. Çiftler sırayla döner, böylece her ses eşit sayıda öğe okur.
+  - Yavaş düzeylerin (A0–A1) öğelerini çiftin ilk sesi bir kez de 0,8 hızla okur.
+- **Okunuş:**
+  - Metin, Kokoro'nun eğitildiği misaki G2P ile fonemlere çevrilir. misaki eş yazımlıyı cümledeki sözcük türüne göre okur: "Close the door." /kloʊz/, "The shop is close." /kloʊs/. kokoro-onnx'in varsayılan espeak-ng yolu bu ayrımı yapamıyor.
+  - Tek kelime, türünü belli eden bir çerçevede çözümlenir: fiil "to close", isim "the …", sıfat "it is …". Yalnızca kelimenin kendi fonemleri okunur.
+  - Kalıptaki boşluk okunmaz: "My name is …" → "My name is".
+- **Ses:**
+  - Kenarlardaki sessizlik kırpılır, RMS −20 dBFS'e getirilir, tepe en çok −1 dBFS olur. İki uca 120 ms sessizlik eklenir.
+  - Mono 24 kHz, sabit bit hızlı MP3: ortalama ~41 kbit/sn, klip başına ~9 KB.
+- **Adlandırma ve önbellek:**
+  - Dosya adı söylenen şeyin karmasıdır: motor, ses, yerel ayar, hız, sözcük türü ve metin. Yol `<ses kimliği>/<karma>.mp3`'tür, `pack-audio` kovasının `{l2}/{version}/{voice}/{hash}.mp3` düzenine uyar (`13`).
+  - Süreler `work/audio.<l2>.durations.json`'da tutulur. Değişmeyen klip yeniden üretilmez. Durdurulan bir çalıştırma kaldığı yerden devam eder.
+- **Çıktılar:**
+  - `build/audio/<l2>/<sürüm>/` (git dışı, `upload` ile Storage'a gider)
+  - `packs/<l2>/audio.jsonl`: öğe başına klipler (`key`, `voice`, `speed`, `file`, `duration_ms`)
+  - `work/audio.<l2>.report.json`
 
 ## 5. Doğrulama kuralları (S4)
 

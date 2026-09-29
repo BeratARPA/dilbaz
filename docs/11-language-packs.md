@@ -34,7 +34,8 @@ content/packs/en/
   connectors.jsonl         # bağlaç listesi (karmaşıklık ölçümü)
   fillers.jsonl            # dolgu sözcükleri (akıcılık ölçümü)
   placement/xlex.jsonl     # version (A/B/C), band (1–5; uydurma kelimede null), word, is_pseudo
-  voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet, motor (en@1: Kokoro)
+  voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet, motor (en@1: Kokoro), ses çiftleri, yavaş hız
+  audio.jsonl              # öğe başına klip: key, voice, speed, file (pack-audio'da <ses>/<karma>.mp3), duration_ms
   LICENSES.md
 
 content/packs/tr-en/

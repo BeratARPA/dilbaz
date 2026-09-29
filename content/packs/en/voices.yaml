@@ -1,0 +1,19 @@
+# Pack voices of en@1 (docs/08-speech.md §8, docs/11 §2).
+#
+# Kokoro-82M v1.0 (Apache-2.0), run offline by `dilbaz-content audio` (S6).
+# Chosen by listening to samples (F1-05, 2026-09-29): two American and two
+# British voices, a woman and a man for each.
+#
+# Every item is read by one American and one British voice; the pairs take
+# turns so that every voice reads as many items. Items of the slow levels
+# are also read slowly by their first voice.
+
+engine: kokoro-82m-v1.0
+voices:
+  - {id: v1, name: af_heart, locale: en-US, gender: female}
+  - {id: v2, name: am_michael, locale: en-US, gender: male}
+  - {id: v3, name: bf_emma, locale: en-GB, gender: female}
+  - {id: v4, name: bm_george, locale: en-GB, gender: male}
+pairs: [[v1, v3], [v2, v4], [v1, v4], [v2, v3]]
+slow_speed: 0.8
+slow_levels: [A0, A1]

@@ -186,12 +186,13 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 - **Ses listesi** paket manifestindedir: ses kimliği, yerel ayar, cinsiyet.
   - En az 4 ses; en az ikisi en-US dışı.
   - Kokoro'da Amerikan (en-US) ve İngiliz (en-GB) sesleri var; en-AU sesi yok.
-  - Model kartına göre en kaliteli Amerikan sesleri `af_heart` ve `af_bella`, en kaliteli İngiliz sesi `bf_emma`. Seçim F1-05'teki dinleme karşılaştırmasıyla yapılır.
+  - en@1'in sesleri F1-05'te örnekler dinlenerek seçildi (2026-09-29): `af_heart`, `am_michael` (ABD), `bf_emma`, `bm_george` (İngiltere). Gemini Flash TTS karşılaştırmasına gerek görülmedi.
+  - Her öğeyi bir ABD ve bir İngiliz sesi okur. Okunuş misaki G2P ile yapılır, bu yüzden eş yazımlılar sözcük türüne göre okunur (`10` §4.5).
 - **Dinamik TTS** (Söyleyemediklerim önerisi, rol oyunu cevapları): Cihazın TTS motoru (`flutter_tts`) kullanılır. Sunucuda TTS fonksiyonu ve `tts-cache` bucket'ı yoktur.
 - **Sınırlar:**
   - Kokoro'nun kota sınırı yoktur.
   - Supabase Storage'ın 1 GB sınırı paket sesleri ve görev kayıtlarıyla paylaşılır.
-  - Paket sesleri kısa ve sıkıştırılmış tutulur; biçim F1-05'te belirlenir.
+  - Paket sesleri kısa ve sıkıştırılmış tutulur: mono 24 kHz MP3, ~41 kbit/sn, klip başına ~9 KB (`10` §4.5).
 
 ## 9. Gizlilik
 

@@ -17,6 +17,7 @@ from wordfreq import top_n_list, word_frequency
 
 from dilbaz_content import __version__
 from dilbaz_content.analysis import SpacyAnalyzer
+from dilbaz_content.audio_step import AudioError, run_audio, worker
 from dilbaz_content.carriers_step import run_carriers
 from dilbaz_content.ingest import (
     ChecksumMismatchError,
@@ -313,4 +314,37 @@ def placement(
     )
     console.print(
         f"pseudowords: {report.pseudo_tried} candidates, rejected {report.pseudo_rejected}"
+    )
+
+
+@app.command()
+def audio(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S6: speak the pack's items with Kokoro (packs/<l2>/audio.jsonl, build/audio/)."""
+    root = _content_dir(content_dir)
+    registry = load_registry(root / REGISTRY_FILE)
+    try:
+        model = latest_snapshot(root / "sources", registry.get("kokoro"))
+        command = [
+            *("uv", "run", "--no-sync", "--project", str(root / "tts"), "dilbaz-tts"),
+            *("--model", str(model / "kokoro-v1.0.onnx")),
+            *("--voices", str(model / "voices-v1.0.bin")),
+        ]
+        speak = worker(command, root / "work" / f"audio.{l2}.worker.log")
+        with console.status("speaking the pack") as status:
+            report = run_audio(
+                root,
+                l2=l2,
+                speak=speak,
+                progress=lambda done, total: status.update(f"speaking: {done:,}/{total:,} clips"),
+            )
+    except (AudioError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"{report.clips:,} clips in {report.files:,} files ({report.made:,} made now); "
+        f"by voice {report.by_voice}; slow {report.slow:,}; "
+        f"{report.minutes:,} min, {report.megabytes:,} MB"
     )
