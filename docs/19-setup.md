@@ -63,12 +63,13 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
    $env:SUPABASE_URL = "https://<ref>.supabase.co"
    $secure = Read-Host -AsSecureString "secret key"
    $env:SUPABASE_SECRET_KEY = [System.Net.NetworkCredential]::new("", $secure).Password
-   uv run dilbaz-content upload --publish
+   uv run --no-sync dilbaz-content upload --publish
    Remove-Item Env:SUPABASE_SECRET_KEY
    ```
 
+   - `--no-sync`: ortam hazır, `uv` yeniden kurmaya çalışmasın.
    - `--publish` verilmezse paketler taslak kalır ve uygulama yalnızca yayımlananları görür.
-   - Yaklaşık 3.600 ses dosyası (~30 MB) yüklenir. Yarıda kalırsa komutu tekrar çalıştır; yüklü sesler atlanır.
+   - 3.629 ses dosyası (~24 MB) ve 2 paket yüklenir. Yerel denemede 26 sn sürdü. Yarıda kalırsa komutu tekrar çalıştır; yüklü sesler atlanır.
 4. **Doğrulama:**
    - Table Editor → `packs`: `en@1` ve `tr-en@1` satırları `published`.
    - Storage → `packs` ve `pack-audio` kovaları dolu.
