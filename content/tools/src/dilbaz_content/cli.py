@@ -18,6 +18,7 @@ from wordfreq import top_n_list, word_frequency
 from dilbaz_content import __version__
 from dilbaz_content.analysis import SpacyAnalyzer
 from dilbaz_content.audio_step import AudioError, run_audio, worker
+from dilbaz_content.build_step import BuildError, run_build
 from dilbaz_content.carriers_step import run_carriers
 from dilbaz_content.ingest import (
     ChecksumMismatchError,
@@ -31,6 +32,7 @@ from dilbaz_content.lexicon_step import CMUDICT, LEXICON_FILE, WIKTEXTRACT_DUMP,
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.pair_step import run_pair
 from dilbaz_content.placement_step import PlacementError, dictionary_words, run_placement
+from dilbaz_content.report_step import build_report
 from dilbaz_content.select_step import SelectionError, run_select
 from dilbaz_content.sentences_step import run_sentences
 from dilbaz_content.sources import (
@@ -348,3 +350,44 @@ def audio(
         f"by voice {report.by_voice}; slow {report.slow:,}; "
         f"{report.minutes:,} min, {report.megabytes:,} MB"
     )
+
+
+@app.command()
+def build(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learners' language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S9: build the pack files (build/<id>.sqlite, its manifest and licenses)."""
+    root = _content_dir(content_dir)
+    try:
+        report = run_build(root, l1=l1, l2=l2)
+    except (BuildError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    for pack in report.packs:
+        console.print(
+            f"{pack.id}: {pack.rows}; {pack.bytes / 1_048_576:.1f} MB; sha256 {pack.sha256[:16]}"
+        )
+    if report.issues:
+        kinds = Counter(issue.kind for issue in report.issues)
+        console.print(f"[red]not built[/red]: {dict(kinds)}")
+        for issue in report.issues[:20]:
+            console.print(f"[red]{issue.kind}[/red] {issue.key}: {issue.detail}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def report(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learners' language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S10: write the build report (build/<id>.report.md) for the upload decision."""
+    root = _content_dir(content_dir)
+    try:
+        path = build_report(root, l1=l1, l2=l2)
+    except (FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(f"written to {path.relative_to(root)}")

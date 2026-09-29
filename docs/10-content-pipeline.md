@@ -53,6 +53,8 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `pair [--l1 tr] [--l2 en]` (S5: çift paketi, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - `audio [--l2 en]` (S6: paket sesleri; `content/tts` işçisini çağırır).
   - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
+  - `build [--l1 tr] [--l2 en]` (S9: paket dosyaları; engelleyici sorun varsa hiçbir dosya yazılmaz, çıkış kodu 1).
+  - `report [--l1 tr] [--l2 en]` (S10: derleme raporu).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).
@@ -75,8 +77,8 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 | S6 | `audio` | Öğeler + `packs/<l2>/voices.yaml` → `build/audio/<l2>/<sürüm>/` + `packs/<l2>/audio.jsonl` (ayrıntı: §4.5) | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
 | S8 | `placement` | Sözlük + `curation/<l2>/xlex.yaml` → `packs/<l2>/placement/xlex.jsonl` (ayrıntı: §5.3) | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
-| S9 | `build` | Tümü → `build/en@N.sqlite` + ses manifesti | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
-| S10 | `report` | Build → `build/en@N.report.md` | Sayılar, ret oranları, üretim oturumları, insan kontrolü örneklemi |
+| S9 | `build` | Tümü → `build/<id>.sqlite`, `<id>.manifest.json`, `<id>.LICENSES.md` (ayrıntı: §4.6) | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
+| S10 | `report` | Build → `build/en@N.report.md` (ayrıntı: §4.7) | Sayılar, ret oranları, üretim oturumları, insan kontrolü örneklemi |
 | — | `upload` | Build → Supabase Storage `packs/` + `packs` satırı | Yalnızca kullanıcı onayıyla (dışa yayın) |
 
 ### 4.1 S1 sözlük kuralları
@@ -214,6 +216,31 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - `build/audio/<l2>/<sürüm>/` (git dışı, `upload` ile Storage'a gider)
   - `packs/<l2>/audio.jsonl`: öğe başına klipler (`key`, `voice`, `speed`, `file`, `duration_ms`)
   - `work/audio.<l2>.report.json`
+
+### 4.6 S9 derleme
+- **Girdiler:**
+  - `packs/<l2>/`: `manifest.yaml`, öğeler, normalizasyon, sesler, `audio.jsonl`, X_Lex
+  - `packs/<l1>-<l2>/`: `manifest.yaml`, S5 çıktıları
+  - `work/lexicon.<l2>.jsonl`: S1 çıktısı; yoksa önce `lexicon` çalıştırılır
+  - `curation/<l2>/sentences.validation.jsonl`
+- **Engelleyici kontroller:** Biri bile varsa hiçbir dosya yazılmaz.
+  - `unvalidated_sentence`: Cümlenin metnini birebir tutan kabul edilmiş bağımsız doğrulaması yok (I-16, §5.2).
+  - `missing_audio`: Cümle, kalıp ya da kelime anlamının iki sesle normal hızda klibi yok.
+  - `missing_audio_file`: Klibin MP3 dosyası `build/audio/` altında yok.
+  - `missing_gloss`: Öğenin çift paketinde karşılığı yok.
+  - `unknown_link`: Bağ, pakette olmayan bir öğeyi anıyor.
+- **Paket dosyası:** Biçimi `11` §5.1'de. Hedef pakette öğeler, kapsama için sözlük lemmaları, X_Lex maddeleri, biçim tablosu ve bağlar (`contains`, `example_of`) bulunur. Çift pakette S5 girdileri ve karşıtlıklardan kurulan `contrasts_with` bağları bulunur.
+- **Manifest ve lisans:** `<id>.manifest.json`, `manifest.yaml`'a sayıları, tarihi ve dosyanın sha256'sını ekler. `<id>.LICENSES.md` manifestteki kaynaklardan yazılır. CC BY-SA kaynak varsa paketin bütününün CC BY-SA 4.0 ile dağıtılacağını söyler (§2).
+
+### 4.7 S10 rapor
+- `build/<id>.report.md`, yükleme kararı için adımların kayıtlarını toplar:
+  - dosyalar, satır sayıları ve sağlama toplamları
+  - seviyeye göre öğeler
+  - doğrulama turları
+  - sesler ve X_Lex
+  - kaynaklar ve lisanslar
+  - `content/reports/` altındaki QA raporları
+- Yükleme (`upload`) kullanıcı onayıyla yapılır (👤).
 
 ## 5. Doğrulama kuralları (S4)
 

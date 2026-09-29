@@ -126,6 +126,7 @@ created_at: 2026-10-…
 ## 5. Derleme ve dağıtım
 
 - `dilbaz-content build` her paket sürümü için tek bir **SQLite dosyası** üretir (`en@1.sqlite`, `tr-en@1.sqlite`). Ses dosyaları ayrıca `pack-audio/` altındadır.
+- Yanında `<id>.manifest.json` (manifest + sayılar + dosyanın `checksum`'ı) ve `<id>.LICENSES.md` bulunur.
 - Supabase Storage `packs/` bucket'ına yüklenir. `packs` tablosunda `published` olarak kaydedilir.
 - **Uygulama tarafı:**
   1. Açılışta manifest listesini çeker.
@@ -133,6 +134,42 @@ created_at: 2026-10-…
   3. Sağlama toplamını doğrular.
   4. drift içindeki salt okunur `content_*` tablolarına **atomik** olarak aktarır (geçici tablo → yeniden adlandırma).
 - Ses dosyaları ilk kullanımda indirilir ve önbelleğe alınır. İsteğe bağlı "seviyemin seslerini önceden indir" (çevrimdışı hazırlık).
+
+### 5.1 Paket dosyası (SQLite, biçim sürümü 1)
+
+- Tablolar uygulamanın drift içerik tablolarıyla aynı ad ve sütunlardadır (`13`, `app/lib/data/db/tables/content_tables.dart`). İçe aktarma satırları olduğu gibi kopyalar.
+- Biçim sürümü `PRAGMA user_version` değeridir. Tablolar değişince artar; uygulama tanımadığı sürümü reddeder.
+- JSON sütunları metindir: `lemmas`, `targets`, `grammar`, `data`.
+- **`pack_meta`** (`key` → JSON değer):
+  - `format_version`
+  - `manifest`: `manifest.yaml` + `counts`
+  - Hedef pakette ayrıca: `normalization` (`normalization.yaml`), `voices` (`voices.yaml`), `audio` (`{"bucket": "pack-audio", "prefix": "en/1/"}`)
+- **Hedef paket** (`en@1.sqlite`):
+  - `content_items`, `kind`'e göre:
+
+    | kind | text_l2 | data |
+    |---|---|---|
+    | `word_sense` | lemma | `pos`, `sense`, `ipa_us`, `ipa_uk`, `carriers`, `audio`, `provenance` |
+    | `chunk` | kalıp | `function`, `note`, `audio`, `provenance` |
+    | `sentence` | cümle | `audio`, `provenance`. `targets` ve `grammar` sütunları dolu. |
+    | `grammar_point` | İngilizce ad | `code`, `description`, `examples`, `provenance` |
+    | `lemma` | yazılışı | `pos`, `ipa_us`, `ipa_uk`. Kişisel kapsama (I-06) ve X_Lex bantları için sözlük; anahtar `en.lemma.<lemma>`. |
+    | `xlex` | kelime | `version`, `band`, `is_pseudo`. Anahtar `en.xlex.<sürüm>.<kelime>`; gerçek kelimede `rank` dolu. |
+
+  - `audio`: `[{voice, speed, file, duration_ms}]`. Dosyanın yolu `pack-audio/<prefix><file>`'dır.
+  - `content_links`:
+    - `contains`: cümle → hedef anlam
+    - `example_of`: cümle → gramer noktası
+  - `content_forms`: biçim → lemma. Her lemma, yazım varyantları ve çekimli biçimleri S1 sözlüğünden gelir.
+  - `content_texts`, `content_tasks`: en@1'de boş.
+- **Çift paketi** (`tr-en@1.sqlite`):
+  - `content_pair_entries`, `kind`'e göre:
+    - `gloss` (anahtar: öğe)
+    - `variants` (anahtar: öğe; `variants`, `alternatives`)
+    - `rule_note` (anahtar: gramer kodu)
+    - `contrast_note` (anahtar: öğeler `|` ile)
+    - `error_tag` (anahtar: kod)
+  - `content_links`: karşıtlık notlarından `contrasts_with`. Bağ simetriktir, küçük anahtar `from_key`'dedir. Karşıtlıklar anadile göre değiştiği için çift paketindedir.
 
 ## 6. Motorun dile özgü işlemleri: veri ile çözmek
 
