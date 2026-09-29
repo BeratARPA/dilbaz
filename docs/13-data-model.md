@@ -357,7 +357,7 @@ create function sync_pull(p_since bigint, p_limit int default 1000) returns json
 |---|---|---|
 | `audio-private` | `{uid}/{yyyy}/{mm}/{uuid}.{m4a,webm,wav}` | Yalnız sahip (yol öneki = `auth.uid()`) |
 | `subtitles-private` | `{uid}/{uuid}.srt` | Yalnız sahip |
-| `packs` | `{pack_id}.sqlite` | Kimliği doğrulanmış okur |
+| `packs` | `{pack_id}.sqlite`, `{pack_id}.LICENSES.md` | Kimliği doğrulanmış okur |
 | `pack-audio` | `{l2}/{version}/{voice}/{hash}.mp3` | Kimliği doğrulanmış okur |
 | `tts-cache` | `{hash}.mp3` | Kimliği doğrulanmış okur, servis rolü yazar |
 | `backups` | `{tarih}/…` | Yalnız servis rolü |

@@ -42,7 +42,7 @@ allowed-confusables = ["ɑ", "ɡ", "ɪ", "ˈ", "ˌ", "ː", "’", "ı"]
 "tests/**" = ["ANN"]
 
 [tool.ruff.lint.isort]
-known-local-folder = ["sample_sentences", "sample_sources", "test_pair_step", "test_tatoeba_analysis"]
+known-local-folder = ["sample_sentences", "sample_sources", "test_build_step", "test_pair_step", "test_tatoeba_analysis"]
 
 [tool.mypy]
 python_version = "3.12"

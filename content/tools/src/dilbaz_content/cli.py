@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections import Counter
 from collections.abc import Sequence
 from datetime import UTC, datetime
@@ -41,6 +42,13 @@ from dilbaz_content.sources import (
     SourceFile,
     find_content_dir,
     load_registry,
+)
+from dilbaz_content.upload_step import (
+    KEY_ENV,
+    URL_ENV,
+    SupabaseStore,
+    UploadError,
+    run_upload,
 )
 
 app = typer.Typer(
@@ -391,3 +399,38 @@ def report(
         console.print(f"[red]{error}[/red]")
         raise typer.Exit(code=1) from error
     console.print(f"written to {path.relative_to(root)}")
+
+
+@app.command()
+def upload(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learners' language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+    publish: Annotated[
+        bool, typer.Option(help="List the packs for the app; without it they stay drafts.")
+    ] = False,
+) -> None:
+    """Upload the built packs and their audio to Supabase (only with the user's approval)."""
+    root = _content_dir(content_dir)
+    url, key = os.environ.get(URL_ENV), os.environ.get(KEY_ENV)
+    if not url or not key:
+        console.print(f"[red]set {URL_ENV} and {KEY_ENV} in the environment first[/red]")
+        raise typer.Exit(code=2)
+    try:
+        store = SupabaseStore(url, key)
+        with console.status("uploading") as status:
+            report = run_upload(
+                root,
+                l1=l1,
+                l2=l2,
+                store=store,
+                publish=publish,
+                progress=lambda done, total: status.update(f"clips: {done:,}/{total:,}"),
+            )
+    except (UploadError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"{', '.join(report.packs)} uploaded as {report.status}; clips: "
+        f"{report.clips_uploaded:,} new, {report.clips_present:,} already there"
+    )

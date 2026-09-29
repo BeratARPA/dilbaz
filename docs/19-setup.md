@@ -53,6 +53,26 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
   2. SQL Editor'de iki e-postayı ekle (küçük harfle): `insert into private.signup_allowlist (email) values ('...'), ('...');`
   - Yeni kayıtlar açık kalır; listede olmayan e-posta 403 alır.
 
+### Paket yükleme (F1-05, kendin çalıştır)
+
+1. **Üretim migrasyonu:** `npx supabase db push`. Ajan önce onayını ister. `packs` tablosunu ve `packs`, `pack-audio` kovalarını oluşturur.
+2. **Gizli anahtar:** Supabase → Project Settings → API Keys → **Secret keys** → yeni anahtar (ad: `content-upload`). Anahtarı yalnızca parola yöneticine kaydet, sohbete yazma. Bu anahtar servis rolüyle çalışır.
+3. **Yükleme** (PowerShell, `content/tools` klasöründe). Anahtar yalnızca bu pencerenin ortamında kalır, dosyaya ve geçmişe yazılmaz:
+
+   ```powershell
+   $env:SUPABASE_URL = "https://<ref>.supabase.co"
+   $secure = Read-Host -AsSecureString "secret key"
+   $env:SUPABASE_SECRET_KEY = [System.Net.NetworkCredential]::new("", $secure).Password
+   uv run dilbaz-content upload --publish
+   Remove-Item Env:SUPABASE_SECRET_KEY
+   ```
+
+   - `--publish` verilmezse paketler taslak kalır ve uygulama yalnızca yayımlananları görür.
+   - Yaklaşık 3.600 ses dosyası (~30 MB) yüklenir. Yarıda kalırsa komutu tekrar çalıştır; yüklü sesler atlanır.
+4. **Doğrulama:**
+   - Table Editor → `packs`: `en@1` ve `tr-en@1` satırları `published`.
+   - Storage → `packs` ve `pack-audio` kovaları dolu.
+
 ## 2. Windows'a araç kurulumu
 
 | Araç | Sürüm | Kurulum |
