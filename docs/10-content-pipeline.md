@@ -241,7 +241,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - kaynaklar ve lisanslar
   - `content/reports/` altındaki QA raporları
 - **Yükleme (`upload`)** kullanıcı onayıyla yapılır (👤, adımlar: `19` §1):
-  - Hedef proje ortam değişkenlerinden okunur: `SUPABASE_URL` ve `SUPABASE_SECRET_KEY` (`sb_secret_…`, servis rolü). Anahtar dosyaya, loga ya da çıktıya yazılmaz; komutu kullanıcı çalıştırır.
+  - Hedef proje ortam değişkenlerinden okunur: `SUPABASE_URL` ve `SUPABASE_SECRET_KEY` (`sb_secret_…`, servis rolü). Anahtar dosyaya, loga ya da çıktıya yazılmaz. Komutu kullanıcı çalıştırır ya da onayıyla ajan, anahtarı CLI oturumundan yalnızca komutun ortamına alarak çalıştırır (`19` §1).
   - Dosyası manifestteki sağlama toplamını tutmayan paket yüklenmez.
   - Önce dosyalar gider: SQLite dosyaları ve lisanslar `packs` kovasına, klipler `pack-audio/<l2>/<sürüm>/` altına. Orada olan klipler atlanır.
   - `packs` satırı en son yazılır; `--publish` verilmezse taslak kalır. Böylece uygulama dosyaları eksik bir paketi hiç listelemez.

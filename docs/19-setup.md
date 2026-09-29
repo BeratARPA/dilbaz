@@ -74,6 +74,8 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
    - Table Editor → `packs`: `en@1` ve `tr-en@1` satırları `published`.
    - Storage → `packs` ve `pack-audio` kovaları dolu.
 
+**Ajana bırakma (2026-09-30'da kullanılan yol):** Supabase CLI'da oturum açıksa (`supabase login`, F0-10) 2. ve 3. adımları ajan yapabilir. Onayınla anahtarı `supabase projects api-keys --reveal` ile alır ve yalnızca yükleme komutunun ortamına verir. Değer ekrana, loga, dosyaya ya da sohbete yazılmaz; senin anahtar oluşturman gerekmez. Doğrulamayı salt okunur SQL ile ajan yapar.
+
 ## 2. Windows'a araç kurulumu
 
 | Araç | Sürüm | Kurulum |
