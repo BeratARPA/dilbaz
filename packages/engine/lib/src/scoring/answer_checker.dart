@@ -77,17 +77,48 @@ final class AnswerChecker {
     return _Judgement(nearest, nearestText, key, language).check();
   }
 
+  /// The key's listed answers split by this card's target: those that say
+  /// it and those that do not (docs/07 §4.1). The LLM gets them so.
+  ({List<String> withTarget, List<String> withoutTarget}) listed(
+    AnswerKey key,
+  ) {
+    final answers = _answers(key).skip(1).toList();
+    return (
+      withTarget: [
+        for (final (:text, :withTarget) in answers)
+          if (withTarget) text,
+      ],
+      withoutTarget: [
+        for (final (:text, :withTarget) in answers)
+          if (!withTarget) text,
+      ],
+    );
+  }
+
   /// The key's correct answers, the reference first, each with whether it
   /// says this card's target.
   ///
   /// The packs list variants and alternatives per sentence, for the items
   /// the sentence was chosen to carry. A sentence carries other items too,
-  /// so what counts is whether the card's own target is in the text. When
-  /// the target's words cannot be found even in the reference, the lists
-  /// decide.
+  /// so what counts is whether the card's own target is in the text: the
+  /// target's words on a word card, the card's structure on a grammar card
+  /// (the pack's grammar codes of each answer). When the target cannot be
+  /// found even in the reference, or an answer's structure is not known,
+  /// the lists decide.
   Iterable<({String text, bool withTarget})> _answers(AnswerKey key) sync* {
     yield (text: key.reference, withTarget: true);
     final lemmas = key.targetLemmas;
+    final code = key.ruleCode;
+    if (lemmas.isEmpty && code != null) {
+      bool? uses(String text) => key.answerGrammar[text]?.contains(code);
+      for (final text in key.variants) {
+        yield (text: text, withTarget: uses(text) ?? true);
+      }
+      for (final text in key.alternatives) {
+        yield (text: text, withTarget: uses(text) ?? false);
+      }
+      return;
+    }
     final known = lemmas.isNotEmpty && _says(key.reference, lemmas);
     for (final text in key.variants) {
       yield (text: text, withTarget: !known || _says(text, lemmas));

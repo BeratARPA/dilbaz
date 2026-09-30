@@ -358,7 +358,7 @@ def eval_cases(content_dir: ContentDir = None) -> None:
     """Build the answer_check gold set (evals/tutor/answer_check/cases.jsonl)."""
     root = _content_dir(content_dir)
     try:
-        report = run_eval_cases(root, analyzer=SpacyAnalyzer)
+        report = run_eval_cases(root)
     except (FileNotFoundError, ValidationError) as error:
         console.print(f"[red]{error}[/red]")
         raise typer.Exit(code=1) from error

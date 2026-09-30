@@ -30,5 +30,10 @@ abstract class AnswerKey with _$AnswerKey {
     /// on a grammar card. Null on word and chunk cards, where the notes of
     /// the sentence's grammar would not be about the miss.
     String? ruleCode,
+
+    /// Grammar codes of the listed answers, by answer (the pair pack's
+    /// `variants.grammar`). On a grammar card an answer says the target
+    /// when it uses [ruleCode]'s structure.
+    @Default(<String, List<String>>{}) Map<String, List<String>> answerGrammar,
   }) = _AnswerKey;
 }

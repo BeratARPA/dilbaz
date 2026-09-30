@@ -184,6 +184,60 @@ void main() {
         });
       });
 
+      group('listed answers by the card target', () {
+        test('a word card keeps the answers that say its word', () {
+          final card = senses.first;
+          final t = card.target.single;
+          final other = unrelated(card, 2);
+          final withWord = [...card.words]..[t == 0 ? 1 : 0] = other[0];
+          final withoutWord = [...card.words]..[t] = other[1];
+          final key = card.key.copyWith(
+            variants: [say(withWord), say(withoutWord)],
+            alternatives: [say(card.words.reversed.toList())],
+          );
+          final lists = checker.listed(key);
+          expect(lists.withTarget, [
+            say(withWord),
+            say(card.words.reversed.toList()),
+          ]);
+          expect(lists.withoutTarget, [say(withoutWord)]);
+        });
+
+        test('a grammar card keeps the answers that use its structure', () {
+          final card = senses.first;
+          final other = unrelated(card, 3);
+          final [uses, lacks, alsoUses] = [
+            for (final word in other) say([...card.words, word]),
+          ];
+          final key = card.key.copyWith(
+            targetLemmas: {},
+            ruleCode: 'gp.zz.target',
+            variants: [uses, lacks],
+            alternatives: [alsoUses],
+            answerGrammar: {
+              uses: ['gp.zz.target'],
+              lacks: ['gp.zz.other'],
+              alsoUses: ['gp.zz.other', 'gp.zz.target'],
+            },
+          );
+          final lists = checker.listed(key);
+          expect(lists.withTarget, [uses, alsoUses]);
+          expect(lists.withoutTarget, [lacks]);
+          expect(checker.match(alsoUses, key)!.verdict, Verdict.correct);
+          expect(
+            checker.match(lacks, key),
+            const Evaluation(
+              verdict: Verdict.acceptableVariant,
+              targetOk: false,
+            ),
+          );
+          // Without the codes of an answer, its list decides.
+          final unknown = checker.listed(key.copyWith(answerGrammar: {}));
+          expect(unknown.withTarget, [uses, lacks]);
+          expect(unknown.withoutTarget, [alsoUses]);
+        });
+      });
+
       group('without the LLM (step 4)', () {
         test('an error outside the target is minor and recalls it', () {
           for (final card in senses) {

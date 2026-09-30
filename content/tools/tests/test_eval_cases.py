@@ -1,13 +1,11 @@
 import json
 import sqlite3
-from collections.abc import Iterable, Iterator
 from dataclasses import replace
 from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
 
-from dilbaz_content.analysis import Token
 from dilbaz_content.cli import app
 from dilbaz_content.eval_cases import (
     CASES_DIR,
@@ -90,16 +88,6 @@ PACKS = Packs(
     normalize=Normalizer.from_file(EN_RULES),
     tags=frozenset({"agr.3sg_s", "be.extra"}),
 )
-
-
-class PlainAnalyzer:
-    """Splits at spaces and tags nothing: no grammar code is found."""
-
-    name = "plain"
-
-    def analyze(self, texts: Iterable[str]) -> Iterator[tuple[Token, ...]]:
-        for text in texts:
-            yield tuple((w, w.lower(), "X", "XX") for w in text.split())
 
 
 def case(**fields: object) -> EvalCase:
@@ -288,7 +276,7 @@ def test_the_step_writes_the_set_in_the_order_of_its_source(tmp_path: Path) -> N
         '{"id": "c01", "round": 1, "verdicts": ["wrong"], "target_ok": "either"}\n',
     )
 
-    report = run_eval_cases(root, analyzer=PlainAnalyzer)
+    report = run_eval_cases(root)
 
     assert report.cases == 2
     assert report.by_kind == {"c": 1, "f": 1}
@@ -297,10 +285,7 @@ def test_the_step_writes_the_set_in_the_order_of_its_source(tmp_path: Path) -> N
     assert [json.loads(line)["id"] for line in lines] == ["f01", "c01"]
 
 
-def test_the_command_fails_and_writes_nothing_while_a_case_is_unusable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr("dilbaz_content.cli.SpacyAnalyzer", PlainAnalyzer)
+def test_the_command_fails_and_writes_nothing_while_a_case_is_unusable(tmp_path: Path) -> None:
     root = _content(
         tmp_path,
         "- {id: f01, card: en.ws.work.v.1, sent: he_works_every_day, say: He works every day.,"
@@ -330,18 +315,27 @@ def test_the_lists_are_split_by_the_cards_own_target() -> None:
 
 
 def test_a_grammar_card_keeps_the_answers_that_use_its_structure() -> None:
-    def grammar_of(text: str) -> frozenset[str]:
-        simple = "works" in text.lower()
-        return frozenset({"gp.present_simple.affirmative"} if simple else ())
-
+    listed = PACKS.variants[SENTENCE.key]
+    coded = listed.model_copy(
+        update={
+            "grammar": {
+                "She works every day.": ("gp.present_simple.affirmative",),
+                "He has a job every day.": ("gp.present_simple.affirmative",),
+            }
+        }
+    )
+    tagged = replace(PACKS, variants={SENTENCE.key: coded})
     card = "en.gp.present_simple.affirmative"
-    tagged = replace(PACKS, grammar_of=grammar_of)
     row, _ = build_case(case(card=card, say="He work every day."), tagged)
     assert row is not None
-    assert row["input"]["item"]["variants"] == ["She works every day."]  # type: ignore[index]
-    assert row["input"]["item"]["alternatives"] == ["He has a job every day."]  # type: ignore[index]
+    # "He has a job every day." lacks the word but uses the structure.
+    assert row["input"]["item"]["variants"] == [  # type: ignore[index]
+        "She works every day.",
+        "He has a job every day.",
+    ]
+    assert row["input"]["item"]["alternatives"] == []  # type: ignore[index]
 
-    # Without a tagger the pack's lists stand, as the engine reads them.
+    # Without the codes the pack's lists stand, as the engine reads them.
     row, _ = build_case(case(card=card, say="He work every day."), PACKS)
     assert row is not None
     assert row["input"]["item"]["alternatives"] == ["He has a job every day."]  # type: ignore[index]

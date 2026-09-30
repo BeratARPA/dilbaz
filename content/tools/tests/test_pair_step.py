@@ -5,13 +5,14 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from dilbaz_content.cli import app
+from dilbaz_content.grammar_tags import grammar_codes
 from dilbaz_content.items import Chunk, Provenance
 from dilbaz_content.normalize import NORMALIZATION_FILE
 from dilbaz_content.pair_step import load_pair_curation, read_translations, run_pair
 from dilbaz_content.select_step import read_lexicon
 from dilbaz_content.sentences_step import Validation, run_sentences
 
-from sample_sentences import OwnAnalyzer, write_s4_inputs
+from sample_sentences import OWN_TOKENS, OwnAnalyzer, write_s4_inputs
 
 RIGHTS = """
 carriers:
@@ -325,3 +326,17 @@ def test_the_pair_command_reports_and_fails_on_blocking_issues(tmp_path: Path) -
     result = runner.invoke(app, ["pair", "--content-dir", str(bad)])
     assert result.exit_code == 1
     assert "missing_gloss" in result.output
+
+
+def test_each_listed_answer_of_a_sentence_carries_its_grammar(tmp_path: Path) -> None:
+    root = build(tmp_path)
+
+    run_pair(root, l1="tr", l2="en", analyzer=OwnAnalyzer)
+
+    rows = {
+        row["key"]: row
+        for row in map(json.loads, (root / "packs" / "tr-en" / "variants.jsonl").open())
+    }
+    text = "We watch television."
+    assert rows["en.sent.we_watch_tv"]["grammar"] == {text: list(grammar_codes(OWN_TOKENS[text]))}
+    assert "grammar" not in rows["en.chunk.thank_you"], "set phrases need none"

@@ -34,6 +34,7 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 from dilbaz_content.analysis import Analyzer, Translation
 from dilbaz_content.carriers import SenseMatcher, hyphenated
 from dilbaz_content.carriers_step import read_word_senses
+from dilbaz_content.grammar_tags import grammar_codes
 from dilbaz_content.items import Chunk, GrammarPoint, Provenance, Sentence
 from dilbaz_content.normalize import NORMALIZATION_FILE, Normalizer
 from dilbaz_content.select_step import read_lexicon
@@ -146,6 +147,10 @@ class Variants(BaseModel):
     variants: tuple[str, ...] = ()
     # Correct, but without a target word: asked again for it (docs/03 §0.2).
     alternatives: tuple[str, ...] = ()
+    # Grammar codes of each listed answer of a sentence (S4's tagger): on a
+    # grammar card, an answer says the target when it uses the card's
+    # structure (docs/03 §0.5); "I'll call you" is not a going-to answer.
+    grammar: dict[str, tuple[str, ...]] = Field(default_factory=dict)
     provenance: Provenance
 
 
@@ -465,6 +470,7 @@ def run_pair(
             carriers_of.setdefault(sentence_key, []).append(sense.key)
     prompts: Counter[str] = Counter()
     checks: list[_Check] = []
+    listed: list[tuple[str, tuple[str, ...], tuple[str, ...]]] = []
     for sentence in sentences:
         sentence_entry = curation.sentences.get(sentence.key) or SentenceEntry()
         decision = decisions.get(sentence.key)
@@ -501,9 +507,7 @@ def run_pair(
         prompt = _prompt_key(meaning, sentence_entry.context)
         cards.append(_Card(sentence.key, sentence.text, (*kept, *others), prompt))
         if kept or others:
-            variants.append(
-                Variants(key=sentence.key, variants=kept, alternatives=others, provenance=_OWN)
-            )
+            listed.append((sentence.key, kept, others))
             alternatives += len(others)
         targets = tuple(carriers_of.get(sentence.key, ()))
         if targets:
@@ -511,15 +515,35 @@ def run_pair(
             checks += [_Check(sentence.key, text, targets, alternative=True) for text in others]
     issues += _clashes(cards, normalize)
 
+    answers = list(dict.fromkeys(text for _, kept, others in listed for text in (*kept, *others)))
+    tagger = analyzer() if checks or answers else None
+    grammar_of = (
+        dict(
+            zip(answers, (grammar_codes(tokens) for tokens in tagger.analyze(answers)), strict=True)
+        )
+        if tagger is not None
+        else {}
+    )
+    for key, kept, others in listed:
+        variants.append(
+            Variants(
+                key=key,
+                variants=kept,
+                alternatives=others,
+                grammar={text: grammar_of[text] for text in (*kept, *others)},
+                provenance=_OWN,
+            )
+        )
+
     # A variant must still say every target's word, in any form and also where
     # the tagger reads it as another part of speech ("I don't feel well", "good
     # at singing"); an alternative must lack one of them, or the learner is
     # asked again for a word already said.
-    if checks:
+    if checks and tagger is not None:
         matcher = SenseMatcher(senses)
         lemma_of = {s.key: s.lemma for s in senses}
         forms = lemmas_of_forms(content_dir / "work" / f"lexicon.{l2}.jsonl")
-        analyzed = analyzer().analyze(check.text for check in checks)
+        analyzed = tagger.analyze(check.text for check in checks)
         for check, tokens in zip(checks, analyzed, strict=True):
             hits = matcher.hits(tokens)
             words = {

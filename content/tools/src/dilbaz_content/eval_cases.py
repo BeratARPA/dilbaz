@@ -21,7 +21,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections import Counter
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -29,8 +29,6 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-from dilbaz_content.analysis import Analyzer
-from dilbaz_content.grammar_tags import grammar_codes
 from dilbaz_content.items import Chunk, GrammarPoint, Level, Sentence, WordSense
 from dilbaz_content.normalize import NORMALIZATION_FILE, Normalizer
 from dilbaz_content.pair_step import Gloss, Variants
@@ -133,9 +131,6 @@ class Packs:
     normalize: Normalizer
     # Error tags a card answer may carry.
     tags: frozenset[str]
-    # The grammar codes a text uses (S4's tagger); None leaves a grammar
-    # card's lists as the pack has them.
-    grammar_of: Callable[[str], frozenset[str]] | None = None
 
 
 @dataclass(frozen=True)
@@ -229,28 +224,32 @@ def _by_target(
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """The listed answers that say this card's target, and those that do not.
 
-    A pack lists answers per sentence, for all the items it carries; what
-    counts is the card's own target (docs/03 §0.5): a word card's lemmas, a
-    grammar card's structure. When the reference itself does not show the
-    target, the lists decide, as in the engine.
+    The same split as the engine's `AnswerChecker.listed`. A pack lists
+    answers per sentence, for all the items it carries; what counts is the
+    card's own target (docs/03 §0.5): a word card's lemmas, a grammar card's
+    structure (the pair pack's grammar codes of each answer). When the
+    reference does not show the target, or an answer's codes are not known,
+    the lists decide.
     """
+    answers = [(text, True) for text in variants] + [(text, False) for text in alternatives]
     lemmas = set(card.target_lemmas)
-    grammar_of = packs.grammar_of
+    code = card.rule_code
+    grammar = card.listed.grammar if card.listed else {}
 
     def says(text: str) -> bool:
-        if lemmas:
-            words = packs.normalize(text).split()
-            return lemmas <= {lemma for w in words for lemma in packs.forms.get(w, {w})}
-        code = card.rule_code
-        return code is not None and grammar_of is not None and code in grammar_of(text)
+        words = packs.normalize(text).split()
+        return lemmas <= {lemma for w in words for lemma in packs.forms.get(w, {w})}
 
-    decided = bool(lemmas) or (card.rule_code is not None and grammar_of is not None)
-    if not decided or not says(card.reference):
-        return tuple(variants), tuple(alternatives)
-    answers = (*variants, *alternatives)
+    if lemmas:
+        known = says(card.reference)
+        split = [(t, (not known or says(t)) if v else (known and says(t))) for t, v in answers]
+    elif code is not None:
+        split = [(t, code in grammar[t] if t in grammar else v) for t, v in answers]
+    else:
+        split = answers
     return (
-        tuple(text for text in answers if says(text)),
-        tuple(text for text in answers if not says(text)),
+        tuple(t for t, with_target in split if with_target),
+        tuple(t for t, with_target in split if not with_target),
     )
 
 
@@ -386,25 +385,11 @@ def _card_tags(path: Path) -> frozenset[str]:
     return frozenset(row["code"] for row in rows if row["category"] in CARD_CATEGORIES)
 
 
-def tagger(analyzer: Analyzer) -> Callable[[str], frozenset[str]]:
-    """The grammar codes of a text, as S4 tags sentences, remembered."""
-    known: dict[str, frozenset[str]] = {}
-
-    def grammar_of(text: str) -> frozenset[str]:
-        if text not in known:
-            tokens = next(iter(analyzer.analyze([text])))
-            known[text] = frozenset(grammar_codes(tokens))
-        return known[text]
-
-    return grammar_of
-
-
 def load_packs(
     content_dir: Path,
     *,
     l1: str = "tr",
     l2: str = "en",
-    grammar_of: Callable[[str], frozenset[str]] | None = None,
 ) -> Packs:
     """The pack sources and the built pack's forms."""
     target = content_dir / "packs" / l2
@@ -428,7 +413,6 @@ def load_packs(
         forms=read_forms(content_dir / "build" / f"{l2}@1.sqlite"),
         normalize=Normalizer.from_file(target / NORMALIZATION_FILE),
         tags=_card_tags(pair / "error_tags.jsonl"),
-        grammar_of=grammar_of,
     )
 
 
@@ -446,11 +430,11 @@ def read_cases(path: Path) -> list[EvalCase]:
     return [EvalCase.model_validate(entry) for entry in data]
 
 
-def run_eval_cases(content_dir: Path, *, analyzer: Callable[[], Analyzer]) -> EvalReport:
+def run_eval_cases(content_dir: Path) -> EvalReport:
     """Writes `evals/tutor/answer_check/cases.jsonl` when every case is usable."""
     folder = content_dir.parent / CASES_DIR
     cases = read_cases(folder / CASES_SOURCE)
-    packs = load_packs(content_dir, grammar_of=tagger(analyzer()))
+    packs = load_packs(content_dir)
     rows, issues = build_cases(cases, packs, read_checks(folder / VALIDATION_FILE))
     report = EvalReport(
         cases=len(rows),
