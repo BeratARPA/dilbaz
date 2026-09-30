@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
 import 'package:dilbaz_app/data/repositories/pack_remote.dart';
@@ -49,6 +51,17 @@ void main() {
 
   Future<ContentStatus> status() =>
       container.read(contentControllerProvider.future);
+
+  /// Completes once the controller reports [expected].
+  Future<void> reaches(ContentStatus expected) {
+    final reached = Completer<void>();
+    final subscription = container.listen(contentControllerProvider, (_, next) {
+      if (next == AsyncData(expected) && !reached.isCompleted) {
+        reached.complete();
+      }
+    }, fireImmediately: true);
+    return reached.future.whenComplete(subscription.close);
+  }
 
   const ready = ContentStatus.ready(words: 1, chunks: 1, sentences: 2);
 
@@ -104,11 +117,10 @@ void main() {
       );
       remote.publish(newer);
 
-      // First what is on the device, then the refreshed content.
+      // First what is on the device, then the refreshed content. The
+      // refresh writes a file, so it is waited for rather than timed.
       expect(await status(), ready);
-      await pumpEventQueue(times: 200);
-      expect(
-        container.read(contentControllerProvider).value,
+      await reaches(
         const ContentStatus.ready(words: 1, chunks: 0, sentences: 0),
       );
     });
