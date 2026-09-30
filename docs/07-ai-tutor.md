@@ -19,15 +19,17 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
 
   | Rota | Birincil | Yedek | Son çare |
   |---|---|---|---|
-  | `answer_check` | Gemini Flash-Lite | Groq `openai/gpt-oss-120b` | Deterministik değerlendirme |
-  | `gap_suggest` | Gemini Flash | Gemini Flash-Lite → Groq | Yakalama + bekleyen öneri |
-  | `speaking_annotate` (aylık test dahil) | Gemini Flash | Gemini Flash-Lite | Deterministik akıcılık ölçümleri; işaretleme sonradan |
+  | `answer_check` | Gemini 3.1 Flash-Lite | Groq `openai/gpt-oss-120b` | Deterministik değerlendirme |
+  | `gap_suggest` | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite → Groq | Yakalama + bekleyen öneri |
+  | `speaking_annotate` (aylık test dahil) | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite | Deterministik akıcılık ölçümleri; işaretleme sonradan |
   | Sonraki fazların rotaları | O fazda eval ile seçilir | | |
+
+  - **Model kimlikleri** (Gemini belgeleri, 2026-09-30): `gemini-3.1-flash-lite` belgelerin düşük maliyetli ve yüksek hacimli işler için önerdiği kararlı, uzun ömürlü model; `gemini-3.5-flash` genel kullanımda (GA). ADR-0009'daki "Flash-Lite 3.5" belgelerde yok.
 
   - **Sıra eval'le kesinleşir.** Bu sıra bir tahmindir; her rota için birincil ve yedek sağlayıcıyı eval belirler (§8). "En iyi", eşikleri geçenler arasında en yüksek doğruluğu veren seçenektir; eşitlikte gecikmeye bakılır.
   - **Groq ve uzun rotalar:** Groq'un ücretsiz katmanındaki dakikada 8K token sınırı, uzun rotalara (`speaking_annotate`) izin vermez.
 - **Ayarların yeri:** Sağlayıcılar, model adları, rota sıraları ve kotalar tek bir yapılandırma dosyasındadır: `supabase/functions/_shared/llm_config.ts`. Kodda model adı sabit yazılmaz. İçerik araçlarında çalışma anı LLM'i yoktur; içerik Claude Code oturumlarında üretilir (`10`).
-- **Düşünme derinliği:** Rota başına anlamsal bir **effort** düzeyi tanımlanır. Adaptör bunu sağlayıcının ayarına çevirir (ör. Gemini'de düşünme düzeyi, `gpt-oss`'ta `reasoning_effort`).
+- **Düşünme derinliği:** Rota başına anlamsal bir **effort** düzeyi (low, medium, high) tanımlanır. Adaptör bunu sağlayıcının ayarına çevirir: Gemini'de `thinkingConfig.thinkingLevel` (`LOW`, `MEDIUM`, `HIGH`), `gpt-oss`'ta `reasoning_effort` (düşünme metni cevaba eklenmez: `include_reasoning: false`).
 
   | Rota | Effort | Gerekçe |
   |---|---|---|
@@ -48,9 +50,14 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
 
 ## 3. API kullanım kuralları (Edge Functions, TypeScript/Deno)
 
-- **SDK:** Resmî SDK'lar kullanılır. OpenAI uyumlu uç nokta sunan sağlayıcılar (Groq ve Gemini'nin uyumluluk katmanı) tek bir adaptörü paylaşabilir. Seçim F1-15'te belgelerle (context7) doğrulanır. Sağlayıcılar `_shared/llm/` altında ortak bir arayüzün arkasındadır.
+- **SDK yok, REST (F1-15 kararı):** Sağlayıcılar `_shared/llm/` altında ortak bir arayüzün (`LlmModel`) arkasındadır. Her biri tek bir uç noktayı `fetch` ile çağırır:
+  - Gemini: `POST …/v1beta/models/{model}:generateContent` (`x-goog-api-key`)
+  - Groq: `POST …/openai/v1/chat/completions` (OpenAI uyumlu, `Authorization: Bearer`)
+
+  Gerekçe: Rota başına tek çağrı var. SDK kenar fonksiyonunu büyütür ve soğuk başlangıcı uzatır. `fetch` enjekte edilince testler ağsız çalışır. Günlük kota, dakika sınırı ve reddetme ayrımı açıkça yapılır. API biçimleri context7 ile 2026-09-30'da doğrulandı.
 - **Yapılandırılmış çıktı:**
-  - Şema zod ile tanımlanır ve sağlayıcıya JSON Schema olarak verilir (yapılandırılmış çıktı ya da JSON modu).
+  - Şema zod ile tanımlanır ve sağlayıcıya JSON Schema olarak verilir: Gemini'de `responseJsonSchema`, Groq'ta `json_schema` + `strict: true` (kısıtlı çözümleme).
+  - Sağlayıcıya yalnızca yapı gider: tipler, alanlar, zorunluluk, enum ve dizi öğeleri. Bütün nesneler kapalıdır. Sınırlar (0–1 arası güven gibi) zod'dadır, çünkü iki sağlayıcı JSON Schema'nın farklı alt kümelerini kabul eder.
   - Dönen JSON sunucuda zod ile **her zaman** doğrulanır.
   - Geçersizse tek bir yeniden deneme yapılır, sonra sıradaki sağlayıcıya geçilir. Hepsi başarısız olursa sonuç `uncertain` sayılır.
 - **Bitiş nedenleri her zaman kontrol edilir:**
@@ -75,16 +82,17 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
   - Sistem promptunda tarih, UUID, sırasız JSON olmaz. Sağlayıcıların örtük önbelleği ancak böyle çalışır. Groq'ta önbellekten okunan tokenlar kotaya sayılmaz.
   - Rol oyununda geçmiş yalnızca sona eklenerek büyür.
 - **Hata yönetimi:**
-  - 429 (kota) → sağlayıcı o kotanın sıfırlanmasına kadar "dolu" işaretlenir, sıradaki sağlayıcıya geçilir.
-  - 5xx ve zaman aşımı → SDK'nın yeniden denemesinden sonra sıradaki sağlayıcıya geçilir.
-  - 400/404 yeniden denenmez; olay kodu loglanır.
+  - Günlük kota 429'u (Gemini'de kota kimliğinde `PerDay`, Groq'ta `x-ratelimit-remaining-requests: 0`) → model kota günü bitene kadar "dolu" işaretlenir, sıradaki modele geçilir.
+  - Dakika sınırı 429'u ve 503 → model sağlayıcının istediği süre (en çok 10 dk, belirtmezse 30 sn) atlanır. İşaret fonksiyon örneği başınadır.
+  - 5xx, zaman aşımı ve ağ hatası → yeniden denenmez, sıradaki modele geçilir. Etkileşimli rotada beklemek gecikmeyi uzatır. Rota başına zaman aşımı `timeoutMs`'dir; `answer_check` için 15 sn.
+  - 400/404 yeniden denenmez; olay kodu loglanır, sıradaki modele geçilir.
 - **Kullanım kaydı ve kota:**
   - Her çağrı `llm_usage` tablosuna yazılır: rota, sağlayıcı, model, token türleri, gecikme. Ücretsiz katmanda `cost_usd` = 0 olur.
   - İki kullanıcı aynı kotaları paylaşır. **Adil paylaşım:** Her kullanıcıya her sağlayıcı ve model kotasının yarısı ayrılır. Pay dolunca rota `quota_exhausted` döner, istemci deterministik moda geçer.
-  - Günlük sayaçlar sağlayıcının sıfırlama saatine göre tutulur (Gemini: Pasifik saatiyle gece yarısı).
+  - Günlük sayaçlar sağlayıcının sıfırlama saatine göre tutulur: Gemini'de Pasifik saatiyle gece yarısı, Groq'ta UTC günü (yaklaşık). Kullanım, `llm_usage_counts` fonksiyonundan okunur. Bu fonksiyon yalnızca servis rolüne açıktır ve kullanıcının her modeldeki çağrı sayısını ve önbellek dışı token sayısını kota gününün başından beri verir. Günlük token sınırı olan modelde (Groq) token payı da denetlenir.
 - **Gizlilik ve onay:**
   - LLM'e yalnızca metin gider: transkript, istem, öğe bilgisi. Ses, isim, e-posta ve kullanıcı kimliği gitmez.
-  - Gemini'nin ücretsiz katmanında gönderilen içerik ürün geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Her kullanıcı karşılamada (F1-12) kendi adına onay verir; onay yoksa istekleri Groq'a ya da deterministik yola gider.
+  - Gemini'nin ücretsiz katmanında gönderilen içerik ürün geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Her kullanıcı karşılamada (F1-12) kendi adına onay verir; onay yoksa istekleri Groq'a ya da deterministik yola gider. Sunucu onayı `profiles.settings.ai_data_consent.granted` alanından okur. Okuyamazsa onay yok sayılır.
   - Groq hesabında ZDR (sıfır saklama) açılır.
 
 ## 4. Rotalar ve sözleşmeler
@@ -124,10 +132,36 @@ Output = {
 
 **Kurallar (sistem promptu + sunucu doğrulaması):**
 - `correct` ya da `acceptable_variant` ise merdiven boş dizelerdir.
-- h1: yalnızca hata türü. h2: yalnızca yer. h3: kural. **h1–h3, düzeltilmiş hedef parçayı içeremez.** Sunucu normalize edilmiş dize kontrolü yapar; ihlalde merdiven yeniden istenir ya da h1–h3 genel şablonlarla değiştirilir.
+- h1: yalnızca hata türü. h2: yalnızca yer. h3: kural. **h1–h3, düzeltilmiş hedef parçayı içeremez.** Sunucu bunu kelime düzeyinde denetler (`_shared/leak.ts`). Şu durumlarda ipucu cevabı ele verir:
+  - H4'ü (düzeltilmiş cümle) ya da referansı içeriyorsa
+  - öğrencinin böyle söylemediği hedef ifadeyi (iki kelime ve üstü) içeriyorsa
+  - öğrencinin söylemediği bir hedef ya da H4 kelimesini içeriyorsa
+
+  Kartın kural notlarındaki kelimelere izin verilir: kural kendi biçimlerini adlandırır ("I ile am") ve bu notlar paketin kendi H3'üdür. Notun ok işaretinden sonra gösterdiği biçimler ise izinli değildir ("go → went"). Tek harfler sayılmaz ("a", -s'nin "s"'si). Cevabı ele veren ipucu boşaltılır; istemci boş ipucunu kendi şablonuyla doldurur (`03` §0.5).
 - A seviyelerinde açıklamalar Türkçe ve en fazla 20 kelimedir.
 - Anlamı koruyan doğal ifadeler reddedilmez (I-17). Emin değilse `uncertain` döner.
 - Hedef kelimenin yerine eş anlamlısını kullanan doğru cevap `acceptable_variant` ve `target_ok=false` döner. Bu durumda merdiven boştur ve istemci hedef için yeniden sorar (`03` §0.2).
+
+**Rota (F1-15):** `POST /functions/v1/tutor/answer_check`, oturum JWT'si fonksiyonda doğrulanır.
+- **Girdi eklemeleri:** `item.alternatives` (hedefsiz doğru cevaplar), `context_note`.
+  - Paket, doğru cevapları cümle başına listeler. İstemci bu listeleri kartın kendi hedefine göre ayırır: kelime kartında hedef lemmayı taşıyanlar `variants`'a, taşımayanlar `alternatives`'e gider. Dilbilgisi kartında ölçüt, yapının cevapta olmasıdır; örneğin `going to` kartında "I'll…" hedefsizdir.
+  - Dilbilgisi kartları için paketin cevap başına gramer kodu taşıması gerekir (F1-16). Eval seti bu ayrımı S4 etiketleyicisiyle yapar.
+- **Modelin cevabı** (zod, `_shared/schemas/answer_check.ts`) sözleşmeden iki noktada ayrılır. Hata aralıkları karakter konumu değil, cevaptan alıntıdır; sunucu bunları konuma çevirir, bulamadığını atar. `variant_to_learn` alanını sunucu doldurur (`acceptable_variant`'ta cevabın kendisi, aksi hâlde null).
+- **Sunucu korumaları:**
+  - `correct`, `acceptable_variant`, `unintelligible` ve `uncertain` cevaplarda merdiven boştur.
+  - `wrong`, `off_target` ve `unintelligible`'da `target_ok` false'tur.
+  - Etiketler yalnızca `minor_error` ve `wrong`'da bulunur, en çok 3 tanedir.
+  - Yazılı cevap `unintelligible` olamaz; model öyle derse sonuç `off_target` olur.
+  - Cevabı ele veren ipucu boşaltılır (yukarıda).
+- **Cevap:** sözleşmedeki alanlar + `catalog` (etiketlerin geldiği çift paket, ör. `tr-en@1`), `provider`, `model`.
+- **Hata kodları:** İstemci bu kodlarda deterministik yola geçer (`03` §0.5 adım 4).
+
+  | Durum | Kod |
+  |---|---|
+  | 400 | `bad_json`, `invalid_input`, `missing_response` (cevapsız çağrı yok, I-01/I-11), `unsupported_pair` |
+  | 429 | `quota_exhausted` (kullanıcının payı ya da kota dolu) |
+  | 502 | `llm_refused` (bütün modeller reddetti; nötr mesaj), `llm_failed` |
+  | 503 | `llm_unavailable` (anahtar yok ya da onay gerektiren model dışında model yok) |
 
 ### 4.2 `speaking_annotate` — konuşma transkripti işaretleme (A11, A13 debrief girişi, A15, A21, A23)
 
@@ -226,7 +260,10 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 ```
 
 - Katalog sürümü değiştiğinde önbellek doğal olarak yenilenir.
-- Promptlar `supabase/functions/_shared/prompts/*.md` dosyalarında versiyonlanır. Değişiklik → eval zorunlu (§8).
+- **Promptların yeri:** Promptlar `supabase/functions/_shared/prompts/*.ts` modüllerinde, sürüm sabitiyle (ör. `answer_check@1`) versiyonlanır. Kenar fonksiyonu paketlemesi `.md` dosyalarını taşımayı garanti etmiyor; TS modülü güvenle paketlenir. Değişiklik → eval zorunlu (§8).
+- **Katalog modülü:** Hata etiketleri ve H3 kural notları çift paketten `_shared/catalogs/<çift>.ts` olarak üretilir: `deno run -A _shared/catalogs/generate.ts`. Bir test paketle eşitliği denetler.
+- **Kart kontrolündeki etiketler:** Yalnızca dilbilgisi, kelime ve edim etiketleri kullanılır. Telaffuz ve algı etiketleri konuşma görevi ve dikte içindir.
+- **`answer_check@1` örnekleri:** 10 örnek var, her verdict için en az bir tane. Örneklerin cümleleri eval setinde kullanılmaz (test).
 
 ## 6. Pedagojik korkuluklar (özet)
 
@@ -258,6 +295,15 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
 
 - **Konum:** `evals/tutor/<rota>/cases.jsonl`. Çalıştırıcı: `evals/run.ts` (Deno); sonuçlar `evals/results/<tarih>-<rota>.json`.
+  - `answer_check` altın seti v1: 285 vaka, kaynağı `cases.yaml`. Vakayı paketten `dilbaz-content eval-cases` kurar: istem, referans, kart hedefine göre ayrılmış listeler, hedef, gramer kodları ve motor testi için biçim tablosu. Yalnızca LLM'e gerçekten ulaşan cevaplar sette yer alır; normalizasyondan sonra listelenmiş bir cevapla eşleşen vaka reddedilir.
+  - Dağılım: 87'si doğru ya da kabul edilebilir cevap (tanıma gürültüsü, listede olmayan varyant, Türkçe "o", hedefsiz doğru cevap), 60'ı hedef dışında ya da hedefte küçük hata, 32'si yanlış kelime ya da anlam, 34'ü dilbilgisi kartı, 22'si kalıp, 25'i anlam dışı, 4'ü parça, 13'ü anlaşılmaz tanıma, 8'i yanlış duyulmuş olabilecek tek kelime.
+  - Altın etiketler üretenden ayrı bir ajan oturumunda **kör** kontrol edildi, iki tur (`validation.jsonl`):
+    - 1. tur: Kontrolcünün ilk kararı 259 vakanın 259'unda altın kümenin içindeydi.
+    - 2. tur: 26 yeni vaka ve 10 çeldirici, 36/36 uyumlu.
+    - `target_ok` farkı yalnızca "belirsiz" vakalardaydı. Orada `target_ok` bir tahmin olduğu için puanlanmaz.
+    - Kontrolü olmayan ya da kontrolle çelişen vaka sete girmez (`eval-cases`).
+  - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
+  - Ölçütler: doğruluk (başarısız çağrı ıska sayılır); yanlış sayma (doğru ya da kabul edilebilir cevabın `wrong`, `off_target` ya da hedefte `minor_error` alması); sunulan ipuçlarında sızıntı; ham sızıntı (modelin yazıp korumanın boşalttığı); ilk cevapta şema geçerliliği; `target_ok` uyumu; beklenen etiket isabeti; A seviyesinde 20 kelimeyi aşan ipucu; gecikme ve token.
 - **Vaka kaynakları:**
   1. Türkçe konuşanlara özgü sentetik hatalar
   2. Kabul edilmesi gereken zor varyantlar
@@ -280,9 +326,13 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
 
 - **Sağlayıcı seçimi:** Çalıştırıcı aynı seti her aday sağlayıcı ve modelle çalıştırır. Rota başına sıra (§2) sonuçlara göre belirlenir ve `evals/results/` altına yazılır.
 - **Kotalar:** Eval ücretsiz kotalarda çalışır. Gemini Flash'ın günlük ~20 isteği yüzünden bazı rotaların eval'i birkaç güne yayılır. Çalıştırmadan önce kullanıcıya süre ve kota etkisi söylenir.
-- **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır. Eşikler:
+- **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır (`packages/engine/test/scoring/answer_check_golden_test.dart`). Eşikler:
   - doğru ya da varyant cevabı "yanlış" sayma ≤ %3
   - H1–H3'te cevap sızıntısı %0
+- **Deterministik denetleyicinin durumu (F1-15):** İlk ölçümde yanlış sayma oranı %19,8 çıktı. Düzeltmelerden sonra %2,3 (87 vakada 2: "Have you any children?" ve "Do you have any sisters?"). Düzeltmeler şunlardır:
+  - Normalizasyon dolgu seslerini atar ve art arda tekrarlanan kelimeyi bir sayar (tanıma duraksamaları).
+  - İsimden sonraki "'s", "is" okunur.
+  - Hedefi kaçıran büyük farkta, cevap doğru cevabın kelimelerinin en az üçte birini koruyorsa ve yalnızca kelime eksiltmiyorsa sonuç `off_target` yerine `uncertain` olur (`03` §0.5).
 
 ## 9. Kota planı (2 kullanıcı)
 

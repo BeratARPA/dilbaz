@@ -16,7 +16,7 @@ Kalite burada iki anlama gelir:
 | Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, sağlayıcı sırası ve kota | Her commit |
 | İçerik hattı testleri | `pytest` | Doğrulayıcılar, kapsama hesabı, derleme | Her commit (content/ değişirse) |
 | LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Sağlayıcı, model ya da prompt değişikliğinde **zorunlu** (ücretsiz kotaları tüketir; elle tetiklenir) |
-| Deterministik değerlendirme | `dart test` (motor) | `answer_check` altın seti; `07` §8 deterministik eşikleri | Her commit |
+| Deterministik değerlendirme | `dart test` (motor, `answer_check_golden_test.dart`) | `answer_check` altın seti; `07` §8 deterministik eşikleri | Her commit |
 | ASR karşılaştırma testi | `evals/asr/` | `08` §3.2 | Faz 2, sağlayıcı değişikliğinde |
 
 ## 2. Değişmez kural → test eşlemesi
@@ -70,7 +70,7 @@ Kalite burada iki anlama gelir:
 3. `dart test` (engine)
 4. `flutter test` (app; golden testler dahil)
 5. `supabase start` → `supabase test db` (pgTAP) → `supabase stop`
-6. `deno test` (functions)
+6. `deno test` (functions; ayrıca `evals/`: altın setin biçimi ve puanlama, sağlayıcı çağrısı yok)
 7. `uv run pytest` (content/tools, yalnızca `content/` değiştiyse)
 8. `flutter build apk --debug` (artifact)
 9. Gizli anahtar taraması

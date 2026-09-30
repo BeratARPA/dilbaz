@@ -201,6 +201,10 @@ abstract interface class LanguageServices {
 - **`forms` tablosu:** Derleme zamanında spaCy/Stanza ile geniş bir kelime listesinin çekimli biçimlerinden üretilir (go/goes/went/gone → go).
 - **Sondan eklemeli diller:** Türkçe ya da Fince hedef dil olursa biçim tablosu çok büyür. Manifest `tokenizer.runtime: "remote"` diyebilir; o zaman lemmatizasyon bir sunucu fonksiyonuyla (Stanza) yapılır. Bu genişleme noktası baştan tanımlıdır, ama ilk sürümde uygulanmaz.
 - **Normalizasyon kuralları veridir:** Kısaltma açma (I'm → I am), yazım varyantları (colour/color) ve sayı sözcükleri (2 → two) `normalization.yaml`'da tanımlıdır, kodda değil. Dosyanın `tests` bölümündeki örnekleri hem motor hem içerik araçları (S5 varyant kontrolü) geçmelidir.
+- **Tanıma gürültüsü (F1-15):**
+  - `fillers`: atılan dolgu sesleri ("uh", "um").
+  - `collapse_repeats`: art arda aynı kelime bir sayılır. Kelime tekrarının anlam taşıdığı dillerde kapalıdır (Türkçe "yavaş yavaş").
+  - Bu iki kural motor sözleşmesini değiştirdi: `engineVersion` 2 oldu, paketler `min_engine_version: 2` ister. Eski uygulama yeni paketi yarım uygulamak yerine "desteklenmiyor" diye geri çevirir.
 
 ## 7. Dilden bağımsızlığı zorunlu kılan kontroller
 

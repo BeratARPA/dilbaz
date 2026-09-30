@@ -77,6 +77,14 @@ Fiyat, kota ve koşullar 2026-09-26'da doğrulandı (kaynaklar en altta).
 
 H1–H3'ün cevabı içermediği paket derlemesinde (S9) test edilir (I-02).
 
+**Not (2026-09-30, F1-15):** `answer_check` altın seti deterministik yolda ölçüldü. Doğru cevapların %19,8'i yanlış sayılıyordu; ADR'nin eşiği %3.
+- **Nedenler:** tanıma dolguları ve tekrarlar hedefi bölüyordu; isimden sonraki "'s" çoğul gibi okunuyordu; hedefsiz yeniden ifadeler "hedef yok, fark büyük" kuralıyla `off_target` oluyordu.
+- **Değişiklikler:**
+  - Normalizasyona `fillers` ve `collapse_repeats` eklendi.
+  - "'s" artık "is" okunuyor.
+  - 3. maddedeki "Hedef parça yok ve fark büyük → off_target" kuralı inceltildi: cevap doğru cevabın kelimelerinin en az üçte birini koruyor ve yalnızca eksiltmiyorsa `uncertain` olur (`03` §0.5).
+- **Sonuç:** Oran %2,3'e indi; sızıntı %0.
+
 **Varyant kapsamı en önemli kaldıraçtır.** Her kart cümlesi için paket; kısaltmalı biçimleri, eş anlamlı kalıpları ve sıra alternatiflerini içerir.
 
 ### 3. İçerik üretimi (`10`)

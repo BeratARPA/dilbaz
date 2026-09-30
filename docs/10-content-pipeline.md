@@ -54,6 +54,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `audio [--l2 en]` (S6: paket sesleri; `content/tts` işçisini çağırır).
   - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
   - `placement-tests [--l2 en]` (S8: gramer bankası ve dikte seti; bankaya giremeyen madde varsa çıkış kodu 1).
+  - `eval-cases` (LLM eval'inin `answer_check` altın seti: `evals/tutor/answer_check/cases.yaml` + kör kontroller → `cases.jsonl`; derlenmiş paketi ve S4 etiketleyicisini kullanır; kullanılamayan vaka varsa çıkış kodu 1; `07` §8).
   - `build [--l1 tr] [--l2 en]` (S9: paket dosyaları; engelleyici sorun varsa hiçbir dosya yazılmaz, çıkış kodu 1).
   - `report [--l1 tr] [--l2 en]` (S10: derleme raporu).
   - Diğer aşama komutları sonraki görevlerde eklenir.

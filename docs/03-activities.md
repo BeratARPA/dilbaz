@@ -91,9 +91,11 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
 
 1. Normalizasyon:
    - küçük harf, noktalama ve fazla boşlukları silme
-   - kısaltmaları açma (I'm → I am, don't → do not)
+   - ses tanımanın bıraktığı dolgu seslerini atma ("uh", "um"; paketin `fillers` listesi)
+   - kısaltmaları açma (I'm → I am, don't → do not; isimden sonraki "'s" → is)
    - sayıları yazıya çevirme
    - İngiliz ve Amerikan yazımını eşitleme (colour/color)
+   - art arda iki kez söylenen kelimeyi bir sayma ("the the"; paketin `collapse_repeats` kuralı, tekrarın anlam taşıdığı dillerde kapalı)
 2. Normalize edilmiş cevap bilinen doğru cevaplardan biriyle birebir eşleşirse LLM çağrılmaz. Bilinen doğru cevaplar: referans, paketteki `variants` ve `alternatives` listeleri, kişisel varyantlar ve alternatifler.
    - Eşleşen cevap **kartın hedef kelimesini içeriyorsa** `correct` döner.
    - İçermiyorsa **hedefsiz doğru cevaptır** (§0.2).
@@ -115,7 +117,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
      | Bozuk: sırası yanlış ya da araya kelime girmiş | — | `wrong`, `target_ok=false` |
      | Eksik | küçük | `wrong`, `target_ok=false` |
      | Yerinde başka kelime var | küçük | `uncertain` (LLM'siz): eş anlamlı olabilir |
-     | Eksik ya da yerinde başka kelime var | büyük | `off_target` |
+     | Eksik ya da yerinde başka kelime var | büyük | `off_target`; ama cevap doğru cevabın kelimelerinin en az üçte birini koruyor ve yalnızca kelime eksiltmekten fazlasını yapıyorsa `uncertain` (LLM'siz): hedefsiz başka bir söyleyiş olabilir ("Remember to buy bread!" ← "Don't forget to buy bread!"). Yalnızca eksiltme bir parçadır, `off_target` kalır. |
 
    - **`uncertain` (LLM'siz):**
      - Üretim kanıtı sayılmaz; FSRS'e Hard yazılır (§0.3).

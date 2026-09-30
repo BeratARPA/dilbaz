@@ -14,7 +14,7 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
 | 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
-| 3 | **Google AI Studio (Gemini)** | aistudio.google.com → Google hesabıyla giriş → **Get API key** → **Create API key**. **Faturalandırma ekleme:** ücretsiz katmanda kalmalı. Kotalar AI Studio'nun kullanım sayfasında görünür. | F1-15'ten önce |
+| 3 | **Google AI Studio (Gemini)** | aistudio.google.com → Google hesabıyla giriş → **Get API key** → **Create API key**. **Faturalandırma ekleme:** ücretsiz katmanda kalmalı. Kotalar AI Studio'nun kullanım sayfasında görünür (`gemini-3.1-flash-lite`, `gemini-3.5-flash`). | F1-15'ten önce |
 | 4 | **Groq** | console.groq.com → e-postayla kayıt (kart yok) → **API Keys** → yeni anahtar. **Settings → Data Controls → Zero Data Retention: açık.** | F1-15'ten önce |
 | 5 | **Deepgram** | console.deepgram.com → e-postayla kayıt ($200 başlangıç kredisi, kart yok) → **API Keys** → yeni anahtar. | F1-14'ten önce |
 | — | **Anthropic, Azure** | Kullanılmıyor: kart gerekiyor (ADR-0009). Bütçe olursa ADR-0005/0006'ya dönülür. | — |
@@ -37,7 +37,7 @@ npx supabase link --project-ref <PROJE_REF>
 npx supabase secrets set --env-file supabase/functions/.env
 ```
 
-Aynı `supabase/functions/.env` dosyası yerel geliştirmede (`npx supabase functions serve`) de kullanılır. Bu dosya git dışıdır.
+Aynı `supabase/functions/.env` dosyası yerel geliştirmede (`npx supabase functions serve`) ve LLM eval'inde (`cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check`) de kullanılır. Bu dosya git dışıdır.
 
 Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yalnızca herkese açık bilgiler):
 

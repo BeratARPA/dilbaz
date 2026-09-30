@@ -311,6 +311,7 @@ create table app_config (key text primary key, value jsonb not null);
   - (`share_levels` açıksa) seviye aralıkları
   - (`share_monthly` açıksa) aylık özet
 - **`delete_my_data()`** (security definer): kullanıcının tüm satırlarını ve Storage nesnelerini siler (servis çağrısıyla).
+- **`llm_usage_counts(p_profile_id, p_models[], p_since[])`** (security invoker, yalnızca servis rolü; F1-15). Bir kullanıcının her modeldeki çağrı sayısını ve önbellek dışı token sayısını (`input − cache_read + output`) o modelin kota gününün başından beri verir. `tutor` adil payı bununla denetler (`07` §3).
 
 ## 3. İndeksler
 
