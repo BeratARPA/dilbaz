@@ -426,3 +426,7 @@ enabled = true
 [functions.tutor]
 verify_jwt = false
 import_map = "./functions/deno.json"
+
+[functions.speech]
+verify_jwt = false
+import_map = "./functions/deno.json"

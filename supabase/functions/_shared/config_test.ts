@@ -56,12 +56,23 @@ Deno.test("model ids appear only in llm_config.ts", async () => {
 
 Deno.test("English ASR is configured for verbatim transcripts", () => {
   const params = speechConfig.sttEnglish.params;
-  assertEquals(params.filler_words, true);
-  assertEquals(params.smart_format, false);
-  assertEquals(params.mip_opt_out, true);
+  assertEquals(params.model, speechConfig.sttEnglish.model);
+  assertEquals(params.filler_words, "true");
+  assertEquals(params.smart_format, "false");
+  assertEquals(params.punctuate, "false");
+  assertEquals(params.mip_opt_out, "true");
 });
 
-Deno.test("pronunciation assessment respects the Azure REST limits", () => {
-  assert(speechConfig.pronunciation.maxSeconds <= 30);
-  assertEquals(speechConfig.pronunciation.locale, "en-US");
+Deno.test("only free providers serve speech (ADR-0009)", () => {
+  assertEquals(speechConfig.sttEnglish.provider, "deepgram");
+  assertEquals(speechConfig.sttTurkish.onDevice, true);
+  assertEquals(speechConfig.pronunciation, null);
+  assertEquals(speechConfig.tts.dynamic, "on-device");
+  assert(speechConfig.pricing.deepgramPerMinute > 0);
+});
+
+Deno.test("a card answer and a two-minute task fit in one upload", () => {
+  // 12 s of AAC at 32 kbps, and two minutes of it (docs/08 §4).
+  assert(speechConfig.upload.maxBytes >= 120 * 32_000 / 8);
+  assert(speechConfig.upload.types.includes("audio/mp4"));
 });
