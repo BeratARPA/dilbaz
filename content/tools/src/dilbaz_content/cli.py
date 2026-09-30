@@ -21,6 +21,7 @@ from dilbaz_content.analysis import SpacyAnalyzer
 from dilbaz_content.audio_step import AudioError, run_audio, worker
 from dilbaz_content.build_step import BuildError, run_build
 from dilbaz_content.carriers_step import run_carriers
+from dilbaz_content.eval_cases import run_eval_cases
 from dilbaz_content.ingest import (
     ChecksumMismatchError,
     OnProgress,
@@ -346,6 +347,23 @@ def placement_tests(
     )
     for item, words in report.hard_words.items():
         console.print(f"[yellow]{item}[/yellow]: words above the level: {', '.join(words)}")
+    for issue in report.issues:
+        console.print(f"[red]{issue.id}[/red]: {issue.kind}: {issue.detail}")
+    if report.issues:
+        raise typer.Exit(code=1)
+
+
+@app.command(name="eval-cases")
+def eval_cases(content_dir: ContentDir = None) -> None:
+    """Build the answer_check gold set (evals/tutor/answer_check/cases.jsonl)."""
+    root = _content_dir(content_dir)
+    try:
+        report = run_eval_cases(root, analyzer=SpacyAnalyzer)
+    except (FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(f"{report.cases} cases; by kind {report.by_kind}")
+    console.print(f"first expected verdicts: {report.by_verdict}")
     for issue in report.issues:
         console.print(f"[red]{issue.id}[/red]: {issue.kind}: {issue.detail}")
     if report.issues:

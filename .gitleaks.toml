@@ -6,11 +6,12 @@ title = "Dilbaz gitleaks configuration"
 useDefault = true
 
 [[allowlists]]
-description = "Item keys (en.ws.hospital.n.1, en.pgram.a1.be_present) in the packs and in the content tests look like tokens to generic-api-key"
+description = "Item keys (en.ws.hospital.n.1, en.pgram.a1.be_present) in the packs, the content tests and the eval cases look like tokens to generic-api-key"
 targetRules = ["generic-api-key"]
 condition = "AND"
 paths = [
   '''^content/packs/[^/]+/(?:items/|placement/)?[^/]+\.jsonl$''',
   '''^content/tools/tests/[^/]+\.py$''',
+  '''^evals/tutor/[^/]+/[^/]+\.jsonl$''',
 ]
 regexes = ['''^[a-z]{2,3}\.(?:ws|chunk|gp|sent|pattern|sound|pgram|pdict)\.[a-z0-9_.]+$''']
