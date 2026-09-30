@@ -18,7 +18,20 @@ declare
   v_id uuid := gen_random_uuid();
   v_name text := btrim(coalesce(p_name, ''));
   v_code text;
+  v_own public.teams%rowtype;
 begin
+  -- Asking again answers with the team made before: a request repeated
+  -- after a lost answer must not leave a second team behind.
+  select * into v_own
+  from public.teams t
+  where t.created_by = v_user
+  order by t.created_at
+  limit 1;
+  if found then
+    return jsonb_build_object(
+      'id', v_own.id, 'name', v_own.name, 'invite_code', v_own.invite_code
+    );
+  end if;
   if v_name = '' then
     raise exception 'team_name_required';
   end if;

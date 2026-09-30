@@ -2,7 +2,7 @@
 -- (docs/13-data-model.md §4).
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(16);
+select plan(18);
 
 insert into auth.users (id, email) values
   ('11111111-1111-4111-8111-111111111111', 'a@dilbaz.test'),
@@ -31,6 +31,12 @@ set local role authenticated;
 select set_config('request.jwt.claims',
   '{"sub": "11111111-1111-4111-8111-111111111111", "role": "authenticated"}', true);
 
+select throws_ok(
+  $$select public.create_team('   ')$$,
+  'P0001', 'team_name_required',
+  'a team needs a name'
+);
+
 create temp table made on commit drop as
   select public.create_team('  Biz  ') as team;
 grant select on made to authenticated;
@@ -45,11 +51,14 @@ select results_eq(
   $$values ('11111111-1111-4111-8111-111111111111'::uuid, 'owner'::text)$$,
   'the creator is the owner of the new team'
 );
-select throws_ok(
-  $$select public.create_team('   ')$$,
-  'P0001', 'team_name_required',
-  'a team needs a name'
+
+-- A request repeated after a lost answer makes no second team.
+select is(
+  (select public.create_team('Yine biz')),
+  (select team from made),
+  'asking again answers with the team made before'
 );
+select is((select count(*)::int from public.teams), 1, 'and makes no second team');
 
 -- B cannot see the team before joining, and a wrong code opens nothing.
 select set_config('request.jwt.claims',
