@@ -20,10 +20,10 @@ void main() {
     await db.close();
   });
 
-  test('schema v1 of the code matches the exported snapshot', () async {
+  test('a v1 database upgrades to v2: the devices table appears', () async {
     final schema = await verifier.schemaAt(1);
     final db = AppDatabase(schema.newConnection());
-    await verifier.migrateAndValidate(db, 1);
+    await verifier.migrateAndValidate(db, 2);
     await db.close();
   });
 }

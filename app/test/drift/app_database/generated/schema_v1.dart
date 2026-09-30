@@ -4,7 +4,7 @@
 //
 import 'package:drift/drift.dart';
 
-class Profiles extends Table with TableInfo {
+class Profiles extends Table with TableInfo<Profiles, ProfilesData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -174,8 +174,74 @@ class Profiles extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ProfilesData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProfilesData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      displayName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_name'],
+      )!,
+      l1: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}l1'],
+      )!,
+      uiLocale: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ui_locale'],
+      )!,
+      timeBudgetMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}time_budget_min'],
+      )!,
+      weeklyDaysGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_days_goal'],
+      )!,
+      anchors: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}anchors'],
+      )!,
+      quietHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}quiet_hours'],
+      ),
+      goalText: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}goal_text'],
+      ),
+      interests: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}interests'],
+      )!,
+      scaffoldOverrides: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scaffold_overrides'],
+      )!,
+      settings: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}settings'],
+      )!,
+    );
   }
 
   @override
@@ -189,7 +255,497 @@ class Profiles extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Courses extends Table with TableInfo {
+class ProfilesData extends DataClass implements Insertable<ProfilesData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String displayName;
+  final String l1;
+  final String uiLocale;
+  final int timeBudgetMin;
+  final int weeklyDaysGoal;
+  final String anchors;
+  final String? quietHours;
+  final String? goalText;
+  final String interests;
+  final String scaffoldOverrides;
+  final String settings;
+  const ProfilesData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.displayName,
+    required this.l1,
+    required this.uiLocale,
+    required this.timeBudgetMin,
+    required this.weeklyDaysGoal,
+    required this.anchors,
+    this.quietHours,
+    this.goalText,
+    required this.interests,
+    required this.scaffoldOverrides,
+    required this.settings,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['display_name'] = Variable<String>(displayName);
+    map['l1'] = Variable<String>(l1);
+    map['ui_locale'] = Variable<String>(uiLocale);
+    map['time_budget_min'] = Variable<int>(timeBudgetMin);
+    map['weekly_days_goal'] = Variable<int>(weeklyDaysGoal);
+    map['anchors'] = Variable<String>(anchors);
+    if (!nullToAbsent || quietHours != null) {
+      map['quiet_hours'] = Variable<String>(quietHours);
+    }
+    if (!nullToAbsent || goalText != null) {
+      map['goal_text'] = Variable<String>(goalText);
+    }
+    map['interests'] = Variable<String>(interests);
+    map['scaffold_overrides'] = Variable<String>(scaffoldOverrides);
+    map['settings'] = Variable<String>(settings);
+    return map;
+  }
+
+  ProfilesCompanion toCompanion(bool nullToAbsent) {
+    return ProfilesCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      displayName: Value(displayName),
+      l1: Value(l1),
+      uiLocale: Value(uiLocale),
+      timeBudgetMin: Value(timeBudgetMin),
+      weeklyDaysGoal: Value(weeklyDaysGoal),
+      anchors: Value(anchors),
+      quietHours: quietHours == null && nullToAbsent
+          ? const Value.absent()
+          : Value(quietHours),
+      goalText: goalText == null && nullToAbsent
+          ? const Value.absent()
+          : Value(goalText),
+      interests: Value(interests),
+      scaffoldOverrides: Value(scaffoldOverrides),
+      settings: Value(settings),
+    );
+  }
+
+  factory ProfilesData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProfilesData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      displayName: serializer.fromJson<String>(json['displayName']),
+      l1: serializer.fromJson<String>(json['l1']),
+      uiLocale: serializer.fromJson<String>(json['uiLocale']),
+      timeBudgetMin: serializer.fromJson<int>(json['timeBudgetMin']),
+      weeklyDaysGoal: serializer.fromJson<int>(json['weeklyDaysGoal']),
+      anchors: serializer.fromJson<String>(json['anchors']),
+      quietHours: serializer.fromJson<String?>(json['quietHours']),
+      goalText: serializer.fromJson<String?>(json['goalText']),
+      interests: serializer.fromJson<String>(json['interests']),
+      scaffoldOverrides: serializer.fromJson<String>(json['scaffoldOverrides']),
+      settings: serializer.fromJson<String>(json['settings']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'displayName': serializer.toJson<String>(displayName),
+      'l1': serializer.toJson<String>(l1),
+      'uiLocale': serializer.toJson<String>(uiLocale),
+      'timeBudgetMin': serializer.toJson<int>(timeBudgetMin),
+      'weeklyDaysGoal': serializer.toJson<int>(weeklyDaysGoal),
+      'anchors': serializer.toJson<String>(anchors),
+      'quietHours': serializer.toJson<String?>(quietHours),
+      'goalText': serializer.toJson<String?>(goalText),
+      'interests': serializer.toJson<String>(interests),
+      'scaffoldOverrides': serializer.toJson<String>(scaffoldOverrides),
+      'settings': serializer.toJson<String>(settings),
+    };
+  }
+
+  ProfilesData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? displayName,
+    String? l1,
+    String? uiLocale,
+    int? timeBudgetMin,
+    int? weeklyDaysGoal,
+    String? anchors,
+    Value<String?> quietHours = const Value.absent(),
+    Value<String?> goalText = const Value.absent(),
+    String? interests,
+    String? scaffoldOverrides,
+    String? settings,
+  }) => ProfilesData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    displayName: displayName ?? this.displayName,
+    l1: l1 ?? this.l1,
+    uiLocale: uiLocale ?? this.uiLocale,
+    timeBudgetMin: timeBudgetMin ?? this.timeBudgetMin,
+    weeklyDaysGoal: weeklyDaysGoal ?? this.weeklyDaysGoal,
+    anchors: anchors ?? this.anchors,
+    quietHours: quietHours.present ? quietHours.value : this.quietHours,
+    goalText: goalText.present ? goalText.value : this.goalText,
+    interests: interests ?? this.interests,
+    scaffoldOverrides: scaffoldOverrides ?? this.scaffoldOverrides,
+    settings: settings ?? this.settings,
+  );
+  ProfilesData copyWithCompanion(ProfilesCompanion data) {
+    return ProfilesData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      displayName: data.displayName.present
+          ? data.displayName.value
+          : this.displayName,
+      l1: data.l1.present ? data.l1.value : this.l1,
+      uiLocale: data.uiLocale.present ? data.uiLocale.value : this.uiLocale,
+      timeBudgetMin: data.timeBudgetMin.present
+          ? data.timeBudgetMin.value
+          : this.timeBudgetMin,
+      weeklyDaysGoal: data.weeklyDaysGoal.present
+          ? data.weeklyDaysGoal.value
+          : this.weeklyDaysGoal,
+      anchors: data.anchors.present ? data.anchors.value : this.anchors,
+      quietHours: data.quietHours.present
+          ? data.quietHours.value
+          : this.quietHours,
+      goalText: data.goalText.present ? data.goalText.value : this.goalText,
+      interests: data.interests.present ? data.interests.value : this.interests,
+      scaffoldOverrides: data.scaffoldOverrides.present
+          ? data.scaffoldOverrides.value
+          : this.scaffoldOverrides,
+      settings: data.settings.present ? data.settings.value : this.settings,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('displayName: $displayName, ')
+          ..write('l1: $l1, ')
+          ..write('uiLocale: $uiLocale, ')
+          ..write('timeBudgetMin: $timeBudgetMin, ')
+          ..write('weeklyDaysGoal: $weeklyDaysGoal, ')
+          ..write('anchors: $anchors, ')
+          ..write('quietHours: $quietHours, ')
+          ..write('goalText: $goalText, ')
+          ..write('interests: $interests, ')
+          ..write('scaffoldOverrides: $scaffoldOverrides, ')
+          ..write('settings: $settings')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    displayName,
+    l1,
+    uiLocale,
+    timeBudgetMin,
+    weeklyDaysGoal,
+    anchors,
+    quietHours,
+    goalText,
+    interests,
+    scaffoldOverrides,
+    settings,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProfilesData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.displayName == this.displayName &&
+          other.l1 == this.l1 &&
+          other.uiLocale == this.uiLocale &&
+          other.timeBudgetMin == this.timeBudgetMin &&
+          other.weeklyDaysGoal == this.weeklyDaysGoal &&
+          other.anchors == this.anchors &&
+          other.quietHours == this.quietHours &&
+          other.goalText == this.goalText &&
+          other.interests == this.interests &&
+          other.scaffoldOverrides == this.scaffoldOverrides &&
+          other.settings == this.settings);
+}
+
+class ProfilesCompanion extends UpdateCompanion<ProfilesData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> displayName;
+  final Value<String> l1;
+  final Value<String> uiLocale;
+  final Value<int> timeBudgetMin;
+  final Value<int> weeklyDaysGoal;
+  final Value<String> anchors;
+  final Value<String?> quietHours;
+  final Value<String?> goalText;
+  final Value<String> interests;
+  final Value<String> scaffoldOverrides;
+  final Value<String> settings;
+  final Value<int> rowid;
+  const ProfilesCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.displayName = const Value.absent(),
+    this.l1 = const Value.absent(),
+    this.uiLocale = const Value.absent(),
+    this.timeBudgetMin = const Value.absent(),
+    this.weeklyDaysGoal = const Value.absent(),
+    this.anchors = const Value.absent(),
+    this.quietHours = const Value.absent(),
+    this.goalText = const Value.absent(),
+    this.interests = const Value.absent(),
+    this.scaffoldOverrides = const Value.absent(),
+    this.settings = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProfilesCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String displayName,
+    this.l1 = const Value.absent(),
+    this.uiLocale = const Value.absent(),
+    this.timeBudgetMin = const Value.absent(),
+    this.weeklyDaysGoal = const Value.absent(),
+    this.anchors = const Value.absent(),
+    this.quietHours = const Value.absent(),
+    this.goalText = const Value.absent(),
+    this.interests = const Value.absent(),
+    this.scaffoldOverrides = const Value.absent(),
+    this.settings = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       displayName = Value(displayName);
+  static Insertable<ProfilesData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? displayName,
+    Expression<String>? l1,
+    Expression<String>? uiLocale,
+    Expression<int>? timeBudgetMin,
+    Expression<int>? weeklyDaysGoal,
+    Expression<String>? anchors,
+    Expression<String>? quietHours,
+    Expression<String>? goalText,
+    Expression<String>? interests,
+    Expression<String>? scaffoldOverrides,
+    Expression<String>? settings,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (displayName != null) 'display_name': displayName,
+      if (l1 != null) 'l1': l1,
+      if (uiLocale != null) 'ui_locale': uiLocale,
+      if (timeBudgetMin != null) 'time_budget_min': timeBudgetMin,
+      if (weeklyDaysGoal != null) 'weekly_days_goal': weeklyDaysGoal,
+      if (anchors != null) 'anchors': anchors,
+      if (quietHours != null) 'quiet_hours': quietHours,
+      if (goalText != null) 'goal_text': goalText,
+      if (interests != null) 'interests': interests,
+      if (scaffoldOverrides != null) 'scaffold_overrides': scaffoldOverrides,
+      if (settings != null) 'settings': settings,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProfilesCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? displayName,
+    Value<String>? l1,
+    Value<String>? uiLocale,
+    Value<int>? timeBudgetMin,
+    Value<int>? weeklyDaysGoal,
+    Value<String>? anchors,
+    Value<String?>? quietHours,
+    Value<String?>? goalText,
+    Value<String>? interests,
+    Value<String>? scaffoldOverrides,
+    Value<String>? settings,
+    Value<int>? rowid,
+  }) {
+    return ProfilesCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      displayName: displayName ?? this.displayName,
+      l1: l1 ?? this.l1,
+      uiLocale: uiLocale ?? this.uiLocale,
+      timeBudgetMin: timeBudgetMin ?? this.timeBudgetMin,
+      weeklyDaysGoal: weeklyDaysGoal ?? this.weeklyDaysGoal,
+      anchors: anchors ?? this.anchors,
+      quietHours: quietHours ?? this.quietHours,
+      goalText: goalText ?? this.goalText,
+      interests: interests ?? this.interests,
+      scaffoldOverrides: scaffoldOverrides ?? this.scaffoldOverrides,
+      settings: settings ?? this.settings,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (displayName.present) {
+      map['display_name'] = Variable<String>(displayName.value);
+    }
+    if (l1.present) {
+      map['l1'] = Variable<String>(l1.value);
+    }
+    if (uiLocale.present) {
+      map['ui_locale'] = Variable<String>(uiLocale.value);
+    }
+    if (timeBudgetMin.present) {
+      map['time_budget_min'] = Variable<int>(timeBudgetMin.value);
+    }
+    if (weeklyDaysGoal.present) {
+      map['weekly_days_goal'] = Variable<int>(weeklyDaysGoal.value);
+    }
+    if (anchors.present) {
+      map['anchors'] = Variable<String>(anchors.value);
+    }
+    if (quietHours.present) {
+      map['quiet_hours'] = Variable<String>(quietHours.value);
+    }
+    if (goalText.present) {
+      map['goal_text'] = Variable<String>(goalText.value);
+    }
+    if (interests.present) {
+      map['interests'] = Variable<String>(interests.value);
+    }
+    if (scaffoldOverrides.present) {
+      map['scaffold_overrides'] = Variable<String>(scaffoldOverrides.value);
+    }
+    if (settings.present) {
+      map['settings'] = Variable<String>(settings.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('displayName: $displayName, ')
+          ..write('l1: $l1, ')
+          ..write('uiLocale: $uiLocale, ')
+          ..write('timeBudgetMin: $timeBudgetMin, ')
+          ..write('weeklyDaysGoal: $weeklyDaysGoal, ')
+          ..write('anchors: $anchors, ')
+          ..write('quietHours: $quietHours, ')
+          ..write('goalText: $goalText, ')
+          ..write('interests: $interests, ')
+          ..write('scaffoldOverrides: $scaffoldOverrides, ')
+          ..write('settings: $settings, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Courses extends Table with TableInfo<Courses, CoursesData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -330,8 +886,62 @@ class Courses extends Table with TableInfo {
     {profileId, l2},
   ];
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  CoursesData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CoursesData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      l2: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}l2'],
+      )!,
+      pairPack: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pair_pack'],
+      )!,
+      levelEstimates: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level_estimates'],
+      )!,
+      vocabEstimate: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vocab_estimate'],
+      ),
+      fsrsParams: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fsrs_params'],
+      ),
+      desiredRetention: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}desired_retention'],
+      )!,
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}active'],
+      )!,
+    );
   }
 
   @override
@@ -348,7 +958,431 @@ class Courses extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class PersonalItems extends Table with TableInfo {
+class CoursesData extends DataClass implements Insertable<CoursesData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String l2;
+  final String pairPack;
+  final String levelEstimates;
+  final int? vocabEstimate;
+  final String? fsrsParams;
+  final double desiredRetention;
+  final int active;
+  const CoursesData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.l2,
+    required this.pairPack,
+    required this.levelEstimates,
+    this.vocabEstimate,
+    this.fsrsParams,
+    required this.desiredRetention,
+    required this.active,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['l2'] = Variable<String>(l2);
+    map['pair_pack'] = Variable<String>(pairPack);
+    map['level_estimates'] = Variable<String>(levelEstimates);
+    if (!nullToAbsent || vocabEstimate != null) {
+      map['vocab_estimate'] = Variable<int>(vocabEstimate);
+    }
+    if (!nullToAbsent || fsrsParams != null) {
+      map['fsrs_params'] = Variable<String>(fsrsParams);
+    }
+    map['desired_retention'] = Variable<double>(desiredRetention);
+    map['active'] = Variable<int>(active);
+    return map;
+  }
+
+  CoursesCompanion toCompanion(bool nullToAbsent) {
+    return CoursesCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      l2: Value(l2),
+      pairPack: Value(pairPack),
+      levelEstimates: Value(levelEstimates),
+      vocabEstimate: vocabEstimate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vocabEstimate),
+      fsrsParams: fsrsParams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fsrsParams),
+      desiredRetention: Value(desiredRetention),
+      active: Value(active),
+    );
+  }
+
+  factory CoursesData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CoursesData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      l2: serializer.fromJson<String>(json['l2']),
+      pairPack: serializer.fromJson<String>(json['pairPack']),
+      levelEstimates: serializer.fromJson<String>(json['levelEstimates']),
+      vocabEstimate: serializer.fromJson<int?>(json['vocabEstimate']),
+      fsrsParams: serializer.fromJson<String?>(json['fsrsParams']),
+      desiredRetention: serializer.fromJson<double>(json['desiredRetention']),
+      active: serializer.fromJson<int>(json['active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'l2': serializer.toJson<String>(l2),
+      'pairPack': serializer.toJson<String>(pairPack),
+      'levelEstimates': serializer.toJson<String>(levelEstimates),
+      'vocabEstimate': serializer.toJson<int?>(vocabEstimate),
+      'fsrsParams': serializer.toJson<String?>(fsrsParams),
+      'desiredRetention': serializer.toJson<double>(desiredRetention),
+      'active': serializer.toJson<int>(active),
+    };
+  }
+
+  CoursesData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? l2,
+    String? pairPack,
+    String? levelEstimates,
+    Value<int?> vocabEstimate = const Value.absent(),
+    Value<String?> fsrsParams = const Value.absent(),
+    double? desiredRetention,
+    int? active,
+  }) => CoursesData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    l2: l2 ?? this.l2,
+    pairPack: pairPack ?? this.pairPack,
+    levelEstimates: levelEstimates ?? this.levelEstimates,
+    vocabEstimate: vocabEstimate.present
+        ? vocabEstimate.value
+        : this.vocabEstimate,
+    fsrsParams: fsrsParams.present ? fsrsParams.value : this.fsrsParams,
+    desiredRetention: desiredRetention ?? this.desiredRetention,
+    active: active ?? this.active,
+  );
+  CoursesData copyWithCompanion(CoursesCompanion data) {
+    return CoursesData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      l2: data.l2.present ? data.l2.value : this.l2,
+      pairPack: data.pairPack.present ? data.pairPack.value : this.pairPack,
+      levelEstimates: data.levelEstimates.present
+          ? data.levelEstimates.value
+          : this.levelEstimates,
+      vocabEstimate: data.vocabEstimate.present
+          ? data.vocabEstimate.value
+          : this.vocabEstimate,
+      fsrsParams: data.fsrsParams.present
+          ? data.fsrsParams.value
+          : this.fsrsParams,
+      desiredRetention: data.desiredRetention.present
+          ? data.desiredRetention.value
+          : this.desiredRetention,
+      active: data.active.present ? data.active.value : this.active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CoursesData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('l2: $l2, ')
+          ..write('pairPack: $pairPack, ')
+          ..write('levelEstimates: $levelEstimates, ')
+          ..write('vocabEstimate: $vocabEstimate, ')
+          ..write('fsrsParams: $fsrsParams, ')
+          ..write('desiredRetention: $desiredRetention, ')
+          ..write('active: $active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    l2,
+    pairPack,
+    levelEstimates,
+    vocabEstimate,
+    fsrsParams,
+    desiredRetention,
+    active,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CoursesData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.l2 == this.l2 &&
+          other.pairPack == this.pairPack &&
+          other.levelEstimates == this.levelEstimates &&
+          other.vocabEstimate == this.vocabEstimate &&
+          other.fsrsParams == this.fsrsParams &&
+          other.desiredRetention == this.desiredRetention &&
+          other.active == this.active);
+}
+
+class CoursesCompanion extends UpdateCompanion<CoursesData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> l2;
+  final Value<String> pairPack;
+  final Value<String> levelEstimates;
+  final Value<int?> vocabEstimate;
+  final Value<String?> fsrsParams;
+  final Value<double> desiredRetention;
+  final Value<int> active;
+  final Value<int> rowid;
+  const CoursesCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.l2 = const Value.absent(),
+    this.pairPack = const Value.absent(),
+    this.levelEstimates = const Value.absent(),
+    this.vocabEstimate = const Value.absent(),
+    this.fsrsParams = const Value.absent(),
+    this.desiredRetention = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CoursesCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String l2,
+    required String pairPack,
+    this.levelEstimates = const Value.absent(),
+    this.vocabEstimate = const Value.absent(),
+    this.fsrsParams = const Value.absent(),
+    this.desiredRetention = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       l2 = Value(l2),
+       pairPack = Value(pairPack);
+  static Insertable<CoursesData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? l2,
+    Expression<String>? pairPack,
+    Expression<String>? levelEstimates,
+    Expression<int>? vocabEstimate,
+    Expression<String>? fsrsParams,
+    Expression<double>? desiredRetention,
+    Expression<int>? active,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (l2 != null) 'l2': l2,
+      if (pairPack != null) 'pair_pack': pairPack,
+      if (levelEstimates != null) 'level_estimates': levelEstimates,
+      if (vocabEstimate != null) 'vocab_estimate': vocabEstimate,
+      if (fsrsParams != null) 'fsrs_params': fsrsParams,
+      if (desiredRetention != null) 'desired_retention': desiredRetention,
+      if (active != null) 'active': active,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CoursesCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? l2,
+    Value<String>? pairPack,
+    Value<String>? levelEstimates,
+    Value<int?>? vocabEstimate,
+    Value<String?>? fsrsParams,
+    Value<double>? desiredRetention,
+    Value<int>? active,
+    Value<int>? rowid,
+  }) {
+    return CoursesCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      l2: l2 ?? this.l2,
+      pairPack: pairPack ?? this.pairPack,
+      levelEstimates: levelEstimates ?? this.levelEstimates,
+      vocabEstimate: vocabEstimate ?? this.vocabEstimate,
+      fsrsParams: fsrsParams ?? this.fsrsParams,
+      desiredRetention: desiredRetention ?? this.desiredRetention,
+      active: active ?? this.active,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (l2.present) {
+      map['l2'] = Variable<String>(l2.value);
+    }
+    if (pairPack.present) {
+      map['pair_pack'] = Variable<String>(pairPack.value);
+    }
+    if (levelEstimates.present) {
+      map['level_estimates'] = Variable<String>(levelEstimates.value);
+    }
+    if (vocabEstimate.present) {
+      map['vocab_estimate'] = Variable<int>(vocabEstimate.value);
+    }
+    if (fsrsParams.present) {
+      map['fsrs_params'] = Variable<String>(fsrsParams.value);
+    }
+    if (desiredRetention.present) {
+      map['desired_retention'] = Variable<double>(desiredRetention.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<int>(active.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CoursesCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('l2: $l2, ')
+          ..write('pairPack: $pairPack, ')
+          ..write('levelEstimates: $levelEstimates, ')
+          ..write('vocabEstimate: $vocabEstimate, ')
+          ..write('fsrsParams: $fsrsParams, ')
+          ..write('desiredRetention: $desiredRetention, ')
+          ..write('active: $active, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class PersonalItems extends Table
+    with TableInfo<PersonalItems, PersonalItemsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -521,8 +1555,78 @@ class PersonalItems extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  PersonalItemsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PersonalItemsData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      textL2: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}text_l2'],
+      )!,
+      lemmas: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lemmas'],
+      )!,
+      cefr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cefr'],
+      ),
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      )!,
+      glossL1: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gloss_l1'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      variants: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}variants'],
+      )!,
+      audioPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}audio_path'],
+      ),
+      deprecated: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deprecated'],
+      )!,
+    );
   }
 
   @override
@@ -536,7 +1640,523 @@ class PersonalItems extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Cards extends Table with TableInfo {
+class PersonalItemsData extends DataClass
+    implements Insertable<PersonalItemsData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String kind;
+  final String textL2;
+  final String lemmas;
+  final String? cefr;
+  final String source;
+  final String? glossL1;
+  final String? notes;
+  final String variants;
+  final String? audioPath;
+  final int deprecated;
+  const PersonalItemsData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.kind,
+    required this.textL2,
+    required this.lemmas,
+    this.cefr,
+    required this.source,
+    this.glossL1,
+    this.notes,
+    required this.variants,
+    this.audioPath,
+    required this.deprecated,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['kind'] = Variable<String>(kind);
+    map['text_l2'] = Variable<String>(textL2);
+    map['lemmas'] = Variable<String>(lemmas);
+    if (!nullToAbsent || cefr != null) {
+      map['cefr'] = Variable<String>(cefr);
+    }
+    map['source'] = Variable<String>(source);
+    if (!nullToAbsent || glossL1 != null) {
+      map['gloss_l1'] = Variable<String>(glossL1);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['variants'] = Variable<String>(variants);
+    if (!nullToAbsent || audioPath != null) {
+      map['audio_path'] = Variable<String>(audioPath);
+    }
+    map['deprecated'] = Variable<int>(deprecated);
+    return map;
+  }
+
+  PersonalItemsCompanion toCompanion(bool nullToAbsent) {
+    return PersonalItemsCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      kind: Value(kind),
+      textL2: Value(textL2),
+      lemmas: Value(lemmas),
+      cefr: cefr == null && nullToAbsent ? const Value.absent() : Value(cefr),
+      source: Value(source),
+      glossL1: glossL1 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(glossL1),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      variants: Value(variants),
+      audioPath: audioPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(audioPath),
+      deprecated: Value(deprecated),
+    );
+  }
+
+  factory PersonalItemsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PersonalItemsData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      textL2: serializer.fromJson<String>(json['textL2']),
+      lemmas: serializer.fromJson<String>(json['lemmas']),
+      cefr: serializer.fromJson<String?>(json['cefr']),
+      source: serializer.fromJson<String>(json['source']),
+      glossL1: serializer.fromJson<String?>(json['glossL1']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      variants: serializer.fromJson<String>(json['variants']),
+      audioPath: serializer.fromJson<String?>(json['audioPath']),
+      deprecated: serializer.fromJson<int>(json['deprecated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'kind': serializer.toJson<String>(kind),
+      'textL2': serializer.toJson<String>(textL2),
+      'lemmas': serializer.toJson<String>(lemmas),
+      'cefr': serializer.toJson<String?>(cefr),
+      'source': serializer.toJson<String>(source),
+      'glossL1': serializer.toJson<String?>(glossL1),
+      'notes': serializer.toJson<String?>(notes),
+      'variants': serializer.toJson<String>(variants),
+      'audioPath': serializer.toJson<String?>(audioPath),
+      'deprecated': serializer.toJson<int>(deprecated),
+    };
+  }
+
+  PersonalItemsData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? kind,
+    String? textL2,
+    String? lemmas,
+    Value<String?> cefr = const Value.absent(),
+    String? source,
+    Value<String?> glossL1 = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    String? variants,
+    Value<String?> audioPath = const Value.absent(),
+    int? deprecated,
+  }) => PersonalItemsData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    kind: kind ?? this.kind,
+    textL2: textL2 ?? this.textL2,
+    lemmas: lemmas ?? this.lemmas,
+    cefr: cefr.present ? cefr.value : this.cefr,
+    source: source ?? this.source,
+    glossL1: glossL1.present ? glossL1.value : this.glossL1,
+    notes: notes.present ? notes.value : this.notes,
+    variants: variants ?? this.variants,
+    audioPath: audioPath.present ? audioPath.value : this.audioPath,
+    deprecated: deprecated ?? this.deprecated,
+  );
+  PersonalItemsData copyWithCompanion(PersonalItemsCompanion data) {
+    return PersonalItemsData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      textL2: data.textL2.present ? data.textL2.value : this.textL2,
+      lemmas: data.lemmas.present ? data.lemmas.value : this.lemmas,
+      cefr: data.cefr.present ? data.cefr.value : this.cefr,
+      source: data.source.present ? data.source.value : this.source,
+      glossL1: data.glossL1.present ? data.glossL1.value : this.glossL1,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      variants: data.variants.present ? data.variants.value : this.variants,
+      audioPath: data.audioPath.present ? data.audioPath.value : this.audioPath,
+      deprecated: data.deprecated.present
+          ? data.deprecated.value
+          : this.deprecated,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonalItemsData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('textL2: $textL2, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('cefr: $cefr, ')
+          ..write('source: $source, ')
+          ..write('glossL1: $glossL1, ')
+          ..write('notes: $notes, ')
+          ..write('variants: $variants, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('deprecated: $deprecated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    kind,
+    textL2,
+    lemmas,
+    cefr,
+    source,
+    glossL1,
+    notes,
+    variants,
+    audioPath,
+    deprecated,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PersonalItemsData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.kind == this.kind &&
+          other.textL2 == this.textL2 &&
+          other.lemmas == this.lemmas &&
+          other.cefr == this.cefr &&
+          other.source == this.source &&
+          other.glossL1 == this.glossL1 &&
+          other.notes == this.notes &&
+          other.variants == this.variants &&
+          other.audioPath == this.audioPath &&
+          other.deprecated == this.deprecated);
+}
+
+class PersonalItemsCompanion extends UpdateCompanion<PersonalItemsData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> kind;
+  final Value<String> textL2;
+  final Value<String> lemmas;
+  final Value<String?> cefr;
+  final Value<String> source;
+  final Value<String?> glossL1;
+  final Value<String?> notes;
+  final Value<String> variants;
+  final Value<String?> audioPath;
+  final Value<int> deprecated;
+  final Value<int> rowid;
+  const PersonalItemsCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.textL2 = const Value.absent(),
+    this.lemmas = const Value.absent(),
+    this.cefr = const Value.absent(),
+    this.source = const Value.absent(),
+    this.glossL1 = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.variants = const Value.absent(),
+    this.audioPath = const Value.absent(),
+    this.deprecated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PersonalItemsCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String kind,
+    required String textL2,
+    this.lemmas = const Value.absent(),
+    this.cefr = const Value.absent(),
+    required String source,
+    this.glossL1 = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.variants = const Value.absent(),
+    this.audioPath = const Value.absent(),
+    this.deprecated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       kind = Value(kind),
+       textL2 = Value(textL2),
+       source = Value(source);
+  static Insertable<PersonalItemsData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? kind,
+    Expression<String>? textL2,
+    Expression<String>? lemmas,
+    Expression<String>? cefr,
+    Expression<String>? source,
+    Expression<String>? glossL1,
+    Expression<String>? notes,
+    Expression<String>? variants,
+    Expression<String>? audioPath,
+    Expression<int>? deprecated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (kind != null) 'kind': kind,
+      if (textL2 != null) 'text_l2': textL2,
+      if (lemmas != null) 'lemmas': lemmas,
+      if (cefr != null) 'cefr': cefr,
+      if (source != null) 'source': source,
+      if (glossL1 != null) 'gloss_l1': glossL1,
+      if (notes != null) 'notes': notes,
+      if (variants != null) 'variants': variants,
+      if (audioPath != null) 'audio_path': audioPath,
+      if (deprecated != null) 'deprecated': deprecated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PersonalItemsCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? kind,
+    Value<String>? textL2,
+    Value<String>? lemmas,
+    Value<String?>? cefr,
+    Value<String>? source,
+    Value<String?>? glossL1,
+    Value<String?>? notes,
+    Value<String>? variants,
+    Value<String?>? audioPath,
+    Value<int>? deprecated,
+    Value<int>? rowid,
+  }) {
+    return PersonalItemsCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      kind: kind ?? this.kind,
+      textL2: textL2 ?? this.textL2,
+      lemmas: lemmas ?? this.lemmas,
+      cefr: cefr ?? this.cefr,
+      source: source ?? this.source,
+      glossL1: glossL1 ?? this.glossL1,
+      notes: notes ?? this.notes,
+      variants: variants ?? this.variants,
+      audioPath: audioPath ?? this.audioPath,
+      deprecated: deprecated ?? this.deprecated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (textL2.present) {
+      map['text_l2'] = Variable<String>(textL2.value);
+    }
+    if (lemmas.present) {
+      map['lemmas'] = Variable<String>(lemmas.value);
+    }
+    if (cefr.present) {
+      map['cefr'] = Variable<String>(cefr.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (glossL1.present) {
+      map['gloss_l1'] = Variable<String>(glossL1.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (variants.present) {
+      map['variants'] = Variable<String>(variants.value);
+    }
+    if (audioPath.present) {
+      map['audio_path'] = Variable<String>(audioPath.value);
+    }
+    if (deprecated.present) {
+      map['deprecated'] = Variable<int>(deprecated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonalItemsCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('textL2: $textL2, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('cefr: $cefr, ')
+          ..write('source: $source, ')
+          ..write('glossL1: $glossL1, ')
+          ..write('notes: $notes, ')
+          ..write('variants: $variants, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('deprecated: $deprecated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Cards extends Table with TableInfo<Cards, CardsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -731,8 +2351,86 @@ class Cards extends Table with TableInfo {
     {profileId, itemRef, mode},
   ];
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  CardsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CardsData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      itemRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}item_ref'],
+      )!,
+      mode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mode'],
+      )!,
+      fsrsCardId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fsrs_card_id'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}state'],
+      )!,
+      step: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}step'],
+      ),
+      stability: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}stability'],
+      ),
+      difficulty: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}difficulty'],
+      ),
+      due: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}due'],
+      )!,
+      lastReview: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_review'],
+      ),
+      reps: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reps'],
+      )!,
+      lapses: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}lapses'],
+      )!,
+      suspended: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}suspended'],
+      )!,
+    );
   }
 
   @override
@@ -749,7 +2447,574 @@ class Cards extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Attempts extends Table with TableInfo {
+class CardsData extends DataClass implements Insertable<CardsData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String itemRef;
+  final String mode;
+  final int fsrsCardId;
+  final int state;
+  final int? step;
+  final double? stability;
+  final double? difficulty;
+  final String due;
+  final String? lastReview;
+  final int reps;
+  final int lapses;
+  final int suspended;
+  const CardsData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.itemRef,
+    required this.mode,
+    required this.fsrsCardId,
+    required this.state,
+    this.step,
+    this.stability,
+    this.difficulty,
+    required this.due,
+    this.lastReview,
+    required this.reps,
+    required this.lapses,
+    required this.suspended,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['item_ref'] = Variable<String>(itemRef);
+    map['mode'] = Variable<String>(mode);
+    map['fsrs_card_id'] = Variable<int>(fsrsCardId);
+    map['state'] = Variable<int>(state);
+    if (!nullToAbsent || step != null) {
+      map['step'] = Variable<int>(step);
+    }
+    if (!nullToAbsent || stability != null) {
+      map['stability'] = Variable<double>(stability);
+    }
+    if (!nullToAbsent || difficulty != null) {
+      map['difficulty'] = Variable<double>(difficulty);
+    }
+    map['due'] = Variable<String>(due);
+    if (!nullToAbsent || lastReview != null) {
+      map['last_review'] = Variable<String>(lastReview);
+    }
+    map['reps'] = Variable<int>(reps);
+    map['lapses'] = Variable<int>(lapses);
+    map['suspended'] = Variable<int>(suspended);
+    return map;
+  }
+
+  CardsCompanion toCompanion(bool nullToAbsent) {
+    return CardsCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      itemRef: Value(itemRef),
+      mode: Value(mode),
+      fsrsCardId: Value(fsrsCardId),
+      state: Value(state),
+      step: step == null && nullToAbsent ? const Value.absent() : Value(step),
+      stability: stability == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stability),
+      difficulty: difficulty == null && nullToAbsent
+          ? const Value.absent()
+          : Value(difficulty),
+      due: Value(due),
+      lastReview: lastReview == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastReview),
+      reps: Value(reps),
+      lapses: Value(lapses),
+      suspended: Value(suspended),
+    );
+  }
+
+  factory CardsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CardsData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      itemRef: serializer.fromJson<String>(json['itemRef']),
+      mode: serializer.fromJson<String>(json['mode']),
+      fsrsCardId: serializer.fromJson<int>(json['fsrsCardId']),
+      state: serializer.fromJson<int>(json['state']),
+      step: serializer.fromJson<int?>(json['step']),
+      stability: serializer.fromJson<double?>(json['stability']),
+      difficulty: serializer.fromJson<double?>(json['difficulty']),
+      due: serializer.fromJson<String>(json['due']),
+      lastReview: serializer.fromJson<String?>(json['lastReview']),
+      reps: serializer.fromJson<int>(json['reps']),
+      lapses: serializer.fromJson<int>(json['lapses']),
+      suspended: serializer.fromJson<int>(json['suspended']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'itemRef': serializer.toJson<String>(itemRef),
+      'mode': serializer.toJson<String>(mode),
+      'fsrsCardId': serializer.toJson<int>(fsrsCardId),
+      'state': serializer.toJson<int>(state),
+      'step': serializer.toJson<int?>(step),
+      'stability': serializer.toJson<double?>(stability),
+      'difficulty': serializer.toJson<double?>(difficulty),
+      'due': serializer.toJson<String>(due),
+      'lastReview': serializer.toJson<String?>(lastReview),
+      'reps': serializer.toJson<int>(reps),
+      'lapses': serializer.toJson<int>(lapses),
+      'suspended': serializer.toJson<int>(suspended),
+    };
+  }
+
+  CardsData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? itemRef,
+    String? mode,
+    int? fsrsCardId,
+    int? state,
+    Value<int?> step = const Value.absent(),
+    Value<double?> stability = const Value.absent(),
+    Value<double?> difficulty = const Value.absent(),
+    String? due,
+    Value<String?> lastReview = const Value.absent(),
+    int? reps,
+    int? lapses,
+    int? suspended,
+  }) => CardsData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    itemRef: itemRef ?? this.itemRef,
+    mode: mode ?? this.mode,
+    fsrsCardId: fsrsCardId ?? this.fsrsCardId,
+    state: state ?? this.state,
+    step: step.present ? step.value : this.step,
+    stability: stability.present ? stability.value : this.stability,
+    difficulty: difficulty.present ? difficulty.value : this.difficulty,
+    due: due ?? this.due,
+    lastReview: lastReview.present ? lastReview.value : this.lastReview,
+    reps: reps ?? this.reps,
+    lapses: lapses ?? this.lapses,
+    suspended: suspended ?? this.suspended,
+  );
+  CardsData copyWithCompanion(CardsCompanion data) {
+    return CardsData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      itemRef: data.itemRef.present ? data.itemRef.value : this.itemRef,
+      mode: data.mode.present ? data.mode.value : this.mode,
+      fsrsCardId: data.fsrsCardId.present
+          ? data.fsrsCardId.value
+          : this.fsrsCardId,
+      state: data.state.present ? data.state.value : this.state,
+      step: data.step.present ? data.step.value : this.step,
+      stability: data.stability.present ? data.stability.value : this.stability,
+      difficulty: data.difficulty.present
+          ? data.difficulty.value
+          : this.difficulty,
+      due: data.due.present ? data.due.value : this.due,
+      lastReview: data.lastReview.present
+          ? data.lastReview.value
+          : this.lastReview,
+      reps: data.reps.present ? data.reps.value : this.reps,
+      lapses: data.lapses.present ? data.lapses.value : this.lapses,
+      suspended: data.suspended.present ? data.suspended.value : this.suspended,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CardsData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('itemRef: $itemRef, ')
+          ..write('mode: $mode, ')
+          ..write('fsrsCardId: $fsrsCardId, ')
+          ..write('state: $state, ')
+          ..write('step: $step, ')
+          ..write('stability: $stability, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('due: $due, ')
+          ..write('lastReview: $lastReview, ')
+          ..write('reps: $reps, ')
+          ..write('lapses: $lapses, ')
+          ..write('suspended: $suspended')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    itemRef,
+    mode,
+    fsrsCardId,
+    state,
+    step,
+    stability,
+    difficulty,
+    due,
+    lastReview,
+    reps,
+    lapses,
+    suspended,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CardsData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.itemRef == this.itemRef &&
+          other.mode == this.mode &&
+          other.fsrsCardId == this.fsrsCardId &&
+          other.state == this.state &&
+          other.step == this.step &&
+          other.stability == this.stability &&
+          other.difficulty == this.difficulty &&
+          other.due == this.due &&
+          other.lastReview == this.lastReview &&
+          other.reps == this.reps &&
+          other.lapses == this.lapses &&
+          other.suspended == this.suspended);
+}
+
+class CardsCompanion extends UpdateCompanion<CardsData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> itemRef;
+  final Value<String> mode;
+  final Value<int> fsrsCardId;
+  final Value<int> state;
+  final Value<int?> step;
+  final Value<double?> stability;
+  final Value<double?> difficulty;
+  final Value<String> due;
+  final Value<String?> lastReview;
+  final Value<int> reps;
+  final Value<int> lapses;
+  final Value<int> suspended;
+  final Value<int> rowid;
+  const CardsCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.itemRef = const Value.absent(),
+    this.mode = const Value.absent(),
+    this.fsrsCardId = const Value.absent(),
+    this.state = const Value.absent(),
+    this.step = const Value.absent(),
+    this.stability = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.due = const Value.absent(),
+    this.lastReview = const Value.absent(),
+    this.reps = const Value.absent(),
+    this.lapses = const Value.absent(),
+    this.suspended = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CardsCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String itemRef,
+    required String mode,
+    required int fsrsCardId,
+    required int state,
+    this.step = const Value.absent(),
+    this.stability = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    required String due,
+    this.lastReview = const Value.absent(),
+    this.reps = const Value.absent(),
+    this.lapses = const Value.absent(),
+    this.suspended = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       itemRef = Value(itemRef),
+       mode = Value(mode),
+       fsrsCardId = Value(fsrsCardId),
+       state = Value(state),
+       due = Value(due);
+  static Insertable<CardsData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? itemRef,
+    Expression<String>? mode,
+    Expression<int>? fsrsCardId,
+    Expression<int>? state,
+    Expression<int>? step,
+    Expression<double>? stability,
+    Expression<double>? difficulty,
+    Expression<String>? due,
+    Expression<String>? lastReview,
+    Expression<int>? reps,
+    Expression<int>? lapses,
+    Expression<int>? suspended,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (itemRef != null) 'item_ref': itemRef,
+      if (mode != null) 'mode': mode,
+      if (fsrsCardId != null) 'fsrs_card_id': fsrsCardId,
+      if (state != null) 'state': state,
+      if (step != null) 'step': step,
+      if (stability != null) 'stability': stability,
+      if (difficulty != null) 'difficulty': difficulty,
+      if (due != null) 'due': due,
+      if (lastReview != null) 'last_review': lastReview,
+      if (reps != null) 'reps': reps,
+      if (lapses != null) 'lapses': lapses,
+      if (suspended != null) 'suspended': suspended,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CardsCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? itemRef,
+    Value<String>? mode,
+    Value<int>? fsrsCardId,
+    Value<int>? state,
+    Value<int?>? step,
+    Value<double?>? stability,
+    Value<double?>? difficulty,
+    Value<String>? due,
+    Value<String?>? lastReview,
+    Value<int>? reps,
+    Value<int>? lapses,
+    Value<int>? suspended,
+    Value<int>? rowid,
+  }) {
+    return CardsCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      itemRef: itemRef ?? this.itemRef,
+      mode: mode ?? this.mode,
+      fsrsCardId: fsrsCardId ?? this.fsrsCardId,
+      state: state ?? this.state,
+      step: step ?? this.step,
+      stability: stability ?? this.stability,
+      difficulty: difficulty ?? this.difficulty,
+      due: due ?? this.due,
+      lastReview: lastReview ?? this.lastReview,
+      reps: reps ?? this.reps,
+      lapses: lapses ?? this.lapses,
+      suspended: suspended ?? this.suspended,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (itemRef.present) {
+      map['item_ref'] = Variable<String>(itemRef.value);
+    }
+    if (mode.present) {
+      map['mode'] = Variable<String>(mode.value);
+    }
+    if (fsrsCardId.present) {
+      map['fsrs_card_id'] = Variable<int>(fsrsCardId.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<int>(state.value);
+    }
+    if (step.present) {
+      map['step'] = Variable<int>(step.value);
+    }
+    if (stability.present) {
+      map['stability'] = Variable<double>(stability.value);
+    }
+    if (difficulty.present) {
+      map['difficulty'] = Variable<double>(difficulty.value);
+    }
+    if (due.present) {
+      map['due'] = Variable<String>(due.value);
+    }
+    if (lastReview.present) {
+      map['last_review'] = Variable<String>(lastReview.value);
+    }
+    if (reps.present) {
+      map['reps'] = Variable<int>(reps.value);
+    }
+    if (lapses.present) {
+      map['lapses'] = Variable<int>(lapses.value);
+    }
+    if (suspended.present) {
+      map['suspended'] = Variable<int>(suspended.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CardsCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('itemRef: $itemRef, ')
+          ..write('mode: $mode, ')
+          ..write('fsrsCardId: $fsrsCardId, ')
+          ..write('state: $state, ')
+          ..write('step: $step, ')
+          ..write('stability: $stability, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('due: $due, ')
+          ..write('lastReview: $lastReview, ')
+          ..write('reps: $reps, ')
+          ..write('lapses: $lapses, ')
+          ..write('suspended: $suspended, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Attempts extends Table with TableInfo<Attempts, AttemptsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1012,8 +3277,118 @@ class Attempts extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  AttemptsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttemptsData(
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      deviceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}device_id'],
+      )!,
+      activity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity'],
+      )!,
+      itemRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}item_ref'],
+      ),
+      cardId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}card_id'],
+      ),
+      taskRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_ref'],
+      ),
+      textRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}text_ref'],
+      ),
+      parentAttemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent_attempt_id'],
+      ),
+      prompt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}prompt'],
+      )!,
+      response: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}response'],
+      )!,
+      verdict: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}verdict'],
+      ),
+      targetOk: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_ok'],
+      ),
+      errorTags: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}error_tags'],
+      )!,
+      hintsUsed: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hints_used'],
+      )!,
+      hintMaxLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hint_max_level'],
+      )!,
+      rating: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rating'],
+      ),
+      latencyMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}latency_ms'],
+      ),
+      durationMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_ms'],
+      ),
+      cardStateAfter: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}card_state_after'],
+      ),
+      llm: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}llm'],
+      ),
+      experiment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}experiment'],
+      ),
+      createdAtClient: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at_client'],
+      )!,
+    );
   }
 
   @override
@@ -1027,7 +3402,804 @@ class Attempts extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class AttemptAmendments extends Table with TableInfo {
+class AttemptsData extends DataClass implements Insertable<AttemptsData> {
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String deviceId;
+  final String activity;
+  final String? itemRef;
+  final String? cardId;
+  final String? taskRef;
+  final String? textRef;
+  final String? parentAttemptId;
+  final String prompt;
+  final String response;
+  final String? verdict;
+  final int? targetOk;
+  final String errorTags;
+  final int hintsUsed;
+  final int hintMaxLevel;
+  final int? rating;
+  final int? latencyMs;
+  final int? durationMs;
+  final String? cardStateAfter;
+  final String? llm;
+  final String? experiment;
+  final String createdAtClient;
+  const AttemptsData({
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.deviceId,
+    required this.activity,
+    this.itemRef,
+    this.cardId,
+    this.taskRef,
+    this.textRef,
+    this.parentAttemptId,
+    required this.prompt,
+    required this.response,
+    this.verdict,
+    this.targetOk,
+    required this.errorTags,
+    required this.hintsUsed,
+    required this.hintMaxLevel,
+    this.rating,
+    this.latencyMs,
+    this.durationMs,
+    this.cardStateAfter,
+    this.llm,
+    this.experiment,
+    required this.createdAtClient,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['device_id'] = Variable<String>(deviceId);
+    map['activity'] = Variable<String>(activity);
+    if (!nullToAbsent || itemRef != null) {
+      map['item_ref'] = Variable<String>(itemRef);
+    }
+    if (!nullToAbsent || cardId != null) {
+      map['card_id'] = Variable<String>(cardId);
+    }
+    if (!nullToAbsent || taskRef != null) {
+      map['task_ref'] = Variable<String>(taskRef);
+    }
+    if (!nullToAbsent || textRef != null) {
+      map['text_ref'] = Variable<String>(textRef);
+    }
+    if (!nullToAbsent || parentAttemptId != null) {
+      map['parent_attempt_id'] = Variable<String>(parentAttemptId);
+    }
+    map['prompt'] = Variable<String>(prompt);
+    map['response'] = Variable<String>(response);
+    if (!nullToAbsent || verdict != null) {
+      map['verdict'] = Variable<String>(verdict);
+    }
+    if (!nullToAbsent || targetOk != null) {
+      map['target_ok'] = Variable<int>(targetOk);
+    }
+    map['error_tags'] = Variable<String>(errorTags);
+    map['hints_used'] = Variable<int>(hintsUsed);
+    map['hint_max_level'] = Variable<int>(hintMaxLevel);
+    if (!nullToAbsent || rating != null) {
+      map['rating'] = Variable<int>(rating);
+    }
+    if (!nullToAbsent || latencyMs != null) {
+      map['latency_ms'] = Variable<int>(latencyMs);
+    }
+    if (!nullToAbsent || durationMs != null) {
+      map['duration_ms'] = Variable<int>(durationMs);
+    }
+    if (!nullToAbsent || cardStateAfter != null) {
+      map['card_state_after'] = Variable<String>(cardStateAfter);
+    }
+    if (!nullToAbsent || llm != null) {
+      map['llm'] = Variable<String>(llm);
+    }
+    if (!nullToAbsent || experiment != null) {
+      map['experiment'] = Variable<String>(experiment);
+    }
+    map['created_at_client'] = Variable<String>(createdAtClient);
+    return map;
+  }
+
+  AttemptsCompanion toCompanion(bool nullToAbsent) {
+    return AttemptsCompanion(
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      deviceId: Value(deviceId),
+      activity: Value(activity),
+      itemRef: itemRef == null && nullToAbsent
+          ? const Value.absent()
+          : Value(itemRef),
+      cardId: cardId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cardId),
+      taskRef: taskRef == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskRef),
+      textRef: textRef == null && nullToAbsent
+          ? const Value.absent()
+          : Value(textRef),
+      parentAttemptId: parentAttemptId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentAttemptId),
+      prompt: Value(prompt),
+      response: Value(response),
+      verdict: verdict == null && nullToAbsent
+          ? const Value.absent()
+          : Value(verdict),
+      targetOk: targetOk == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetOk),
+      errorTags: Value(errorTags),
+      hintsUsed: Value(hintsUsed),
+      hintMaxLevel: Value(hintMaxLevel),
+      rating: rating == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rating),
+      latencyMs: latencyMs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latencyMs),
+      durationMs: durationMs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationMs),
+      cardStateAfter: cardStateAfter == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cardStateAfter),
+      llm: llm == null && nullToAbsent ? const Value.absent() : Value(llm),
+      experiment: experiment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(experiment),
+      createdAtClient: Value(createdAtClient),
+    );
+  }
+
+  factory AttemptsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttemptsData(
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      deviceId: serializer.fromJson<String>(json['deviceId']),
+      activity: serializer.fromJson<String>(json['activity']),
+      itemRef: serializer.fromJson<String?>(json['itemRef']),
+      cardId: serializer.fromJson<String?>(json['cardId']),
+      taskRef: serializer.fromJson<String?>(json['taskRef']),
+      textRef: serializer.fromJson<String?>(json['textRef']),
+      parentAttemptId: serializer.fromJson<String?>(json['parentAttemptId']),
+      prompt: serializer.fromJson<String>(json['prompt']),
+      response: serializer.fromJson<String>(json['response']),
+      verdict: serializer.fromJson<String?>(json['verdict']),
+      targetOk: serializer.fromJson<int?>(json['targetOk']),
+      errorTags: serializer.fromJson<String>(json['errorTags']),
+      hintsUsed: serializer.fromJson<int>(json['hintsUsed']),
+      hintMaxLevel: serializer.fromJson<int>(json['hintMaxLevel']),
+      rating: serializer.fromJson<int?>(json['rating']),
+      latencyMs: serializer.fromJson<int?>(json['latencyMs']),
+      durationMs: serializer.fromJson<int?>(json['durationMs']),
+      cardStateAfter: serializer.fromJson<String?>(json['cardStateAfter']),
+      llm: serializer.fromJson<String?>(json['llm']),
+      experiment: serializer.fromJson<String?>(json['experiment']),
+      createdAtClient: serializer.fromJson<String>(json['createdAtClient']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'deviceId': serializer.toJson<String>(deviceId),
+      'activity': serializer.toJson<String>(activity),
+      'itemRef': serializer.toJson<String?>(itemRef),
+      'cardId': serializer.toJson<String?>(cardId),
+      'taskRef': serializer.toJson<String?>(taskRef),
+      'textRef': serializer.toJson<String?>(textRef),
+      'parentAttemptId': serializer.toJson<String?>(parentAttemptId),
+      'prompt': serializer.toJson<String>(prompt),
+      'response': serializer.toJson<String>(response),
+      'verdict': serializer.toJson<String?>(verdict),
+      'targetOk': serializer.toJson<int?>(targetOk),
+      'errorTags': serializer.toJson<String>(errorTags),
+      'hintsUsed': serializer.toJson<int>(hintsUsed),
+      'hintMaxLevel': serializer.toJson<int>(hintMaxLevel),
+      'rating': serializer.toJson<int?>(rating),
+      'latencyMs': serializer.toJson<int?>(latencyMs),
+      'durationMs': serializer.toJson<int?>(durationMs),
+      'cardStateAfter': serializer.toJson<String?>(cardStateAfter),
+      'llm': serializer.toJson<String?>(llm),
+      'experiment': serializer.toJson<String?>(experiment),
+      'createdAtClient': serializer.toJson<String>(createdAtClient),
+    };
+  }
+
+  AttemptsData copyWith({
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? deviceId,
+    String? activity,
+    Value<String?> itemRef = const Value.absent(),
+    Value<String?> cardId = const Value.absent(),
+    Value<String?> taskRef = const Value.absent(),
+    Value<String?> textRef = const Value.absent(),
+    Value<String?> parentAttemptId = const Value.absent(),
+    String? prompt,
+    String? response,
+    Value<String?> verdict = const Value.absent(),
+    Value<int?> targetOk = const Value.absent(),
+    String? errorTags,
+    int? hintsUsed,
+    int? hintMaxLevel,
+    Value<int?> rating = const Value.absent(),
+    Value<int?> latencyMs = const Value.absent(),
+    Value<int?> durationMs = const Value.absent(),
+    Value<String?> cardStateAfter = const Value.absent(),
+    Value<String?> llm = const Value.absent(),
+    Value<String?> experiment = const Value.absent(),
+    String? createdAtClient,
+  }) => AttemptsData(
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    deviceId: deviceId ?? this.deviceId,
+    activity: activity ?? this.activity,
+    itemRef: itemRef.present ? itemRef.value : this.itemRef,
+    cardId: cardId.present ? cardId.value : this.cardId,
+    taskRef: taskRef.present ? taskRef.value : this.taskRef,
+    textRef: textRef.present ? textRef.value : this.textRef,
+    parentAttemptId: parentAttemptId.present
+        ? parentAttemptId.value
+        : this.parentAttemptId,
+    prompt: prompt ?? this.prompt,
+    response: response ?? this.response,
+    verdict: verdict.present ? verdict.value : this.verdict,
+    targetOk: targetOk.present ? targetOk.value : this.targetOk,
+    errorTags: errorTags ?? this.errorTags,
+    hintsUsed: hintsUsed ?? this.hintsUsed,
+    hintMaxLevel: hintMaxLevel ?? this.hintMaxLevel,
+    rating: rating.present ? rating.value : this.rating,
+    latencyMs: latencyMs.present ? latencyMs.value : this.latencyMs,
+    durationMs: durationMs.present ? durationMs.value : this.durationMs,
+    cardStateAfter: cardStateAfter.present
+        ? cardStateAfter.value
+        : this.cardStateAfter,
+    llm: llm.present ? llm.value : this.llm,
+    experiment: experiment.present ? experiment.value : this.experiment,
+    createdAtClient: createdAtClient ?? this.createdAtClient,
+  );
+  AttemptsData copyWithCompanion(AttemptsCompanion data) {
+    return AttemptsData(
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      deviceId: data.deviceId.present ? data.deviceId.value : this.deviceId,
+      activity: data.activity.present ? data.activity.value : this.activity,
+      itemRef: data.itemRef.present ? data.itemRef.value : this.itemRef,
+      cardId: data.cardId.present ? data.cardId.value : this.cardId,
+      taskRef: data.taskRef.present ? data.taskRef.value : this.taskRef,
+      textRef: data.textRef.present ? data.textRef.value : this.textRef,
+      parentAttemptId: data.parentAttemptId.present
+          ? data.parentAttemptId.value
+          : this.parentAttemptId,
+      prompt: data.prompt.present ? data.prompt.value : this.prompt,
+      response: data.response.present ? data.response.value : this.response,
+      verdict: data.verdict.present ? data.verdict.value : this.verdict,
+      targetOk: data.targetOk.present ? data.targetOk.value : this.targetOk,
+      errorTags: data.errorTags.present ? data.errorTags.value : this.errorTags,
+      hintsUsed: data.hintsUsed.present ? data.hintsUsed.value : this.hintsUsed,
+      hintMaxLevel: data.hintMaxLevel.present
+          ? data.hintMaxLevel.value
+          : this.hintMaxLevel,
+      rating: data.rating.present ? data.rating.value : this.rating,
+      latencyMs: data.latencyMs.present ? data.latencyMs.value : this.latencyMs,
+      durationMs: data.durationMs.present
+          ? data.durationMs.value
+          : this.durationMs,
+      cardStateAfter: data.cardStateAfter.present
+          ? data.cardStateAfter.value
+          : this.cardStateAfter,
+      llm: data.llm.present ? data.llm.value : this.llm,
+      experiment: data.experiment.present
+          ? data.experiment.value
+          : this.experiment,
+      createdAtClient: data.createdAtClient.present
+          ? data.createdAtClient.value
+          : this.createdAtClient,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttemptsData(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('activity: $activity, ')
+          ..write('itemRef: $itemRef, ')
+          ..write('cardId: $cardId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('textRef: $textRef, ')
+          ..write('parentAttemptId: $parentAttemptId, ')
+          ..write('prompt: $prompt, ')
+          ..write('response: $response, ')
+          ..write('verdict: $verdict, ')
+          ..write('targetOk: $targetOk, ')
+          ..write('errorTags: $errorTags, ')
+          ..write('hintsUsed: $hintsUsed, ')
+          ..write('hintMaxLevel: $hintMaxLevel, ')
+          ..write('rating: $rating, ')
+          ..write('latencyMs: $latencyMs, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('cardStateAfter: $cardStateAfter, ')
+          ..write('llm: $llm, ')
+          ..write('experiment: $experiment, ')
+          ..write('createdAtClient: $createdAtClient')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    deviceId,
+    activity,
+    itemRef,
+    cardId,
+    taskRef,
+    textRef,
+    parentAttemptId,
+    prompt,
+    response,
+    verdict,
+    targetOk,
+    errorTags,
+    hintsUsed,
+    hintMaxLevel,
+    rating,
+    latencyMs,
+    durationMs,
+    cardStateAfter,
+    llm,
+    experiment,
+    createdAtClient,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttemptsData &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.deviceId == this.deviceId &&
+          other.activity == this.activity &&
+          other.itemRef == this.itemRef &&
+          other.cardId == this.cardId &&
+          other.taskRef == this.taskRef &&
+          other.textRef == this.textRef &&
+          other.parentAttemptId == this.parentAttemptId &&
+          other.prompt == this.prompt &&
+          other.response == this.response &&
+          other.verdict == this.verdict &&
+          other.targetOk == this.targetOk &&
+          other.errorTags == this.errorTags &&
+          other.hintsUsed == this.hintsUsed &&
+          other.hintMaxLevel == this.hintMaxLevel &&
+          other.rating == this.rating &&
+          other.latencyMs == this.latencyMs &&
+          other.durationMs == this.durationMs &&
+          other.cardStateAfter == this.cardStateAfter &&
+          other.llm == this.llm &&
+          other.experiment == this.experiment &&
+          other.createdAtClient == this.createdAtClient);
+}
+
+class AttemptsCompanion extends UpdateCompanion<AttemptsData> {
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> deviceId;
+  final Value<String> activity;
+  final Value<String?> itemRef;
+  final Value<String?> cardId;
+  final Value<String?> taskRef;
+  final Value<String?> textRef;
+  final Value<String?> parentAttemptId;
+  final Value<String> prompt;
+  final Value<String> response;
+  final Value<String?> verdict;
+  final Value<int?> targetOk;
+  final Value<String> errorTags;
+  final Value<int> hintsUsed;
+  final Value<int> hintMaxLevel;
+  final Value<int?> rating;
+  final Value<int?> latencyMs;
+  final Value<int?> durationMs;
+  final Value<String?> cardStateAfter;
+  final Value<String?> llm;
+  final Value<String?> experiment;
+  final Value<String> createdAtClient;
+  final Value<int> rowid;
+  const AttemptsCompanion({
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.deviceId = const Value.absent(),
+    this.activity = const Value.absent(),
+    this.itemRef = const Value.absent(),
+    this.cardId = const Value.absent(),
+    this.taskRef = const Value.absent(),
+    this.textRef = const Value.absent(),
+    this.parentAttemptId = const Value.absent(),
+    this.prompt = const Value.absent(),
+    this.response = const Value.absent(),
+    this.verdict = const Value.absent(),
+    this.targetOk = const Value.absent(),
+    this.errorTags = const Value.absent(),
+    this.hintsUsed = const Value.absent(),
+    this.hintMaxLevel = const Value.absent(),
+    this.rating = const Value.absent(),
+    this.latencyMs = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.cardStateAfter = const Value.absent(),
+    this.llm = const Value.absent(),
+    this.experiment = const Value.absent(),
+    this.createdAtClient = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AttemptsCompanion.insert({
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String deviceId,
+    required String activity,
+    this.itemRef = const Value.absent(),
+    this.cardId = const Value.absent(),
+    this.taskRef = const Value.absent(),
+    this.textRef = const Value.absent(),
+    this.parentAttemptId = const Value.absent(),
+    required String prompt,
+    required String response,
+    this.verdict = const Value.absent(),
+    this.targetOk = const Value.absent(),
+    this.errorTags = const Value.absent(),
+    this.hintsUsed = const Value.absent(),
+    this.hintMaxLevel = const Value.absent(),
+    this.rating = const Value.absent(),
+    this.latencyMs = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.cardStateAfter = const Value.absent(),
+    this.llm = const Value.absent(),
+    this.experiment = const Value.absent(),
+    required String createdAtClient,
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       deviceId = Value(deviceId),
+       activity = Value(activity),
+       prompt = Value(prompt),
+       response = Value(response),
+       createdAtClient = Value(createdAtClient);
+  static Insertable<AttemptsData> custom({
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? deviceId,
+    Expression<String>? activity,
+    Expression<String>? itemRef,
+    Expression<String>? cardId,
+    Expression<String>? taskRef,
+    Expression<String>? textRef,
+    Expression<String>? parentAttemptId,
+    Expression<String>? prompt,
+    Expression<String>? response,
+    Expression<String>? verdict,
+    Expression<int>? targetOk,
+    Expression<String>? errorTags,
+    Expression<int>? hintsUsed,
+    Expression<int>? hintMaxLevel,
+    Expression<int>? rating,
+    Expression<int>? latencyMs,
+    Expression<int>? durationMs,
+    Expression<String>? cardStateAfter,
+    Expression<String>? llm,
+    Expression<String>? experiment,
+    Expression<String>? createdAtClient,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (deviceId != null) 'device_id': deviceId,
+      if (activity != null) 'activity': activity,
+      if (itemRef != null) 'item_ref': itemRef,
+      if (cardId != null) 'card_id': cardId,
+      if (taskRef != null) 'task_ref': taskRef,
+      if (textRef != null) 'text_ref': textRef,
+      if (parentAttemptId != null) 'parent_attempt_id': parentAttemptId,
+      if (prompt != null) 'prompt': prompt,
+      if (response != null) 'response': response,
+      if (verdict != null) 'verdict': verdict,
+      if (targetOk != null) 'target_ok': targetOk,
+      if (errorTags != null) 'error_tags': errorTags,
+      if (hintsUsed != null) 'hints_used': hintsUsed,
+      if (hintMaxLevel != null) 'hint_max_level': hintMaxLevel,
+      if (rating != null) 'rating': rating,
+      if (latencyMs != null) 'latency_ms': latencyMs,
+      if (durationMs != null) 'duration_ms': durationMs,
+      if (cardStateAfter != null) 'card_state_after': cardStateAfter,
+      if (llm != null) 'llm': llm,
+      if (experiment != null) 'experiment': experiment,
+      if (createdAtClient != null) 'created_at_client': createdAtClient,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AttemptsCompanion copyWith({
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? deviceId,
+    Value<String>? activity,
+    Value<String?>? itemRef,
+    Value<String?>? cardId,
+    Value<String?>? taskRef,
+    Value<String?>? textRef,
+    Value<String?>? parentAttemptId,
+    Value<String>? prompt,
+    Value<String>? response,
+    Value<String?>? verdict,
+    Value<int?>? targetOk,
+    Value<String>? errorTags,
+    Value<int>? hintsUsed,
+    Value<int>? hintMaxLevel,
+    Value<int?>? rating,
+    Value<int?>? latencyMs,
+    Value<int?>? durationMs,
+    Value<String?>? cardStateAfter,
+    Value<String?>? llm,
+    Value<String?>? experiment,
+    Value<String>? createdAtClient,
+    Value<int>? rowid,
+  }) {
+    return AttemptsCompanion(
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      deviceId: deviceId ?? this.deviceId,
+      activity: activity ?? this.activity,
+      itemRef: itemRef ?? this.itemRef,
+      cardId: cardId ?? this.cardId,
+      taskRef: taskRef ?? this.taskRef,
+      textRef: textRef ?? this.textRef,
+      parentAttemptId: parentAttemptId ?? this.parentAttemptId,
+      prompt: prompt ?? this.prompt,
+      response: response ?? this.response,
+      verdict: verdict ?? this.verdict,
+      targetOk: targetOk ?? this.targetOk,
+      errorTags: errorTags ?? this.errorTags,
+      hintsUsed: hintsUsed ?? this.hintsUsed,
+      hintMaxLevel: hintMaxLevel ?? this.hintMaxLevel,
+      rating: rating ?? this.rating,
+      latencyMs: latencyMs ?? this.latencyMs,
+      durationMs: durationMs ?? this.durationMs,
+      cardStateAfter: cardStateAfter ?? this.cardStateAfter,
+      llm: llm ?? this.llm,
+      experiment: experiment ?? this.experiment,
+      createdAtClient: createdAtClient ?? this.createdAtClient,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (deviceId.present) {
+      map['device_id'] = Variable<String>(deviceId.value);
+    }
+    if (activity.present) {
+      map['activity'] = Variable<String>(activity.value);
+    }
+    if (itemRef.present) {
+      map['item_ref'] = Variable<String>(itemRef.value);
+    }
+    if (cardId.present) {
+      map['card_id'] = Variable<String>(cardId.value);
+    }
+    if (taskRef.present) {
+      map['task_ref'] = Variable<String>(taskRef.value);
+    }
+    if (textRef.present) {
+      map['text_ref'] = Variable<String>(textRef.value);
+    }
+    if (parentAttemptId.present) {
+      map['parent_attempt_id'] = Variable<String>(parentAttemptId.value);
+    }
+    if (prompt.present) {
+      map['prompt'] = Variable<String>(prompt.value);
+    }
+    if (response.present) {
+      map['response'] = Variable<String>(response.value);
+    }
+    if (verdict.present) {
+      map['verdict'] = Variable<String>(verdict.value);
+    }
+    if (targetOk.present) {
+      map['target_ok'] = Variable<int>(targetOk.value);
+    }
+    if (errorTags.present) {
+      map['error_tags'] = Variable<String>(errorTags.value);
+    }
+    if (hintsUsed.present) {
+      map['hints_used'] = Variable<int>(hintsUsed.value);
+    }
+    if (hintMaxLevel.present) {
+      map['hint_max_level'] = Variable<int>(hintMaxLevel.value);
+    }
+    if (rating.present) {
+      map['rating'] = Variable<int>(rating.value);
+    }
+    if (latencyMs.present) {
+      map['latency_ms'] = Variable<int>(latencyMs.value);
+    }
+    if (durationMs.present) {
+      map['duration_ms'] = Variable<int>(durationMs.value);
+    }
+    if (cardStateAfter.present) {
+      map['card_state_after'] = Variable<String>(cardStateAfter.value);
+    }
+    if (llm.present) {
+      map['llm'] = Variable<String>(llm.value);
+    }
+    if (experiment.present) {
+      map['experiment'] = Variable<String>(experiment.value);
+    }
+    if (createdAtClient.present) {
+      map['created_at_client'] = Variable<String>(createdAtClient.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttemptsCompanion(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('activity: $activity, ')
+          ..write('itemRef: $itemRef, ')
+          ..write('cardId: $cardId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('textRef: $textRef, ')
+          ..write('parentAttemptId: $parentAttemptId, ')
+          ..write('prompt: $prompt, ')
+          ..write('response: $response, ')
+          ..write('verdict: $verdict, ')
+          ..write('targetOk: $targetOk, ')
+          ..write('errorTags: $errorTags, ')
+          ..write('hintsUsed: $hintsUsed, ')
+          ..write('hintMaxLevel: $hintMaxLevel, ')
+          ..write('rating: $rating, ')
+          ..write('latencyMs: $latencyMs, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('cardStateAfter: $cardStateAfter, ')
+          ..write('llm: $llm, ')
+          ..write('experiment: $experiment, ')
+          ..write('createdAtClient: $createdAtClient, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class AttemptAmendments extends Table
+    with TableInfo<AttemptAmendments, AttemptAmendmentsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1116,8 +4288,42 @@ class AttemptAmendments extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  AttemptAmendmentsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttemptAmendmentsData(
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attempt_id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      payload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload'],
+      )!,
+    );
   }
 
   @override
@@ -1131,7 +4337,299 @@ class AttemptAmendments extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class GapEntries extends Table with TableInfo {
+class AttemptAmendmentsData extends DataClass
+    implements Insertable<AttemptAmendmentsData> {
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String attemptId;
+  final String profileId;
+  final String kind;
+  final String payload;
+  const AttemptAmendmentsData({
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.attemptId,
+    required this.profileId,
+    required this.kind,
+    required this.payload,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['attempt_id'] = Variable<String>(attemptId);
+    map['profile_id'] = Variable<String>(profileId);
+    map['kind'] = Variable<String>(kind);
+    map['payload'] = Variable<String>(payload);
+    return map;
+  }
+
+  AttemptAmendmentsCompanion toCompanion(bool nullToAbsent) {
+    return AttemptAmendmentsCompanion(
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      attemptId: Value(attemptId),
+      profileId: Value(profileId),
+      kind: Value(kind),
+      payload: Value(payload),
+    );
+  }
+
+  factory AttemptAmendmentsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttemptAmendmentsData(
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      attemptId: serializer.fromJson<String>(json['attemptId']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      payload: serializer.fromJson<String>(json['payload']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'attemptId': serializer.toJson<String>(attemptId),
+      'profileId': serializer.toJson<String>(profileId),
+      'kind': serializer.toJson<String>(kind),
+      'payload': serializer.toJson<String>(payload),
+    };
+  }
+
+  AttemptAmendmentsData copyWith({
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? attemptId,
+    String? profileId,
+    String? kind,
+    String? payload,
+  }) => AttemptAmendmentsData(
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    attemptId: attemptId ?? this.attemptId,
+    profileId: profileId ?? this.profileId,
+    kind: kind ?? this.kind,
+    payload: payload ?? this.payload,
+  );
+  AttemptAmendmentsData copyWithCompanion(AttemptAmendmentsCompanion data) {
+    return AttemptAmendmentsData(
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      payload: data.payload.present ? data.payload.value : this.payload,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttemptAmendmentsData(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('profileId: $profileId, ')
+          ..write('kind: $kind, ')
+          ..write('payload: $payload')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    attemptId,
+    profileId,
+    kind,
+    payload,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttemptAmendmentsData &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.attemptId == this.attemptId &&
+          other.profileId == this.profileId &&
+          other.kind == this.kind &&
+          other.payload == this.payload);
+}
+
+class AttemptAmendmentsCompanion
+    extends UpdateCompanion<AttemptAmendmentsData> {
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> attemptId;
+  final Value<String> profileId;
+  final Value<String> kind;
+  final Value<String> payload;
+  final Value<int> rowid;
+  const AttemptAmendmentsCompanion({
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.attemptId = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AttemptAmendmentsCompanion.insert({
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String attemptId,
+    required String profileId,
+    required String kind,
+    required String payload,
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       id = Value(id),
+       attemptId = Value(attemptId),
+       profileId = Value(profileId),
+       kind = Value(kind),
+       payload = Value(payload);
+  static Insertable<AttemptAmendmentsData> custom({
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? attemptId,
+    Expression<String>? profileId,
+    Expression<String>? kind,
+    Expression<String>? payload,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (attemptId != null) 'attempt_id': attemptId,
+      if (profileId != null) 'profile_id': profileId,
+      if (kind != null) 'kind': kind,
+      if (payload != null) 'payload': payload,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AttemptAmendmentsCompanion copyWith({
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? attemptId,
+    Value<String>? profileId,
+    Value<String>? kind,
+    Value<String>? payload,
+    Value<int>? rowid,
+  }) {
+    return AttemptAmendmentsCompanion(
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      attemptId: attemptId ?? this.attemptId,
+      profileId: profileId ?? this.profileId,
+      kind: kind ?? this.kind,
+      payload: payload ?? this.payload,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (attemptId.present) {
+      map['attempt_id'] = Variable<String>(attemptId.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttemptAmendmentsCompanion(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('profileId: $profileId, ')
+          ..write('kind: $kind, ')
+          ..write('payload: $payload, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class GapEntries extends Table with TableInfo<GapEntries, GapEntriesData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1276,8 +4774,66 @@ class GapEntries extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  GapEntriesData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GapEntriesData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      l1Text: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}l1_text'],
+      )!,
+      audioPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}audio_path'],
+      ),
+      context: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}context'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      suggestion: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}suggestion'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      personalItemIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}personal_item_ids'],
+      )!,
+    );
   }
 
   @override
@@ -1291,7 +4847,450 @@ class GapEntries extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Recordings extends Table with TableInfo {
+class GapEntriesData extends DataClass implements Insertable<GapEntriesData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String l1Text;
+  final String? audioPath;
+  final String context;
+  final String? note;
+  final String? suggestion;
+  final String status;
+  final String personalItemIds;
+  const GapEntriesData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.l1Text,
+    this.audioPath,
+    required this.context,
+    this.note,
+    this.suggestion,
+    required this.status,
+    required this.personalItemIds,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['l1_text'] = Variable<String>(l1Text);
+    if (!nullToAbsent || audioPath != null) {
+      map['audio_path'] = Variable<String>(audioPath);
+    }
+    map['context'] = Variable<String>(context);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    if (!nullToAbsent || suggestion != null) {
+      map['suggestion'] = Variable<String>(suggestion);
+    }
+    map['status'] = Variable<String>(status);
+    map['personal_item_ids'] = Variable<String>(personalItemIds);
+    return map;
+  }
+
+  GapEntriesCompanion toCompanion(bool nullToAbsent) {
+    return GapEntriesCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      l1Text: Value(l1Text),
+      audioPath: audioPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(audioPath),
+      context: Value(context),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      suggestion: suggestion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(suggestion),
+      status: Value(status),
+      personalItemIds: Value(personalItemIds),
+    );
+  }
+
+  factory GapEntriesData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GapEntriesData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      l1Text: serializer.fromJson<String>(json['l1Text']),
+      audioPath: serializer.fromJson<String?>(json['audioPath']),
+      context: serializer.fromJson<String>(json['context']),
+      note: serializer.fromJson<String?>(json['note']),
+      suggestion: serializer.fromJson<String?>(json['suggestion']),
+      status: serializer.fromJson<String>(json['status']),
+      personalItemIds: serializer.fromJson<String>(json['personalItemIds']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'l1Text': serializer.toJson<String>(l1Text),
+      'audioPath': serializer.toJson<String?>(audioPath),
+      'context': serializer.toJson<String>(context),
+      'note': serializer.toJson<String?>(note),
+      'suggestion': serializer.toJson<String?>(suggestion),
+      'status': serializer.toJson<String>(status),
+      'personalItemIds': serializer.toJson<String>(personalItemIds),
+    };
+  }
+
+  GapEntriesData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? l1Text,
+    Value<String?> audioPath = const Value.absent(),
+    String? context,
+    Value<String?> note = const Value.absent(),
+    Value<String?> suggestion = const Value.absent(),
+    String? status,
+    String? personalItemIds,
+  }) => GapEntriesData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    l1Text: l1Text ?? this.l1Text,
+    audioPath: audioPath.present ? audioPath.value : this.audioPath,
+    context: context ?? this.context,
+    note: note.present ? note.value : this.note,
+    suggestion: suggestion.present ? suggestion.value : this.suggestion,
+    status: status ?? this.status,
+    personalItemIds: personalItemIds ?? this.personalItemIds,
+  );
+  GapEntriesData copyWithCompanion(GapEntriesCompanion data) {
+    return GapEntriesData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      l1Text: data.l1Text.present ? data.l1Text.value : this.l1Text,
+      audioPath: data.audioPath.present ? data.audioPath.value : this.audioPath,
+      context: data.context.present ? data.context.value : this.context,
+      note: data.note.present ? data.note.value : this.note,
+      suggestion: data.suggestion.present
+          ? data.suggestion.value
+          : this.suggestion,
+      status: data.status.present ? data.status.value : this.status,
+      personalItemIds: data.personalItemIds.present
+          ? data.personalItemIds.value
+          : this.personalItemIds,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GapEntriesData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('l1Text: $l1Text, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('context: $context, ')
+          ..write('note: $note, ')
+          ..write('suggestion: $suggestion, ')
+          ..write('status: $status, ')
+          ..write('personalItemIds: $personalItemIds')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    l1Text,
+    audioPath,
+    context,
+    note,
+    suggestion,
+    status,
+    personalItemIds,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GapEntriesData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.l1Text == this.l1Text &&
+          other.audioPath == this.audioPath &&
+          other.context == this.context &&
+          other.note == this.note &&
+          other.suggestion == this.suggestion &&
+          other.status == this.status &&
+          other.personalItemIds == this.personalItemIds);
+}
+
+class GapEntriesCompanion extends UpdateCompanion<GapEntriesData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> l1Text;
+  final Value<String?> audioPath;
+  final Value<String> context;
+  final Value<String?> note;
+  final Value<String?> suggestion;
+  final Value<String> status;
+  final Value<String> personalItemIds;
+  final Value<int> rowid;
+  const GapEntriesCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.l1Text = const Value.absent(),
+    this.audioPath = const Value.absent(),
+    this.context = const Value.absent(),
+    this.note = const Value.absent(),
+    this.suggestion = const Value.absent(),
+    this.status = const Value.absent(),
+    this.personalItemIds = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  GapEntriesCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String l1Text,
+    this.audioPath = const Value.absent(),
+    required String context,
+    this.note = const Value.absent(),
+    this.suggestion = const Value.absent(),
+    this.status = const Value.absent(),
+    this.personalItemIds = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       l1Text = Value(l1Text),
+       context = Value(context);
+  static Insertable<GapEntriesData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? l1Text,
+    Expression<String>? audioPath,
+    Expression<String>? context,
+    Expression<String>? note,
+    Expression<String>? suggestion,
+    Expression<String>? status,
+    Expression<String>? personalItemIds,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (l1Text != null) 'l1_text': l1Text,
+      if (audioPath != null) 'audio_path': audioPath,
+      if (context != null) 'context': context,
+      if (note != null) 'note': note,
+      if (suggestion != null) 'suggestion': suggestion,
+      if (status != null) 'status': status,
+      if (personalItemIds != null) 'personal_item_ids': personalItemIds,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  GapEntriesCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? l1Text,
+    Value<String?>? audioPath,
+    Value<String>? context,
+    Value<String?>? note,
+    Value<String?>? suggestion,
+    Value<String>? status,
+    Value<String>? personalItemIds,
+    Value<int>? rowid,
+  }) {
+    return GapEntriesCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      l1Text: l1Text ?? this.l1Text,
+      audioPath: audioPath ?? this.audioPath,
+      context: context ?? this.context,
+      note: note ?? this.note,
+      suggestion: suggestion ?? this.suggestion,
+      status: status ?? this.status,
+      personalItemIds: personalItemIds ?? this.personalItemIds,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (l1Text.present) {
+      map['l1_text'] = Variable<String>(l1Text.value);
+    }
+    if (audioPath.present) {
+      map['audio_path'] = Variable<String>(audioPath.value);
+    }
+    if (context.present) {
+      map['context'] = Variable<String>(context.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (suggestion.present) {
+      map['suggestion'] = Variable<String>(suggestion.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (personalItemIds.present) {
+      map['personal_item_ids'] = Variable<String>(personalItemIds.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GapEntriesCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('l1Text: $l1Text, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('context: $context, ')
+          ..write('note: $note, ')
+          ..write('suggestion: $suggestion, ')
+          ..write('status: $status, ')
+          ..write('personalItemIds: $personalItemIds, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Recordings extends Table with TableInfo<Recordings, RecordingsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1472,8 +5471,82 @@ class Recordings extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  RecordingsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecordingsData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      taskRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_ref'],
+      ),
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attempt_id'],
+      ),
+      audioPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}audio_path'],
+      ),
+      durationMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_ms'],
+      )!,
+      asr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}asr'],
+      ),
+      annotation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}annotation'],
+      ),
+      metrics: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}metrics'],
+      ),
+      outcome: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}outcome'],
+      ),
+      isAssessment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}is_assessment'],
+      )!,
+      assessmentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}assessment_id'],
+      ),
+      keep: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}keep'],
+      )!,
+    );
   }
 
   @override
@@ -1487,7 +5560,565 @@ class Recordings extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Assessments extends Table with TableInfo {
+class RecordingsData extends DataClass implements Insertable<RecordingsData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String? taskRef;
+  final String? attemptId;
+  final String? audioPath;
+  final int durationMs;
+  final String? asr;
+  final String? annotation;
+  final String? metrics;
+  final String? outcome;
+  final int isAssessment;
+  final String? assessmentId;
+  final int keep;
+  const RecordingsData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    this.taskRef,
+    this.attemptId,
+    this.audioPath,
+    required this.durationMs,
+    this.asr,
+    this.annotation,
+    this.metrics,
+    this.outcome,
+    required this.isAssessment,
+    this.assessmentId,
+    required this.keep,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    if (!nullToAbsent || taskRef != null) {
+      map['task_ref'] = Variable<String>(taskRef);
+    }
+    if (!nullToAbsent || attemptId != null) {
+      map['attempt_id'] = Variable<String>(attemptId);
+    }
+    if (!nullToAbsent || audioPath != null) {
+      map['audio_path'] = Variable<String>(audioPath);
+    }
+    map['duration_ms'] = Variable<int>(durationMs);
+    if (!nullToAbsent || asr != null) {
+      map['asr'] = Variable<String>(asr);
+    }
+    if (!nullToAbsent || annotation != null) {
+      map['annotation'] = Variable<String>(annotation);
+    }
+    if (!nullToAbsent || metrics != null) {
+      map['metrics'] = Variable<String>(metrics);
+    }
+    if (!nullToAbsent || outcome != null) {
+      map['outcome'] = Variable<String>(outcome);
+    }
+    map['is_assessment'] = Variable<int>(isAssessment);
+    if (!nullToAbsent || assessmentId != null) {
+      map['assessment_id'] = Variable<String>(assessmentId);
+    }
+    map['keep'] = Variable<int>(keep);
+    return map;
+  }
+
+  RecordingsCompanion toCompanion(bool nullToAbsent) {
+    return RecordingsCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      taskRef: taskRef == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskRef),
+      attemptId: attemptId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attemptId),
+      audioPath: audioPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(audioPath),
+      durationMs: Value(durationMs),
+      asr: asr == null && nullToAbsent ? const Value.absent() : Value(asr),
+      annotation: annotation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(annotation),
+      metrics: metrics == null && nullToAbsent
+          ? const Value.absent()
+          : Value(metrics),
+      outcome: outcome == null && nullToAbsent
+          ? const Value.absent()
+          : Value(outcome),
+      isAssessment: Value(isAssessment),
+      assessmentId: assessmentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(assessmentId),
+      keep: Value(keep),
+    );
+  }
+
+  factory RecordingsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecordingsData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      taskRef: serializer.fromJson<String?>(json['taskRef']),
+      attemptId: serializer.fromJson<String?>(json['attemptId']),
+      audioPath: serializer.fromJson<String?>(json['audioPath']),
+      durationMs: serializer.fromJson<int>(json['durationMs']),
+      asr: serializer.fromJson<String?>(json['asr']),
+      annotation: serializer.fromJson<String?>(json['annotation']),
+      metrics: serializer.fromJson<String?>(json['metrics']),
+      outcome: serializer.fromJson<String?>(json['outcome']),
+      isAssessment: serializer.fromJson<int>(json['isAssessment']),
+      assessmentId: serializer.fromJson<String?>(json['assessmentId']),
+      keep: serializer.fromJson<int>(json['keep']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'taskRef': serializer.toJson<String?>(taskRef),
+      'attemptId': serializer.toJson<String?>(attemptId),
+      'audioPath': serializer.toJson<String?>(audioPath),
+      'durationMs': serializer.toJson<int>(durationMs),
+      'asr': serializer.toJson<String?>(asr),
+      'annotation': serializer.toJson<String?>(annotation),
+      'metrics': serializer.toJson<String?>(metrics),
+      'outcome': serializer.toJson<String?>(outcome),
+      'isAssessment': serializer.toJson<int>(isAssessment),
+      'assessmentId': serializer.toJson<String?>(assessmentId),
+      'keep': serializer.toJson<int>(keep),
+    };
+  }
+
+  RecordingsData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    Value<String?> taskRef = const Value.absent(),
+    Value<String?> attemptId = const Value.absent(),
+    Value<String?> audioPath = const Value.absent(),
+    int? durationMs,
+    Value<String?> asr = const Value.absent(),
+    Value<String?> annotation = const Value.absent(),
+    Value<String?> metrics = const Value.absent(),
+    Value<String?> outcome = const Value.absent(),
+    int? isAssessment,
+    Value<String?> assessmentId = const Value.absent(),
+    int? keep,
+  }) => RecordingsData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    taskRef: taskRef.present ? taskRef.value : this.taskRef,
+    attemptId: attemptId.present ? attemptId.value : this.attemptId,
+    audioPath: audioPath.present ? audioPath.value : this.audioPath,
+    durationMs: durationMs ?? this.durationMs,
+    asr: asr.present ? asr.value : this.asr,
+    annotation: annotation.present ? annotation.value : this.annotation,
+    metrics: metrics.present ? metrics.value : this.metrics,
+    outcome: outcome.present ? outcome.value : this.outcome,
+    isAssessment: isAssessment ?? this.isAssessment,
+    assessmentId: assessmentId.present ? assessmentId.value : this.assessmentId,
+    keep: keep ?? this.keep,
+  );
+  RecordingsData copyWithCompanion(RecordingsCompanion data) {
+    return RecordingsData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      taskRef: data.taskRef.present ? data.taskRef.value : this.taskRef,
+      attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
+      audioPath: data.audioPath.present ? data.audioPath.value : this.audioPath,
+      durationMs: data.durationMs.present
+          ? data.durationMs.value
+          : this.durationMs,
+      asr: data.asr.present ? data.asr.value : this.asr,
+      annotation: data.annotation.present
+          ? data.annotation.value
+          : this.annotation,
+      metrics: data.metrics.present ? data.metrics.value : this.metrics,
+      outcome: data.outcome.present ? data.outcome.value : this.outcome,
+      isAssessment: data.isAssessment.present
+          ? data.isAssessment.value
+          : this.isAssessment,
+      assessmentId: data.assessmentId.present
+          ? data.assessmentId.value
+          : this.assessmentId,
+      keep: data.keep.present ? data.keep.value : this.keep,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordingsData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('asr: $asr, ')
+          ..write('annotation: $annotation, ')
+          ..write('metrics: $metrics, ')
+          ..write('outcome: $outcome, ')
+          ..write('isAssessment: $isAssessment, ')
+          ..write('assessmentId: $assessmentId, ')
+          ..write('keep: $keep')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    taskRef,
+    attemptId,
+    audioPath,
+    durationMs,
+    asr,
+    annotation,
+    metrics,
+    outcome,
+    isAssessment,
+    assessmentId,
+    keep,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecordingsData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.taskRef == this.taskRef &&
+          other.attemptId == this.attemptId &&
+          other.audioPath == this.audioPath &&
+          other.durationMs == this.durationMs &&
+          other.asr == this.asr &&
+          other.annotation == this.annotation &&
+          other.metrics == this.metrics &&
+          other.outcome == this.outcome &&
+          other.isAssessment == this.isAssessment &&
+          other.assessmentId == this.assessmentId &&
+          other.keep == this.keep);
+}
+
+class RecordingsCompanion extends UpdateCompanion<RecordingsData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String?> taskRef;
+  final Value<String?> attemptId;
+  final Value<String?> audioPath;
+  final Value<int> durationMs;
+  final Value<String?> asr;
+  final Value<String?> annotation;
+  final Value<String?> metrics;
+  final Value<String?> outcome;
+  final Value<int> isAssessment;
+  final Value<String?> assessmentId;
+  final Value<int> keep;
+  final Value<int> rowid;
+  const RecordingsCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.taskRef = const Value.absent(),
+    this.attemptId = const Value.absent(),
+    this.audioPath = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.asr = const Value.absent(),
+    this.annotation = const Value.absent(),
+    this.metrics = const Value.absent(),
+    this.outcome = const Value.absent(),
+    this.isAssessment = const Value.absent(),
+    this.assessmentId = const Value.absent(),
+    this.keep = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecordingsCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    this.taskRef = const Value.absent(),
+    this.attemptId = const Value.absent(),
+    this.audioPath = const Value.absent(),
+    required int durationMs,
+    this.asr = const Value.absent(),
+    this.annotation = const Value.absent(),
+    this.metrics = const Value.absent(),
+    this.outcome = const Value.absent(),
+    this.isAssessment = const Value.absent(),
+    this.assessmentId = const Value.absent(),
+    this.keep = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       durationMs = Value(durationMs);
+  static Insertable<RecordingsData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? taskRef,
+    Expression<String>? attemptId,
+    Expression<String>? audioPath,
+    Expression<int>? durationMs,
+    Expression<String>? asr,
+    Expression<String>? annotation,
+    Expression<String>? metrics,
+    Expression<String>? outcome,
+    Expression<int>? isAssessment,
+    Expression<String>? assessmentId,
+    Expression<int>? keep,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (taskRef != null) 'task_ref': taskRef,
+      if (attemptId != null) 'attempt_id': attemptId,
+      if (audioPath != null) 'audio_path': audioPath,
+      if (durationMs != null) 'duration_ms': durationMs,
+      if (asr != null) 'asr': asr,
+      if (annotation != null) 'annotation': annotation,
+      if (metrics != null) 'metrics': metrics,
+      if (outcome != null) 'outcome': outcome,
+      if (isAssessment != null) 'is_assessment': isAssessment,
+      if (assessmentId != null) 'assessment_id': assessmentId,
+      if (keep != null) 'keep': keep,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecordingsCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String?>? taskRef,
+    Value<String?>? attemptId,
+    Value<String?>? audioPath,
+    Value<int>? durationMs,
+    Value<String?>? asr,
+    Value<String?>? annotation,
+    Value<String?>? metrics,
+    Value<String?>? outcome,
+    Value<int>? isAssessment,
+    Value<String?>? assessmentId,
+    Value<int>? keep,
+    Value<int>? rowid,
+  }) {
+    return RecordingsCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      taskRef: taskRef ?? this.taskRef,
+      attemptId: attemptId ?? this.attemptId,
+      audioPath: audioPath ?? this.audioPath,
+      durationMs: durationMs ?? this.durationMs,
+      asr: asr ?? this.asr,
+      annotation: annotation ?? this.annotation,
+      metrics: metrics ?? this.metrics,
+      outcome: outcome ?? this.outcome,
+      isAssessment: isAssessment ?? this.isAssessment,
+      assessmentId: assessmentId ?? this.assessmentId,
+      keep: keep ?? this.keep,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (taskRef.present) {
+      map['task_ref'] = Variable<String>(taskRef.value);
+    }
+    if (attemptId.present) {
+      map['attempt_id'] = Variable<String>(attemptId.value);
+    }
+    if (audioPath.present) {
+      map['audio_path'] = Variable<String>(audioPath.value);
+    }
+    if (durationMs.present) {
+      map['duration_ms'] = Variable<int>(durationMs.value);
+    }
+    if (asr.present) {
+      map['asr'] = Variable<String>(asr.value);
+    }
+    if (annotation.present) {
+      map['annotation'] = Variable<String>(annotation.value);
+    }
+    if (metrics.present) {
+      map['metrics'] = Variable<String>(metrics.value);
+    }
+    if (outcome.present) {
+      map['outcome'] = Variable<String>(outcome.value);
+    }
+    if (isAssessment.present) {
+      map['is_assessment'] = Variable<int>(isAssessment.value);
+    }
+    if (assessmentId.present) {
+      map['assessment_id'] = Variable<String>(assessmentId.value);
+    }
+    if (keep.present) {
+      map['keep'] = Variable<int>(keep.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordingsCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('audioPath: $audioPath, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('asr: $asr, ')
+          ..write('annotation: $annotation, ')
+          ..write('metrics: $metrics, ')
+          ..write('outcome: $outcome, ')
+          ..write('isAssessment: $isAssessment, ')
+          ..write('assessmentId: $assessmentId, ')
+          ..write('keep: $keep, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Assessments extends Table with TableInfo<Assessments, AssessmentsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1585,8 +6216,46 @@ class Assessments extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  AssessmentsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AssessmentsData(
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      results: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}results'],
+      )!,
+      levelEstimates: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level_estimates'],
+      ),
+    );
   }
 
   @override
@@ -1600,7 +6269,328 @@ class Assessments extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Writings extends Table with TableInfo {
+class AssessmentsData extends DataClass implements Insertable<AssessmentsData> {
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String kind;
+  final String results;
+  final String? levelEstimates;
+  const AssessmentsData({
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.kind,
+    required this.results,
+    this.levelEstimates,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['kind'] = Variable<String>(kind);
+    map['results'] = Variable<String>(results);
+    if (!nullToAbsent || levelEstimates != null) {
+      map['level_estimates'] = Variable<String>(levelEstimates);
+    }
+    return map;
+  }
+
+  AssessmentsCompanion toCompanion(bool nullToAbsent) {
+    return AssessmentsCompanion(
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      kind: Value(kind),
+      results: Value(results),
+      levelEstimates: levelEstimates == null && nullToAbsent
+          ? const Value.absent()
+          : Value(levelEstimates),
+    );
+  }
+
+  factory AssessmentsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AssessmentsData(
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      results: serializer.fromJson<String>(json['results']),
+      levelEstimates: serializer.fromJson<String?>(json['levelEstimates']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'kind': serializer.toJson<String>(kind),
+      'results': serializer.toJson<String>(results),
+      'levelEstimates': serializer.toJson<String?>(levelEstimates),
+    };
+  }
+
+  AssessmentsData copyWith({
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? kind,
+    String? results,
+    Value<String?> levelEstimates = const Value.absent(),
+  }) => AssessmentsData(
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    kind: kind ?? this.kind,
+    results: results ?? this.results,
+    levelEstimates: levelEstimates.present
+        ? levelEstimates.value
+        : this.levelEstimates,
+  );
+  AssessmentsData copyWithCompanion(AssessmentsCompanion data) {
+    return AssessmentsData(
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      results: data.results.present ? data.results.value : this.results,
+      levelEstimates: data.levelEstimates.present
+          ? data.levelEstimates.value
+          : this.levelEstimates,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssessmentsData(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('results: $results, ')
+          ..write('levelEstimates: $levelEstimates')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    kind,
+    results,
+    levelEstimates,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AssessmentsData &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.kind == this.kind &&
+          other.results == this.results &&
+          other.levelEstimates == this.levelEstimates);
+}
+
+class AssessmentsCompanion extends UpdateCompanion<AssessmentsData> {
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> kind;
+  final Value<String> results;
+  final Value<String?> levelEstimates;
+  final Value<int> rowid;
+  const AssessmentsCompanion({
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.results = const Value.absent(),
+    this.levelEstimates = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AssessmentsCompanion.insert({
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String kind,
+    required String results,
+    this.levelEstimates = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       kind = Value(kind),
+       results = Value(results);
+  static Insertable<AssessmentsData> custom({
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? kind,
+    Expression<String>? results,
+    Expression<String>? levelEstimates,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (kind != null) 'kind': kind,
+      if (results != null) 'results': results,
+      if (levelEstimates != null) 'level_estimates': levelEstimates,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AssessmentsCompanion copyWith({
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? kind,
+    Value<String>? results,
+    Value<String?>? levelEstimates,
+    Value<int>? rowid,
+  }) {
+    return AssessmentsCompanion(
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      kind: kind ?? this.kind,
+      results: results ?? this.results,
+      levelEstimates: levelEstimates ?? this.levelEstimates,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (results.present) {
+      map['results'] = Variable<String>(results.value);
+    }
+    if (levelEstimates.present) {
+      map['level_estimates'] = Variable<String>(levelEstimates.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssessmentsCompanion(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('results: $results, ')
+          ..write('levelEstimates: $levelEstimates, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Writings extends Table with TableInfo<Writings, WritingsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1717,8 +6707,54 @@ class Writings extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  WritingsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WritingsData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      taskRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_ref'],
+      )!,
+      drafts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}drafts'],
+      )!,
+      feedback: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}feedback'],
+      ),
+      finalText: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}final_text'],
+      ),
+    );
   }
 
   @override
@@ -1732,7 +6768,374 @@ class Writings extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Sessions extends Table with TableInfo {
+class WritingsData extends DataClass implements Insertable<WritingsData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String taskRef;
+  final String drafts;
+  final String? feedback;
+  final String? finalText;
+  const WritingsData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.taskRef,
+    required this.drafts,
+    this.feedback,
+    this.finalText,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['task_ref'] = Variable<String>(taskRef);
+    map['drafts'] = Variable<String>(drafts);
+    if (!nullToAbsent || feedback != null) {
+      map['feedback'] = Variable<String>(feedback);
+    }
+    if (!nullToAbsent || finalText != null) {
+      map['final_text'] = Variable<String>(finalText);
+    }
+    return map;
+  }
+
+  WritingsCompanion toCompanion(bool nullToAbsent) {
+    return WritingsCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      taskRef: Value(taskRef),
+      drafts: Value(drafts),
+      feedback: feedback == null && nullToAbsent
+          ? const Value.absent()
+          : Value(feedback),
+      finalText: finalText == null && nullToAbsent
+          ? const Value.absent()
+          : Value(finalText),
+    );
+  }
+
+  factory WritingsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WritingsData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      taskRef: serializer.fromJson<String>(json['taskRef']),
+      drafts: serializer.fromJson<String>(json['drafts']),
+      feedback: serializer.fromJson<String?>(json['feedback']),
+      finalText: serializer.fromJson<String?>(json['finalText']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'taskRef': serializer.toJson<String>(taskRef),
+      'drafts': serializer.toJson<String>(drafts),
+      'feedback': serializer.toJson<String?>(feedback),
+      'finalText': serializer.toJson<String?>(finalText),
+    };
+  }
+
+  WritingsData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? taskRef,
+    String? drafts,
+    Value<String?> feedback = const Value.absent(),
+    Value<String?> finalText = const Value.absent(),
+  }) => WritingsData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    taskRef: taskRef ?? this.taskRef,
+    drafts: drafts ?? this.drafts,
+    feedback: feedback.present ? feedback.value : this.feedback,
+    finalText: finalText.present ? finalText.value : this.finalText,
+  );
+  WritingsData copyWithCompanion(WritingsCompanion data) {
+    return WritingsData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      taskRef: data.taskRef.present ? data.taskRef.value : this.taskRef,
+      drafts: data.drafts.present ? data.drafts.value : this.drafts,
+      feedback: data.feedback.present ? data.feedback.value : this.feedback,
+      finalText: data.finalText.present ? data.finalText.value : this.finalText,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WritingsData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('drafts: $drafts, ')
+          ..write('feedback: $feedback, ')
+          ..write('finalText: $finalText')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    taskRef,
+    drafts,
+    feedback,
+    finalText,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WritingsData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.taskRef == this.taskRef &&
+          other.drafts == this.drafts &&
+          other.feedback == this.feedback &&
+          other.finalText == this.finalText);
+}
+
+class WritingsCompanion extends UpdateCompanion<WritingsData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> taskRef;
+  final Value<String> drafts;
+  final Value<String?> feedback;
+  final Value<String?> finalText;
+  final Value<int> rowid;
+  const WritingsCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.taskRef = const Value.absent(),
+    this.drafts = const Value.absent(),
+    this.feedback = const Value.absent(),
+    this.finalText = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WritingsCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String taskRef,
+    this.drafts = const Value.absent(),
+    this.feedback = const Value.absent(),
+    this.finalText = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       taskRef = Value(taskRef);
+  static Insertable<WritingsData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? taskRef,
+    Expression<String>? drafts,
+    Expression<String>? feedback,
+    Expression<String>? finalText,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (taskRef != null) 'task_ref': taskRef,
+      if (drafts != null) 'drafts': drafts,
+      if (feedback != null) 'feedback': feedback,
+      if (finalText != null) 'final_text': finalText,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WritingsCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? taskRef,
+    Value<String>? drafts,
+    Value<String?>? feedback,
+    Value<String?>? finalText,
+    Value<int>? rowid,
+  }) {
+    return WritingsCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      taskRef: taskRef ?? this.taskRef,
+      drafts: drafts ?? this.drafts,
+      feedback: feedback ?? this.feedback,
+      finalText: finalText ?? this.finalText,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (taskRef.present) {
+      map['task_ref'] = Variable<String>(taskRef.value);
+    }
+    if (drafts.present) {
+      map['drafts'] = Variable<String>(drafts.value);
+    }
+    if (feedback.present) {
+      map['feedback'] = Variable<String>(feedback.value);
+    }
+    if (finalText.present) {
+      map['final_text'] = Variable<String>(finalText.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WritingsCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('taskRef: $taskRef, ')
+          ..write('drafts: $drafts, ')
+          ..write('feedback: $feedback, ')
+          ..write('finalText: $finalText, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Sessions extends Table with TableInfo<Sessions, SessionsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1868,8 +7271,62 @@ class Sessions extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  SessionsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SessionsData(
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      deviceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}device_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}started_at'],
+      )!,
+      endedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ended_at'],
+      ),
+      planned: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}planned'],
+      ),
+      done: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}done'],
+      ),
+      activeMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}active_ms'],
+      )!,
+      strandMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}strand_ms'],
+      )!,
+    );
   }
 
   @override
@@ -1883,7 +7340,422 @@ class Sessions extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class MediaLogs extends Table with TableInfo {
+class SessionsData extends DataClass implements Insertable<SessionsData> {
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String deviceId;
+  final String startedAt;
+  final String? endedAt;
+  final String? planned;
+  final String? done;
+  final int activeMs;
+  final String strandMs;
+  const SessionsData({
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.deviceId,
+    required this.startedAt,
+    this.endedAt,
+    this.planned,
+    this.done,
+    required this.activeMs,
+    required this.strandMs,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['device_id'] = Variable<String>(deviceId);
+    map['started_at'] = Variable<String>(startedAt);
+    if (!nullToAbsent || endedAt != null) {
+      map['ended_at'] = Variable<String>(endedAt);
+    }
+    if (!nullToAbsent || planned != null) {
+      map['planned'] = Variable<String>(planned);
+    }
+    if (!nullToAbsent || done != null) {
+      map['done'] = Variable<String>(done);
+    }
+    map['active_ms'] = Variable<int>(activeMs);
+    map['strand_ms'] = Variable<String>(strandMs);
+    return map;
+  }
+
+  SessionsCompanion toCompanion(bool nullToAbsent) {
+    return SessionsCompanion(
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      deviceId: Value(deviceId),
+      startedAt: Value(startedAt),
+      endedAt: endedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endedAt),
+      planned: planned == null && nullToAbsent
+          ? const Value.absent()
+          : Value(planned),
+      done: done == null && nullToAbsent ? const Value.absent() : Value(done),
+      activeMs: Value(activeMs),
+      strandMs: Value(strandMs),
+    );
+  }
+
+  factory SessionsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SessionsData(
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      deviceId: serializer.fromJson<String>(json['deviceId']),
+      startedAt: serializer.fromJson<String>(json['startedAt']),
+      endedAt: serializer.fromJson<String?>(json['endedAt']),
+      planned: serializer.fromJson<String?>(json['planned']),
+      done: serializer.fromJson<String?>(json['done']),
+      activeMs: serializer.fromJson<int>(json['activeMs']),
+      strandMs: serializer.fromJson<String>(json['strandMs']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'deviceId': serializer.toJson<String>(deviceId),
+      'startedAt': serializer.toJson<String>(startedAt),
+      'endedAt': serializer.toJson<String?>(endedAt),
+      'planned': serializer.toJson<String?>(planned),
+      'done': serializer.toJson<String?>(done),
+      'activeMs': serializer.toJson<int>(activeMs),
+      'strandMs': serializer.toJson<String>(strandMs),
+    };
+  }
+
+  SessionsData copyWith({
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? deviceId,
+    String? startedAt,
+    Value<String?> endedAt = const Value.absent(),
+    Value<String?> planned = const Value.absent(),
+    Value<String?> done = const Value.absent(),
+    int? activeMs,
+    String? strandMs,
+  }) => SessionsData(
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    deviceId: deviceId ?? this.deviceId,
+    startedAt: startedAt ?? this.startedAt,
+    endedAt: endedAt.present ? endedAt.value : this.endedAt,
+    planned: planned.present ? planned.value : this.planned,
+    done: done.present ? done.value : this.done,
+    activeMs: activeMs ?? this.activeMs,
+    strandMs: strandMs ?? this.strandMs,
+  );
+  SessionsData copyWithCompanion(SessionsCompanion data) {
+    return SessionsData(
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      deviceId: data.deviceId.present ? data.deviceId.value : this.deviceId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
+      planned: data.planned.present ? data.planned.value : this.planned,
+      done: data.done.present ? data.done.value : this.done,
+      activeMs: data.activeMs.present ? data.activeMs.value : this.activeMs,
+      strandMs: data.strandMs.present ? data.strandMs.value : this.strandMs,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SessionsData(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('endedAt: $endedAt, ')
+          ..write('planned: $planned, ')
+          ..write('done: $done, ')
+          ..write('activeMs: $activeMs, ')
+          ..write('strandMs: $strandMs')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    deviceId,
+    startedAt,
+    endedAt,
+    planned,
+    done,
+    activeMs,
+    strandMs,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SessionsData &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.deviceId == this.deviceId &&
+          other.startedAt == this.startedAt &&
+          other.endedAt == this.endedAt &&
+          other.planned == this.planned &&
+          other.done == this.done &&
+          other.activeMs == this.activeMs &&
+          other.strandMs == this.strandMs);
+}
+
+class SessionsCompanion extends UpdateCompanion<SessionsData> {
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> deviceId;
+  final Value<String> startedAt;
+  final Value<String?> endedAt;
+  final Value<String?> planned;
+  final Value<String?> done;
+  final Value<int> activeMs;
+  final Value<String> strandMs;
+  final Value<int> rowid;
+  const SessionsCompanion({
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.deviceId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.endedAt = const Value.absent(),
+    this.planned = const Value.absent(),
+    this.done = const Value.absent(),
+    this.activeMs = const Value.absent(),
+    this.strandMs = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SessionsCompanion.insert({
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String deviceId,
+    required String startedAt,
+    this.endedAt = const Value.absent(),
+    this.planned = const Value.absent(),
+    this.done = const Value.absent(),
+    this.activeMs = const Value.absent(),
+    this.strandMs = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       deviceId = Value(deviceId),
+       startedAt = Value(startedAt);
+  static Insertable<SessionsData> custom({
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? deviceId,
+    Expression<String>? startedAt,
+    Expression<String>? endedAt,
+    Expression<String>? planned,
+    Expression<String>? done,
+    Expression<int>? activeMs,
+    Expression<String>? strandMs,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (deviceId != null) 'device_id': deviceId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (endedAt != null) 'ended_at': endedAt,
+      if (planned != null) 'planned': planned,
+      if (done != null) 'done': done,
+      if (activeMs != null) 'active_ms': activeMs,
+      if (strandMs != null) 'strand_ms': strandMs,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SessionsCompanion copyWith({
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? deviceId,
+    Value<String>? startedAt,
+    Value<String?>? endedAt,
+    Value<String?>? planned,
+    Value<String?>? done,
+    Value<int>? activeMs,
+    Value<String>? strandMs,
+    Value<int>? rowid,
+  }) {
+    return SessionsCompanion(
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      deviceId: deviceId ?? this.deviceId,
+      startedAt: startedAt ?? this.startedAt,
+      endedAt: endedAt ?? this.endedAt,
+      planned: planned ?? this.planned,
+      done: done ?? this.done,
+      activeMs: activeMs ?? this.activeMs,
+      strandMs: strandMs ?? this.strandMs,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (deviceId.present) {
+      map['device_id'] = Variable<String>(deviceId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<String>(startedAt.value);
+    }
+    if (endedAt.present) {
+      map['ended_at'] = Variable<String>(endedAt.value);
+    }
+    if (planned.present) {
+      map['planned'] = Variable<String>(planned.value);
+    }
+    if (done.present) {
+      map['done'] = Variable<String>(done.value);
+    }
+    if (activeMs.present) {
+      map['active_ms'] = Variable<int>(activeMs.value);
+    }
+    if (strandMs.present) {
+      map['strand_ms'] = Variable<String>(strandMs.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SessionsCompanion(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('deviceId: $deviceId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('endedAt: $endedAt, ')
+          ..write('planned: $planned, ')
+          ..write('done: $done, ')
+          ..write('activeMs: $activeMs, ')
+          ..write('strandMs: $strandMs, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class MediaLogs extends Table with TableInfo<MediaLogs, MediaLogsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2009,8 +7881,58 @@ class MediaLogs extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  MediaLogsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MediaLogsData(
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      minutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}minutes'],
+      )!,
+      subtitles: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtitles'],
+      ),
+      withPartner: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}with_partner'],
+      )!,
+      day: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day'],
+      )!,
+    );
   }
 
   @override
@@ -2024,7 +7946,401 @@ class MediaLogs extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class SubtitleImports extends Table with TableInfo {
+class MediaLogsData extends DataClass implements Insertable<MediaLogsData> {
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String kind;
+  final String? title;
+  final int minutes;
+  final String? subtitles;
+  final int withPartner;
+  final String day;
+  const MediaLogsData({
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.kind,
+    this.title,
+    required this.minutes,
+    this.subtitles,
+    required this.withPartner,
+    required this.day,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['kind'] = Variable<String>(kind);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    map['minutes'] = Variable<int>(minutes);
+    if (!nullToAbsent || subtitles != null) {
+      map['subtitles'] = Variable<String>(subtitles);
+    }
+    map['with_partner'] = Variable<int>(withPartner);
+    map['day'] = Variable<String>(day);
+    return map;
+  }
+
+  MediaLogsCompanion toCompanion(bool nullToAbsent) {
+    return MediaLogsCompanion(
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      kind: Value(kind),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      minutes: Value(minutes),
+      subtitles: subtitles == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subtitles),
+      withPartner: Value(withPartner),
+      day: Value(day),
+    );
+  }
+
+  factory MediaLogsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MediaLogsData(
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      title: serializer.fromJson<String?>(json['title']),
+      minutes: serializer.fromJson<int>(json['minutes']),
+      subtitles: serializer.fromJson<String?>(json['subtitles']),
+      withPartner: serializer.fromJson<int>(json['withPartner']),
+      day: serializer.fromJson<String>(json['day']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'kind': serializer.toJson<String>(kind),
+      'title': serializer.toJson<String?>(title),
+      'minutes': serializer.toJson<int>(minutes),
+      'subtitles': serializer.toJson<String?>(subtitles),
+      'withPartner': serializer.toJson<int>(withPartner),
+      'day': serializer.toJson<String>(day),
+    };
+  }
+
+  MediaLogsData copyWith({
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? kind,
+    Value<String?> title = const Value.absent(),
+    int? minutes,
+    Value<String?> subtitles = const Value.absent(),
+    int? withPartner,
+    String? day,
+  }) => MediaLogsData(
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    kind: kind ?? this.kind,
+    title: title.present ? title.value : this.title,
+    minutes: minutes ?? this.minutes,
+    subtitles: subtitles.present ? subtitles.value : this.subtitles,
+    withPartner: withPartner ?? this.withPartner,
+    day: day ?? this.day,
+  );
+  MediaLogsData copyWithCompanion(MediaLogsCompanion data) {
+    return MediaLogsData(
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      title: data.title.present ? data.title.value : this.title,
+      minutes: data.minutes.present ? data.minutes.value : this.minutes,
+      subtitles: data.subtitles.present ? data.subtitles.value : this.subtitles,
+      withPartner: data.withPartner.present
+          ? data.withPartner.value
+          : this.withPartner,
+      day: data.day.present ? data.day.value : this.day,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MediaLogsData(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('title: $title, ')
+          ..write('minutes: $minutes, ')
+          ..write('subtitles: $subtitles, ')
+          ..write('withPartner: $withPartner, ')
+          ..write('day: $day')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    kind,
+    title,
+    minutes,
+    subtitles,
+    withPartner,
+    day,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MediaLogsData &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.kind == this.kind &&
+          other.title == this.title &&
+          other.minutes == this.minutes &&
+          other.subtitles == this.subtitles &&
+          other.withPartner == this.withPartner &&
+          other.day == this.day);
+}
+
+class MediaLogsCompanion extends UpdateCompanion<MediaLogsData> {
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> kind;
+  final Value<String?> title;
+  final Value<int> minutes;
+  final Value<String?> subtitles;
+  final Value<int> withPartner;
+  final Value<String> day;
+  final Value<int> rowid;
+  const MediaLogsCompanion({
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.title = const Value.absent(),
+    this.minutes = const Value.absent(),
+    this.subtitles = const Value.absent(),
+    this.withPartner = const Value.absent(),
+    this.day = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MediaLogsCompanion.insert({
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String kind,
+    this.title = const Value.absent(),
+    required int minutes,
+    this.subtitles = const Value.absent(),
+    this.withPartner = const Value.absent(),
+    required String day,
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       kind = Value(kind),
+       minutes = Value(minutes),
+       day = Value(day);
+  static Insertable<MediaLogsData> custom({
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? kind,
+    Expression<String>? title,
+    Expression<int>? minutes,
+    Expression<String>? subtitles,
+    Expression<int>? withPartner,
+    Expression<String>? day,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (kind != null) 'kind': kind,
+      if (title != null) 'title': title,
+      if (minutes != null) 'minutes': minutes,
+      if (subtitles != null) 'subtitles': subtitles,
+      if (withPartner != null) 'with_partner': withPartner,
+      if (day != null) 'day': day,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MediaLogsCompanion copyWith({
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? kind,
+    Value<String?>? title,
+    Value<int>? minutes,
+    Value<String?>? subtitles,
+    Value<int>? withPartner,
+    Value<String>? day,
+    Value<int>? rowid,
+  }) {
+    return MediaLogsCompanion(
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      kind: kind ?? this.kind,
+      title: title ?? this.title,
+      minutes: minutes ?? this.minutes,
+      subtitles: subtitles ?? this.subtitles,
+      withPartner: withPartner ?? this.withPartner,
+      day: day ?? this.day,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (minutes.present) {
+      map['minutes'] = Variable<int>(minutes.value);
+    }
+    if (subtitles.present) {
+      map['subtitles'] = Variable<String>(subtitles.value);
+    }
+    if (withPartner.present) {
+      map['with_partner'] = Variable<int>(withPartner.value);
+    }
+    if (day.present) {
+      map['day'] = Variable<String>(day.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MediaLogsCompanion(')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('kind: $kind, ')
+          ..write('title: $title, ')
+          ..write('minutes: $minutes, ')
+          ..write('subtitles: $subtitles, ')
+          ..write('withPartner: $withPartner, ')
+          ..write('day: $day, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class SubtitleImports extends Table
+    with TableInfo<SubtitleImports, SubtitleImportsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2150,8 +8466,58 @@ class SubtitleImports extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  SubtitleImportsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SubtitleImportsData(
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      serverSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_seq'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      pendingPush: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pending_push'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      filePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_path'],
+      )!,
+      coverage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}coverage'],
+      ),
+      unknown: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unknown'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+    );
   }
 
   @override
@@ -2165,7 +8531,399 @@ class SubtitleImports extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class Outbox extends Table with TableInfo {
+class SubtitleImportsData extends DataClass
+    implements Insertable<SubtitleImportsData> {
+  final String updatedAt;
+  final int? serverSeq;
+  final String createdAt;
+  final int pendingPush;
+  final String id;
+  final String profileId;
+  final String courseId;
+  final String title;
+  final String filePath;
+  final double? coverage;
+  final String? unknown;
+  final String status;
+  const SubtitleImportsData({
+    required this.updatedAt,
+    this.serverSeq,
+    required this.createdAt,
+    required this.pendingPush,
+    required this.id,
+    required this.profileId,
+    required this.courseId,
+    required this.title,
+    required this.filePath,
+    this.coverage,
+    this.unknown,
+    required this.status,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || serverSeq != null) {
+      map['server_seq'] = Variable<int>(serverSeq);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['pending_push'] = Variable<int>(pendingPush);
+    map['id'] = Variable<String>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['course_id'] = Variable<String>(courseId);
+    map['title'] = Variable<String>(title);
+    map['file_path'] = Variable<String>(filePath);
+    if (!nullToAbsent || coverage != null) {
+      map['coverage'] = Variable<double>(coverage);
+    }
+    if (!nullToAbsent || unknown != null) {
+      map['unknown'] = Variable<String>(unknown);
+    }
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  SubtitleImportsCompanion toCompanion(bool nullToAbsent) {
+    return SubtitleImportsCompanion(
+      updatedAt: Value(updatedAt),
+      serverSeq: serverSeq == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverSeq),
+      createdAt: Value(createdAt),
+      pendingPush: Value(pendingPush),
+      id: Value(id),
+      profileId: Value(profileId),
+      courseId: Value(courseId),
+      title: Value(title),
+      filePath: Value(filePath),
+      coverage: coverage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coverage),
+      unknown: unknown == null && nullToAbsent
+          ? const Value.absent()
+          : Value(unknown),
+      status: Value(status),
+    );
+  }
+
+  factory SubtitleImportsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SubtitleImportsData(
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      serverSeq: serializer.fromJson<int?>(json['serverSeq']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      pendingPush: serializer.fromJson<int>(json['pendingPush']),
+      id: serializer.fromJson<String>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      courseId: serializer.fromJson<String>(json['courseId']),
+      title: serializer.fromJson<String>(json['title']),
+      filePath: serializer.fromJson<String>(json['filePath']),
+      coverage: serializer.fromJson<double?>(json['coverage']),
+      unknown: serializer.fromJson<String?>(json['unknown']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'updatedAt': serializer.toJson<String>(updatedAt),
+      'serverSeq': serializer.toJson<int?>(serverSeq),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'pendingPush': serializer.toJson<int>(pendingPush),
+      'id': serializer.toJson<String>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'courseId': serializer.toJson<String>(courseId),
+      'title': serializer.toJson<String>(title),
+      'filePath': serializer.toJson<String>(filePath),
+      'coverage': serializer.toJson<double?>(coverage),
+      'unknown': serializer.toJson<String?>(unknown),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  SubtitleImportsData copyWith({
+    String? updatedAt,
+    Value<int?> serverSeq = const Value.absent(),
+    String? createdAt,
+    int? pendingPush,
+    String? id,
+    String? profileId,
+    String? courseId,
+    String? title,
+    String? filePath,
+    Value<double?> coverage = const Value.absent(),
+    Value<String?> unknown = const Value.absent(),
+    String? status,
+  }) => SubtitleImportsData(
+    updatedAt: updatedAt ?? this.updatedAt,
+    serverSeq: serverSeq.present ? serverSeq.value : this.serverSeq,
+    createdAt: createdAt ?? this.createdAt,
+    pendingPush: pendingPush ?? this.pendingPush,
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    courseId: courseId ?? this.courseId,
+    title: title ?? this.title,
+    filePath: filePath ?? this.filePath,
+    coverage: coverage.present ? coverage.value : this.coverage,
+    unknown: unknown.present ? unknown.value : this.unknown,
+    status: status ?? this.status,
+  );
+  SubtitleImportsData copyWithCompanion(SubtitleImportsCompanion data) {
+    return SubtitleImportsData(
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      serverSeq: data.serverSeq.present ? data.serverSeq.value : this.serverSeq,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingPush: data.pendingPush.present
+          ? data.pendingPush.value
+          : this.pendingPush,
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      title: data.title.present ? data.title.value : this.title,
+      filePath: data.filePath.present ? data.filePath.value : this.filePath,
+      coverage: data.coverage.present ? data.coverage.value : this.coverage,
+      unknown: data.unknown.present ? data.unknown.value : this.unknown,
+      status: data.status.present ? data.status.value : this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubtitleImportsData(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('title: $title, ')
+          ..write('filePath: $filePath, ')
+          ..write('coverage: $coverage, ')
+          ..write('unknown: $unknown, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    updatedAt,
+    serverSeq,
+    createdAt,
+    pendingPush,
+    id,
+    profileId,
+    courseId,
+    title,
+    filePath,
+    coverage,
+    unknown,
+    status,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SubtitleImportsData &&
+          other.updatedAt == this.updatedAt &&
+          other.serverSeq == this.serverSeq &&
+          other.createdAt == this.createdAt &&
+          other.pendingPush == this.pendingPush &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.courseId == this.courseId &&
+          other.title == this.title &&
+          other.filePath == this.filePath &&
+          other.coverage == this.coverage &&
+          other.unknown == this.unknown &&
+          other.status == this.status);
+}
+
+class SubtitleImportsCompanion extends UpdateCompanion<SubtitleImportsData> {
+  final Value<String> updatedAt;
+  final Value<int?> serverSeq;
+  final Value<String> createdAt;
+  final Value<int> pendingPush;
+  final Value<String> id;
+  final Value<String> profileId;
+  final Value<String> courseId;
+  final Value<String> title;
+  final Value<String> filePath;
+  final Value<double?> coverage;
+  final Value<String?> unknown;
+  final Value<String> status;
+  final Value<int> rowid;
+  const SubtitleImportsCompanion({
+    this.updatedAt = const Value.absent(),
+    this.serverSeq = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.pendingPush = const Value.absent(),
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.filePath = const Value.absent(),
+    this.coverage = const Value.absent(),
+    this.unknown = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SubtitleImportsCompanion.insert({
+    required String updatedAt,
+    this.serverSeq = const Value.absent(),
+    required String createdAt,
+    this.pendingPush = const Value.absent(),
+    required String id,
+    required String profileId,
+    required String courseId,
+    required String title,
+    required String filePath,
+    this.coverage = const Value.absent(),
+    this.unknown = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt),
+       id = Value(id),
+       profileId = Value(profileId),
+       courseId = Value(courseId),
+       title = Value(title),
+       filePath = Value(filePath);
+  static Insertable<SubtitleImportsData> custom({
+    Expression<String>? updatedAt,
+    Expression<int>? serverSeq,
+    Expression<String>? createdAt,
+    Expression<int>? pendingPush,
+    Expression<String>? id,
+    Expression<String>? profileId,
+    Expression<String>? courseId,
+    Expression<String>? title,
+    Expression<String>? filePath,
+    Expression<double>? coverage,
+    Expression<String>? unknown,
+    Expression<String>? status,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (serverSeq != null) 'server_seq': serverSeq,
+      if (createdAt != null) 'created_at': createdAt,
+      if (pendingPush != null) 'pending_push': pendingPush,
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (courseId != null) 'course_id': courseId,
+      if (title != null) 'title': title,
+      if (filePath != null) 'file_path': filePath,
+      if (coverage != null) 'coverage': coverage,
+      if (unknown != null) 'unknown': unknown,
+      if (status != null) 'status': status,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SubtitleImportsCompanion copyWith({
+    Value<String>? updatedAt,
+    Value<int?>? serverSeq,
+    Value<String>? createdAt,
+    Value<int>? pendingPush,
+    Value<String>? id,
+    Value<String>? profileId,
+    Value<String>? courseId,
+    Value<String>? title,
+    Value<String>? filePath,
+    Value<double?>? coverage,
+    Value<String?>? unknown,
+    Value<String>? status,
+    Value<int>? rowid,
+  }) {
+    return SubtitleImportsCompanion(
+      updatedAt: updatedAt ?? this.updatedAt,
+      serverSeq: serverSeq ?? this.serverSeq,
+      createdAt: createdAt ?? this.createdAt,
+      pendingPush: pendingPush ?? this.pendingPush,
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      courseId: courseId ?? this.courseId,
+      title: title ?? this.title,
+      filePath: filePath ?? this.filePath,
+      coverage: coverage ?? this.coverage,
+      unknown: unknown ?? this.unknown,
+      status: status ?? this.status,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (serverSeq.present) {
+      map['server_seq'] = Variable<int>(serverSeq.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (pendingPush.present) {
+      map['pending_push'] = Variable<int>(pendingPush.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (filePath.present) {
+      map['file_path'] = Variable<String>(filePath.value);
+    }
+    if (coverage.present) {
+      map['coverage'] = Variable<double>(coverage.value);
+    }
+    if (unknown.present) {
+      map['unknown'] = Variable<String>(unknown.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubtitleImportsCompanion(')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('serverSeq: $serverSeq, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingPush: $pendingPush, ')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('courseId: $courseId, ')
+          ..write('title: $title, ')
+          ..write('filePath: $filePath, ')
+          ..write('coverage: $coverage, ')
+          ..write('unknown: $unknown, ')
+          ..write('status: $status, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Outbox extends Table with TableInfo<Outbox, OutboxData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2255,8 +9013,42 @@ class Outbox extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  OutboxData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OutboxData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      targetTable: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}target_table'],
+      )!,
+      rowId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}row_id'],
+      )!,
+      op: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}op'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      attempts: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempts'],
+      )!,
+      nextAttemptAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}next_attempt_at'],
+      ),
+      lastError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_error'],
+      ),
+    );
   }
 
   @override
@@ -2268,7 +9060,292 @@ class Outbox extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class SyncState extends Table with TableInfo {
+class OutboxData extends DataClass implements Insertable<OutboxData> {
+  final int id;
+  final String targetTable;
+  final String rowId;
+  final String op;
+  final String createdAt;
+  final int attempts;
+  final String? nextAttemptAt;
+  final String? lastError;
+  const OutboxData({
+    required this.id,
+    required this.targetTable,
+    required this.rowId,
+    required this.op,
+    required this.createdAt,
+    required this.attempts,
+    this.nextAttemptAt,
+    this.lastError,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['target_table'] = Variable<String>(targetTable);
+    map['row_id'] = Variable<String>(rowId);
+    map['op'] = Variable<String>(op);
+    map['created_at'] = Variable<String>(createdAt);
+    map['attempts'] = Variable<int>(attempts);
+    if (!nullToAbsent || nextAttemptAt != null) {
+      map['next_attempt_at'] = Variable<String>(nextAttemptAt);
+    }
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    return map;
+  }
+
+  OutboxCompanion toCompanion(bool nullToAbsent) {
+    return OutboxCompanion(
+      id: Value(id),
+      targetTable: Value(targetTable),
+      rowId: Value(rowId),
+      op: Value(op),
+      createdAt: Value(createdAt),
+      attempts: Value(attempts),
+      nextAttemptAt: nextAttemptAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextAttemptAt),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+    );
+  }
+
+  factory OutboxData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OutboxData(
+      id: serializer.fromJson<int>(json['id']),
+      targetTable: serializer.fromJson<String>(json['targetTable']),
+      rowId: serializer.fromJson<String>(json['rowId']),
+      op: serializer.fromJson<String>(json['op']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      attempts: serializer.fromJson<int>(json['attempts']),
+      nextAttemptAt: serializer.fromJson<String?>(json['nextAttemptAt']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'targetTable': serializer.toJson<String>(targetTable),
+      'rowId': serializer.toJson<String>(rowId),
+      'op': serializer.toJson<String>(op),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'attempts': serializer.toJson<int>(attempts),
+      'nextAttemptAt': serializer.toJson<String?>(nextAttemptAt),
+      'lastError': serializer.toJson<String?>(lastError),
+    };
+  }
+
+  OutboxData copyWith({
+    int? id,
+    String? targetTable,
+    String? rowId,
+    String? op,
+    String? createdAt,
+    int? attempts,
+    Value<String?> nextAttemptAt = const Value.absent(),
+    Value<String?> lastError = const Value.absent(),
+  }) => OutboxData(
+    id: id ?? this.id,
+    targetTable: targetTable ?? this.targetTable,
+    rowId: rowId ?? this.rowId,
+    op: op ?? this.op,
+    createdAt: createdAt ?? this.createdAt,
+    attempts: attempts ?? this.attempts,
+    nextAttemptAt: nextAttemptAt.present
+        ? nextAttemptAt.value
+        : this.nextAttemptAt,
+    lastError: lastError.present ? lastError.value : this.lastError,
+  );
+  OutboxData copyWithCompanion(OutboxCompanion data) {
+    return OutboxData(
+      id: data.id.present ? data.id.value : this.id,
+      targetTable: data.targetTable.present
+          ? data.targetTable.value
+          : this.targetTable,
+      rowId: data.rowId.present ? data.rowId.value : this.rowId,
+      op: data.op.present ? data.op.value : this.op,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      attempts: data.attempts.present ? data.attempts.value : this.attempts,
+      nextAttemptAt: data.nextAttemptAt.present
+          ? data.nextAttemptAt.value
+          : this.nextAttemptAt,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OutboxData(')
+          ..write('id: $id, ')
+          ..write('targetTable: $targetTable, ')
+          ..write('rowId: $rowId, ')
+          ..write('op: $op, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('attempts: $attempts, ')
+          ..write('nextAttemptAt: $nextAttemptAt, ')
+          ..write('lastError: $lastError')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    targetTable,
+    rowId,
+    op,
+    createdAt,
+    attempts,
+    nextAttemptAt,
+    lastError,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OutboxData &&
+          other.id == this.id &&
+          other.targetTable == this.targetTable &&
+          other.rowId == this.rowId &&
+          other.op == this.op &&
+          other.createdAt == this.createdAt &&
+          other.attempts == this.attempts &&
+          other.nextAttemptAt == this.nextAttemptAt &&
+          other.lastError == this.lastError);
+}
+
+class OutboxCompanion extends UpdateCompanion<OutboxData> {
+  final Value<int> id;
+  final Value<String> targetTable;
+  final Value<String> rowId;
+  final Value<String> op;
+  final Value<String> createdAt;
+  final Value<int> attempts;
+  final Value<String?> nextAttemptAt;
+  final Value<String?> lastError;
+  const OutboxCompanion({
+    this.id = const Value.absent(),
+    this.targetTable = const Value.absent(),
+    this.rowId = const Value.absent(),
+    this.op = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.attempts = const Value.absent(),
+    this.nextAttemptAt = const Value.absent(),
+    this.lastError = const Value.absent(),
+  });
+  OutboxCompanion.insert({
+    this.id = const Value.absent(),
+    required String targetTable,
+    required String rowId,
+    required String op,
+    required String createdAt,
+    this.attempts = const Value.absent(),
+    this.nextAttemptAt = const Value.absent(),
+    this.lastError = const Value.absent(),
+  }) : targetTable = Value(targetTable),
+       rowId = Value(rowId),
+       op = Value(op),
+       createdAt = Value(createdAt);
+  static Insertable<OutboxData> custom({
+    Expression<int>? id,
+    Expression<String>? targetTable,
+    Expression<String>? rowId,
+    Expression<String>? op,
+    Expression<String>? createdAt,
+    Expression<int>? attempts,
+    Expression<String>? nextAttemptAt,
+    Expression<String>? lastError,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (targetTable != null) 'target_table': targetTable,
+      if (rowId != null) 'row_id': rowId,
+      if (op != null) 'op': op,
+      if (createdAt != null) 'created_at': createdAt,
+      if (attempts != null) 'attempts': attempts,
+      if (nextAttemptAt != null) 'next_attempt_at': nextAttemptAt,
+      if (lastError != null) 'last_error': lastError,
+    });
+  }
+
+  OutboxCompanion copyWith({
+    Value<int>? id,
+    Value<String>? targetTable,
+    Value<String>? rowId,
+    Value<String>? op,
+    Value<String>? createdAt,
+    Value<int>? attempts,
+    Value<String?>? nextAttemptAt,
+    Value<String?>? lastError,
+  }) {
+    return OutboxCompanion(
+      id: id ?? this.id,
+      targetTable: targetTable ?? this.targetTable,
+      rowId: rowId ?? this.rowId,
+      op: op ?? this.op,
+      createdAt: createdAt ?? this.createdAt,
+      attempts: attempts ?? this.attempts,
+      nextAttemptAt: nextAttemptAt ?? this.nextAttemptAt,
+      lastError: lastError ?? this.lastError,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (targetTable.present) {
+      map['target_table'] = Variable<String>(targetTable.value);
+    }
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (op.present) {
+      map['op'] = Variable<String>(op.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (attempts.present) {
+      map['attempts'] = Variable<int>(attempts.value);
+    }
+    if (nextAttemptAt.present) {
+      map['next_attempt_at'] = Variable<String>(nextAttemptAt.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OutboxCompanion(')
+          ..write('id: $id, ')
+          ..write('targetTable: $targetTable, ')
+          ..write('rowId: $rowId, ')
+          ..write('op: $op, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('attempts: $attempts, ')
+          ..write('nextAttemptAt: $nextAttemptAt, ')
+          ..write('lastError: $lastError')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class SyncState extends Table with TableInfo<SyncState, SyncStateData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2308,8 +9385,22 @@ class SyncState extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {profileId};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  SyncStateData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncStateData(
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      lastServerSeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_server_seq'],
+      )!,
+      lastSyncAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_sync_at'],
+      ),
+    );
   }
 
   @override
@@ -2323,7 +9414,176 @@ class SyncState extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentPacks extends Table with TableInfo {
+class SyncStateData extends DataClass implements Insertable<SyncStateData> {
+  final String profileId;
+  final int lastServerSeq;
+  final String? lastSyncAt;
+  const SyncStateData({
+    required this.profileId,
+    required this.lastServerSeq,
+    this.lastSyncAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['profile_id'] = Variable<String>(profileId);
+    map['last_server_seq'] = Variable<int>(lastServerSeq);
+    if (!nullToAbsent || lastSyncAt != null) {
+      map['last_sync_at'] = Variable<String>(lastSyncAt);
+    }
+    return map;
+  }
+
+  SyncStateCompanion toCompanion(bool nullToAbsent) {
+    return SyncStateCompanion(
+      profileId: Value(profileId),
+      lastServerSeq: Value(lastServerSeq),
+      lastSyncAt: lastSyncAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncAt),
+    );
+  }
+
+  factory SyncStateData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncStateData(
+      profileId: serializer.fromJson<String>(json['profileId']),
+      lastServerSeq: serializer.fromJson<int>(json['lastServerSeq']),
+      lastSyncAt: serializer.fromJson<String?>(json['lastSyncAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'profileId': serializer.toJson<String>(profileId),
+      'lastServerSeq': serializer.toJson<int>(lastServerSeq),
+      'lastSyncAt': serializer.toJson<String?>(lastSyncAt),
+    };
+  }
+
+  SyncStateData copyWith({
+    String? profileId,
+    int? lastServerSeq,
+    Value<String?> lastSyncAt = const Value.absent(),
+  }) => SyncStateData(
+    profileId: profileId ?? this.profileId,
+    lastServerSeq: lastServerSeq ?? this.lastServerSeq,
+    lastSyncAt: lastSyncAt.present ? lastSyncAt.value : this.lastSyncAt,
+  );
+  SyncStateData copyWithCompanion(SyncStateCompanion data) {
+    return SyncStateData(
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      lastServerSeq: data.lastServerSeq.present
+          ? data.lastServerSeq.value
+          : this.lastServerSeq,
+      lastSyncAt: data.lastSyncAt.present
+          ? data.lastSyncAt.value
+          : this.lastSyncAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncStateData(')
+          ..write('profileId: $profileId, ')
+          ..write('lastServerSeq: $lastServerSeq, ')
+          ..write('lastSyncAt: $lastSyncAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(profileId, lastServerSeq, lastSyncAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncStateData &&
+          other.profileId == this.profileId &&
+          other.lastServerSeq == this.lastServerSeq &&
+          other.lastSyncAt == this.lastSyncAt);
+}
+
+class SyncStateCompanion extends UpdateCompanion<SyncStateData> {
+  final Value<String> profileId;
+  final Value<int> lastServerSeq;
+  final Value<String?> lastSyncAt;
+  final Value<int> rowid;
+  const SyncStateCompanion({
+    this.profileId = const Value.absent(),
+    this.lastServerSeq = const Value.absent(),
+    this.lastSyncAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncStateCompanion.insert({
+    required String profileId,
+    this.lastServerSeq = const Value.absent(),
+    this.lastSyncAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : profileId = Value(profileId);
+  static Insertable<SyncStateData> custom({
+    Expression<String>? profileId,
+    Expression<int>? lastServerSeq,
+    Expression<String>? lastSyncAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (profileId != null) 'profile_id': profileId,
+      if (lastServerSeq != null) 'last_server_seq': lastServerSeq,
+      if (lastSyncAt != null) 'last_sync_at': lastSyncAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncStateCompanion copyWith({
+    Value<String>? profileId,
+    Value<int>? lastServerSeq,
+    Value<String?>? lastSyncAt,
+    Value<int>? rowid,
+  }) {
+    return SyncStateCompanion(
+      profileId: profileId ?? this.profileId,
+      lastServerSeq: lastServerSeq ?? this.lastServerSeq,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (lastServerSeq.present) {
+      map['last_server_seq'] = Variable<int>(lastServerSeq.value);
+    }
+    if (lastSyncAt.present) {
+      map['last_sync_at'] = Variable<String>(lastSyncAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncStateCompanion(')
+          ..write('profileId: $profileId, ')
+          ..write('lastServerSeq: $lastServerSeq, ')
+          ..write('lastSyncAt: $lastSyncAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentPacks extends Table
+    with TableInfo<ContentPacks, ContentPacksData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2411,8 +9671,42 @@ class ContentPacks extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {packId};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentPacksData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentPacksData(
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      l2: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}l2'],
+      )!,
+      l1: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}l1'],
+      ),
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}version'],
+      )!,
+      manifest: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}manifest'],
+      )!,
+      checksum: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}checksum'],
+      )!,
+      importedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}imported_at'],
+      )!,
+    );
   }
 
   @override
@@ -2426,7 +9720,298 @@ class ContentPacks extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentItems extends Table with TableInfo {
+class ContentPacksData extends DataClass
+    implements Insertable<ContentPacksData> {
+  final String packId;
+  final String kind;
+  final String l2;
+  final String? l1;
+  final double version;
+  final String manifest;
+  final String checksum;
+  final String importedAt;
+  const ContentPacksData({
+    required this.packId,
+    required this.kind,
+    required this.l2,
+    this.l1,
+    required this.version,
+    required this.manifest,
+    required this.checksum,
+    required this.importedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['pack_id'] = Variable<String>(packId);
+    map['kind'] = Variable<String>(kind);
+    map['l2'] = Variable<String>(l2);
+    if (!nullToAbsent || l1 != null) {
+      map['l1'] = Variable<String>(l1);
+    }
+    map['version'] = Variable<double>(version);
+    map['manifest'] = Variable<String>(manifest);
+    map['checksum'] = Variable<String>(checksum);
+    map['imported_at'] = Variable<String>(importedAt);
+    return map;
+  }
+
+  ContentPacksCompanion toCompanion(bool nullToAbsent) {
+    return ContentPacksCompanion(
+      packId: Value(packId),
+      kind: Value(kind),
+      l2: Value(l2),
+      l1: l1 == null && nullToAbsent ? const Value.absent() : Value(l1),
+      version: Value(version),
+      manifest: Value(manifest),
+      checksum: Value(checksum),
+      importedAt: Value(importedAt),
+    );
+  }
+
+  factory ContentPacksData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentPacksData(
+      packId: serializer.fromJson<String>(json['packId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      l2: serializer.fromJson<String>(json['l2']),
+      l1: serializer.fromJson<String?>(json['l1']),
+      version: serializer.fromJson<double>(json['version']),
+      manifest: serializer.fromJson<String>(json['manifest']),
+      checksum: serializer.fromJson<String>(json['checksum']),
+      importedAt: serializer.fromJson<String>(json['importedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'packId': serializer.toJson<String>(packId),
+      'kind': serializer.toJson<String>(kind),
+      'l2': serializer.toJson<String>(l2),
+      'l1': serializer.toJson<String?>(l1),
+      'version': serializer.toJson<double>(version),
+      'manifest': serializer.toJson<String>(manifest),
+      'checksum': serializer.toJson<String>(checksum),
+      'importedAt': serializer.toJson<String>(importedAt),
+    };
+  }
+
+  ContentPacksData copyWith({
+    String? packId,
+    String? kind,
+    String? l2,
+    Value<String?> l1 = const Value.absent(),
+    double? version,
+    String? manifest,
+    String? checksum,
+    String? importedAt,
+  }) => ContentPacksData(
+    packId: packId ?? this.packId,
+    kind: kind ?? this.kind,
+    l2: l2 ?? this.l2,
+    l1: l1.present ? l1.value : this.l1,
+    version: version ?? this.version,
+    manifest: manifest ?? this.manifest,
+    checksum: checksum ?? this.checksum,
+    importedAt: importedAt ?? this.importedAt,
+  );
+  ContentPacksData copyWithCompanion(ContentPacksCompanion data) {
+    return ContentPacksData(
+      packId: data.packId.present ? data.packId.value : this.packId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      l2: data.l2.present ? data.l2.value : this.l2,
+      l1: data.l1.present ? data.l1.value : this.l1,
+      version: data.version.present ? data.version.value : this.version,
+      manifest: data.manifest.present ? data.manifest.value : this.manifest,
+      checksum: data.checksum.present ? data.checksum.value : this.checksum,
+      importedAt: data.importedAt.present
+          ? data.importedAt.value
+          : this.importedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentPacksData(')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('l2: $l2, ')
+          ..write('l1: $l1, ')
+          ..write('version: $version, ')
+          ..write('manifest: $manifest, ')
+          ..write('checksum: $checksum, ')
+          ..write('importedAt: $importedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    packId,
+    kind,
+    l2,
+    l1,
+    version,
+    manifest,
+    checksum,
+    importedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentPacksData &&
+          other.packId == this.packId &&
+          other.kind == this.kind &&
+          other.l2 == this.l2 &&
+          other.l1 == this.l1 &&
+          other.version == this.version &&
+          other.manifest == this.manifest &&
+          other.checksum == this.checksum &&
+          other.importedAt == this.importedAt);
+}
+
+class ContentPacksCompanion extends UpdateCompanion<ContentPacksData> {
+  final Value<String> packId;
+  final Value<String> kind;
+  final Value<String> l2;
+  final Value<String?> l1;
+  final Value<double> version;
+  final Value<String> manifest;
+  final Value<String> checksum;
+  final Value<String> importedAt;
+  final Value<int> rowid;
+  const ContentPacksCompanion({
+    this.packId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.l2 = const Value.absent(),
+    this.l1 = const Value.absent(),
+    this.version = const Value.absent(),
+    this.manifest = const Value.absent(),
+    this.checksum = const Value.absent(),
+    this.importedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentPacksCompanion.insert({
+    required String packId,
+    required String kind,
+    required String l2,
+    this.l1 = const Value.absent(),
+    required double version,
+    required String manifest,
+    required String checksum,
+    required String importedAt,
+    this.rowid = const Value.absent(),
+  }) : packId = Value(packId),
+       kind = Value(kind),
+       l2 = Value(l2),
+       version = Value(version),
+       manifest = Value(manifest),
+       checksum = Value(checksum),
+       importedAt = Value(importedAt);
+  static Insertable<ContentPacksData> custom({
+    Expression<String>? packId,
+    Expression<String>? kind,
+    Expression<String>? l2,
+    Expression<String>? l1,
+    Expression<double>? version,
+    Expression<String>? manifest,
+    Expression<String>? checksum,
+    Expression<String>? importedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (packId != null) 'pack_id': packId,
+      if (kind != null) 'kind': kind,
+      if (l2 != null) 'l2': l2,
+      if (l1 != null) 'l1': l1,
+      if (version != null) 'version': version,
+      if (manifest != null) 'manifest': manifest,
+      if (checksum != null) 'checksum': checksum,
+      if (importedAt != null) 'imported_at': importedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentPacksCompanion copyWith({
+    Value<String>? packId,
+    Value<String>? kind,
+    Value<String>? l2,
+    Value<String?>? l1,
+    Value<double>? version,
+    Value<String>? manifest,
+    Value<String>? checksum,
+    Value<String>? importedAt,
+    Value<int>? rowid,
+  }) {
+    return ContentPacksCompanion(
+      packId: packId ?? this.packId,
+      kind: kind ?? this.kind,
+      l2: l2 ?? this.l2,
+      l1: l1 ?? this.l1,
+      version: version ?? this.version,
+      manifest: manifest ?? this.manifest,
+      checksum: checksum ?? this.checksum,
+      importedAt: importedAt ?? this.importedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (l2.present) {
+      map['l2'] = Variable<String>(l2.value);
+    }
+    if (l1.present) {
+      map['l1'] = Variable<String>(l1.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<double>(version.value);
+    }
+    if (manifest.present) {
+      map['manifest'] = Variable<String>(manifest.value);
+    }
+    if (checksum.present) {
+      map['checksum'] = Variable<String>(checksum.value);
+    }
+    if (importedAt.present) {
+      map['imported_at'] = Variable<String>(importedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentPacksCompanion(')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('l2: $l2, ')
+          ..write('l1: $l1, ')
+          ..write('version: $version, ')
+          ..write('manifest: $manifest, ')
+          ..write('checksum: $checksum, ')
+          ..write('importedAt: $importedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentItems extends Table
+    with TableInfo<ContentItems, ContentItemsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2546,8 +10131,54 @@ class ContentItems extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentItemsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentItemsData(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level'],
+      )!,
+      textL2: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}text_l2'],
+      ),
+      lemmas: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lemmas'],
+      )!,
+      targets: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}targets'],
+      )!,
+      grammar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}grammar'],
+      )!,
+      rank: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rank'],
+      ),
+      deprecated: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deprecated'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+    );
   }
 
   @override
@@ -2561,7 +10192,368 @@ class ContentItems extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentLinks extends Table with TableInfo {
+class ContentItemsData extends DataClass
+    implements Insertable<ContentItemsData> {
+  final String key;
+  final String packId;
+  final String kind;
+  final String level;
+  final String? textL2;
+  final String lemmas;
+  final String targets;
+  final String grammar;
+  final int? rank;
+  final int deprecated;
+  final String data;
+  const ContentItemsData({
+    required this.key,
+    required this.packId,
+    required this.kind,
+    required this.level,
+    this.textL2,
+    required this.lemmas,
+    required this.targets,
+    required this.grammar,
+    this.rank,
+    required this.deprecated,
+    required this.data,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['pack_id'] = Variable<String>(packId);
+    map['kind'] = Variable<String>(kind);
+    map['level'] = Variable<String>(level);
+    if (!nullToAbsent || textL2 != null) {
+      map['text_l2'] = Variable<String>(textL2);
+    }
+    map['lemmas'] = Variable<String>(lemmas);
+    map['targets'] = Variable<String>(targets);
+    map['grammar'] = Variable<String>(grammar);
+    if (!nullToAbsent || rank != null) {
+      map['rank'] = Variable<int>(rank);
+    }
+    map['deprecated'] = Variable<int>(deprecated);
+    map['data'] = Variable<String>(data);
+    return map;
+  }
+
+  ContentItemsCompanion toCompanion(bool nullToAbsent) {
+    return ContentItemsCompanion(
+      key: Value(key),
+      packId: Value(packId),
+      kind: Value(kind),
+      level: Value(level),
+      textL2: textL2 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(textL2),
+      lemmas: Value(lemmas),
+      targets: Value(targets),
+      grammar: Value(grammar),
+      rank: rank == null && nullToAbsent ? const Value.absent() : Value(rank),
+      deprecated: Value(deprecated),
+      data: Value(data),
+    );
+  }
+
+  factory ContentItemsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentItemsData(
+      key: serializer.fromJson<String>(json['key']),
+      packId: serializer.fromJson<String>(json['packId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      level: serializer.fromJson<String>(json['level']),
+      textL2: serializer.fromJson<String?>(json['textL2']),
+      lemmas: serializer.fromJson<String>(json['lemmas']),
+      targets: serializer.fromJson<String>(json['targets']),
+      grammar: serializer.fromJson<String>(json['grammar']),
+      rank: serializer.fromJson<int?>(json['rank']),
+      deprecated: serializer.fromJson<int>(json['deprecated']),
+      data: serializer.fromJson<String>(json['data']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'packId': serializer.toJson<String>(packId),
+      'kind': serializer.toJson<String>(kind),
+      'level': serializer.toJson<String>(level),
+      'textL2': serializer.toJson<String?>(textL2),
+      'lemmas': serializer.toJson<String>(lemmas),
+      'targets': serializer.toJson<String>(targets),
+      'grammar': serializer.toJson<String>(grammar),
+      'rank': serializer.toJson<int?>(rank),
+      'deprecated': serializer.toJson<int>(deprecated),
+      'data': serializer.toJson<String>(data),
+    };
+  }
+
+  ContentItemsData copyWith({
+    String? key,
+    String? packId,
+    String? kind,
+    String? level,
+    Value<String?> textL2 = const Value.absent(),
+    String? lemmas,
+    String? targets,
+    String? grammar,
+    Value<int?> rank = const Value.absent(),
+    int? deprecated,
+    String? data,
+  }) => ContentItemsData(
+    key: key ?? this.key,
+    packId: packId ?? this.packId,
+    kind: kind ?? this.kind,
+    level: level ?? this.level,
+    textL2: textL2.present ? textL2.value : this.textL2,
+    lemmas: lemmas ?? this.lemmas,
+    targets: targets ?? this.targets,
+    grammar: grammar ?? this.grammar,
+    rank: rank.present ? rank.value : this.rank,
+    deprecated: deprecated ?? this.deprecated,
+    data: data ?? this.data,
+  );
+  ContentItemsData copyWithCompanion(ContentItemsCompanion data) {
+    return ContentItemsData(
+      key: data.key.present ? data.key.value : this.key,
+      packId: data.packId.present ? data.packId.value : this.packId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      level: data.level.present ? data.level.value : this.level,
+      textL2: data.textL2.present ? data.textL2.value : this.textL2,
+      lemmas: data.lemmas.present ? data.lemmas.value : this.lemmas,
+      targets: data.targets.present ? data.targets.value : this.targets,
+      grammar: data.grammar.present ? data.grammar.value : this.grammar,
+      rank: data.rank.present ? data.rank.value : this.rank,
+      deprecated: data.deprecated.present
+          ? data.deprecated.value
+          : this.deprecated,
+      data: data.data.present ? data.data.value : this.data,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentItemsData(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('textL2: $textL2, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('targets: $targets, ')
+          ..write('grammar: $grammar, ')
+          ..write('rank: $rank, ')
+          ..write('deprecated: $deprecated, ')
+          ..write('data: $data')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    key,
+    packId,
+    kind,
+    level,
+    textL2,
+    lemmas,
+    targets,
+    grammar,
+    rank,
+    deprecated,
+    data,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentItemsData &&
+          other.key == this.key &&
+          other.packId == this.packId &&
+          other.kind == this.kind &&
+          other.level == this.level &&
+          other.textL2 == this.textL2 &&
+          other.lemmas == this.lemmas &&
+          other.targets == this.targets &&
+          other.grammar == this.grammar &&
+          other.rank == this.rank &&
+          other.deprecated == this.deprecated &&
+          other.data == this.data);
+}
+
+class ContentItemsCompanion extends UpdateCompanion<ContentItemsData> {
+  final Value<String> key;
+  final Value<String> packId;
+  final Value<String> kind;
+  final Value<String> level;
+  final Value<String?> textL2;
+  final Value<String> lemmas;
+  final Value<String> targets;
+  final Value<String> grammar;
+  final Value<int?> rank;
+  final Value<int> deprecated;
+  final Value<String> data;
+  final Value<int> rowid;
+  const ContentItemsCompanion({
+    this.key = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.level = const Value.absent(),
+    this.textL2 = const Value.absent(),
+    this.lemmas = const Value.absent(),
+    this.targets = const Value.absent(),
+    this.grammar = const Value.absent(),
+    this.rank = const Value.absent(),
+    this.deprecated = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentItemsCompanion.insert({
+    required String key,
+    required String packId,
+    required String kind,
+    required String level,
+    this.textL2 = const Value.absent(),
+    this.lemmas = const Value.absent(),
+    this.targets = const Value.absent(),
+    this.grammar = const Value.absent(),
+    this.rank = const Value.absent(),
+    this.deprecated = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       packId = Value(packId),
+       kind = Value(kind),
+       level = Value(level);
+  static Insertable<ContentItemsData> custom({
+    Expression<String>? key,
+    Expression<String>? packId,
+    Expression<String>? kind,
+    Expression<String>? level,
+    Expression<String>? textL2,
+    Expression<String>? lemmas,
+    Expression<String>? targets,
+    Expression<String>? grammar,
+    Expression<int>? rank,
+    Expression<int>? deprecated,
+    Expression<String>? data,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (packId != null) 'pack_id': packId,
+      if (kind != null) 'kind': kind,
+      if (level != null) 'level': level,
+      if (textL2 != null) 'text_l2': textL2,
+      if (lemmas != null) 'lemmas': lemmas,
+      if (targets != null) 'targets': targets,
+      if (grammar != null) 'grammar': grammar,
+      if (rank != null) 'rank': rank,
+      if (deprecated != null) 'deprecated': deprecated,
+      if (data != null) 'data': data,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentItemsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? packId,
+    Value<String>? kind,
+    Value<String>? level,
+    Value<String?>? textL2,
+    Value<String>? lemmas,
+    Value<String>? targets,
+    Value<String>? grammar,
+    Value<int?>? rank,
+    Value<int>? deprecated,
+    Value<String>? data,
+    Value<int>? rowid,
+  }) {
+    return ContentItemsCompanion(
+      key: key ?? this.key,
+      packId: packId ?? this.packId,
+      kind: kind ?? this.kind,
+      level: level ?? this.level,
+      textL2: textL2 ?? this.textL2,
+      lemmas: lemmas ?? this.lemmas,
+      targets: targets ?? this.targets,
+      grammar: grammar ?? this.grammar,
+      rank: rank ?? this.rank,
+      deprecated: deprecated ?? this.deprecated,
+      data: data ?? this.data,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<String>(level.value);
+    }
+    if (textL2.present) {
+      map['text_l2'] = Variable<String>(textL2.value);
+    }
+    if (lemmas.present) {
+      map['lemmas'] = Variable<String>(lemmas.value);
+    }
+    if (targets.present) {
+      map['targets'] = Variable<String>(targets.value);
+    }
+    if (grammar.present) {
+      map['grammar'] = Variable<String>(grammar.value);
+    }
+    if (rank.present) {
+      map['rank'] = Variable<int>(rank.value);
+    }
+    if (deprecated.present) {
+      map['deprecated'] = Variable<int>(deprecated.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentItemsCompanion(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('textL2: $textL2, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('targets: $targets, ')
+          ..write('grammar: $grammar, ')
+          ..write('rank: $rank, ')
+          ..write('deprecated: $deprecated, ')
+          ..write('data: $data, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentLinks extends Table
+    with TableInfo<ContentLinks, ContentLinksData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2608,8 +10600,26 @@ class ContentLinks extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {fromKey, toKey, type};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentLinksData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentLinksData(
+      fromKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}from_key'],
+      )!,
+      toKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}to_key'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+    );
   }
 
   @override
@@ -2625,7 +10635,194 @@ class ContentLinks extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentForms extends Table with TableInfo {
+class ContentLinksData extends DataClass
+    implements Insertable<ContentLinksData> {
+  final String fromKey;
+  final String toKey;
+  final String type;
+  final String packId;
+  const ContentLinksData({
+    required this.fromKey,
+    required this.toKey,
+    required this.type,
+    required this.packId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['from_key'] = Variable<String>(fromKey);
+    map['to_key'] = Variable<String>(toKey);
+    map['type'] = Variable<String>(type);
+    map['pack_id'] = Variable<String>(packId);
+    return map;
+  }
+
+  ContentLinksCompanion toCompanion(bool nullToAbsent) {
+    return ContentLinksCompanion(
+      fromKey: Value(fromKey),
+      toKey: Value(toKey),
+      type: Value(type),
+      packId: Value(packId),
+    );
+  }
+
+  factory ContentLinksData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentLinksData(
+      fromKey: serializer.fromJson<String>(json['fromKey']),
+      toKey: serializer.fromJson<String>(json['toKey']),
+      type: serializer.fromJson<String>(json['type']),
+      packId: serializer.fromJson<String>(json['packId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'fromKey': serializer.toJson<String>(fromKey),
+      'toKey': serializer.toJson<String>(toKey),
+      'type': serializer.toJson<String>(type),
+      'packId': serializer.toJson<String>(packId),
+    };
+  }
+
+  ContentLinksData copyWith({
+    String? fromKey,
+    String? toKey,
+    String? type,
+    String? packId,
+  }) => ContentLinksData(
+    fromKey: fromKey ?? this.fromKey,
+    toKey: toKey ?? this.toKey,
+    type: type ?? this.type,
+    packId: packId ?? this.packId,
+  );
+  ContentLinksData copyWithCompanion(ContentLinksCompanion data) {
+    return ContentLinksData(
+      fromKey: data.fromKey.present ? data.fromKey.value : this.fromKey,
+      toKey: data.toKey.present ? data.toKey.value : this.toKey,
+      type: data.type.present ? data.type.value : this.type,
+      packId: data.packId.present ? data.packId.value : this.packId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentLinksData(')
+          ..write('fromKey: $fromKey, ')
+          ..write('toKey: $toKey, ')
+          ..write('type: $type, ')
+          ..write('packId: $packId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(fromKey, toKey, type, packId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentLinksData &&
+          other.fromKey == this.fromKey &&
+          other.toKey == this.toKey &&
+          other.type == this.type &&
+          other.packId == this.packId);
+}
+
+class ContentLinksCompanion extends UpdateCompanion<ContentLinksData> {
+  final Value<String> fromKey;
+  final Value<String> toKey;
+  final Value<String> type;
+  final Value<String> packId;
+  final Value<int> rowid;
+  const ContentLinksCompanion({
+    this.fromKey = const Value.absent(),
+    this.toKey = const Value.absent(),
+    this.type = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentLinksCompanion.insert({
+    required String fromKey,
+    required String toKey,
+    required String type,
+    required String packId,
+    this.rowid = const Value.absent(),
+  }) : fromKey = Value(fromKey),
+       toKey = Value(toKey),
+       type = Value(type),
+       packId = Value(packId);
+  static Insertable<ContentLinksData> custom({
+    Expression<String>? fromKey,
+    Expression<String>? toKey,
+    Expression<String>? type,
+    Expression<String>? packId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (fromKey != null) 'from_key': fromKey,
+      if (toKey != null) 'to_key': toKey,
+      if (type != null) 'type': type,
+      if (packId != null) 'pack_id': packId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentLinksCompanion copyWith({
+    Value<String>? fromKey,
+    Value<String>? toKey,
+    Value<String>? type,
+    Value<String>? packId,
+    Value<int>? rowid,
+  }) {
+    return ContentLinksCompanion(
+      fromKey: fromKey ?? this.fromKey,
+      toKey: toKey ?? this.toKey,
+      type: type ?? this.type,
+      packId: packId ?? this.packId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (fromKey.present) {
+      map['from_key'] = Variable<String>(fromKey.value);
+    }
+    if (toKey.present) {
+      map['to_key'] = Variable<String>(toKey.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentLinksCompanion(')
+          ..write('fromKey: $fromKey, ')
+          ..write('toKey: $toKey, ')
+          ..write('type: $type, ')
+          ..write('packId: $packId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentForms extends Table
+    with TableInfo<ContentForms, ContentFormsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2664,8 +10861,22 @@ class ContentForms extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {form, lemma};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentFormsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentFormsData(
+      form: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}form'],
+      )!,
+      lemma: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lemma'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+    );
   }
 
   @override
@@ -2679,7 +10890,168 @@ class ContentForms extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentTexts extends Table with TableInfo {
+class ContentFormsData extends DataClass
+    implements Insertable<ContentFormsData> {
+  final String form;
+  final String lemma;
+  final String packId;
+  const ContentFormsData({
+    required this.form,
+    required this.lemma,
+    required this.packId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['form'] = Variable<String>(form);
+    map['lemma'] = Variable<String>(lemma);
+    map['pack_id'] = Variable<String>(packId);
+    return map;
+  }
+
+  ContentFormsCompanion toCompanion(bool nullToAbsent) {
+    return ContentFormsCompanion(
+      form: Value(form),
+      lemma: Value(lemma),
+      packId: Value(packId),
+    );
+  }
+
+  factory ContentFormsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentFormsData(
+      form: serializer.fromJson<String>(json['form']),
+      lemma: serializer.fromJson<String>(json['lemma']),
+      packId: serializer.fromJson<String>(json['packId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'form': serializer.toJson<String>(form),
+      'lemma': serializer.toJson<String>(lemma),
+      'packId': serializer.toJson<String>(packId),
+    };
+  }
+
+  ContentFormsData copyWith({String? form, String? lemma, String? packId}) =>
+      ContentFormsData(
+        form: form ?? this.form,
+        lemma: lemma ?? this.lemma,
+        packId: packId ?? this.packId,
+      );
+  ContentFormsData copyWithCompanion(ContentFormsCompanion data) {
+    return ContentFormsData(
+      form: data.form.present ? data.form.value : this.form,
+      lemma: data.lemma.present ? data.lemma.value : this.lemma,
+      packId: data.packId.present ? data.packId.value : this.packId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentFormsData(')
+          ..write('form: $form, ')
+          ..write('lemma: $lemma, ')
+          ..write('packId: $packId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(form, lemma, packId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentFormsData &&
+          other.form == this.form &&
+          other.lemma == this.lemma &&
+          other.packId == this.packId);
+}
+
+class ContentFormsCompanion extends UpdateCompanion<ContentFormsData> {
+  final Value<String> form;
+  final Value<String> lemma;
+  final Value<String> packId;
+  final Value<int> rowid;
+  const ContentFormsCompanion({
+    this.form = const Value.absent(),
+    this.lemma = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentFormsCompanion.insert({
+    required String form,
+    required String lemma,
+    required String packId,
+    this.rowid = const Value.absent(),
+  }) : form = Value(form),
+       lemma = Value(lemma),
+       packId = Value(packId);
+  static Insertable<ContentFormsData> custom({
+    Expression<String>? form,
+    Expression<String>? lemma,
+    Expression<String>? packId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (form != null) 'form': form,
+      if (lemma != null) 'lemma': lemma,
+      if (packId != null) 'pack_id': packId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentFormsCompanion copyWith({
+    Value<String>? form,
+    Value<String>? lemma,
+    Value<String>? packId,
+    Value<int>? rowid,
+  }) {
+    return ContentFormsCompanion(
+      form: form ?? this.form,
+      lemma: lemma ?? this.lemma,
+      packId: packId ?? this.packId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (form.present) {
+      map['form'] = Variable<String>(form.value);
+    }
+    if (lemma.present) {
+      map['lemma'] = Variable<String>(lemma.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentFormsCompanion(')
+          ..write('form: $form, ')
+          ..write('lemma: $lemma, ')
+          ..write('packId: $packId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentTexts extends Table
+    with TableInfo<ContentTexts, ContentTextsData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2751,8 +11123,34 @@ class ContentTexts extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentTextsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentTextsData(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level'],
+      )!,
+      lemmas: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lemmas'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+    );
   }
 
   @override
@@ -2766,7 +11164,238 @@ class ContentTexts extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentTasks extends Table with TableInfo {
+class ContentTextsData extends DataClass
+    implements Insertable<ContentTextsData> {
+  final String key;
+  final String packId;
+  final String kind;
+  final String level;
+  final String lemmas;
+  final String data;
+  const ContentTextsData({
+    required this.key,
+    required this.packId,
+    required this.kind,
+    required this.level,
+    required this.lemmas,
+    required this.data,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['pack_id'] = Variable<String>(packId);
+    map['kind'] = Variable<String>(kind);
+    map['level'] = Variable<String>(level);
+    map['lemmas'] = Variable<String>(lemmas);
+    map['data'] = Variable<String>(data);
+    return map;
+  }
+
+  ContentTextsCompanion toCompanion(bool nullToAbsent) {
+    return ContentTextsCompanion(
+      key: Value(key),
+      packId: Value(packId),
+      kind: Value(kind),
+      level: Value(level),
+      lemmas: Value(lemmas),
+      data: Value(data),
+    );
+  }
+
+  factory ContentTextsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentTextsData(
+      key: serializer.fromJson<String>(json['key']),
+      packId: serializer.fromJson<String>(json['packId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      level: serializer.fromJson<String>(json['level']),
+      lemmas: serializer.fromJson<String>(json['lemmas']),
+      data: serializer.fromJson<String>(json['data']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'packId': serializer.toJson<String>(packId),
+      'kind': serializer.toJson<String>(kind),
+      'level': serializer.toJson<String>(level),
+      'lemmas': serializer.toJson<String>(lemmas),
+      'data': serializer.toJson<String>(data),
+    };
+  }
+
+  ContentTextsData copyWith({
+    String? key,
+    String? packId,
+    String? kind,
+    String? level,
+    String? lemmas,
+    String? data,
+  }) => ContentTextsData(
+    key: key ?? this.key,
+    packId: packId ?? this.packId,
+    kind: kind ?? this.kind,
+    level: level ?? this.level,
+    lemmas: lemmas ?? this.lemmas,
+    data: data ?? this.data,
+  );
+  ContentTextsData copyWithCompanion(ContentTextsCompanion data) {
+    return ContentTextsData(
+      key: data.key.present ? data.key.value : this.key,
+      packId: data.packId.present ? data.packId.value : this.packId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      level: data.level.present ? data.level.value : this.level,
+      lemmas: data.lemmas.present ? data.lemmas.value : this.lemmas,
+      data: data.data.present ? data.data.value : this.data,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentTextsData(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('data: $data')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, packId, kind, level, lemmas, data);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentTextsData &&
+          other.key == this.key &&
+          other.packId == this.packId &&
+          other.kind == this.kind &&
+          other.level == this.level &&
+          other.lemmas == this.lemmas &&
+          other.data == this.data);
+}
+
+class ContentTextsCompanion extends UpdateCompanion<ContentTextsData> {
+  final Value<String> key;
+  final Value<String> packId;
+  final Value<String> kind;
+  final Value<String> level;
+  final Value<String> lemmas;
+  final Value<String> data;
+  final Value<int> rowid;
+  const ContentTextsCompanion({
+    this.key = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.level = const Value.absent(),
+    this.lemmas = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentTextsCompanion.insert({
+    required String key,
+    required String packId,
+    required String kind,
+    required String level,
+    this.lemmas = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       packId = Value(packId),
+       kind = Value(kind),
+       level = Value(level);
+  static Insertable<ContentTextsData> custom({
+    Expression<String>? key,
+    Expression<String>? packId,
+    Expression<String>? kind,
+    Expression<String>? level,
+    Expression<String>? lemmas,
+    Expression<String>? data,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (packId != null) 'pack_id': packId,
+      if (kind != null) 'kind': kind,
+      if (level != null) 'level': level,
+      if (lemmas != null) 'lemmas': lemmas,
+      if (data != null) 'data': data,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentTextsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? packId,
+    Value<String>? kind,
+    Value<String>? level,
+    Value<String>? lemmas,
+    Value<String>? data,
+    Value<int>? rowid,
+  }) {
+    return ContentTextsCompanion(
+      key: key ?? this.key,
+      packId: packId ?? this.packId,
+      kind: kind ?? this.kind,
+      level: level ?? this.level,
+      lemmas: lemmas ?? this.lemmas,
+      data: data ?? this.data,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<String>(level.value);
+    }
+    if (lemmas.present) {
+      map['lemmas'] = Variable<String>(lemmas.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentTextsCompanion(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('lemmas: $lemmas, ')
+          ..write('data: $data, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentTasks extends Table
+    with TableInfo<ContentTasks, ContentTasksData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2822,8 +11451,30 @@ class ContentTasks extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentTasksData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentTasksData(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+    );
   }
 
   @override
@@ -2837,7 +11488,216 @@ class ContentTasks extends Table with TableInfo {
   bool get dontWriteConstraints => true;
 }
 
-class ContentPairEntries extends Table with TableInfo {
+class ContentTasksData extends DataClass
+    implements Insertable<ContentTasksData> {
+  final String key;
+  final String packId;
+  final String kind;
+  final String level;
+  final String data;
+  const ContentTasksData({
+    required this.key,
+    required this.packId,
+    required this.kind,
+    required this.level,
+    required this.data,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['pack_id'] = Variable<String>(packId);
+    map['kind'] = Variable<String>(kind);
+    map['level'] = Variable<String>(level);
+    map['data'] = Variable<String>(data);
+    return map;
+  }
+
+  ContentTasksCompanion toCompanion(bool nullToAbsent) {
+    return ContentTasksCompanion(
+      key: Value(key),
+      packId: Value(packId),
+      kind: Value(kind),
+      level: Value(level),
+      data: Value(data),
+    );
+  }
+
+  factory ContentTasksData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentTasksData(
+      key: serializer.fromJson<String>(json['key']),
+      packId: serializer.fromJson<String>(json['packId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      level: serializer.fromJson<String>(json['level']),
+      data: serializer.fromJson<String>(json['data']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'packId': serializer.toJson<String>(packId),
+      'kind': serializer.toJson<String>(kind),
+      'level': serializer.toJson<String>(level),
+      'data': serializer.toJson<String>(data),
+    };
+  }
+
+  ContentTasksData copyWith({
+    String? key,
+    String? packId,
+    String? kind,
+    String? level,
+    String? data,
+  }) => ContentTasksData(
+    key: key ?? this.key,
+    packId: packId ?? this.packId,
+    kind: kind ?? this.kind,
+    level: level ?? this.level,
+    data: data ?? this.data,
+  );
+  ContentTasksData copyWithCompanion(ContentTasksCompanion data) {
+    return ContentTasksData(
+      key: data.key.present ? data.key.value : this.key,
+      packId: data.packId.present ? data.packId.value : this.packId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      level: data.level.present ? data.level.value : this.level,
+      data: data.data.present ? data.data.value : this.data,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentTasksData(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('data: $data')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, packId, kind, level, data);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentTasksData &&
+          other.key == this.key &&
+          other.packId == this.packId &&
+          other.kind == this.kind &&
+          other.level == this.level &&
+          other.data == this.data);
+}
+
+class ContentTasksCompanion extends UpdateCompanion<ContentTasksData> {
+  final Value<String> key;
+  final Value<String> packId;
+  final Value<String> kind;
+  final Value<String> level;
+  final Value<String> data;
+  final Value<int> rowid;
+  const ContentTasksCompanion({
+    this.key = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.level = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentTasksCompanion.insert({
+    required String key,
+    required String packId,
+    required String kind,
+    required String level,
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       packId = Value(packId),
+       kind = Value(kind),
+       level = Value(level);
+  static Insertable<ContentTasksData> custom({
+    Expression<String>? key,
+    Expression<String>? packId,
+    Expression<String>? kind,
+    Expression<String>? level,
+    Expression<String>? data,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (packId != null) 'pack_id': packId,
+      if (kind != null) 'kind': kind,
+      if (level != null) 'level': level,
+      if (data != null) 'data': data,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentTasksCompanion copyWith({
+    Value<String>? key,
+    Value<String>? packId,
+    Value<String>? kind,
+    Value<String>? level,
+    Value<String>? data,
+    Value<int>? rowid,
+  }) {
+    return ContentTasksCompanion(
+      key: key ?? this.key,
+      packId: packId ?? this.packId,
+      kind: kind ?? this.kind,
+      level: level ?? this.level,
+      data: data ?? this.data,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<String>(level.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentTasksCompanion(')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('kind: $kind, ')
+          ..write('level: $level, ')
+          ..write('data: $data, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class ContentPairEntries extends Table
+    with TableInfo<ContentPairEntries, ContentPairEntriesData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2884,8 +11744,26 @@ class ContentPairEntries extends Table with TableInfo {
   @override
   Set<GeneratedColumn> get $primaryKey => {kind, key};
   @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
+  ContentPairEntriesData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ContentPairEntriesData(
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      packId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pack_id'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+    );
   }
 
   @override
@@ -2897,6 +11775,193 @@ class ContentPairEntries extends Table with TableInfo {
   List<String> get customConstraints => const ['PRIMARY KEY(kind, "key")'];
   @override
   bool get dontWriteConstraints => true;
+}
+
+class ContentPairEntriesData extends DataClass
+    implements Insertable<ContentPairEntriesData> {
+  final String kind;
+  final String key;
+  final String packId;
+  final String data;
+  const ContentPairEntriesData({
+    required this.kind,
+    required this.key,
+    required this.packId,
+    required this.data,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['kind'] = Variable<String>(kind);
+    map['key'] = Variable<String>(key);
+    map['pack_id'] = Variable<String>(packId);
+    map['data'] = Variable<String>(data);
+    return map;
+  }
+
+  ContentPairEntriesCompanion toCompanion(bool nullToAbsent) {
+    return ContentPairEntriesCompanion(
+      kind: Value(kind),
+      key: Value(key),
+      packId: Value(packId),
+      data: Value(data),
+    );
+  }
+
+  factory ContentPairEntriesData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ContentPairEntriesData(
+      kind: serializer.fromJson<String>(json['kind']),
+      key: serializer.fromJson<String>(json['key']),
+      packId: serializer.fromJson<String>(json['packId']),
+      data: serializer.fromJson<String>(json['data']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'kind': serializer.toJson<String>(kind),
+      'key': serializer.toJson<String>(key),
+      'packId': serializer.toJson<String>(packId),
+      'data': serializer.toJson<String>(data),
+    };
+  }
+
+  ContentPairEntriesData copyWith({
+    String? kind,
+    String? key,
+    String? packId,
+    String? data,
+  }) => ContentPairEntriesData(
+    kind: kind ?? this.kind,
+    key: key ?? this.key,
+    packId: packId ?? this.packId,
+    data: data ?? this.data,
+  );
+  ContentPairEntriesData copyWithCompanion(ContentPairEntriesCompanion data) {
+    return ContentPairEntriesData(
+      kind: data.kind.present ? data.kind.value : this.kind,
+      key: data.key.present ? data.key.value : this.key,
+      packId: data.packId.present ? data.packId.value : this.packId,
+      data: data.data.present ? data.data.value : this.data,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentPairEntriesData(')
+          ..write('kind: $kind, ')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('data: $data')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(kind, key, packId, data);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ContentPairEntriesData &&
+          other.kind == this.kind &&
+          other.key == this.key &&
+          other.packId == this.packId &&
+          other.data == this.data);
+}
+
+class ContentPairEntriesCompanion
+    extends UpdateCompanion<ContentPairEntriesData> {
+  final Value<String> kind;
+  final Value<String> key;
+  final Value<String> packId;
+  final Value<String> data;
+  final Value<int> rowid;
+  const ContentPairEntriesCompanion({
+    this.kind = const Value.absent(),
+    this.key = const Value.absent(),
+    this.packId = const Value.absent(),
+    this.data = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ContentPairEntriesCompanion.insert({
+    required String kind,
+    required String key,
+    required String packId,
+    required String data,
+    this.rowid = const Value.absent(),
+  }) : kind = Value(kind),
+       key = Value(key),
+       packId = Value(packId),
+       data = Value(data);
+  static Insertable<ContentPairEntriesData> custom({
+    Expression<String>? kind,
+    Expression<String>? key,
+    Expression<String>? packId,
+    Expression<String>? data,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (kind != null) 'kind': kind,
+      if (key != null) 'key': key,
+      if (packId != null) 'pack_id': packId,
+      if (data != null) 'data': data,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ContentPairEntriesCompanion copyWith({
+    Value<String>? kind,
+    Value<String>? key,
+    Value<String>? packId,
+    Value<String>? data,
+    Value<int>? rowid,
+  }) {
+    return ContentPairEntriesCompanion(
+      kind: kind ?? this.kind,
+      key: key ?? this.key,
+      packId: packId ?? this.packId,
+      data: data ?? this.data,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (packId.present) {
+      map['pack_id'] = Variable<String>(packId.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ContentPairEntriesCompanion(')
+          ..write('kind: $kind, ')
+          ..write('key: $key, ')
+          ..write('packId: $packId, ')
+          ..write('data: $data, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
 }
 
 class DatabaseAtV1 extends GeneratedDatabase {

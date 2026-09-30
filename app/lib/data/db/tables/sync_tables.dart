@@ -23,6 +23,21 @@ class Outbox extends Table {
   TextColumn get lastError => text().nullable()();
 }
 
+/// This installation, one row per signed-in profile (docs/13-data-model.md
+/// §2.6 `devices`): attempts and sessions name the device they were made on.
+@DataClassName('DeviceRow')
+class Devices extends Table {
+  TextColumn get id => text()();
+  TextColumn get profileId => text()();
+  TextColumn get platform => text()();
+  TextColumn get appVersion => text().nullable()();
+  DateTimeColumn get lastSyncAt => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime().clientDefault(nowUtc)();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 /// Pull cursor per signed-in profile.
 @DataClassName('SyncStateRow')
 class SyncState extends Table {

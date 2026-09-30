@@ -32,7 +32,9 @@ const stateTables = {
   'subtitle_imports',
 };
 
-const localTables = {'outbox', 'sync_state'};
+/// Kept on the device; `devices` reaches the server with the sync, not as a
+/// synced table.
+const localTables = {'outbox', 'sync_state', 'devices'};
 
 const contentTables = {
   'content_packs',
