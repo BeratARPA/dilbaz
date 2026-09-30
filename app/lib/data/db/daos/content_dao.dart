@@ -26,6 +26,22 @@ class ContentDao extends DatabaseAccessor<AppDatabase> with _$ContentDaoMixin {
     contentPacks,
   )..orderBy([(t) => OrderingTerm(expression: t.packId)])).watch();
 
+  /// The target pack of [l2], with its settings; null before its import.
+  Future<ContentPackRow?> targetPack(String l2) =>
+      (select(contentPacks)
+            ..where((t) => t.kind.equals(_target) & t.l2.equals(l2))
+            ..limit(1))
+          .getSingleOrNull();
+
+  /// Follows [targetPack]: a pack refresh may bring what was missing.
+  Stream<ContentPackRow?> watchTargetPack(String l2) =>
+      (select(contentPacks)
+            ..where((t) => t.kind.equals(_target) & t.l2.equals(l2))
+            ..limit(1))
+          .watchSingleOrNull();
+
+  static const _target = 'target';
+
   Future<ContentItemRow?> item(String key) =>
       (select(contentItems)..where((t) => t.key.equals(key))).getSingleOrNull();
 

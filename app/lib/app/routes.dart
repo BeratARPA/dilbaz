@@ -11,4 +11,7 @@ abstract final class AppRoutes {
   static const progress = '/progress';
   static const settings = '/progress/settings';
   static const gapCapture = '/gap/new';
+
+  /// The placement test, over the tabs.
+  static const placement = '/placement';
 }

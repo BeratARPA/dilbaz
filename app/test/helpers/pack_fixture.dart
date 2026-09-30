@@ -41,6 +41,7 @@ Future<BuiltPack> buildPack({
   List<ContentPairEntriesCompanion> pairEntries = const [],
   Map<String, Object?> manifest = const {},
   Map<String, Object?>? normalization,
+  Map<String, Object?> meta = const {},
 }) async {
   // The fixture is a second database on its own file.
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -58,12 +59,13 @@ Future<BuiltPack> buildPack({
     await db.customStatement(
       'CREATE TABLE pack_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
     );
-    final meta = <String, Object?>{
+    final packMeta = <String, Object?>{
       'format_version': formatVersion,
       'manifest': {'id': id, 'kind': kind, 'l2': l2, 'l1': l1, ...manifest},
       'normalization': ?normalization,
+      ...meta,
     };
-    for (final MapEntry(:key, :value) in meta.entries) {
+    for (final MapEntry(:key, :value) in packMeta.entries) {
       await db.customStatement(
         'INSERT INTO pack_meta (key, value) VALUES (?, ?)',
         [key, jsonEncode(value)],

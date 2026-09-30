@@ -8,6 +8,7 @@ import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/opening_screen.dart';
+import 'package:dilbaz_app/features/placement/presentation/placement_screen.dart';
 import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
@@ -117,6 +118,11 @@ GoRouter router(Ref ref) {
         path: AppRoutes.gapCapture,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const GapCaptureScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.placement,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const PlacementScreen(),
       ),
     ],
   );

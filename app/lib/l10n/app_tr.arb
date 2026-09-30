@@ -418,7 +418,7 @@
   "@onboardingLevelTitle": {
     "description": "Welcome flow step 9: title."
   },
-  "onboardingLevelBody": "Yaklaşık bir başlangıç yeter. Dilbaz cevaplarına göre kendini ayarlar.",
+  "onboardingLevelBody": "Yaklaşık bir başlangıç yeter. İstersen hemen ardından kısa bir seviye testiyle netleştirirsin; Dilbaz da cevaplarına göre kendini ayarlar.",
   "@onboardingLevelBody": {
     "description": "Welcome flow step 9: the level is a rough start."
   },
@@ -441,5 +441,258 @@
   "onboardingFinish": "Hazırım",
   "@onboardingFinish": {
     "description": "Welcome flow step 9: finishes the flow."
+  },
+  "placementTitle": "Seviye testi",
+  "@placementTitle": {
+    "description": "Placement test: page title."
+  },
+  "placementOverviewBody": "Bu bir sınav değil: not ya da puan yok, yalnızca nereden başlayacağını görmek için. Bilmediğin yerde \"bilmiyorum\" demek en doğru cevap. İstediğin an bırakabilirsin; bitirdiğin bölümler kaydedilir.",
+  "@placementOverviewBody": {
+    "description": "Placement test: what the test is and is not (docs/06 §6)."
+  },
+  "placementPartWords": "Kelimeler, yaklaşık 5 dakika",
+  "@placementPartWords": {
+    "description": "Placement test: part 1."
+  },
+  "placementPartGrammar": "Gramer, yaklaşık 4 dakika",
+  "@placementPartGrammar": {
+    "description": "Placement test: part 2."
+  },
+  "placementPartDictation": "Dinle ve yaz, yaklaşık 3 dakika",
+  "@placementPartDictation": {
+    "description": "Placement test: part 3."
+  },
+  "placementBegin": "Başla",
+  "@placementBegin": {
+    "description": "Placement test: starts the test."
+  },
+  "placementWordsTitle": "Kelimeler",
+  "@placementWordsTitle": {
+    "description": "Placement test: title of the vocabulary part."
+  },
+  "placementWordsIntro": "Kelimeler tek tek gelecek. Anlamını biliyorsan \"Biliyorum\" de. Aralarında uydurma kelimeler de var; emin değilsen \"Bilmiyorum\" de.",
+  "@placementWordsIntro": {
+    "description": "Placement test: how the yes/no vocabulary part works."
+  },
+  "placementGrammarTitle": "Gramer",
+  "@placementGrammarTitle": {
+    "description": "Placement test: title of the grammar part."
+  },
+  "placementGrammarIntro": "Boşluğa uyan seçeneği seç. Emin değilsen tahmin etme, \"Emin değilim\" de. Sorular cevaplarına göre kolaylaşır ya da zorlaşır; 12 ile 15 arası soru gelir.",
+  "@placementGrammarIntro": {
+    "description": "Placement test: how the adaptive grammar part works."
+  },
+  "placementDictationTitle": "Dinle ve yaz",
+  "@placementDictationTitle": {
+    "description": "Placement test: title of the dictation part."
+  },
+  "placementDictationIntro": "Beş cümle dinleyeceksin. Her birini en fazla iki kez dinleyip duyduğunu yaz. Küçük yazım hataları sayılmaz.",
+  "@placementDictationIntro": {
+    "description": "Placement test: how the dictation part works."
+  },
+  "placementStartPart": "Bölüme başla",
+  "@placementStartPart": {
+    "description": "Placement test: starts a part."
+  },
+  "placementSkipDictation": "Şu an dinleyemiyorum, bu bölümü geç",
+  "@placementSkipDictation": {
+    "description": "Placement test: leaves out the dictation part."
+  },
+  "placementProgress": "{number} / {total}",
+  "@placementProgress": {
+    "description": "Placement test: position in the vocabulary part.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "placementWordKnown": "Biliyorum",
+  "@placementWordKnown": {
+    "description": "Placement test: the learner knows the word."
+  },
+  "placementWordUnknown": "Bilmiyorum",
+  "@placementWordUnknown": {
+    "description": "Placement test: the learner does not know it."
+  },
+  "placementQuestionNumber": "Soru {number}",
+  "@placementQuestionNumber": {
+    "description": "Placement test: number of the grammar question.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "placementNotSure": "Emin değilim",
+  "@placementNotSure": {
+    "description": "Placement test: no guess on a question."
+  },
+  "placementSentenceOf": "Cümle {number} / {total}",
+  "@placementSentenceOf": {
+    "description": "Placement test: position in the dictation part.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "placementListen": "Dinle",
+  "@placementListen": {
+    "description": "Placement test: plays the sentence."
+  },
+  "placementListenAgain": "Bir kez daha dinle",
+  "@placementListenAgain": {
+    "description": "Placement test: plays it again."
+  },
+  "placementPlaysLeft": "Kalan dinleme: {count}",
+  "@placementPlaysLeft": {
+    "description": "Placement test: how many more times the sentence may be played.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "placementWriteLabel": "Duyduğunu yaz",
+  "@placementWriteLabel": {
+    "description": "Placement test: label of the dictation field."
+  },
+  "placementContinue": "Devam",
+  "@placementContinue": {
+    "description": "Placement test: goes on to the next sentence."
+  },
+  "placementAudioFailure": "Ses şu an açılamadı. Yeniden deneyebilir ya da bu bölümü geçebilirsin.",
+  "@placementAudioFailure": {
+    "description": "Placement test: a clip could not be fetched or played."
+  },
+  "placementSaving": "Kaydediliyor…",
+  "@placementSaving": {
+    "description": "Placement test: the results are being saved."
+  },
+  "placementLeave": "Testi bırak",
+  "@placementLeave": {
+    "description": "Placement test: tooltip of the button that ends the test."
+  },
+  "placementLeaveTitle": "Testi bırakmak ister misin?",
+  "@placementLeaveTitle": {
+    "description": "Placement test: title of the dialog before leaving."
+  },
+  "placementLeaveBody": "Bitirdiğin bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Testi sonra yeniden yapabilirsin.",
+  "@placementLeaveBody": {
+    "description": "Placement test: what leaving keeps."
+  },
+  "placementLeaveConfirm": "Bırak",
+  "@placementLeaveConfirm": {
+    "description": "Placement test: leaves the test."
+  },
+  "placementLeaveCancel": "Devam et",
+  "@placementLeaveCancel": {
+    "description": "Placement test: stays in the test."
+  },
+  "placementUnavailable": "Seviye testi bu cihazdaki içerikte henüz yok. İçerik güncellenince burada olacak.",
+  "@placementUnavailable": {
+    "description": "Placement test: the content on the device has no placement test yet."
+  },
+  "placementResultTitle": "Başlangıç noktan: {level}",
+  "@placementResultTitle": {
+    "description": "Placement test result: where the curriculum starts.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementResultVocabulary": "En sık 5.000 kelimenin yaklaşık {count} tanesini tanıyorsun.",
+  "@placementResultVocabulary": {
+    "description": "Placement test result: recognition vocabulary size.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "placementResultGuesswork": "Uydurma kelimelerin bazılarına da \"biliyorum\" dedin, bu yüzden bu sayı kaba bir tahmin.",
+  "@placementResultGuesswork": {
+    "description": "Placement test result: many yes answers to made-up words."
+  },
+  "placementSkillVocabulary": "Kelime: {level}",
+  "@placementSkillVocabulary": {
+    "description": "Placement test result: vocabulary level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementSkillGrammar": "Gramer: {level}",
+  "@placementSkillGrammar": {
+    "description": "Placement test result: grammar level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementSkillListening": "Dinleme: {level}",
+  "@placementSkillListening": {
+    "description": "Placement test result: listening level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementResultNote": "Bu ilk ölçüm, o yüzden kaba bir tahmin. Dilbaz çalıştıkça cevaplarına göre bunu günceller.",
+  "@placementResultNote": {
+    "description": "Placement test result: the estimate is rough (I-04)."
+  },
+  "placementDone": "Tamam",
+  "@placementDone": {
+    "description": "Placement test result: closes the page."
+  },
+  "levelRange": "{low}–{high}",
+  "@levelRange": {
+    "description": "A level range, such as A1–A2.",
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  },
+  "levelAndAbove": "{level} ve üstü",
+  "@levelAndAbove": {
+    "description": "A level whose upper end the test could not reach.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementInviteTitle": "Seviye testi",
+  "@placementInviteTitle": {
+    "description": "Today: title of the placement test invitation."
+  },
+  "placementInviteBody": "Üç kısa bölüm, 12–15 dakika. Nereden başlayacağımızı daha iyi görürüz. Not yok.",
+  "@placementInviteBody": {
+    "description": "Today: what the placement test invitation offers."
+  },
+  "placementInviteStart": "Teste başla",
+  "@placementInviteStart": {
+    "description": "Today: opens the placement test."
+  },
+  "placementInviteLater": "Şimdi değil",
+  "@placementInviteLater": {
+    "description": "Today: hides the invitation for now."
   }
 }

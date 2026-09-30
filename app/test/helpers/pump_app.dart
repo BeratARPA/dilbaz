@@ -1,5 +1,6 @@
 import 'package:dilbaz_app/app/app.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
+import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/content/application/content_status.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_auth_repository.dart';
 import 'fake_profile_repository.dart';
+import 'placement_fixture.dart';
 
 /// Content as the app has it once the course packs are imported.
 const ContentStatus readyContent = ContentStatus.ready(
@@ -24,12 +26,17 @@ final AppLocalizations trStrings = lookupAppLocalizations(const Locale('tr'));
 
 /// Fakes for everything the app reaches outside itself, with the course
 /// content already on the device. Unless [profiles] says otherwise, the
-/// learner has finished the welcome flow.
+/// learner has finished the welcome flow; unless [assessments] and
+/// [placements] say otherwise, no placement test is due.
 List<Override> appOverrides({
   required FakeAuthRepository auth,
   FakeProfileRepository? profiles,
   FakeTeamRepository? teams,
   FakePermissionGateway? permissions,
+  FakeAssessmentRepository? assessments,
+  FakeBankRepository? placements,
+  FakePackAudio? audio,
+  FakeClipPlayer? player,
 }) => [
   authRepositoryProvider.overrideWithValue(auth),
   profileRepositoryProvider.overrideWithValue(
@@ -40,6 +47,14 @@ List<Override> appOverrides({
     permissions ?? FakePermissionGateway(),
   ),
   contentControllerProvider.overrideWithBuild((ref, notifier) => readyContent),
+  assessmentRepositoryProvider.overrideWithValue(
+    assessments ?? FakeAssessmentRepository(open: false),
+  ),
+  placementBankRepositoryProvider.overrideWithValue(
+    placements ?? FakeBankRepository(null),
+  ),
+  packAudioProvider.overrideWithValue(audio ?? FakePackAudio()),
+  clipPlayerProvider.overrideWithValue(player ?? FakeClipPlayer()),
 ];
 
 extension PumpApp on WidgetTester {
@@ -50,6 +65,10 @@ extension PumpApp on WidgetTester {
     FakeProfileRepository? profiles,
     FakeTeamRepository? teams,
     FakePermissionGateway? permissions,
+    FakeAssessmentRepository? assessments,
+    FakeBankRepository? placements,
+    FakePackAudio? audio,
+    FakeClipPlayer? player,
   }) async {
     final fake = auth ?? FakeAuthRepository(signedIn: signedIn);
     await pumpWidget(
@@ -59,6 +78,10 @@ extension PumpApp on WidgetTester {
           profiles: profiles,
           teams: teams,
           permissions: permissions,
+          assessments: assessments,
+          placements: placements,
+          audio: audio,
+          player: player,
         ),
         child: const DilbazApp(),
       ),
