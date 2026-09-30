@@ -151,12 +151,13 @@ created_at: 2026-10-…
     | kind | text_l2 | data |
     |---|---|---|
     | `word_sense` | lemma | `pos`, `sense`, `ipa_us`, `ipa_uk`, `carriers`, `audio`, `provenance` |
-    | `chunk` | kalıp | `function`, `note`, `audio`, `provenance` |
+    | `chunk` | kalıp | `function`, `note`, `audio`, `provenance`. `rank` sütunu dolu: kalıbın müfredattaki yeri (aşağıda). |
     | `sentence` | cümle | `audio`, `provenance`. `targets` ve `grammar` sütunları dolu. |
     | `grammar_point` | İngilizce ad | `code`, `description`, `examples`, `provenance` |
     | `lemma` | yazılışı | `pos`, `ipa_us`, `ipa_uk`. Kişisel kapsama (I-06) ve X_Lex bantları için sözlük; anahtar `en.lemma.<lemma>`. |
     | `xlex` | kelime | `version`, `band`, `is_pseudo`. Anahtar `en.xlex.<sürüm>.<kelime>`; gerçek kelimede `rank` dolu. |
 
+  - **Kalıp sırası (`rank`):** Kalıbın kendi sıklığı yoktur; müfredat yeni öğeleri seviye ve sıklık sırasına göre dizer (`02` §4.3). Sırasız kalsalar kalıplar tek blok hâlinde gelir. Bu yüzden her seviyenin kalıpları, sohbet çantasındaki sıralarıyla, o seviyedeki kelime anlamlarının sıklık sıralarına eşit aralıklarla yerleştirilir (S9). `en@1`'de A0 için sonuç: Hello, have, do, get, Hi, like, just, go, Good morning…
   - `audio`: `[{voice, speed, file, duration_ms}]`. Dosyanın yolu `pack-audio/<prefix><file>`'dır.
   - `content_links`:
     - `contains`: cümle → hedef anlam

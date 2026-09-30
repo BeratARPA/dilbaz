@@ -24,7 +24,7 @@ import json
 import re
 import sqlite3
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
@@ -34,7 +34,7 @@ from pydantic import BaseModel, ConfigDict
 
 from dilbaz_content.audio_step import AUDIO_FILE, PACK_VERSION, VOICES_FILE, Clip
 from dilbaz_content.carriers_step import read_word_senses
-from dilbaz_content.items import Chunk, GrammarPoint, Sentence
+from dilbaz_content.items import Chunk, GrammarPoint, Sentence, WordSense
 from dilbaz_content.lexicon import LexiconEntry
 from dilbaz_content.manifest import Manifest, load_manifest
 from dilbaz_content.normalize import NORMALIZATION_FILE
@@ -171,6 +171,26 @@ def _data(model: BaseModel, *fields: str, **extra: object) -> dict[str, object]:
     return {**{k: v for k, v in values.items() if v not in ((), [], "")}, **extra}
 
 
+def chunk_ranks(chunks: Sequence[Chunk], senses: Sequence[WordSense]) -> dict[str, int]:
+    """A rank for each chunk, so that chunks mix with the words of their level.
+
+    A chunk has no frequency of its own, and the curriculum orders new items
+    by level and frequency rank (docs/02 §4.3): without a rank the whole kit
+    would come as one block. The chunks of a level, in the kit's own order,
+    take the ranks of that level's word senses at evenly spaced positions.
+    """
+    ranks: dict[str, int] = {}
+    for level in sorted({chunk.level for chunk in chunks}):
+        kit = [chunk for chunk in chunks if chunk.level == level]
+        words = sorted(
+            sense.rank for sense in senses if sense.level == level and sense.rank is not None
+        )
+        for position, chunk in enumerate(kit):
+            if words:
+                ranks[chunk.key] = words[position * len(words) // len(kit)]
+    return ranks
+
+
 def _target_rows(
     content_dir: Path, l2: str, audio: dict[str, list[Clip]]
 ) -> tuple[list[_Row], list[LexiconEntry]]:
@@ -184,6 +204,7 @@ def _target_rows(
     points = _read(items / "grammar_points.jsonl", GrammarPoint)
     lexicon = list(read_lexicon(content_dir / "work" / f"lexicon.{l2}.jsonl"))
     rank_of = {entry.lemma: entry.rank for entry in lexicon}
+    kit_ranks = chunk_ranks(chunks, senses)
     xlex = _read(content_dir / "packs" / l2 / XLEX_FILE, XlexItem)
 
     rows = [
@@ -207,6 +228,7 @@ def _target_rows(
             level=c.level,
             text_l2=c.text,
             lemmas=c.lemmas,
+            rank=kit_ranks.get(c.key),
             data=_data(c, "function", "note", "provenance", audio=clips(c.key)),
         )
         for c in chunks

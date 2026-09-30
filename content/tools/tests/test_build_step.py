@@ -8,8 +8,9 @@ import pytest
 from typer.testing import CliRunner
 
 from dilbaz_content.audio_step import AUDIO_FILE, VOICES_FILE, Clip
-from dilbaz_content.build_step import FORMAT_VERSION, BuildError, run_build
+from dilbaz_content.build_step import FORMAT_VERSION, BuildError, chunk_ranks, run_build
 from dilbaz_content.cli import app
+from dilbaz_content.items import Chunk, Provenance, WordSense
 from dilbaz_content.pair_step import run_pair
 from dilbaz_content.placement_step import XLEX_FILE, XlexItem
 from dilbaz_content.sentences_step import VALIDATION_FILE, Validation
@@ -96,6 +97,13 @@ def test_the_packs_are_built_with_the_app_tables(tmp_path: Path) -> None:
     assert kinds["grammar_point"] == 6
     assert kinds["xlex"] == 2
     assert kinds["lemma"] > 10
+    # A chunk ranks with the words of its level (docs/02 §4.3).
+    ((level, rank),) = rows(target, "SELECT level, rank FROM content_items WHERE kind = 'chunk'")
+    (least,) = rows(
+        target,
+        f"SELECT min(rank) FROM content_items WHERE kind = 'word_sense' AND level = '{level}'",
+    )[0]
+    assert rank == least
     (data,) = rows(target, "SELECT data FROM content_items WHERE key = 'en.sent.we_watch_tv'")[0]
     assert {clip["voice"] for clip in json.loads(data)["audio"]} == {"v1", "v3"}
     links = set(rows(target, "SELECT from_key, to_key, type FROM content_links"))
@@ -221,3 +229,37 @@ def test_the_report_writes_numbers_the_turkish_way(tmp_path: Path) -> None:
     assert "- Uygun kelime: 1. bant 796, 2. bant 918" in text
     assert "- Dışlanan: küratörlükle dışlanan 165, özel ad 40" in text
     assert "{" not in text.split("## Sesler")[1]
+
+
+def test_chunks_take_ranks_spread_over_the_words_of_their_level() -> None:
+    own = Provenance(source="dilbaz curation", license="own")
+
+    def sense(lemma: str, level: str, rank: int | None) -> WordSense:
+        return WordSense(
+            key=f"en.ws.{lemma}.n.1",
+            lemma=lemma,
+            pos="NOUN",
+            sense="a thing",
+            level=level,
+            rank=rank,
+            provenance=own,
+        )
+
+    def chunk(name: str, level: str) -> Chunk:
+        return Chunk(
+            key=f"en.chunk.{name}", text=name, level=level, function="greeting", provenance=own
+        )
+
+    senses = [sense(f"w{rank}", "A0", rank) for rank in (40, 10, 30, 20, 60, 50)]
+    senses += [sense("later", "A1", 500), sense("unranked", "A1", None)]
+    kit = [chunk("first", "A0"), chunk("next", "A1"), chunk("second", "A0"), chunk("third", "A0")]
+
+    ranks = chunk_ranks([*kit, chunk("alone", "A2")], senses)
+
+    # Three A0 chunks over six A0 words: every second rank, in the kit's order.
+    assert ranks == {
+        "en.chunk.first": 10,
+        "en.chunk.second": 30,
+        "en.chunk.third": 50,
+        "en.chunk.next": 500,
+    }

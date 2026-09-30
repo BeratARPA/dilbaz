@@ -229,6 +229,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - `missing_audio_file`: Klibin MP3 dosyası `build/audio/` altında yok.
   - `missing_gloss`: Öğenin çift paketinde karşılığı yok.
   - `unknown_link`: Bağ, pakette olmayan bir öğeyi anıyor.
+- **Kalıp sıraları:** Her seviyenin kalıpları, sohbet çantasındaki sırayla, o seviyedeki kelime anlamlarının sıklık sıralarına eşit aralıklarla yerleştirilir (`chunk_ranks`; gerekçe `11` §5.1).
 - **Paket dosyası:** Biçimi `11` §5.1'de. Hedef pakette öğeler, kapsama için sözlük lemmaları, X_Lex maddeleri, biçim tablosu ve bağlar (`contains`, `example_of`) bulunur. Çift pakette S5 girdileri ve karşıtlıklardan kurulan `contrasts_with` bağları bulunur.
 - **Manifest ve lisans:** `<id>.manifest.json`, `manifest.yaml`'a sayıları, tarihi ve dosyanın sha256'sını ekler. `<id>.LICENSES.md` manifestteki kaynaklardan yazılır. CC BY-SA kaynak varsa paketin bütününün CC BY-SA 4.0 ile dağıtılacağını söyler (§2).
 

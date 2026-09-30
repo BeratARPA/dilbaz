@@ -96,7 +96,7 @@ puan = 3.0 · kişisel_ilgi      (Söyleyemediklerim'den geldiyse 1, ilgi alanı
 
 - **Adaylar:** kartı olmayan kelime anlamları ve kalıplar. Kaldırılmış (`deprecated`) öğe aday olmaz.
 - **Seviye uyumu:** üç ve daha fazla seviye üstündeki öğe 0 alır.
-- **Sıklık:** `max_sıra`, paketteki en büyük sıklık sırasıdır. Sırası olmayan öğe 0,5 alır.
+- **Sıklık:** `max_sıra`, paketteki en büyük sıklık sırasıdır. Kalıpların sırası pakette verilir: sohbet çantasındaki sıralarıyla, aynı seviyedeki kelimelerin arasına eşit aralıklarla yerleştirilirler (`11` §5.1). Hiç sırası olmayan öğe 0,5 alır.
 - **Eşit puanda** sıklık sırası küçük olan, sonra anahtarı küçük olan öndedir. Sonuç, paket listelerinin sırasından bağımsızdır.
 - **Aynı gün kuralı:** Liste, birbiriyle `contrasts_with` olan iki öğeyi birlikte içermez; puanı yüksek olan kalır. Bugün tanıtılmış bir öğenin karşıtı da listede olmaz. Böylece planlayıcı listenin başından kaç öğe alırsa alsın kural sağlanır (`05` §8 madde 10).
 - **Aynı kelimenin iki anlamı** da aynı gün tanıtılmaz (only: "sadece" ve "tek"). Gerekçe aynıdır: yeni öğrenilen iki benzer şey birbirini bozar.
