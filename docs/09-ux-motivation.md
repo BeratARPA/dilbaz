@@ -76,6 +76,15 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 8. Mikrofon izni ve ses kaydı onayı (`14` §4)
 9. Seviye testi (atlanabilir) → ilk kısa oturum
 
+**Uygulama notları (F1-12):**
+- **Yalnızca isim zorunludur.** Diğer her adım varsayılanıyla geçilebilir (30 dk, 5 gün, sabah kahvesi 08:30, bildirim yok, ekip yok, onay yok, A1). Geri dönmek cevapları silmez; sistemin geri tuşu da adım adım geri gider ve yalnızca ilk adımda uygulamadan çıkar.
+- **Adım 6:** "İzin ver" sistem iznini o anda ister; "Şimdi değil" sistem penceresini hiç açmaz.
+- **Adım 7:** Ekip davet koduyla kurulur ya da katılınır (`13` §4); QR sonraya bırakıldı, iki kişi için kod yetiyor. Ekip profilin sunucuda olmasını gerektirdiğinden akış o ana kadarki cevapları taslak olarak kaydedip gönderir; taslak akışı bitirmez.
+- **Adım 8:** İki ayrı onay, ikisi de kapalı başlar ve her kullanıcı kendi adına verir: ses kaydı onayı (`14` §4) ve yapay zekâ veri onayı (ADR-0009, `14` §5). Mikrofon izni yalnızca ses onayı verilince istenir. Onay ya da mikrofon izni yoksa sessiz mod açılır (yazılı cevap).
+- **Adım 9:** Seviye testi F1-13'te gelene kadar kullanıcı yaklaşık seviyesini seçer (A0–B1; `04` §10: güven `low`, kaynak `self`).
+- **Açılış kapısı:** Girişten sonra cihazda bitmiş bir profil yoksa önce sunucuya bakılır; başka cihazda yapılmış profil varsa akış atlanır. Sunucuya ulaşılamazsa akış **başlatılmaz** (aynı dile ikinci kurs açılmasın diye), sakin bir not ve "Yeniden dene" gösterilir. Profil cihazdaysa açılış ekranı doğrudan Bugün'e açılır.
+- **Büyük yazı:** 2 kat yazı boyutunda ve 360 dp genişlikte her adım taşmadan sığar; alt düğmeler alt alta dizilir (§8).
+
 ### 5.2 Bugün
 - Selamlama (seri yok). "Bugün ne kadar vaktin var?" hızlı seçimi.
 - **Tekrar kartı:** "12 kart · ~5 dk"

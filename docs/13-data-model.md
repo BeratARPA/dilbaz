@@ -66,6 +66,18 @@ create table courses (
 );
 ```
 
+**`profiles.settings` anahtarları** (karşılama akışı yazar, Ayarlar değiştirir):
+
+| Anahtar | Değer | Anlam |
+|---|---|---|
+| `audio_consent` | `{granted: bool, at: ISO-8601 UTC}` | Ses kaydı onayı (`14` §4). Verilmediyse kayıt yapılmaz. |
+| `ai_data_consent` | `{granted: bool, at: ISO-8601 UTC}` | Metnin Gemini ücretsiz katmanına gitmesine onay (ADR-0009). Yoksa istek Groq'a ya da deterministik yola gider. |
+| `daily_invitation` | bool | Günde tek davet bildirimi isteniyor mu (`09` §6). |
+| `silent_mode` | bool | Yazılı cevap varsayılanı. Ses onayı ya da mikrofon izni yoksa `true` başlar. |
+| `onboarded_at` | ISO-8601 UTC | Karşılama akışının bittiği an. Yoksa akış gösterilir (ekip adımı için gönderilen taslak profilde bulunmaz). |
+
+**`courses.level_estimates` başlangıcı:** Seviye testi yapılana kadar `{overall: {low, high, confidence: "low", source: "self"}}`; `low` = `high` = kullanıcının seçtiği seviyenin ölçek değeri (`04` §10).
+
 ### 2.2 İçerik kayıt defteri ve kişisel öğeler
 
 ```sql
@@ -323,7 +335,7 @@ create index on llm_usage (profile_id, created_at);
   - **Olay tablolarında update/delete yok** (§1).
 - **Ekip:**
   - `teams`: üyeler ve kurucu okur. Kullanıcı yalnızca kendi adına (`created_by = auth.uid()`) ekip kurar.
-  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır: `join_team(p_invite_code)` (SECURITY DEFINER; kodu doğrular, üyeliği ekler, yinelenen katılım zararsızdır). `create_team(p_name)` çağıranın kendi yetkisiyle çalışır: 10 karakterlik davet kodunu sunucuda üretir, ekibi ve kurucunun `owner` üyeliğini birlikte yazar. İkisi de yalnızca `authenticated` rolüne açıktır.
+  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır: `join_team(p_invite_code)` (SECURITY DEFINER; kodu doğrular, üyeliği ekler, yinelenen katılım zararsızdır). `create_team(p_name)` çağıranın kendi yetkisiyle çalışır: 10 karakterlik davet kodunu sunucuda üretir, ekibi ve kurucunun `owner` üyeliğini birlikte yazar. Çağıranın kurduğu bir ekip zaten varsa yenisini kurmaz, onu döndürür: yanıtı kaybolan bir isteğin yinelenmesi ikinci ekip bırakmaz. İkisi de yalnızca `authenticated` rolüne açıktır. Profil sunucuda yoksa ikisi de reddedilir (yabancı anahtar), bu yüzden istemci önce profili gönderir.
   - Üye yalnızca kendi `share_levels` / `share_monthly` anahtarlarını değiştirir (sütun düzeyinde UPDATE yetkisi); `role` değiştirilemez.
   - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.

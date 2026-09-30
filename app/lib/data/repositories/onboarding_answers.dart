@@ -31,6 +31,9 @@ abstract class OnboardingAnswers with _$OnboardingAnswers {
     /// Consent to recording and keeping audio (docs/14 §4).
     @Default(false) bool audioConsent,
 
+    /// The system let the app use the microphone.
+    @Default(false) bool microphone,
+
     /// Consent to sending answers to a provider that may use them to
     /// improve its products (ADR-0009); given by each user for themselves.
     @Default(false) bool aiDataConsent,

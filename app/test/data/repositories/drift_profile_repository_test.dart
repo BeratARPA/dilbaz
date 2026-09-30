@@ -5,6 +5,7 @@ import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/drift_profile_repository.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
+import 'package:drift/drift.dart' show driftRuntimeOptions;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_profile_remote.dart';
@@ -23,6 +24,7 @@ const answers = OnboardingAnswers(
   anchorTime: '20:00',
   notifications: true,
   audioConsent: true,
+  microphone: true,
   level: 'A2',
 );
 
@@ -56,7 +58,7 @@ void main() {
 
   group('DriftProfileRepository.create', () {
     test('writes the profile with the answers of the welcome flow', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
 
       final row = await profile();
       expect(row.id, userId);
@@ -74,17 +76,29 @@ void main() {
     });
 
     test('records each consent with its time, given or not', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
 
       expect((await profile()).settings, {
         'audio_consent': {'granted': true, 'at': '2026-09-30T15:20:00.000Z'},
         'ai_data_consent': {'granted': false, 'at': '2026-09-30T15:20:00.000Z'},
         'daily_invitation': true,
+        'silent_mode': false,
+        'onboarded_at': '2026-09-30T15:20:00.000Z',
       });
     });
 
+    test('without consent or a microphone, answers are typed', () async {
+      for (final quiet in [
+        answers.copyWith(audioConsent: false),
+        answers.copyWith(microphone: false),
+      ]) {
+        await repository.create(userId, quiet, finished: true);
+        expect((await profile()).settings['silent_mode'], isTrue);
+      }
+    });
+
     test('opens the course at the level the learner chose', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
 
       final row = await course();
       expect(row.id, 'course-1');
@@ -98,7 +112,7 @@ void main() {
     });
 
     test('queues both rows for the server (docs/12 §6)', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
 
       final entries = await db.select(db.outbox).get();
       expect(
@@ -108,13 +122,21 @@ void main() {
     });
 
     test('an empty goal text is no goal text', () async {
-      await repository.create(userId, answers.copyWith(goalText: '   '));
+      await repository.create(
+        userId,
+        answers.copyWith(goalText: '   '),
+        finished: true,
+      );
       expect((await profile()).goalText, isNull);
     });
 
     test('done again, it keeps the course', () async {
-      await repository.create(userId, answers);
-      await repository.create(userId, answers.copyWith(level: 'B1'));
+      await repository.create(userId, answers, finished: true);
+      await repository.create(
+        userId,
+        answers.copyWith(level: 'B1'),
+        finished: true,
+      );
 
       expect((await course()).id, 'course-1');
       expect(
@@ -124,19 +146,40 @@ void main() {
     });
   });
 
-  test('watchOnboarded follows the profile', () async {
+  test('saved again, the rows keep the time they were made', () async {
+    var clock = now;
+    final moving = DriftProfileRepository(
+      db,
+      remote,
+      now: () => clock,
+      newId: () => 'course-1',
+    );
+    await moving.create(userId, answers, finished: false);
+    clock = now.add(const Duration(minutes: 3));
+    await moving.create(userId, answers, finished: true);
+
+    expect((await profile()).createdAt, now);
+    expect((await profile()).updatedAt, clock);
+    expect((await course()).createdAt, now);
+    expect((await course()).updatedAt, clock);
+  });
+
+  test('the welcome flow is over only once it is finished', () async {
     final seen = expectLater(
       repository.watchOnboarded(userId),
-      emitsInOrder([false, true]),
+      emitsInOrder([false, false, true]),
     );
     await pumpEventQueue();
-    await repository.create(userId, answers);
+    // Saved before the team step: the flow goes on.
+    await repository.create(userId, answers, finished: false);
+    await pumpEventQueue();
+    await repository.create(userId, answers, finished: true);
     await seen;
   });
 
   group('DriftProfileRepository.push', () {
     test('sends the rows with the server column names', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
 
       expect(await repository.push(userId), isA<Ok<void, ProfileFailure>>());
 
@@ -151,7 +194,7 @@ void main() {
     });
 
     test('once sent, nothing waits any more', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
       await repository.push(userId);
 
       expect((await profile()).pendingPush, isFalse);
@@ -160,7 +203,7 @@ void main() {
     });
 
     test('a failure keeps everything queued', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
       remote.failure = ProfileFailure.network;
 
       final result = await repository.push(userId);
@@ -183,8 +226,10 @@ void main() {
     });
 
     test('brings a profile made on another device', () async {
-      await repository.create(userId, answers);
+      await repository.create(userId, answers, finished: true);
       await repository.push(userId);
+      // The other device is a second database.
+      driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
       final other = memoryDatabase();
       addTearDown(other.close);
 

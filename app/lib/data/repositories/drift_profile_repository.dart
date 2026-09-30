@@ -24,11 +24,14 @@ class DriftProfileRepository implements ProfileRepository {
   static const _courses = 'courses';
   static const _upsert = 'upsert';
 
+  /// Key in `profiles.settings`: when the welcome flow was finished.
+  static const onboardedAt = 'onboarded_at';
+
   @override
   Stream<bool> watchOnboarded(String userId) =>
       (_db.select(_db.profiles)..where((t) => t.id.equals(userId)))
           .watchSingleOrNull()
-          .map((row) => row != null);
+          .map((row) => row?.settings[onboardedAt] != null);
 
   @override
   Future<Result<bool, ProfileFailure>> restore(String userId) async {
@@ -53,12 +56,19 @@ class DriftProfileRepository implements ProfileRepository {
   }
 
   @override
-  Future<void> create(String userId, OnboardingAnswers answers) async {
+  Future<void> create(
+    String userId,
+    OnboardingAnswers answers, {
+    required bool finished,
+  }) async {
     final now = _now();
     final at = now.toIso8601String();
     final level = CefrLevel.values.firstWhere((l) => l.code == answers.level);
     final goalText = answers.goalText.trim();
     await _db.transaction(() async {
+      final profile = await (_db.select(
+        _db.profiles,
+      )..where((t) => t.id.equals(userId))).getSingleOrNull();
       final course =
           await (_db.select(_db.courses)..where(
                 (t) => t.profileId.equals(userId) & t.l2.equals(defaultL2),
@@ -83,9 +93,12 @@ class DriftProfileRepository implements ProfileRepository {
                 'audio_consent': {'granted': answers.audioConsent, 'at': at},
                 'ai_data_consent': {'granted': answers.aiDataConsent, 'at': at},
                 'daily_invitation': answers.notifications,
+                // Without consent or a microphone, answers are typed.
+                'silent_mode': !(answers.audioConsent && answers.microphone),
+                if (finished) onboardedAt: at,
               }),
               updatedAt: Value(now),
-              createdAt: Value(now),
+              createdAt: Value(profile?.createdAt ?? now),
               pendingPush: const Value(true),
             ),
           );

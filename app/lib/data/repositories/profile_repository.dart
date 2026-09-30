@@ -10,14 +10,21 @@ enum ProfileFailure { network, unknown }
 /// outbox; [push] sends the two rows right away, because teams need the
 /// profile on the server before the general sync exists.
 abstract interface class ProfileRepository {
-  /// Whether [userId] has a profile on this device.
+  /// Whether [userId] has finished the welcome flow, as far as this device
+  /// knows.
   Stream<bool> watchOnboarded(String userId);
 
   /// Brings a profile made on another device here. True if there was one.
   Future<Result<bool, ProfileFailure>> restore(String userId);
 
   /// Saves the answers of the welcome flow: the profile and its course.
-  Future<void> create(String userId, OnboardingAnswers answers);
+  /// The flow saves before its team step too, which needs the profile on
+  /// the server; only a [finished] save ends the flow.
+  Future<void> create(
+    String userId,
+    OnboardingAnswers answers, {
+    required bool finished,
+  });
 
   /// Sends the profile and the course to the server.
   Future<Result<void, ProfileFailure>> push(String userId);

@@ -148,5 +148,298 @@
   "contentRetry": "Yeniden dene",
   "@contentRetry": {
     "description": "Button that fetches the content again."
+  },
+  "openingUnreachable": "Profiline ulaşamadık, bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@openingUnreachable": {
+    "description": "Opening page: the server could not be asked whether the learner already has a profile."
+  },
+  "openingRetry": "Yeniden dene",
+  "@openingRetry": {
+    "description": "Opening page: asks the server again."
+  },
+  "onboardingNext": "İleri",
+  "@onboardingNext": {
+    "description": "Welcome flow: goes to the next step."
+  },
+  "onboardingBack": "Geri",
+  "@onboardingBack": {
+    "description": "Welcome flow: goes to the previous step."
+  },
+  "onboardingSkip": "Atla",
+  "@onboardingSkip": {
+    "description": "Welcome flow: leaves an optional step."
+  },
+  "onboardingStepOf": "{step} / {total}",
+  "@onboardingStepOf": {
+    "description": "Welcome flow: progress, read out by screen readers.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeTitle": "Dilbaz'a hoş geldin",
+  "@onboardingWelcomeTitle": {
+    "description": "Welcome flow step 1: title."
+  },
+  "onboardingPrinciple1": "Önce dene, sonra gör.",
+  "@onboardingPrinciple1": {
+    "description": "Welcome flow step 1: first principle."
+  },
+  "onboardingPrinciple1Detail": "Cevabı görmeden önce kendin söylersin. Öğrenme tam orada olur.",
+  "@onboardingPrinciple1Detail": {
+    "description": "Welcome flow step 1: why the learner answers before seeing the answer."
+  },
+  "onboardingPrinciple2": "Az ama her gün.",
+  "@onboardingPrinciple2": {
+    "description": "Welcome flow step 1: second principle."
+  },
+  "onboardingPrinciple2Detail": "Günde birkaç dakika, haftada bir uzun çalışmadan daha çok işe yarar.",
+  "@onboardingPrinciple2Detail": {
+    "description": "Welcome flow step 1: why practice is short and daily."
+  },
+  "onboardingPrinciple3": "İlerlemeni kendi sesinden duy.",
+  "@onboardingPrinciple3": {
+    "description": "Welcome flow step 1: third principle."
+  },
+  "onboardingPrinciple3Detail": "Her ay aynı konuşmayı yeniden kaydeder, farkı kendin dinlersin.",
+  "@onboardingPrinciple3Detail": {
+    "description": "Welcome flow step 1: how progress is shown."
+  },
+  "onboardingStart": "Başlayalım",
+  "@onboardingStart": {
+    "description": "Welcome flow step 1: starts the flow."
+  },
+  "onboardingNameTitle": "Sana nasıl seslenelim?",
+  "@onboardingNameTitle": {
+    "description": "Welcome flow step 2: title."
+  },
+  "onboardingNameLabel": "Adın",
+  "@onboardingNameLabel": {
+    "description": "Welcome flow step 2: label of the name field."
+  },
+  "onboardingCourseNote": "Kursun: Türkçe konuşanlar için İngilizce.",
+  "@onboardingCourseNote": {
+    "description": "Welcome flow step 2: the language pair, fixed for now."
+  },
+  "onboardingGoalTitle": "12 ay sonra İngilizceyle ne yapabilmek istersin?",
+  "@onboardingGoalTitle": {
+    "description": "Welcome flow step 3: title."
+  },
+  "onboardingGoalHint": "Birden fazlasını seçebilirsin.",
+  "@onboardingGoalHint": {
+    "description": "Welcome flow step 3: several goals may be chosen."
+  },
+  "goalConversation": "Rahatça sohbet etmek",
+  "@goalConversation": {
+    "description": "Goal option: everyday conversation."
+  },
+  "goalTravel": "Seyahatte derdimi anlatmak",
+  "@goalTravel": {
+    "description": "Goal option: travel."
+  },
+  "goalWork": "İşte toplantı ve yazışma",
+  "@goalWork": {
+    "description": "Goal option: work."
+  },
+  "goalMedia": "Dizi ve filmleri rahat izlemek",
+  "@goalMedia": {
+    "description": "Goal option: series and films."
+  },
+  "goalStudy": "Sınav ya da başvuruya hazırlanmak",
+  "@goalStudy": {
+    "description": "Goal option: exams and applications."
+  },
+  "onboardingGoalTextLabel": "Kendi cümlenle (isteğe bağlı)",
+  "@onboardingGoalTextLabel": {
+    "description": "Welcome flow step 3: label of the free-text goal."
+  },
+  "onboardingTimeTitle": "Günde ne kadar vakit ayırmak istersin?",
+  "@onboardingTimeTitle": {
+    "description": "Welcome flow step 4: title."
+  },
+  "onboardingBudgetMinutes": "{minutes} dk",
+  "@onboardingBudgetMinutes": {
+    "description": "Welcome flow step 4: a daily budget option.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingTimeNote": "Dilbaz bu süreyi aşmaz. Süre dolunca \"bugünlük yeter\" der.",
+  "@onboardingTimeNote": {
+    "description": "Welcome flow step 4: the budget is a ceiling (I-13)."
+  },
+  "onboardingWeeklyDaysTitle": "Haftada kaç gün?",
+  "@onboardingWeeklyDaysTitle": {
+    "description": "Welcome flow step 4: title of the weekly days choice."
+  },
+  "onboardingWeeklyDays": "{days} gün",
+  "@onboardingWeeklyDays": {
+    "description": "Welcome flow step 4: a weekly days option.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingAnchorTitle": "Günün hangi anına bağlayalım?",
+  "@onboardingAnchorTitle": {
+    "description": "Welcome flow step 5: title."
+  },
+  "onboardingAnchorNote": "Var olan bir alışkanlığın ardına eklenen şey daha kolay sürer.",
+  "@onboardingAnchorNote": {
+    "description": "Welcome flow step 5: why a habit anchor is asked for."
+  },
+  "anchorMorningCoffee": "Sabah kahvesi",
+  "@anchorMorningCoffee": {
+    "description": "Habit anchor option."
+  },
+  "anchorLunchBreak": "Öğle arası",
+  "@anchorLunchBreak": {
+    "description": "Habit anchor option."
+  },
+  "anchorAfterDinner": "Akşam yemeğinden sonra",
+  "@anchorAfterDinner": {
+    "description": "Habit anchor option."
+  },
+  "anchorBeforeBed": "Yatmadan önce",
+  "@anchorBeforeBed": {
+    "description": "Habit anchor option."
+  },
+  "onboardingAnchorTime": "Saat {time}",
+  "@onboardingAnchorTime": {
+    "description": "Welcome flow step 5: the chosen time; tapping it changes it.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingNotifyTitle": "Günde tek bir davet gönderelim mi?",
+  "@onboardingNotifyTitle": {
+    "description": "Welcome flow step 6: title."
+  },
+  "onboardingNotifyBody": "Seçtiğin saatte bir kez hatırlatırız. O gün çalıştıysan göndermeyiz. Başka bildirim yok.",
+  "@onboardingNotifyBody": {
+    "description": "Welcome flow step 6: what the single daily notification is."
+  },
+  "onboardingNotifyAllow": "İzin ver",
+  "@onboardingNotifyAllow": {
+    "description": "Welcome flow step 6: asks for the notification permission."
+  },
+  "onboardingNotifyLater": "Şimdi değil",
+  "@onboardingNotifyLater": {
+    "description": "Welcome flow step 6: goes on without notifications."
+  },
+  "onboardingPartnerTitle": "Birlikte mi çalışacaksınız?",
+  "@onboardingPartnerTitle": {
+    "description": "Welcome flow step 7: title."
+  },
+  "onboardingPartnerBody": "Partnerinle bir ekip kurabilirsiniz. Birbirinizin yalnızca haftalık özetini görürsünüz. Ses kayıtları ve hatalar kimseyle paylaşılmaz.",
+  "@onboardingPartnerBody": {
+    "description": "Welcome flow step 7: what a team shares and what it never shares (I-18)."
+  },
+  "onboardingTeamNameLabel": "Ekip adı",
+  "@onboardingTeamNameLabel": {
+    "description": "Welcome flow step 7: label of the team name field."
+  },
+  "onboardingTeamCreate": "Ekip kur",
+  "@onboardingTeamCreate": {
+    "description": "Welcome flow step 7: creates a team."
+  },
+  "onboardingInviteCodeLabel": "Davet kodu",
+  "@onboardingInviteCodeLabel": {
+    "description": "Welcome flow step 7: label of the invite code field."
+  },
+  "onboardingTeamJoin": "Koda katıl",
+  "@onboardingTeamJoin": {
+    "description": "Welcome flow step 7: joins a team by its invite code."
+  },
+  "onboardingTeamCreated": "Ekip hazır. Partnerine bu kodu ver: {code}",
+  "@onboardingTeamCreated": {
+    "description": "Welcome flow step 7: the team was created; shows its invite code.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingTeamJoined": "{name} ekibine katıldın.",
+  "@onboardingTeamJoined": {
+    "description": "Welcome flow step 7: the team was joined.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamFailureNetwork": "Bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@teamFailureNetwork": {
+    "description": "Team step: no connection."
+  },
+  "teamFailureInviteNotFound": "Bu kodla bir ekip bulunamadı. Kodu kontrol eder misin?",
+  "@teamFailureInviteNotFound": {
+    "description": "Team step: the invite code opens no team."
+  },
+  "teamFailureUnknown": "Şu an olmadı. Birazdan yeniden dene.",
+  "@teamFailureUnknown": {
+    "description": "Team step: any other problem."
+  },
+  "onboardingVoiceTitle": "Ses ve yapay zekâ",
+  "@onboardingVoiceTitle": {
+    "description": "Welcome flow step 8: title."
+  },
+  "onboardingAudioBody": "Dilbaz'da çoğu cevabı sesle verirsin. Kart cevaplarının sesi saklanmaz. Konuşma görevlerinin kaydı 30 gün sonra silinir, yazıya dökülmüş hâli kalır. Aylık test kayıtları, ilerlemeni dinleyebilmen için sen silene kadar durur.",
+  "@onboardingAudioBody": {
+    "description": "Welcome flow step 8: what is recorded and how long it is kept (docs/14 §4)."
+  },
+  "onboardingAudioConsent": "Ses kaydını onaylıyorum",
+  "@onboardingAudioConsent": {
+    "description": "Welcome flow step 8: audio consent switch."
+  },
+  "onboardingAudioOffNote": "Onay vermezsen cevaplarını yazarak verirsin.",
+  "@onboardingAudioOffNote": {
+    "description": "Welcome flow step 8: what happens without audio consent."
+  },
+  "onboardingAiBody": "Cevaplarını değerlendirmek için yazdıkların ve söylediklerinin metni Google'ın Gemini servisine gidebilir. Ücretsiz katmanda Google bu metinleri ürün geliştirmede kullanabilir ve insanlar inceleyebilir. Onay vermezsen metin, saklamayan bir servise ya da cihazındaki kontrole gider.",
+  "@onboardingAiBody": {
+    "description": "Welcome flow step 8: what the AI data consent means (ADR-0009)."
+  },
+  "onboardingAiConsent": "Gemini'ye gönderilmesini onaylıyorum",
+  "@onboardingAiConsent": {
+    "description": "Welcome flow step 8: AI data consent switch."
+  },
+  "onboardingLevelTitle": "Şu an neredesin?",
+  "@onboardingLevelTitle": {
+    "description": "Welcome flow step 9: title."
+  },
+  "onboardingLevelBody": "Yaklaşık bir başlangıç yeter. Dilbaz cevaplarına göre kendini ayarlar.",
+  "@onboardingLevelBody": {
+    "description": "Welcome flow step 9: the level is a rough start."
+  },
+  "levelA0": "Yeni başlıyorum",
+  "@levelA0": {
+    "description": "Self-reported level A0."
+  },
+  "levelA1": "Basit cümleler kurabiliyorum",
+  "@levelA1": {
+    "description": "Self-reported level A1."
+  },
+  "levelA2": "Günlük konularda anlaşabiliyorum",
+  "@levelA2": {
+    "description": "Self-reported level A2."
+  },
+  "levelB1": "Sohbet edebiliyorum ama takılıyorum",
+  "@levelB1": {
+    "description": "Self-reported level B1."
+  },
+  "onboardingFinish": "Hazırım",
+  "@onboardingFinish": {
+    "description": "Welcome flow step 9: finishes the flow."
   }
 }

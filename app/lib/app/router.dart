@@ -5,12 +5,15 @@ import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/features/auth/presentation/sign_in_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
+import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
+import 'package:dilbaz_app/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:dilbaz_app/features/onboarding/presentation/opening_screen.dart';
 import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,20 +30,46 @@ GoRouter router(Ref ref) {
     onError: (Object _) {},
   );
 
+  // Null until it is known whether the learner has finished the welcome
+  // flow; a profile made on another device is looked up first, and it
+  // stays null while the server cannot be asked.
+  final onboarded = ValueNotifier<bool?>(null);
+  ref.listen(
+    onboardedProvider,
+    (_, next) => onboarded.value = next.isLoading ? null : next.value,
+    fireImmediately: true,
+  );
+
   final rootKey = GlobalKey<NavigatorState>();
   final router = GoRouter(
     navigatorKey: rootKey,
     initialLocation: AppRoutes.today,
-    refreshListenable: signedIn,
+    refreshListenable: Listenable.merge([signedIn, onboarded]),
     redirect: (context, state) {
-      final onSignIn = state.matchedLocation == AppRoutes.signIn;
-      if (!signedIn.value) return onSignIn ? null : AppRoutes.signIn;
-      return onSignIn ? AppRoutes.today : null;
+      final location = state.matchedLocation;
+      if (!signedIn.value) {
+        return location == AppRoutes.signIn ? null : AppRoutes.signIn;
+      }
+      final target = switch (onboarded.value) {
+        null => AppRoutes.opening,
+        false => AppRoutes.welcome,
+        true => null,
+      };
+      if (target != null) return location == target ? null : target;
+      return _beforeHome.contains(location) ? AppRoutes.today : null;
     },
     routes: [
       GoRoute(
         path: AppRoutes.signIn,
         builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.opening,
+        builder: (context, state) => const OpeningScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.welcome,
+        builder: (context, state) => const OnboardingScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => HomeShell(navigationShell: shell),
@@ -95,6 +124,15 @@ GoRouter router(Ref ref) {
     unawaited(subscription.cancel());
     router.dispose();
     signedIn.dispose();
+    onboarded.dispose();
   });
   return router;
 }
+
+/// Pages a signed-in learner who has finished the welcome flow has no
+/// business on.
+const Set<String> _beforeHome = {
+  AppRoutes.signIn,
+  AppRoutes.opening,
+  AppRoutes.welcome,
+};

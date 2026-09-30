@@ -34,7 +34,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 
 ## 4. Ses verisi
 
-- **Açık onay:** Karşılama akışında mikrofon izninden önce hangi kayıtların ne kadar tutulduğu açıkça yazılır ve onay alınır.
+- **Açık onay:** Karşılama akışında mikrofon izninden önce hangi kayıtların ne kadar tutulduğu açıkça yazılır ve onay alınır. Onay kapalı başlar, zamanıyla birlikte `profiles.settings.audio_consent` içinde saklanır (`13` §2.1) ve Ayarlar'dan geri alınabilir. Onay yoksa mikrofon izni istenmez, cevaplar yazılı verilir.
 - **Saklama:**
 
   | Kayıt türü | Saklama |
@@ -57,7 +57,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 | Deepgram | Ses (İngilizce), parametreler | Kimlik bilgisi |
 | Cihaz üstü (Android konuşma servisi, TTS) | Türkçe ses, seslendirilecek metin (cihazda kalır; tanıyıcı çevrimiçi çalışabilir) | — |
 
-- **Gemini ücretsiz katmanı:** Gönderilen içerik Google ürünlerini geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Bu yüzden onay kullanıcı başınadır ve karşılamada (F1-12) açıkça sorulur. Ayarlardan her zaman değiştirilebilir.
+- **Gemini ücretsiz katmanı:** Gönderilen içerik Google ürünlerini geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Bu yüzden onay kullanıcı başınadır ve karşılamada (F1-12) açıkça sorulur. Ayarlardan her zaman değiştirilebilir. Onay kapalı başlar ve zamanıyla birlikte `profiles.settings.ai_data_consent` içinde saklanır; kimse başkası adına veremez.
 - **Politika kontrolü:** Her sağlayıcının veri kullanım ve saklama politikası kurulumda kontrol edilir ve `docs/adr/0009` içine not edilir.
 
 ## 6. Gizli anahtar yönetimi
