@@ -13,6 +13,7 @@ export 'src/curriculum/curriculum_config.dart';
 export 'src/curriculum/item_kind.dart';
 export 'src/curriculum/item_link.dart';
 export 'src/curriculum/link_type.dart';
+export 'src/engine_version.dart';
 export 'src/fsrs/card_memory.dart';
 export 'src/fsrs/card_mode.dart';
 export 'src/fsrs/memory_state.dart';

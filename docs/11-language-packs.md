@@ -129,11 +129,14 @@ created_at: 2026-10-…
 - `dilbaz-content build` her paket sürümü için tek bir **SQLite dosyası** üretir (`en@1.sqlite`, `tr-en@1.sqlite`). Ses dosyaları ayrıca `pack-audio/` altındadır.
 - Yanında `<id>.manifest.json` (manifest + sayılar + dosyanın `checksum`'ı) ve `<id>.LICENSES.md` bulunur.
 - Supabase Storage `packs/` bucket'ına yüklenir. `packs` tablosunda `published` olarak kaydedilir.
-- **Uygulama tarafı:**
-  1. Açılışta manifest listesini çeker.
-  2. Yeni sürüm varsa arka planda indirir.
-  3. Sağlama toplamını doğrular.
-  4. drift içindeki salt okunur `content_*` tablolarına **atomik** olarak aktarır (geçici tablo → yeniden adlandırma).
+- **Uygulama tarafı** (F1-11; `PackRepository`, `PackImporter`, `ContentController`):
+  1. **Yerel öncelikli açılış:** Cihazda kursun iki paketi de varsa içerik hemen hazırdır; kayıt defteri arka planda sorulur. Yalnızca ilk indirme beklenir ("İçerik indiriliyor…").
+  2. **Seçim:** Kursun hedef paketi (`kind=target`, `l2`) ve çift paketi (`kind=pair`, `l1`–`l2`) için yayımlanmış en yüksek sürüm alınır. Cihazdaki paketin kimliği ve sağlama toplamı aynıysa indirilmez; aynı kimlikle yeniden derlenmiş paket (toplam farklı) yeniden indirilir.
+  3. **Doğrulama:** dosyanın sha256'sı kayıt defterindekiyle aynı olmalı. Dosya açılınca biçim sürümü (`PRAGMA user_version`), manifestteki kimlik, `min_engine_version` ve hedef pakette normalizasyon örnekleri (uygulamadaki motorla çalıştırılır) kontrol edilir.
+  4. **Atomik aktarım:** Dosya yerel veritabanına `ATTACH` edilir. Tek işlemde aynı ailenin (tür + diller) eski satırları silinir ve paket satırları olduğu gibi kopyalanır; hata olursa eski içerik yerinde kalır. `content_packs.manifest`, paketin `pack_meta` tablosunun tamamını tutar (manifest, normalizasyon, sesler).
+  5. **Hatalar** sakin bir metin ve "Yeniden dene" ile gösterilir: bağlantı yok, paket yayımlanmamış, dosya bozuk, uygulama eski. Cihazda içerik varken güncelleme hatası kullanıcıya gösterilmez.
+  6. **Web:** Dosya sistemi olmadığı için aktarım henüz yok (`unsupported`); Faz 1 hedefi Android'dir.
+- **Sözleşme testi:** S9'un oluşturduğu tablolar, uygulamanın drift şema anlık görüntüsündeki `content_*` tablolarıyla aynı sütunlara sahip olmalıdır (`content/tools/tests/test_build_step.py`).
 - Ses dosyaları ilk kullanımda indirilir ve önbelleğe alınır. İsteğe bağlı "seviyemin seslerini önceden indir" (çevrimdışı hazırlık).
 
 ### 5.1 Paket dosyası (SQLite, biçim sürümü 1)

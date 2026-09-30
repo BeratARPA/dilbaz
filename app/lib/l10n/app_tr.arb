@@ -105,5 +105,48 @@
   "signOut": "Çıkış yap",
   "@signOut": {
     "description": "Settings entry that ends the session on this device."
+  },
+  "contentPreparing": "İçerik indiriliyor…",
+  "@contentPreparing": {
+    "description": "Shown with a progress indicator while the course's packs are fetched and imported."
+  },
+  "contentReady": "İçerik hazır: {words} kelime, {chunks} kalıp, {sentences} cümle.",
+  "@contentReady": {
+    "description": "Concrete summary of the imported packs.",
+    "placeholders": {
+      "words": {
+        "type": "int"
+      },
+      "chunks": {
+        "type": "int"
+      },
+      "sentences": {
+        "type": "int"
+      }
+    }
+  },
+  "contentFailureNetwork": "İçerik indirilemedi, bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@contentFailureNetwork": {
+    "description": "No content on the device and no connection."
+  },
+  "contentFailureMissing": "İçerik henüz yayımlanmamış. Biraz sonra yeniden dene.",
+  "@contentFailureMissing": {
+    "description": "The registry has no published pack for the course."
+  },
+  "contentFailureDamaged": "İndirilen içerik eksik geldi. Yeniden dener misin?",
+  "@contentFailureDamaged": {
+    "description": "A downloaded pack did not match its checksum."
+  },
+  "contentFailureUnsupported": "Bu içerik için uygulamanın yeni sürümü gerekiyor.",
+  "@contentFailureUnsupported": {
+    "description": "The pack needs a newer app."
+  },
+  "contentFailureUnknown": "İçerik şu an indirilemedi. Birazdan yeniden dene.",
+  "@contentFailureUnknown": {
+    "description": "Any other problem while fetching content."
+  },
+  "contentRetry": "Yeniden dene",
+  "@contentRetry": {
+    "description": "Button that fetches the content again."
   }
 }

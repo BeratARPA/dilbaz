@@ -8,7 +8,14 @@ import pytest
 from typer.testing import CliRunner
 
 from dilbaz_content.audio_step import AUDIO_FILE, VOICES_FILE, Clip
-from dilbaz_content.build_step import FORMAT_VERSION, BuildError, chunk_ranks, run_build
+from dilbaz_content.build_step import (
+    FORMAT_VERSION,
+    PAIR_TABLES,
+    TARGET_TABLES,
+    BuildError,
+    chunk_ranks,
+    run_build,
+)
 from dilbaz_content.cli import app
 from dilbaz_content.items import Chunk, Provenance, WordSense
 from dilbaz_content.pair_step import run_pair
@@ -263,3 +270,35 @@ def test_chunks_take_ranks_spread_over_the_words_of_their_level() -> None:
         "en.chunk.third": 50,
         "en.chunk.next": 500,
     }
+
+
+def test_the_pack_tables_are_the_app_content_tables() -> None:
+    """The app copies pack rows as they are (docs/11 §5.1): same tables, same columns.
+
+    The app side is drift's exported schema snapshot; its content tables other
+    than `content_packs`, which the app fills itself, must match what S9 creates.
+    """
+    snapshots = Path(__file__).resolve().parents[3] / "app" / "drift_schemas" / "app_database"
+    latest = max(snapshots.glob("drift_schema_v*.json"), key=lambda f: int(f.stem.split("_v")[1]))
+    schema = json.loads(latest.read_text(encoding="utf-8"))
+    app = {
+        entity["data"]["name"]: [
+            (column["name"], column["nullable"]) for column in entity["data"]["columns"]
+        ]
+        for entity in schema["entities"]
+        if entity["type"] == "table" and entity["data"]["name"].startswith("content_")
+    }
+    del app["content_packs"]
+
+    pack: dict[str, list[tuple[str, bool]]] = {}
+    for ddl in (TARGET_TABLES, PAIR_TABLES):
+        with sqlite3.connect(":memory:") as db:
+            db.executescript(ddl)
+            for (name,) in db.execute("SELECT name FROM sqlite_master WHERE type = 'table'"):
+                columns = db.execute(f"PRAGMA table_info({name})").fetchall()
+                # A primary-key column is never null, whatever its declaration says.
+                pack[name] = [(c[1], not c[3] and not c[5]) for c in columns]
+        db.close()
+    del pack["pack_meta"]
+
+    assert pack == app

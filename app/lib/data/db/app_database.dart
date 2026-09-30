@@ -1,4 +1,5 @@
 import 'package:dilbaz_app/data/db/converters.dart';
+import 'package:dilbaz_app/data/db/daos/content_dao.dart';
 import 'package:dilbaz_app/data/db/tables/content_tables.dart';
 import 'package:dilbaz_app/data/db/tables/identity_tables.dart';
 import 'package:dilbaz_app/data/db/tables/learning_tables.dart';
@@ -40,6 +41,7 @@ part 'app_database.g.dart';
     ContentTasks,
     ContentPairEntries,
   ],
+  daos: [ContentDao],
 )
 class AppDatabase extends _$AppDatabase {
   new(super.e);
