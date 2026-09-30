@@ -24,4 +24,7 @@ final class PackLanguage implements LanguageServices {
 
   @override
   Set<String> lemmasOf(String token) => _forms[token] ?? {token};
+
+  @override
+  bool knows(String token) => _forms.containsKey(token);
 }

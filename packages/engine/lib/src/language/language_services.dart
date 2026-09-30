@@ -9,4 +9,7 @@ abstract interface class LanguageServices {
 
   /// Lemmas that [token] is a form of; the token itself when unknown.
   Set<String> lemmasOf(String token);
+
+  /// Whether [token] is a word form the pack knows.
+  bool knows(String token);
 }

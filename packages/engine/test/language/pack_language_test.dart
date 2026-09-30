@@ -40,6 +40,12 @@ void main() {
         expect(language.lemmasOf(homograph.key), homograph.value);
         expect(language.lemmasOf('${homograph.key}q'), {'${homograph.key}q'});
       });
+
+      test('knows the forms of the pack and no others', () {
+        final form = zz.forms.keys.first;
+        expect(language.knows(form), isTrue);
+        expect(language.knows('${form}q'), isFalse);
+      });
     });
   }
 }

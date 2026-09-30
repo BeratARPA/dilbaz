@@ -22,4 +22,17 @@ final class SeededRandom {
     _state = x;
     return x % max;
   }
+
+  /// [items] in a random order (Fisher-Yates); the list itself is left as
+  /// it is.
+  List<T> shuffled<T>(List<T> items) {
+    final result = [...items];
+    for (var i = result.length - 1; i > 0; i--) {
+      final j = nextInt(i + 1);
+      final swap = result[i];
+      result[i] = result[j];
+      result[j] = swap;
+    }
+    return result;
+  }
 }
