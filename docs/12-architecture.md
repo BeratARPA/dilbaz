@@ -92,6 +92,7 @@ CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
   6. Kimlikler istemcide üretilen **UUIDv7**'dir (`uuid` paketi, `Uuid().v7()`).
   7. Kullanıcıya görünen metinler yalnızca ARB'den gelir. Yasak kelime testi vardır (`15`).
 - **Yönlendirme:** `go_router`; her özellik kendi rotalarını tanımlar. Kapılar tek `redirect` içindedir: oturum yoksa `/sign-in`; oturum var ama karşılama durumu bilinmiyorsa `/opening`; karşılama bitmemişse `/welcome`; aksi halde ana kabuk. `main`, açılış ekranını bu durum bilinene kadar (en fazla 1 sn) tutar; böylece profili cihazda olan kullanıcı ara ekran görmez.
+- **Ses çalma:** Paket klipleri `PackAudio` ile uygulamanın destek klasörüne indirilir ve orada kalır (`11` §5), `ClipPlayer` (just_audio) ile çalınır. Kayıt altyapısı F1-14'te gelir.
 - **Durum yönetimi:** Riverpod 3 + kod üretimi (`riverpod_generator`). freezed ve json_serializable zaten kod ürettiği için tutarlıdır.
 - **Özellik bayrakları:** `app_config` tablosu + yerel varsayılanlar. Yarım kalan özellikler bayrak arkasında birleştirilir.
 

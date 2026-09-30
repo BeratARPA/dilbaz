@@ -34,6 +34,8 @@ content/packs/en/
   connectors.jsonl         # bağlaç listesi (karmaşıklık ölçümü)
   fillers.jsonl            # dolgu sözcükleri (akıcılık ölçümü)
   placement/xlex.jsonl     # version (A/B/C), band (1–5; uydurma kelimede null), word, is_pseudo
+  placement/grammar.jsonl  # key, level, grammar (kod; B1+ boş), focus, stem (___ ile), answer, distractors
+  placement/dictation.jsonl # version, order, level, sentence (cümle anahtarı)
   voices.yaml              # TTS ses kimlikleri, yerel ayar, cinsiyet, motor (en@1: Kokoro), ses çiftleri, yavaş hız
   audio.jsonl              # öğe başına klip: key, voice, speed, file (pack-audio'da <ses>/<karma>.mp3), duration_ms
   LICENSES.md
@@ -138,6 +140,7 @@ created_at: 2026-10-…
   6. **Web:** Dosya sistemi olmadığı için aktarım henüz yok (`unsupported`); Faz 1 hedefi Android'dir.
 - **Sözleşme testi:** S9'un oluşturduğu tablolar, uygulamanın drift şema anlık görüntüsündeki `content_*` tablolarıyla aynı sütunlara sahip olmalıdır (`content/tools/tests/test_build_step.py`).
 - Ses dosyaları ilk kullanımda indirilir ve önbelleğe alınır. İsteğe bağlı "seviyemin seslerini önceden indir" (çevrimdışı hazırlık).
+  - Uygulamada (F1-13): klip, uygulamanın destek klasöründe kovadaki yoluyla saklanır (`pack-audio/<prefix><file>`); işletim sisteminin boşaltabileceği önbellek klasörü kullanılmaz, çünkü klip tam çevrimdışıyken lazım olabilir. İndirilen dosya önce `.part` adıyla yazılır, bitince adı değişir. Web'de dosya sistemi olmadığı için klip saklama henüz yok.
 
 ### 5.1 Paket dosyası (SQLite, biçim sürümü 1)
 
@@ -146,7 +149,7 @@ created_at: 2026-10-…
 - JSON sütunları metindir: `lemmas`, `targets`, `grammar`, `data`.
 - **`pack_meta`** (`key` → JSON değer):
   - `format_version`
-  - `manifest`: `manifest.yaml` + `counts`
+  - `manifest`: `manifest.yaml` + `counts`. Hedef pakette `placement.vocab_levels`: seviye başına X_Lex puan aralığı (`[{level, from, to}]`, `to` hariç; `06` §2).
   - Hedef pakette ayrıca: `normalization` (`normalization.yaml`), `voices` (`voices.yaml`), `audio` (`{"bucket": "pack-audio", "prefix": "en/1/"}`)
 - **Hedef paket** (`en@1.sqlite`):
   - `content_items`, `kind`'e göre:
@@ -159,6 +162,8 @@ created_at: 2026-10-…
     | `grammar_point` | İngilizce ad | `code`, `description`, `examples`, `provenance` |
     | `lemma` | yazılışı | `pos`, `ipa_us`, `ipa_uk`. Kişisel kapsama (I-06) ve X_Lex bantları için sözlük; anahtar `en.lemma.<lemma>`. |
     | `xlex` | kelime | `version`, `band`, `is_pseudo`. Anahtar `en.xlex.<sürüm>.<kelime>`; gerçek kelimede `rank` dolu. |
+    | `placement_grammar` | boşluklu cümle (`___`) | `answer`, `distractors`, `focus`, `provenance`. Anahtar `en.pgram.<seviye>.<ad>`; `grammar` sütunu gramer kodunu taşır (B1+ boş). |
+    | `placement_dictation` | cümle | `version`, `order`, `audio` (cümlenin klipleri). Anahtar `en.pdict.<sürüm>.<sıra>`; `targets` sütunu cümle öğesini gösterir. |
 
   - **Kalıp sırası (`rank`):** Kalıbın kendi sıklığı yoktur; müfredat yeni öğeleri seviye ve sıklık sırasına göre dizer (`02` §4.3). Sırasız kalsalar kalıplar tek blok hâlinde gelir. Bu yüzden her seviyenin kalıpları, sohbet çantasındaki sıralarıyla, o seviyedeki kelime anlamlarının sıklık sıralarına eşit aralıklarla yerleştirilir (S9). `en@1`'de A0 için sonuç: Hello, have, do, get, Hi, like, just, go, Good morning…
   - `audio`: `[{voice, speed, file, duration_ms}]`. Dosyanın yolu `pack-audio/<prefix><file>`'dır.

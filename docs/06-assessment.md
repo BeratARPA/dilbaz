@@ -23,21 +23,35 @@
   - Motorda: `XlexResult.of` (sonuç `assessments.results` içine `score`, `band_rates`, `false_alarm_rate` olarak yazılır).
 - **Güvenilirlik:** Uydurma kelimelerde "biliyorum" oranı %25'in üstündeyse sonuç "tahmine dayalı" işaretlenir ve güven `low` olur.
 - **Sürümler:** Üç eşdeğer sürüm (A/B/C) vardır, yeniden testlerde sırayla kullanılır.
+- **Seviyeye çevirme:** Puan, paketin `placement.vocab_levels` aralıklarıyla (`02` §2, Milton) seviyeye çevrilir. İki aralığın arasında kalan puan (ör. 2.600: A2 ile B1 arası) iki seviyeyi birden kapsar. Aralıklar dile özgü olduğu için motor sabiti değil, paket verisidir (I-15).
 - **Kelime listesi:** Bantlar, İngilizce paketin sıklık listesinden gelir. Uydurma kelimelerin üretimi `10-content-pipeline.md` §5.3'te.
 
 ### Bölüm 2 — Gramer tanıma (uyarlanır, 12–15 madde)
-- Dilbilgisel doğruluk yargısı ya da doğru biçimi seçme.
-- A2 maddesiyle başlar. Doğru cevapta seviye yükselir, yanlışta düşer.
-- Maddeler seviye etiketli gramer noktalarından gelir.
+- Doğru biçimi seçme: boşluklu bir cümle ve üç seçenek. Seçeneklerin yanında "Emin değilim" vardır; tahmin yerine onu seçmek ölçümü temizler ve yanlış sayılır.
+- A2 maddesiyle başlar. Doğru cevapta bir üst seviyeden, diğer her cevapta bir alt seviyeden madde gelir; seviyesinde madde kalmamışsa en yakın seviyeden (eşitlikte alttakinden). Bir seviyenin maddeleri tohumlu rastgele sırayla çekilir, hiçbiri iki kez sorulmaz.
+- **Uzunluk:** En az 12, en çok 15 madde. 12. maddeden sonra son 6 madde iki komşu seviye içinde kaldıysa test oturmuş sayılır ve biter.
+- **Seviye kararı:** En az 2 maddesi sorulan seviyede doğruların payı ≥ 2/3 ise seviyeye ulaşılmış, ≤ 1/3 ise ulaşılmamış sayılır; arası kararsızdır.
+- **Tahmin (seviye merdiveni, dikte için de aynı):** Alt uç, ulaşılmayan ilk seviyenin altındaki en yüksek ulaşılmış seviyedir; hiçbiri yoksa sorulan en alt seviyenin bir altı. Üst uç, ulaşılmayan ilk seviyeye kadar sorulmuş en yüksek seviyedir. Sorulan en üst seviyeye ulaşıldıysa test yukarısını ölçemez ve aralık ölçeğin sonuna açık kalır ("B2 ve üstü"). Seviyeler üst üste kurulur: ulaşılmayan bir seviyenin üstünde şansla doğru cevaplanan seviye sayılmaz.
+- **Banka (`en@1`):** A1 (A0 yapılarıyla), A2, B1 ve B2 için 12'şer, toplam 48 madde. A0–A2 maddeleri paketin gramer kodlarından birini sınar; B1–B2 maddelerinin kodu henüz yoktur (paketin gramer noktaları A2'de biter). Çeldiriciler Türkçe konuşanın tipik hatalarıdır (`02` §5). Her madde, cevabı görmeden yapılan bağımsız bir kontrolde tek doğru seçenekli bulunmadan bankaya girmez (`10` §5.3).
 
 ### Bölüm 3 — Dinleme: 5 dikte cümlesi
-- Cümleler A1'den B2'ye zorlaşır.
-- Cümle başına kelime hata oranı (WER) hesaplanır ve dinleme çözme tahmini yapılır.
+- Cümleler A1'den B2'ye zorlaşır. `en@1`'in cümleleri A2'de bittiği için sürüm başına 2 A1 ve 3 A2 cümlesi vardır; dinleme tahmini bu yüzden en çok "A2 ve üstü" diyebilir. Seviyeler içinde de kısadan uzuna gider.
+- Her cümle en fazla iki kez dinlenir, normal hızda. Yazma alanı cümle dinlenince açılır; klavyenin otomatik düzeltmesi kapalıdır.
+- Kelime hata oranı (WER) = eksik, fazla, değişmiş ya da yeri değişmiş kelime sayısı / cümlenin kelime sayısı (en çok 1). Karşılaştırma paketin normalizasyonuyla yapılır (büyük harf, noktalama, kısaltmalar).
+- **Yazım hatası sayılmaz:** Dikte duymayı ölçer. Dilin bir kelimesi olmayan (biçim tablosunda bulunmayan) ama beklenen kelimeye 4–7 harfte 1, 8+ harfte 2 düzenleme uzakta olan yazım hata değil, yazım kaymasıdır. Dilin gerçek bir kelimesi hatadır: öğrencinin duyduğu odur (cat/cats, walk/walked).
+- Bir seviyenin cümleleri birlikte değerlendirilir: toplam hata / toplam kelime ≤ %15 ise seviyeye ulaşılmıştır (`04` §7). Tahmin, gramerdeki seviye merdiveniyle çıkar.
+- Kısaltma, rakam ya da özel ad içeren cümleler dikteye alınmaz: "don't", "2" ya da "Tom" yazmak yazım bilgisidir.
+- Ses alınamazsa (bağlantı yok) ya da öğrenci o an dinleyemiyorsa bu bölüm atlanabilir; test kalan bölümlerle kaydedilir.
 
 ### Bölüm 4 — Başlangıç kaydı (isteğe bağlı, 1 dk)
 - ANC-1 görevi kaydedilir. **Seviye puanlamasına girmez.** Amacı "önce/sonra" karşılaştırmasının ilk kaydı olmaktır.
+- **Durum (F1-13):** Kayıt altyapısı (F1-14) ve sabit görevler (aylık test, F1-19) gelince eklenecek; ilk aylık testin ANC-1 kaydı başlangıç kaydı olur.
 
 ### Çıktılar
+- **Bölümler ve bırakma:** Bölümler sırayla gelir (kelime, gramer, dikte). Test her an bırakılabilir: bitmiş bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Kelime bölümü bitmeden bırakılan testten hiçbir şey kaydedilmez. Test sırasında hiçbir cevap doğru ya da yanlış diye gösterilmez.
+- **Müfredatın başlangıcı:** Kelime ve gramer seviyelerinin alt uçlarından düşük olanı. Yeni öğeler ikisine birden dayanır, bu yüzden zayıf olan yol gösterir. Dinlemenin kendi tahmini vardır, başlangıcı değiştirmez. İkisi de yoksa öğrencinin seçtiği seviye kalır.
+- **Kayıt:** Bir `assessments` satırı (`kind = placement`); `results` ham cevapları taşır (§1.4): `version`, `seed`, `xlex` (`score`, `band_rates`, `false_alarm_rate` ve her kelimenin cevabı), `grammar.steps` (her madde, seviyesi, seçilen seçenek, doğru mu), `dictation.sentences` (yazılan metin, dinleme sayısı, kelime, hata, yazım kayması), `duration_ms`. `level_estimates` sütunu ve kursun `level_estimates` alanı ölçülen becerileri (`vocabulary`, `grammar`, `listening`) ve `overall` (başlangıç, `source: placement`) ile güncellenir; ölçülmeyen beceriler olduğu gibi kalır. `courses.vocab_estimate` = X_Lex puanı.
+- **Gösterim:** Sonuç ekranında not ya da puan yoktur: başlangıç seviyesi, beceri başına seviye ya da aralık ("A1–A2", "A2 ve üstü") ve tanınan kelime sayısı (yaklaşık). Tahmine dayalı X_Lex sonucunda bu açıkça yazılır. Test Bugün ekranında davet olarak durur, "Şimdi değil" ile bir sonraki açılışa kadar kalkar (I-14).
 - Beceri başına başlangıç seviye tahmini (güven `low`)
 - Tanıma kelime boyutu
 - Müfredat başlangıç noktası

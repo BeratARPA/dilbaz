@@ -53,6 +53,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `pair [--l1 tr] [--l2 en]` (S5: çift paketi, kontroller; engelleyici sorun varsa çıkış kodu 1).
   - `audio [--l2 en]` (S6: paket sesleri; `content/tts` işçisini çağırır).
   - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
+  - `placement-tests [--l2 en]` (S8: gramer bankası ve dikte seti; bankaya giremeyen madde varsa çıkış kodu 1).
   - `build [--l1 tr] [--l2 en]` (S9: paket dosyaları; engelleyici sorun varsa hiçbir dosya yazılmaz, çıkış kodu 1).
   - `report [--l1 tr] [--l2 en]` (S10: derleme raporu).
   - Diğer aşama komutları sonraki görevlerde eklenir.
@@ -76,7 +77,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
 | S5 | `pair --l1 tr` | Hedef paket + `curation/tr-en/` + S4 çevirileri → `packs/tr-en/` (ayrıntı: §6) | Türkçe karşılıklar ve istemler, açıklamalar, karşıtlık notları, kabul edilebilir varyantlar, H3 kural notları, hata etiketi kataloğu |
 | S6 | `audio` | Öğeler + `packs/<l2>/voices.yaml` → `build/audio/<l2>/<sürüm>/` + `packs/<l2>/audio.jsonl` (ayrıntı: §4.5) | Kokoro-82M, çevrimdışı: öğe başına ≥ 2 ses; minimal çiftler için ≥ 4 ses; A0–A1 için yavaş sürüm; ses düzeyi normalizasyonu |
 | S7 | `texts`, `tasks` | Seviye → metin, diyalog, görev | Kapsama kontrollü metinler + sorular + cevap anahtarları; diyaloglar (2 ses); konuşma, rol, bilgi boşluğu, yazma, aracılık görevleri |
-| S8 | `placement` | Sözlük + `curation/<l2>/xlex.yaml` → `packs/<l2>/placement/xlex.jsonl` (ayrıntı: §5.3) | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime) |
+| S8 | `placement`, `placement-tests` | Sözlük + `curation/<l2>/xlex.yaml` → `packs/<l2>/placement/xlex.jsonl`; `curation/<l2>/placement_grammar.yaml` + bağımsız kontrol → `placement/grammar.jsonl`; cümleler + sesler → `placement/dictation.jsonl` (ayrıntı: §5.3) | 3 sürüm × (5 bant × 20 kelime + 20 uydurma kelime); 48 gramer maddesi; 3 sürüm × 5 dikte cümlesi |
 | S9 | `build` | Tümü → `build/<id>.sqlite`, `<id>.manifest.json`, `<id>.LICENSES.md` (ayrıntı: §4.6) | Lemma listeleri, `forms` tablosu, normalizasyon kuralları, manifest, sağlama toplamı, lisanslar |
 | S10 | `report` | Build → `build/en@N.report.md` (ayrıntı: §4.7) | Sayılar, ret oranları, üretim oturumları, insan kontrolü örneklemi |
 | — | `upload` | Build → Supabase Storage `packs/` + `packs` satırı | Yalnızca kullanıcı onayıyla (dışa yayın) |
@@ -296,6 +297,16 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - 360 madde: sürüm başına 100 gerçek kelime ve 20 uydurma kelime.
   - Bantlarda uygun kelime 796–943 arası. 165 alıntı dışlandı.
   - Uydurma kelime için 212 aday denendi. 62'si bir kelimeye 1 harf uzak, 43'ü bir kelimeyle başlıyor ya da bitiyor, 42'si sözlükte ya da sıklık listesinde vardı, 5'i elle reddedildi.
+
+- **Gramer bankası (`placement-tests`):**
+  - Maddeler elle yazılır (`curation/<l2>/placement_grammar.yaml`, Claude Code oturumu, lisans: own): boşluklu cümle, cevap ve iki çeldirici, seviye, sınanan yapı ve paketin seviyelerindeki maddeler için gramer kodu.
+  - Yapısal kontroller: tek boşluk, üç farklı seçenek, cümle başındaki seçenek büyük harfle, diğerleri küçük ("I" hariç; aksi cevabı ele verir), gramer kodu kapalı listede ve maddenin seviyesini aşmıyor.
+  - **Bağımsız kontrol:** Maddeler cevap anahtarı olmadan, seçenekleri karıştırılmış olarak ayrı bir oturuma (alt ajan) verilir. Kontrol her seçenek için doğru mu kararını, doğallığı ve seviye uygunluğunu kaydeder (`placement_grammar.validation.jsonl`, aynı maddenin son satırı geçerli). Madde bankaya ancak kontrol metnini birebir görmüş ve cevabı tek doğru seçenek olarak bulmuşsa girer; anahtarla karşılaştırmayı adım yapar. Değişen madde yeniden kontrol ister. Gerekçeli istisna `override` ile yazılır. S9, kontrolü olmayan maddeyle paket derlemez.
+  - Kelime uyarısı: tamamlanmış cümlede maddenin seviyesini aşan ya da sözlükte olmayan kelimeler rapora yazılır (engellemez; adlar ve yıllar beklenir).
+- **Dikte seti:** Her sürüme paketten 5 cümle (`curation/<l2>/placement_dictation.yaml`: seviyeler, seviye başına kelime aralığı, ses, tohum, elle dışlananlar). Aday cümlenin normal hızda seçilen sesle klibi olmalı; kısaltma, rakam, tire ve cümle ortasında büyük harf (özel ad) içermemeli. Sürümler cümle paylaşmaz; bir sürümün cümleleri seviye ve uzunlukla dizilir.
+- **İlk sonuç (2026-09-30):**
+  - 48 madde (A1, A2, B1, B2: 12'şer). 1. kontrolde 48 maddenin hepsinde tek doğru seçenek bulundu; notlara göre 5 madde düzeltildi (ör. "She ___ like coffee": "isn't like" de İngilizce; "market" A1 maddesinde A2 kelimesi) ve 2. kontrolden geçti.
+  - Dikte: A1'de 108, A2'de 35 uygun cümle; 15 cümle seçildi.
 
 ### 5.4 Metinler (S7)
 - **Seviye metni:** metindeki lemmaların ≥ %98'i ≤ seviye listesinde. Kalan %2 önce öğretilecek kelimeler olarak işaretlenir.

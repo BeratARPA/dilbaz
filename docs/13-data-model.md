@@ -76,6 +76,8 @@ create table courses (
 | `silent_mode` | bool | Yazılı cevap varsayılanı. Ses onayı ya da mikrofon izni yoksa `true` başlar. |
 | `onboarded_at` | ISO-8601 UTC | Karşılama akışının bittiği an. Yoksa akış gösterilir (ekip adımı için gönderilen taslak profilde bulunmaz). |
 
+**`assessments` satırı, `kind = placement`:** `results` = `{version, seed, xlex: {score, band_rates, false_alarm_rate, answers: [{key, known}]}, grammar: {steps: [{key, level, choice, correct}]}, dictation: {sentences: [{key, level, typed, plays, words, errors, slips}]}, duration_ms: {words, grammar, dictation}}`; yapılmayan bölümün anahtarı yoktur. `level_estimates` = ölçülen beceriler + `overall` (`06` §2). Satır değişmez; testin tekrarı yeni satırdır (sürüm sırası satır sayısından çıkar).
+
 **`courses.level_estimates` başlangıcı:** Seviye testi yapılana kadar `{overall: {low, high, confidence: "low", source: "self"}}`; `low` = `high` = kullanıcının seçtiği seviyenin ölçek değeri (`04` §10).
 
 ### 2.2 İçerik kayıt defteri ve kişisel öğeler
