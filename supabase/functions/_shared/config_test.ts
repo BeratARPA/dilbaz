@@ -3,33 +3,60 @@ import { dirname, fromFileUrl, join, relative } from "@std/path";
 import { llmConfig } from "./llm_config.ts";
 import { speechConfig } from "./speech_config.ts";
 
-const efforts = ["low", "medium", "high", "xhigh", "max"];
+const efforts = ["low", "medium", "high"];
 
 Deno.test("every route has a valid effort and a generous max_tokens", () => {
   for (const [route, config] of Object.entries(llmConfig.routes)) {
     assert(efforts.includes(config.effort), route);
     assert(config.maxTokens >= 3000, `${route} max_tokens too low`);
+    assert(config.timeoutMs > 0, route);
   }
 });
 
 Deno.test("route settings follow docs/07 §2–§3", () => {
-  assertEquals(llmConfig.model, "claude-opus-5");
   assertEquals(llmConfig.routes.answer_check, {
+    chain: ["gemini-3.1-flash-lite", "openai/gpt-oss-120b"],
     effort: "low",
     maxTokens: 4000,
-    interactive: true,
+    timeoutMs: 15_000,
   });
+  assertEquals(llmConfig.routes.gap_suggest.chain[0], "gemini-3.5-flash");
   assertEquals(llmConfig.routes.speaking_annotate.effort, "medium");
   assertEquals(llmConfig.assessmentEffort, "high");
-  assertEquals(llmConfig.dailyBudgetUsd, 1.5);
-  assertEquals(llmConfig.refusalFallback, {
-    beta: "server-side-fallback-2026-07-01",
-    fallbacks: "default",
-  });
+  assertEquals(llmConfig.fairShare, 0.5);
 });
 
-Deno.test("the default model has a price", () => {
-  assert(llmConfig.pricing[llmConfig.model] !== undefined);
+Deno.test("routes of later phases have no model until their eval", () => {
+  for (
+    const route of [
+      "roleplay_turn",
+      "roleplay_debrief",
+      "writing_feedback",
+      "mediation_check",
+      "comprehension_check",
+    ] as const
+  ) {
+    assertEquals(llmConfig.routes[route].chain, [], route);
+  }
+});
+
+Deno.test("every model of a chain is configured with a free quota", () => {
+  for (const [route, config] of Object.entries(llmConfig.routes)) {
+    for (const id of config.chain) {
+      const model = llmConfig.models[id];
+      assert(model, `${route}: ${id} is not configured`);
+      assert(model.requestsPerDay > 0, id);
+      assert(llmConfig.providers[model.provider], id);
+    }
+  }
+});
+
+Deno.test("only free providers serve the tutor (ADR-0009)", () => {
+  assertEquals(Object.keys(llmConfig.providers).sort(), ["gemini", "groq"]);
+  // Gemini's free tier may use the text: only with the learner's consent.
+  assertEquals(llmConfig.providers.gemini.needsConsent, true);
+  assertEquals(llmConfig.providers.groq.needsConsent, false);
+  assertEquals(llmConfig.providers.gemini.quotaDay, "America/Los_Angeles");
 });
 
 Deno.test("model ids appear only in llm_config.ts", async () => {
@@ -44,7 +71,9 @@ Deno.test("model ids appear only in llm_config.ts", async () => {
         entry.name.endsWith(".ts") &&
         !entry.name.endsWith("_test.ts") &&
         entry.name !== "llm_config.ts" &&
-        /["'`]claude-/.test(await Deno.readTextFile(path))
+        /["'`](claude-|gemini-|openai\/gpt-)/.test(
+          await Deno.readTextFile(path),
+        )
       ) {
         offenders.push(relative(functionsDir, path));
       }
