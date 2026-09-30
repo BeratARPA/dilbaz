@@ -4,8 +4,12 @@
 /// rule, list or text comes from language packs, never from this package.
 library;
 
+export 'src/curriculum/carrier_choice.dart';
+export 'src/curriculum/carrier_picker.dart';
 export 'src/curriculum/cefr_level.dart';
 export 'src/curriculum/content_item.dart';
+export 'src/curriculum/curriculum.dart';
+export 'src/curriculum/curriculum_config.dart';
 export 'src/curriculum/item_kind.dart';
 export 'src/curriculum/item_link.dart';
 export 'src/curriculum/link_type.dart';

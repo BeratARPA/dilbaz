@@ -209,4 +209,4 @@ Rastgele üretilmiş öğrenci durumları ve içerikle çalışan testler şunla
 7. 7+ gün aradan sonra tekrar bloğu tavanı aşmaz. Birikim varken yeni öğe yoktur.
 8. Sentetik bir öğrenciyle 4 haftalık simülasyonda kol açıkları hedefe doğru kapanır.
 9. Aynı girdi + seed → aynı plan.
-10. `contrasts_with` çiftleri aynı gün birlikte **tanıtılmaz** (02 §4.3); ikisi de öğrenildikten sonra aynı blokta karışık çıkabilir.
+10. `contrasts_with` çiftleri aynı gün birlikte **tanıtılmaz** (02 §4.3); ikisi de öğrenildikten sonra aynı blokta karışık çıkabilir. Bunu müfredat listesi sağlar (`Curriculum.next`): planlayıcı listenin başından alır.

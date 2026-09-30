@@ -134,6 +134,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - `scoring/`: deterministik değerlendirme (`03` §0.5). `AnswerKey` (referans, varyantlar, alternatifler, hedef lemmalar) → `AnswerChecker` → `Evaluation` ve şablonlu `HintLadder`.
   - `language/`: `PackLanguage` (`LanguageServices`), `Normalizer` + `NormalizationRules` (`pack_meta.normalization`), `WordAlignment` (kelime hizalama; dikte de bunu kullanacak).
   - `model/`: öğrenci modeli (`04`). `CardRecord` + `ReviewRecord` → `ItemEvidence` (L2 kanıt düzeyleri), `XlexResult` (X_Lex puanı, bant olasılıkları), `LemmaKnowledge` (kişisel kapsama, I-06), `LearnerSnapshot`.
+  - `curriculum/`: `Curriculum.next` (sıradaki yeni öğeler, `02` §4.3) ve `CarrierPicker.pick` (i+1 taşıyıcı seçimi, `02` §4.4).
   - `planner/`: `Planner.plan` → `TodayPlan` (`05` §3): bütçe, minimum gün, tekrar bloğu, yeni öğe sınırı, seçenekler. `PlannerConfig` tüm eşikleri tutar.
 - **Dart paketinde optimizasyon ve yeniden zamanlama yok:**
   - Kişisel parametreler `tools/fsrs/optimize.py` ile hesaplanır (py-fsrs 6.x, `fsrs[optimizer]`). py-fsrs, farklı günlere yayılmış 512'den az tekrarda varsayılan parametreleri döndürür.

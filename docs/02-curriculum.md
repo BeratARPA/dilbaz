@@ -92,11 +92,29 @@ puan = 3.0 · kişisel_ilgi      (Söyleyemediklerim'den geldiyse 1, ilgi alanı
      − 1.0 · benzerlik_cezası  (son 3 günde tanıtılan bir öğeyle contrasts_with ise 1)
 ```
 
+**Ayrıntılar (motorda `Curriculum.next` ve `Curriculum.score`, F1-10):**
+
+- **Adaylar:** kartı olmayan kelime anlamları ve kalıplar. Kaldırılmış (`deprecated`) öğe aday olmaz.
+- **Seviye uyumu:** üç ve daha fazla seviye üstündeki öğe 0 alır.
+- **Sıklık:** `max_sıra`, paketteki en büyük sıklık sırasıdır. Sırası olmayan öğe 0,5 alır.
+- **Eşit puanda** sıklık sırası küçük olan, sonra anahtarı küçük olan öndedir. Sonuç, paket listelerinin sırasından bağımsızdır.
+- **Aynı gün kuralı:** Liste, birbiriyle `contrasts_with` olan iki öğeyi birlikte içermez; puanı yüksek olan kalır. Bugün tanıtılmış bir öğenin karşıtı da listede olmaz. Böylece planlayıcı listenin başından kaç öğe alırsa alsın kural sağlanır (`05` §8 madde 10).
+- **Aynı kelimenin iki anlamı** da aynı gün tanıtılmaz (only: "sadece" ve "tek"). Gerekçe aynıdır: yeni öğrenilen iki benzer şey birbirini bozar.
+- **v1:** Kişisel ilgi yalnızca Söyleyemediklerim'den gelen öğeler için 1'dir; ilgi alanı etiketi sonraya kaldı.
+
 Ağırlıklar motor yapılandırmasındadır ve deneylerle ayarlanır. Son satır bilinçli bir tercih: karışan öğeler **aynı gün birlikte tanıtılmaz**, önce biri oturur, sonra karşıtlık çalışılır (Nation'ın "interference" uyarısı). Birlikte karışık çalışma ancak ikisi de öğrenildikten sonra başlar (I-10).
 
 ### 4.4 Taşıyıcı cümle kuralı (i+1)
 
 Yeni bir kelime ya da kalıp, **içindeki diğer tüm kelimeleri bilinen** 1–2 taşıyıcı cümleyle tanıtılır. Paket her cümle için lemma listesini taşır. Motor, öğrencinin bildiği lemmalara göre uygun taşıyıcıyı seçer. Uygun taşıyıcı yoksa `gap_suggest` rotası anlık üretir, cümle doğrulanır ve kişisel öğe olarak kaydedilir.
+
+**Ayrıntılar (motorda `CarrierPicker.pick`, F1-10):**
+
+- **Adaylar, paketin o anlam için seçtiği cümlelerdir** (kelime anlamının `carriers` alanı). Cümlelerin `contains` bağları lemma ve sözcük türüyle eşleştirilir; aynı kelimenin başka bir anlamını ya da kullanımını da getirebilir. Bu yüzden taşıyıcı adayı sayılmaz.
+- **Sıralama:** hedef dışındaki lemmalardan bilinmeyenlerin beklenen sayısı en az olan öndedir. Beklenen sayı = Σ (1 − lemmanın bilinme olasılığı) (`06` §2: kartla bilinen 1, diğerleri bant olasılığı). Eşitlikte kısa olan, sonra seviyesi düşük olan öndedir.
+- **Uygunluk (i+1):** beklenen bilinmeyen sayısı ≤ 0,5.
+- **Kalıp:** Cümlesi olmayan kalıp kendi taşıyıcısıdır.
+- **v1:** Uygun taşıyıcı yoksa en iyi aday kullanılır. Hedef dışındaki küçük hatalar kartı düşürmez (`03` §0.5), bu yüzden başlangıçta tam uygun taşıyıcı bulunmaması öğrenmeyi durdurmaz. Anlık üretim sonraki faza kaldı.
 
 ## 5. Gramer ilerlemesi (taslak)
 
