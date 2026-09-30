@@ -36,6 +36,8 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 
 Puan tek bir denemeye değil, kartın o gösterimine verilir. Gösterim doğru cevapla, deneme hakkı bitince ya da H4 açılınca biter. Her yanlış cevap bir deneme hakkı harcar ve bir üst ipucunu açar. Kullanıcı ipucu merdiveninde kendisi de ilerleyebilir, ama ilk yanlıştan önce ipucu yoktur. H3'ten sonraki yanlış H4'ü açar. Motorda: `CardReview` → `ReviewOutcome.rating`.
 
+**Tanıtımın hemen ardından Easy verilmez.** Yeni öğenin tanıtımından (A00) hemen sonraki ilk tekrarda cevap az önce gösterilmiştir; hız hafızayı göstermez. İlk denemede doğru cevap burada en fazla Good alır. FSRS varsayılanlarında ilk tekrardaki Easy kartı doğrudan 16 günlük aralığa atar; bu hem zamanlamayı hem kanıt düzeyini şişirirdi (I-04).
+
 **LLM'siz `uncertain`** (§0.5, adım 4) her zaman **Hard** alır: ceza da şişirme de yoktur. Sonradan gelen LLM sonucu (`llm_resolved`) kanıtı düzeltir, FSRS geçmişini değiştirmez (I-03).
 
 **Hedefsiz doğru cevap** (§0.2) deneme hakkı ve ipucu harcamaz; istem bir kez yeniden sorulur:

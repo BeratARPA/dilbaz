@@ -47,13 +47,16 @@ Bir öğenin **üretim** düzeyi, üretim modlarındaki kartlarının en iyisind
 | Düzey | Kod | Koşul | Arayüzde |
 |---|---|---|---|
 | 0 | `new` | Kart yok | — |
-| 1 | `learning` | Kart learning/relearning durumunda | "Öğreniliyor" |
+| 1 | `learning` | Kart var, ama `recallable` koşulu sağlanmıyor (learning/relearning durumu ya da review durumunda S < 7 gün) | "Öğreniliyor" |
 | 2 | `recallable` | Review durumunda ve stabilite S ≥ 7 gün | "Hatırlıyor" |
-| 3 | `durable` | S ≥ 30 gün **ve** son 90 günde, bir önceki başarılı tekrardan en az 21 gün sonra yapılmış ipucusuz başarılı bir tekrar var | "Kalıcı" |
+| 3 | `durable` | S ≥ 30 gün **ve** son 90 günde, hemen önceki tekrardan en az 21 gün sonra yapılmış, ilk denemede ve ipucusuz başarılı bir tekrar var | "Kalıcı" |
 | 4 | `transferred` | Düzey ≥ 2 **ve** serbest üretimde (A11, A13, A15, A20, A21) **en az 2 farklı günde** hatasız kullanım | "Kullanıyor" |
 
 - **Serbest üretimde kullanım tespiti:** Transkriptteki lemma/kalıp eşleşmesi paketteki lemma listeleriyle yapılır. Eşleşen parçanın üzerinde hata etiketi yoksa hatasız sayılır.
-- **Alıcı düzey** ayrıca hesaplanır (A03, A05, okumadaki aramalar): `recognized` = alıcı kartta S ≥ 7 gün. Arayüzde "Tanıyor" olarak gösterilir.
+- **Kanıt esası (I-04):** Eşikler kartın o anki stabilitesiyle değil, **son kanıtlı tekrardaki stabiliteyle** karşılaştırılır. Kanıtsız biten tekrarlar (LLM'siz `uncertain`, hedefsiz doğru cevap; `03` §0.3) zamanlamayı ilerletir ama düzey yükseltmez.
+- **21 gün hemen önceki tekrardan sayılır.** Aradaki her tekrar, kanıtsız olsa bile, doğru cümleyi gösterip hafızayı tazeler; gerçek aralık odur.
+- **Alıcı düzey** ayrıca hesaplanır (A03, A05, okumadaki aramalar): `recognized` = alıcı kartta (dinle-anla ya da dikte) S ≥ 7 gün, aynı kanıt esasıyla. Arayüzde "Tanıyor" olarak gösterilir.
+- **Motorda:** `CardRecord` (kart + puanlı tekrarları) → `ItemEvidence.productionLevel`, `isRecognized`, `isKnown`. Tekrar kayıtları `attempts`'ten okunur: zaman, puan, kanıt olup olmadığı ve `card_state_after.stability`. `transferred` serbest üretim gelince eklenecek.
 - **Unutma:** Kalıcı bir öğe unutulursa (Again), düzey projeksiyonla otomatik düşer. Geçmişte "kullanıyor" olmuş olması arayüzde not olarak kalır ("daha önce kullanmıştın").
 - **İlerleme ekranı** yüzde değil, sayı gösterir. Örnek: "Tanıyor 1840 · Hatırlıyor 612 · Kalıcı 305 · Kullanıyor 97".
 

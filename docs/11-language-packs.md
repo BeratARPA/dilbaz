@@ -186,7 +186,7 @@ abstract interface class LanguageServices {
 }
 ```
 
-- **Durum (F1-07):** `normalize`, `tokenize` ve `lemmasOf` motorda hazır (`PackLanguage`: paketin normalizasyon kuralları, kelime ayırıcısı ve `forms` tablosu). `coverage`, öğrenci modeliyle birlikte gelecek (F1-08/F1-10).
+- **Durum (F1-07):** `normalize`, `tokenize` ve `lemmasOf` motorda hazır (`PackLanguage`: paketin normalizasyon kuralları, kelime ayırıcısı ve `forms` tablosu). `coverage` öğrenci modelindedir: `LemmaKnowledge.coverage` (F1-08; `06` §2).
 - **Kelime ayırıcı:** `script.word_separator` tek karakterdir (`space` → boşluk). Normalizer ve hizalama bu karakterle çalışır; motor testleri boşluksuz bir ayırıcıyla da koşar.
 
 - **`forms` tablosu:** Derleme zamanında spaCy/Stanza ile geniş bir kelime listesinin çekimli biçimlerinden üretilir (go/goes/went/gone → go).

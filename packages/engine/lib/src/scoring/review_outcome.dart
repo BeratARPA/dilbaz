@@ -32,10 +32,17 @@ sealed class ReviewOutcome with _$ReviewOutcome {
   bool get isEvidence => this is Recalled;
 
   /// The FSRS rating. Easy needs a first-try recall that is fast for this
-  /// learner in this mode ([latencies]).
-  ReviewRating rating(LatencyProfile latencies) => switch (this) {
+  /// learner in this mode ([latencies]), and never comes right after the
+  /// item's introduction ([justIntroduced]): the answer was just shown, so
+  /// speed says nothing about memory.
+  ReviewRating rating(
+    LatencyProfile latencies, {
+    bool justIntroduced = false,
+  }) => switch (this) {
     Recalled(firstTry: true, :final latencyMs) =>
-      latencies.isFast(latencyMs) ? ReviewRating.easy : ReviewRating.good,
+      !justIntroduced && latencies.isFast(latencyMs)
+          ? ReviewRating.easy
+          : ReviewRating.good,
     Recalled() => ReviewRating.hard,
     // Neither a penalty nor inflation.
     WithoutTarget() || Undecided() => ReviewRating.hard,

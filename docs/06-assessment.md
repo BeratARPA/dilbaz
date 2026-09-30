@@ -19,6 +19,8 @@
 ### Bölüm 1 — Kelime: X_Lex tipi evet/hayır testi (Meara & Milton)
 - 120 madde: en sık 5000 lemmanın her bin kelimelik bandından 20 gerçek kelime (100) + 20 uydurma kelime.
 - **Puan:** gerçek kelimeye her "biliyorum" +50, uydurma kelimeye her "biliyorum" −250. Sonuç [0, 5000] aralığına sınırlanır. Bant başına kabul oranı ayrıca saklanır.
+  - Genel biçimi: her bandın kabul oranından yanlış alarm oranı çıkarılır, 1000 ile çarpılır ve bantlar toplanır. 20'şer kelimelik bantlarda ve 20 uydurma kelimede bu, +50 / −250 ile aynıdır.
+  - Motorda: `XlexResult.of` (sonuç `assessments.results` içine `score`, `band_rates`, `false_alarm_rate` olarak yazılır).
 - **Güvenilirlik:** Uydurma kelimelerde "biliyorum" oranı %25'in üstündeyse sonuç "tahmine dayalı" işaretlenir ve güven `low` olur.
 - **Sürümler:** Üç eşdeğer sürüm (A/B/C) vardır, yeniden testlerde sırayla kullanılır.
 - **Kelime listesi:** Bantlar, İngilizce paketin sıklık listesinden gelir. Uydurma kelimelerin üretimi `10-content-pipeline.md` §5.3'te.
@@ -39,8 +41,12 @@
 - Beceri başına başlangıç seviye tahmini (güven `low`)
 - Tanıma kelime boyutu
 - Müfredat başlangıç noktası
-- **Kişisel kapsama için başlangıç bilgisi:** Kartı olmayan bir lemmanın bilinme olasılığı, o lemmanın bandındaki kabul oranı (yanlış alarmla düzeltilmiş) olarak alınır. Bir metnin kişisel kapsaması şöyle hesaplanır:
-  - Kartla bilinen lemmalar (üretim ≥ `recallable` ya da alıcı `recognized`) → 1
+- **Kişisel kapsama için başlangıç bilgisi:** Kartı olmayan bir lemmanın bilinme olasılığı, o lemmanın bandındaki kabul oranı (yanlış alarmla düzeltilmiş) olarak alınır.
+  - Düzeltme: bant kabul oranı − yanlış alarm oranı, [0, 1] aralığına sınırlanır. Böylece bant olasılıklarının toplamı X_Lex puanını verir.
+  - Bant, lemmanın paket sözlüğündeki sıklık sırasından gelir (1–1000 → 1. bant). 5. bandın ötesindeki lemmalar son bandın olasılığını alır.
+  - Paket sözlüğünde olmayan lemma bilinmiyor sayılır (0). Hiç test yapılmadıysa yalnızca kartlar sayılır.
+- **Kişisel kapsama** (motorda `LemmaKnowledge`). Bir metnin kişisel kapsaması şöyle hesaplanır:
+  - Kartla bilinen lemmalar (bir kelime anlamı üretimde ≥ `recallable` ya da alıcıda `recognized`) → 1. Bilinen bir kalıp, içindeki kelimeleri tek başına bilinir yapmaz.
   - Diğer lemmalar → bant olasılığı
   - Kapsama = bu değerlerin ortalaması
   

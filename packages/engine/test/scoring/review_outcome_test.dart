@@ -23,6 +23,16 @@ void main() {
       expect(fast.rating(LatencyProfile.none), ReviewRating.good);
     });
 
+    test('right after the introduction a fast recall is only Good', () {
+      const fast = ReviewOutcome.recalled(firstTry: true, latencyMs: 0);
+      expect(fast.rating(history), ReviewRating.easy);
+      expect(fast.rating(history, justIntroduced: true), ReviewRating.good);
+      expect(
+        const ReviewOutcome.notRecalled().rating(history, justIntroduced: true),
+        ReviewRating.again,
+      );
+    });
+
     test('a later recall is Hard, however fast', () {
       expect(recalled(firstTry: false, latencyMs: 0), ReviewRating.hard);
     });
