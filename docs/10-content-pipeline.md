@@ -339,6 +339,7 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - `grammar.yaml`: gramer kodu başına Türkçe ad, açıklama ve H3 kural notu (`rule`).
   - `contrasts.yaml`, `error_tags.yaml`.
 - **Cümle istemi sırası:** küratörlüğün Türkçesi → doğrulamanın düzeltmesi (`turkish_fix`, Tatoeba çevirisi yanlışsa; §5.2) → ilk Tatoeba çevirisi (kimliği, CC BY 2.0 FR lisansı ve çevirmen atfıyla).
+- **Hedefe göre ayrım motorda yapılır:** Buradaki `variants`/`alternatives` ayrımı cümlenin seçilmiş taşıyıcı hedeflerine göredir. Cümle başka öğeler için de taşıyıcı olabileceğinden motor, eşleşen cevabı kartın hedef kelimesini içerip içermediğine göre sınıflar (`03` §0.5, adım 2). `en@1`'de 3.946 kart–varyant çiftinin 650'si o kartın hedefini içermiyor, 492 kart–alternatif çiftinin 203'ü içeriyor.
 - **Normalizasyon:** Varyantlar, cevaplar gibi `packs/<l2>/normalization.yaml` kurallarıyla karşılaştırılır (`03` §0.5). Motor aynı dosyayı kullanır (F1-07); dosyadaki `tests` örneklerini iki uygulama da geçmelidir. Kelime kurallarından sonra kalıp ifadeler düzeltilir ("he's got" → "he has got"), para birimi yazıya çevrilir ("$30" → "thirty dollars").
 - **Engelleyici kontroller** (çıkış kodu 1):
   - `missing_gloss`: Hedef paketteki her anlamın, kalıbın ve gramer noktasının karşılığı vardır.

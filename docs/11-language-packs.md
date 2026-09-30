@@ -96,6 +96,7 @@ created_at: 2026-10-…
 
 // tr-en/variants.jsonl: normalizasyondan sonra referanstan farklı cevaplar.
 // variants hedef kelimeyi içerir; alternatives içermez: doğru sayılır, hedef için yeniden sorulur.
+// Listeler cümlenin seçilmiş hedeflerine göre yazılır; motor ayrımı kartın hedefine göre yeniden yapar (`03` §0.5).
 { "key": "en.sent.i_have_a_job", "variants": ["I've got a job."], "provenance": { … } }
 { "key": "en.sent.here_s_a_present_for_you", "variants": ["This is a present for you."],
   "alternatives": ["Here's a gift for you."], "provenance": { … } }
@@ -184,6 +185,9 @@ abstract interface class LanguageServices {
   double coverage(Iterable<String> lemmas, KnownLemmaModel known); // I-06
 }
 ```
+
+- **Durum (F1-07):** `normalize`, `tokenize` ve `lemmasOf` motorda hazır (`PackLanguage`: paketin normalizasyon kuralları, kelime ayırıcısı ve `forms` tablosu). `coverage`, öğrenci modeliyle birlikte gelecek (F1-08/F1-10).
+- **Kelime ayırıcı:** `script.word_separator` tek karakterdir (`space` → boşluk). Normalizer ve hizalama bu karakterle çalışır; motor testleri boşluksuz bir ayırıcıyla da koşar.
 
 - **`forms` tablosu:** Derleme zamanında spaCy/Stanza ile geniş bir kelime listesinin çekimli biçimlerinden üretilir (go/goes/went/gone → go).
 - **Sondan eklemeli diller:** Türkçe ya da Fince hedef dil olursa biçim tablosu çok büyür. Manifest `tokenizer.runtime: "remote"` diyebilir; o zaman lemmatizasyon bir sunucu fonksiyonuyla (Stanza) yapılır. Bu genişleme noktası baştan tanımlıdır, ama ilk sürümde uygulanmaz.

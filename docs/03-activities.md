@@ -92,25 +92,39 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - kısaltmaları açma (I'm → I am, don't → do not)
    - sayıları yazıya çevirme
    - İngiliz ve Amerikan yazımını eşitleme (colour/color)
-2. Normalize edilmiş cevap şunlardan biriyle birebir eşleşirse `correct` döner:
-   - normalize edilmiş referans
-   - paketteki `variants` listesi
-   - kişisel varyantlar
-   Paketin `alternatives` listesiyle (hedefi içermeyen doğru cevaplar) ya da kişisel alternatiflerle eşleşirse **hedefsiz doğru cevaptır** (§0.2).
+2. Normalize edilmiş cevap bilinen doğru cevaplardan biriyle birebir eşleşirse LLM çağrılmaz. Bilinen doğru cevaplar: referans, paketteki `variants` ve `alternatives` listeleri, kişisel varyantlar ve alternatifler.
+   - Eşleşen cevap **kartın hedef kelimesini içeriyorsa** `correct` döner.
+   - İçermiyorsa **hedefsiz doğru cevaptır** (§0.2).
+   - Referans her zaman `correct`'tir.
+   - Karar listeye göre değil hedefe göre verilir, çünkü bir cümle birden çok öğe taşır ve paket listeleri cümlenin seçilmiş hedeflerine göre yazılmıştır. Örnek: "I've got homework to do." cümlesinin varyantı "I have homework to do", `homework` kartında doğrudur, `get` kartında hedefsizdir.
+   - Hedef kelime referansın kendisinde bile bulunamıyorsa (kalıp kartları, biçim tablosunda olmayan yazımlar) liste belirleyicidir: `variants` hedefli, `alternatives` hedefsiz sayılır.
 3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir.
-4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, en yakın referans ya da varyantla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
-   - **Küçük ve sınıflanabilir fark** (eksik ya da fazla kelime, aynı lemmanın yanlış biçimi, sıra) → `minor_error` ya da `wrong`.
-     - Yalnızca kuralla kesin bulunabilen hata etiketleri eklenir.
-     - Fark hedef parçadaysa `target_ok=false`.
-   - **Hedef parça doğru, cümlenin geri kalanı çok farklı** → `uncertain` (LLM'siz):
+4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, hedefi içeren doğru cevapların en yakınıyla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
+   - **Fark türleri:** eksik kelime, fazla kelime, aynı lemmanın başka biçimi, sıra (yan yana iki kelimenin yer değiştirmesi ya da bir kelimenin başka yere taşınması), başka kelime. İlk dördü sınıflanabilir farktır. "Başka kelime" sınıflanamaz, çünkü eş anlamlı mı yanlış mı olduğunu yalnızca LLM söyleyebilir.
+   - **Küçük fark:** en fazla 1 fark. Doğru cevap 6 kelime ya da daha uzunsa en fazla 2 fark.
+   - **Hedef parça:** doğru cevapta hedef öğenin lemmalarını taşıyan kelimeler. Hedef bulunamazsa cevabın tamamı hedef sayılır.
+   - Karar, hedef parçanın durumuna göre verilir:
+
+     | Hedef parça | Fark | Karar |
+     |---|---|---|
+     | Sağlam | küçük ve sınıflanabilir | `minor_error`, `target_ok=true` (hedef için doğru) |
+     | Sağlam | büyük ya da sınıflanamaz | `uncertain` (LLM'siz) |
+     | Bozuk: biçimi yanlış | — | `minor_error`, `target_ok=false` |
+     | Bozuk: sırası yanlış ya da araya kelime girmiş | — | `wrong`, `target_ok=false` |
+     | Eksik | küçük | `wrong`, `target_ok=false` |
+     | Yerinde başka kelime var | küçük | `uncertain` (LLM'siz): eş anlamlı olabilir |
+     | Eksik ya da yerinde başka kelime var | büyük | `off_target` |
+
+   - **`uncertain` (LLM'siz):**
      - Üretim kanıtı sayılmaz; FSRS'e Hard yazılır (§0.3).
      - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir.
-   - **Hedef parça yok ve fark büyük** → `off_target`.
-   - **İpucu merdiveni şablonludur:**
-     - H1: fark türü
-     - H2: farkın cevaptaki yeri
-     - H3: paketteki kural notu
-     - H4: referans
+   - **Hata etiketi eklenmez.** Paketlerde etiketleri kelime farkından kesin çıkaracak kural verisi yok; etiketler LLM'den gelir.
+   - **İpucu merdiveni şablonludur** ve yalnızca yanlış sayılan cevapta üretilir. H1–H3 doğru cevaptan hiçbir kelime taşımaz (I-02):
+     - H1: fark türü (kelime eksik, kelime fazla, biçim yanlış, sıra yanlış; `off_target`'ta "istenen anlam bu değil"). Metni ARB'den gelir.
+     - H2: farkın yeri, öğrencinin kendi söylediği bir kelimeyle anlatılır ("… kelimesinden önce", "… kelimesinden sonra", "… kelimesinde").
+     - H3: kartın kendi gramer noktasının kural notu. Kelime ve kalıp kartlarında H3 yoktur: cümledeki başka bir gramer noktasının notu hatayla ilgisiz olur ve yanıltır.
+     - H4: hizalanan doğru cevap (referans ya da cevaba daha yakın olan varyant).
+   - Motorda: `AnswerChecker.match` (adım 2) ve `AnswerChecker.checkWithoutLlm` (adım 2 + 4).
 5. Kullanıcı her sonuca "cevabım da doğru olabilir" diyebilir:
    - İtiraz `attempt_amendments` (`user_dispute`) olarak yazılır.
    - LLM varsa yeniden kontrol edilir; ayrıca içerik bildirimi olarak kaydedilir (`10` §8).
