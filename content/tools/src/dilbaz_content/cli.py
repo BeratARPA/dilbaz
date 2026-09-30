@@ -33,6 +33,7 @@ from dilbaz_content.lexicon_step import CMUDICT, LEXICON_FILE, WIKTEXTRACT_DUMP,
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.pair_step import run_pair
 from dilbaz_content.placement_step import PlacementError, dictionary_words, run_placement
+from dilbaz_content.placement_tests import PlacementTestsError, run_placement_tests
 from dilbaz_content.report_step import build_report
 from dilbaz_content.select_step import SelectionError, run_select
 from dilbaz_content.sentences_step import run_sentences
@@ -325,6 +326,30 @@ def placement(
     console.print(
         f"pseudowords: {report.pseudo_tried} candidates, rejected {report.pseudo_rejected}"
     )
+
+
+@app.command(name="placement-tests")
+def placement_tests(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """S8: build the placement grammar bank and dictation set (packs/<l2>/placement/)."""
+    root = _content_dir(content_dir)
+    try:
+        report = run_placement_tests(root, l2=l2)
+    except (PlacementTestsError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"grammar items per level {report.grammar_by_level}; "
+        f"{report.dictation} dictation sentences (eligible {report.dictation_eligible})"
+    )
+    for item, words in report.hard_words.items():
+        console.print(f"[yellow]{item}[/yellow]: words above the level: {', '.join(words)}")
+    for issue in report.issues:
+        console.print(f"[red]{issue.id}[/red]: {issue.kind}: {issue.detail}")
+    if report.issues:
+        raise typer.Exit(code=1)
 
 
 @app.command()

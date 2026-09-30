@@ -27,7 +27,7 @@ from collections import Counter
 from collections.abc import Iterable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 import yaml
 from pydantic import BaseModel, ConfigDict
@@ -39,6 +39,15 @@ from dilbaz_content.lexicon import LexiconEntry
 from dilbaz_content.manifest import Manifest, load_manifest
 from dilbaz_content.normalize import NORMALIZATION_FILE
 from dilbaz_content.placement_step import XLEX_FILE, XlexItem
+from dilbaz_content.placement_tests import (
+    DICTATION_FILE,
+    GRAMMAR_FILE,
+    GRAMMAR_VALIDATION,
+    DictationItem,
+    GrammarItem,
+    check_issue,
+    read_checks,
+)
 from dilbaz_content.select_step import read_lexicon
 from dilbaz_content.sentences_step import VALIDATION_FILE, read_validation
 
@@ -89,7 +98,13 @@ _PAIR_FILES = {
 }
 
 IssueKind = Literal[
-    "unvalidated_sentence", "missing_audio", "missing_audio_file", "missing_gloss", "unknown_link"
+    "unvalidated_sentence",
+    "missing_audio",
+    "missing_audio_file",
+    "missing_gloss",
+    "unknown_link",
+    "unvalidated_placement_item",
+    "unknown_dictation_sentence",
 ]
 
 
@@ -206,6 +221,9 @@ def _target_rows(
     rank_of = {entry.lemma: entry.rank for entry in lexicon}
     kit_ranks = chunk_ranks(chunks, senses)
     xlex = _read(content_dir / "packs" / l2 / XLEX_FILE, XlexItem)
+    grammar = _read(content_dir / "packs" / l2 / GRAMMAR_FILE, GrammarItem)
+    dictation = _read(content_dir / "packs" / l2 / DICTATION_FILE, DictationItem)
+    text_of = {sentence.key: sentence.text for sentence in sentences}
 
     rows = [
         _Row(
@@ -285,6 +303,30 @@ def _target_rows(
         )
         for item in xlex
     ]
+    # The rest of the placement test (docs/06 §2): grammar items and the
+    # sentences to write down, with the clips of each.
+    rows += [
+        _Row(
+            key=item.key,
+            kind="placement_grammar",
+            level=item.level,
+            text_l2=item.stem,
+            grammar=(item.grammar,) if item.grammar else (),
+            data=_data(item, "answer", "distractors", "focus", "provenance"),
+        )
+        for item in grammar
+    ]
+    rows += [
+        _Row(
+            key=f"{l2}.pdict.{item.version.lower()}.{item.order}",
+            kind="placement_dictation",
+            level=item.level,
+            text_l2=text_of.get(item.sentence),
+            targets=(item.sentence,),
+            data={"version": item.version, "order": item.order, "audio": clips(item.sentence)},
+        )
+        for item in dictation
+    ]
     return rows, lexicon
 
 
@@ -310,6 +352,40 @@ def _validation_issues(content_dir: Path, l2: str, rows: Iterable[_Row]) -> list
         if decision is None or decision.text != row.text_l2 or not decision.accepted:
             issues.append(
                 Issue(key=row.key, kind="unvalidated_sentence", detail="no accepted validation")
+            )
+    return issues
+
+
+def _placement_issues(content_dir: Path, l2: str, rows: Iterable[_Row]) -> list[Issue]:
+    """Grammar items need a check of their exact text (I-16), dictation a sentence."""
+    curation = content_dir / "curation" / l2
+    checks = read_checks(curation / GRAMMAR_VALIDATION)
+    issues: list[Issue] = []
+    for row in rows:
+        if row.kind == "placement_grammar":
+            item = row.key.split(".pgram.", 1)[1]
+            found = check_issue(
+                item,
+                checks.get(item),
+                stem=row.text_l2 or "",
+                answer=str(row.data["answer"]),
+                distractors=cast("Sequence[str]", row.data["distractors"]),
+            )
+            if found is not None:
+                issues.append(
+                    Issue(
+                        key=row.key,
+                        kind="unvalidated_placement_item",
+                        detail=f"{found.kind}: {found.detail}",
+                    )
+                )
+        elif row.kind == "placement_dictation" and row.text_l2 is None:
+            issues.append(
+                Issue(
+                    key=row.key,
+                    kind="unknown_dictation_sentence",
+                    detail=f"{row.targets[0]} is not a sentence of the pack",
+                )
             )
     return issues
 
@@ -400,7 +476,8 @@ def _finish(
         }
     )
     (out / f"{manifest.id}.manifest.json").write_text(
-        final.model_dump_json(indent=2, exclude_none=True) + "\n", encoding="utf-8"
+        final.model_dump_json(indent=2, exclude_none=True, by_alias=True) + "\n",
+        encoding="utf-8",
     )
     (out / f"{manifest.id}.LICENSES.md").write_text(_licenses(manifest), encoding="utf-8")
     return PackBuild(id=manifest.id, rows=rows, bytes=path.stat().st_size, sha256=checksum)
@@ -447,6 +524,7 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
     }
     glossed = {str(key) for kind, key, _, _ in pair_rows if kind == "gloss"}
     issues = _validation_issues(content_dir, l2, rows)
+    issues += _placement_issues(content_dir, l2, rows)
     issues += _audio_issues(rows, audio, content_dir / "build" / "audio" / l2 / str(PACK_VERSION))
     issues += [
         Issue(key=row.key, kind="missing_gloss", detail="no gloss in the pair pack")
@@ -470,7 +548,8 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
     voices = yaml.safe_load((packs / l2 / VOICES_FILE).read_text(encoding="utf-8"))
     meta_target: dict[str, object] = {
         "format_version": FORMAT_VERSION,
-        "manifest": target.model_dump(mode="json", exclude_none=True) | {"counts": counts},
+        "manifest": target.model_dump(mode="json", exclude_none=True, by_alias=True)
+        | {"counts": counts},
         "normalization": normalization,
         "voices": voices,
         "audio": {"bucket": "pack-audio", "prefix": f"{l2}/{PACK_VERSION}/"},

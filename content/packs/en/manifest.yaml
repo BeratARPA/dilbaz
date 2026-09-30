@@ -12,6 +12,18 @@ level_scheme: CEFR
 script: {direction: ltr, word_separator: space}
 tokenizer: {build_time: "spacy:en_core_web_md", runtime: forms_table}
 fsrs_defaults: null
+placement:
+  # Recognition vocabulary of each level as an X_Lex score: `from` up to but
+  # not including `to` (Milton 2010; docs/02-curriculum.md §2). A score
+  # between two ranges belongs to both levels.
+  vocab_levels:
+    - {level: A0, from: 0, to: 300}
+    - {level: A1, from: 300, to: 1500}
+    - {level: A2, from: 1500, to: 2500}
+    - {level: B1, from: 2750, to: 3250}
+    - {level: B2, from: 3250, to: 3750}
+    - {level: C1, from: 3750, to: 4500}
+    - {level: C2, from: 4500, to: 5001}
 sources:
   - name: New General Service List (NGSL) and NGSL-Spoken
     version: "1.2"

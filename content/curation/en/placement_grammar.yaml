@@ -1,0 +1,383 @@
+# Placement grammar bank for English (docs/06-assessment.md §2, part 2;
+# docs/10-content-pipeline.md §5.3).
+#
+# Each item is a sentence with one gap (`___`) and three choices: the answer
+# and two distractors. Exactly one choice is correct standard English; the
+# distractors are what a Turkish-speaking learner below the level tends to
+# say (docs/02-curriculum.md §5). The words around the gap are kept simple,
+# so that the item tests the structure and not the vocabulary.
+#
+# level: the level of the structure (docs/02 §5). A1 also holds the A0
+#   structures: the test has no step below A1.
+# grammar: the grammar point of the pack that the item tests (closed list,
+#   curation/en/grammar_points.yaml). Levels above the pack's grammar points
+#   have no code yet and name the structure in `focus` only.
+#
+# Written in a Claude Code session (ADR-0009); license: own. Every item
+# needs an accepted independent validation of its exact text in
+# placement_grammar.validation.jsonl (I-16).
+
+items:
+  # --- A1 (with A0) ---------------------------------------------------------
+  - id: a1.be_present
+    level: A1
+    grammar: gp.be.present
+    focus: "be: am / is / are"
+    stem: "My parents ___ at home now."
+    answer: "are"
+    distractors: ["is", "am"]
+
+  - id: a1.subject_pronoun
+    level: A1
+    grammar: gp.pronouns.subject
+    focus: "he / she"
+    stem: "My mother is a teacher. ___ works in a school."
+    answer: "She"
+    distractors: ["He", "Her"]
+
+  - id: a1.a_an
+    level: A1
+    grammar: gp.articles.a_an
+    focus: "a / an"
+    stem: "I have ___ old car."
+    answer: "an"
+    distractors: ["a", "any"]
+
+  - id: a1.present_simple_s
+    level: A1
+    grammar: gp.present_simple.affirmative
+    focus: "present simple: third person -s"
+    stem: "My brother ___ in a bank."
+    answer: "works"
+    distractors: ["work", "working"]
+
+  - id: a1.present_simple_negative
+    level: A1
+    grammar: gp.present_simple.negative
+    focus: "present simple: doesn't"
+    stem: "She ___ know the answer."
+    answer: "doesn't"
+    distractors: ["don't", "isn't"]
+
+  - id: a1.present_simple_question
+    level: A1
+    grammar: gp.present_simple.questions
+    focus: "present simple: questions with does"
+    stem: "___ your father speak English?"
+    answer: "Does"
+    distractors: ["Do", "Is"]
+
+  - id: a1.object_pronoun
+    level: A1
+    grammar: gp.pronouns.object
+    focus: "object pronouns"
+    stem: "This is my brother. Do you know ___?"
+    answer: "him"
+    distractors: ["he", "his"]
+
+  - id: a1.preposition_time
+    level: A1
+    grammar: gp.prepositions.time
+    focus: "in / on / at for time"
+    stem: "The meeting is ___ Monday."
+    answer: "on"
+    distractors: ["in", "at"]
+
+  - id: a1.can
+    level: A1
+    grammar: gp.can.ability
+    focus: "can + base form"
+    stem: "She can ___ very well."
+    answer: "swim"
+    distractors: ["swims", "to swim"]
+
+  - id: a1.present_continuous
+    level: A1
+    grammar: gp.present_continuous.now
+    focus: "present continuous: be + -ing"
+    stem: "Look! It ___ now."
+    answer: "is raining"
+    distractors: ["is rain", "raining"]
+
+  - id: a1.was_were
+    level: A1
+    grammar: gp.past_simple.be
+    focus: "was / were"
+    stem: "We ___ at the cinema yesterday."
+    answer: "were"
+    distractors: ["was", "are"]
+
+  - id: a1.past_irregular
+    level: A1
+    grammar: gp.past_simple.irregular
+    focus: "past simple: irregular verbs"
+    stem: "I ___ to school yesterday."
+    answer: "went"
+    distractors: ["go", "goed"]
+
+  # --- A2 -------------------------------------------------------------------
+  - id: a2.past_negative
+    level: A2
+    grammar: gp.past_simple.negative_questions
+    focus: "past simple: didn't + base form"
+    stem: "I ___ to work yesterday."
+    answer: "didn't go"
+    distractors: ["didn't went", "don't went"]
+
+  - id: a2.past_question
+    level: A2
+    grammar: gp.past_simple.negative_questions
+    focus: "past simple: questions with did"
+    stem: "Where ___ you go last night?"
+    answer: "did"
+    distractors: ["do", "were"]
+
+  - id: a2.going_to
+    level: A2
+    grammar: gp.future.going_to
+    focus: "be going to"
+    stem: "Look at those clouds. It ___ rain."
+    answer: "is going to"
+    distractors: ["going to", "will to"]
+
+  - id: a2.will
+    level: A2
+    grammar: gp.future.will
+    focus: "will + base form"
+    stem: "I think she ___ the exam."
+    answer: "will pass"
+    distractors: ["will passes", "wills pass"]
+
+  - id: a2.comparative
+    level: A2
+    grammar: gp.comparatives
+    focus: "comparatives"
+    stem: "My car is ___ than yours."
+    answer: "faster"
+    distractors: ["more fast", "fastest"]
+
+  - id: a2.superlative
+    level: A2
+    grammar: gp.superlatives
+    focus: "superlatives"
+    stem: "This is the ___ restaurant in the city."
+    answer: "best"
+    distractors: ["better", "most good"]
+
+  - id: a2.any
+    level: A2
+    grammar: gp.countable_uncountable
+    focus: "some / any"
+    stem: "We don't have ___ milk."
+    answer: "any"
+    distractors: ["some", "many"]
+
+  - id: a2.much_many
+    level: A2
+    grammar: gp.countable_uncountable
+    focus: "much / many"
+    stem: "How ___ money do you need?"
+    answer: "much"
+    distractors: ["many", "a lot"]
+
+  - id: a2.have_to
+    level: A2
+    grammar: gp.modals.obligation
+    focus: "have to / must"
+    stem: "You ___ wear a seat belt. It's the law."
+    answer: "have to"
+    distractors: ["has to", "must to"]
+
+  - id: a2.simple_or_continuous
+    level: A2
+    grammar: gp.present_simple_vs_continuous
+    focus: "present simple or continuous"
+    stem: "She can't talk now. She ___ dinner."
+    answer: "is having"
+    distractors: ["has", "have"]
+
+  - id: a2.present_perfect_ever
+    level: A2
+    grammar: gp.present_perfect.experience
+    focus: "present perfect: ever + past participle"
+    stem: "Have you ever ___ to London?"
+    answer: "been"
+    distractors: ["be", "went"]
+
+  - id: a2.enjoy_ing
+    level: A2
+    grammar: gp.verb_patterns.to_ing
+    focus: "verb + -ing"
+    stem: "I enjoy ___ books in the evening."
+    answer: "reading"
+    distractors: ["to read", "read"]
+
+  # --- B1 -------------------------------------------------------------------
+  - id: b1.past_simple_not_perfect
+    level: B1
+    focus: "past simple, not present perfect, with a finished time"
+    stem: "I ___ my keys yesterday."
+    answer: "lost"
+    distractors: ["have lost", "was lost"]
+
+  - id: b1.since
+    level: B1
+    focus: "present perfect with since"
+    stem: "We have lived here ___ 2015."
+    answer: "since"
+    distractors: ["for", "from"]
+
+  - id: b1.past_continuous
+    level: B1
+    focus: "past continuous"
+    stem: "I ___ dinner when the phone rang."
+    answer: "was cooking"
+    distractors: ["were cooking", "am cooking"]
+
+  - id: b1.used_to
+    level: B1
+    focus: "used to"
+    stem: "I ___ play football when I was a child."
+    answer: "used to"
+    distractors: ["use to", "was used to"]
+
+  - id: b1.first_conditional
+    level: B1
+    focus: "first conditional"
+    stem: "If it ___ tomorrow, we will stay at home."
+    answer: "rains"
+    distractors: ["will rain", "rained"]
+
+  - id: b1.second_conditional
+    level: B1
+    focus: "second conditional"
+    stem: "If I ___ more money, I would buy a bigger house."
+    answer: "had"
+    distractors: ["have", "would have"]
+
+  - id: b1.relative_who
+    level: B1
+    focus: "relative clauses: who"
+    stem: "The man ___ lives next door is a doctor."
+    answer: "who"
+    distractors: ["which", "where"]
+
+  - id: b1.passive_past
+    level: B1
+    focus: "passive: past simple"
+    stem: "This house ___ in 1950."
+    answer: "was built"
+    distractors: ["built", "was building"]
+
+  - id: b1.might
+    level: B1
+    focus: "might + base form"
+    stem: "Take an umbrella. It ___ rain later."
+    answer: "might"
+    distractors: ["might to", "mights"]
+
+  - id: b1.say_tell
+    level: B1
+    focus: "reported speech: say / tell"
+    stem: "She ___ me that she was tired."
+    answer: "told"
+    distractors: ["said", "spoke"]
+
+  - id: b1.preposition_ing
+    level: B1
+    focus: "preposition + -ing"
+    stem: "I'm interested in ___ Spanish."
+    answer: "learning"
+    distractors: ["learn", "to learn"]
+
+  - id: b1.although
+    level: B1
+    focus: "although"
+    stem: "___ it was raining, we went for a walk."
+    answer: "Although"
+    distractors: ["Despite", "However"]
+
+  # --- B2 -------------------------------------------------------------------
+  - id: b2.present_perfect_continuous
+    level: B2
+    focus: "present perfect continuous"
+    stem: "I ___ for you for two hours!"
+    answer: "have been waiting"
+    distractors: ["am waiting", "have been waited"]
+
+  - id: b2.past_perfect
+    level: B2
+    focus: "past perfect"
+    stem: "When we arrived, the film ___ already started."
+    answer: "had"
+    distractors: ["has", "did"]
+
+  - id: b2.third_conditional
+    level: B2
+    focus: "third conditional"
+    stem: "If I had known about the party, I ___ last night."
+    answer: "would have come"
+    distractors: ["would come", "had come"]
+
+  - id: b2.wish
+    level: B2
+    focus: "wish + past"
+    stem: "I wish I ___ more free time."
+    answer: "had"
+    distractors: ["have", "would have"]
+
+  - id: b2.have_something_done
+    level: B2
+    focus: "have something done"
+    stem: "I ___ my hair cut yesterday."
+    answer: "had"
+    distractors: ["made", "did"]
+
+  - id: b2.must_have
+    level: B2
+    focus: "deduction about the past: must have"
+    stem: "He isn't answering. He ___ have left already."
+    answer: "must"
+    distractors: ["must to", "can"]
+
+  - id: b2.non_defining_relative
+    level: B2
+    focus: "non-defining relative clauses"
+    stem: "My brother, ___ lives in Ankara, is a teacher."
+    answer: "who"
+    distractors: ["that", "which"]
+
+  - id: b2.reported_question
+    level: B2
+    focus: "reported questions: word order"
+    stem: "She asked me where ___."
+    answer: "I lived"
+    distractors: ["did I live", "do I live"]
+
+  - id: b2.nevertheless
+    level: B2
+    focus: "discourse markers: nevertheless"
+    stem: "He was very tired. ___, he finished his work."
+    answer: "Nevertheless"
+    distractors: ["Although", "Despite"]
+
+  - id: b2.passive_continuous
+    level: B2
+    focus: "passive: present continuous"
+    stem: "The bridge is ___ at the moment."
+    answer: "being repaired"
+    distractors: ["repairing", "been repaired"]
+
+  - id: b2.cleft
+    level: B2
+    focus: "cleft sentences: what … is"
+    stem: "___ I need is a long holiday."
+    answer: "What"
+    distractors: ["That", "Which"]
+
+  - id: b2.deny_ing
+    level: B2
+    focus: "verb patterns: deny + -ing"
+    stem: "She denied ___ the money."
+    answer: "taking"
+    distractors: ["to take", "take"]

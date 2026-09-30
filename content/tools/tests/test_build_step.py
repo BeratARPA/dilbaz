@@ -20,6 +20,14 @@ from dilbaz_content.cli import app
 from dilbaz_content.items import Chunk, Provenance, WordSense
 from dilbaz_content.pair_step import run_pair
 from dilbaz_content.placement_step import XLEX_FILE, XlexItem
+from dilbaz_content.placement_tests import (
+    DICTATION_FILE,
+    GRAMMAR_FILE,
+    GRAMMAR_VALIDATION,
+    DictationItem,
+    GrammarCheck,
+    GrammarItem,
+)
 from dilbaz_content.sentences_step import VALIDATION_FILE, Validation
 
 from sample_sentences import OwnAnalyzer
@@ -78,6 +86,35 @@ def ready(tmp_path: Path) -> Path:
     ]
     (en / XLEX_FILE).parent.mkdir(parents=True, exist_ok=True)
     (en / XLEX_FILE).write_text("".join(x.model_dump_json() + "\n" for x in xlex), encoding="utf-8")
+    grammar = GrammarItem(
+        key="en.pgram.a1.be_present",
+        level="A1",
+        grammar="gp.be.present",
+        focus="be: am / is / are",
+        stem="You ___ right.",
+        answer="are",
+        distractors=("is", "am"),
+        provenance=Provenance(source="dilbaz curation", license="own"),
+    )
+    (en / GRAMMAR_FILE).write_text(
+        grammar.model_dump_json(exclude_none=True) + "\n", encoding="utf-8"
+    )
+    check = GrammarCheck(
+        id="a1.be_present",
+        stem=grammar.stem,
+        options=("am", "are", "is"),
+        round=1,
+        acceptable=("are",),
+        natural=True,
+        level_ok=True,
+    )
+    (root / "curation" / "en" / GRAMMAR_VALIDATION).write_text(
+        check.model_dump_json() + "\n", encoding="utf-8"
+    )
+    dictation = DictationItem(
+        version="A", order=1, level="A1", sentence="en.sent.my_right_hand_is_cold"
+    )
+    (en / DICTATION_FILE).write_text(dictation.model_dump_json() + "\n", encoding="utf-8")
     return root
 
 
@@ -104,6 +141,30 @@ def test_the_packs_are_built_with_the_app_tables(tmp_path: Path) -> None:
     assert kinds["grammar_point"] == 6
     assert kinds["xlex"] == 2
     assert kinds["lemma"] > 10
+    # The placement test: a grammar item with its choices, a sentence to
+    # write down with its clips, and the vocabulary sizes of the levels.
+    ((key, level, text, grammar, asked),) = rows(
+        target,
+        "SELECT key, level, text_l2, grammar, data FROM content_items"
+        " WHERE kind = 'placement_grammar'",
+    )
+    assert (key, level, text) == ("en.pgram.a1.be_present", "A1", "You ___ right.")
+    assert grammar == '["gp.be.present"]'
+    assert json.loads(asked) == {
+        "answer": "are",
+        "distractors": ["is", "am"],
+        "focus": "be: am / is / are",
+        "provenance": {"source": "dilbaz curation", "license": "own"},
+    }
+    ((key, level, text, targets, dictated),) = rows(
+        target,
+        "SELECT key, level, text_l2, targets, data FROM content_items"
+        " WHERE kind = 'placement_dictation'",
+    )
+    assert (key, level, text) == ("en.pdict.a.1", "A1", "My right hand is cold.")
+    assert targets == '["en.sent.my_right_hand_is_cold"]'
+    assert json.loads(dictated)["version"] == "A"
+    assert {clip["voice"] for clip in json.loads(dictated)["audio"]} == {"v1", "v3"}
     # A chunk ranks with the words of its level (docs/02 §4.3).
     ((level, rank),) = rows(target, "SELECT level, rank FROM content_items WHERE kind = 'chunk'")
     (least,) = rows(
@@ -120,6 +181,11 @@ def test_the_packs_are_built_with_the_app_tables(tmp_path: Path) -> None:
     assert ("watch", "watch") in set(rows(target, "SELECT form, lemma FROM content_forms"))
     meta = dict(rows(target, "SELECT key, value FROM pack_meta"))
     assert json.loads(meta["manifest"])["id"] == "en@1"
+    assert json.loads(meta["manifest"])["placement"]["vocab_levels"][1] == {
+        "level": "A1",
+        "from": 300,
+        "to": 1500,
+    }
     assert json.loads(meta["audio"]) == {"bucket": "pack-audio", "prefix": "en/1/"}
     assert "tests" in json.loads(meta["normalization"])
     entries = dict(rows(pair, "SELECT kind, count(*) FROM content_pair_entries GROUP BY kind"))
@@ -157,6 +223,38 @@ def test_unvalidated_sentences_and_missing_audio_stop_the_build(tmp_path: Path) 
         "missing_audio_file",
     }
     assert not (root / "build" / "en@1.sqlite").exists()
+
+
+def test_placement_items_without_their_check_or_sentence_stop_the_build(tmp_path: Path) -> None:
+    root = ready(tmp_path)
+    en = root / "packs" / "en"
+    grammar = en / GRAMMAR_FILE
+    # The item was changed after its check.
+    grammar.write_text(
+        grammar.read_text(encoding="utf-8").replace("You ___ right.", "You ___ right here."),
+        encoding="utf-8",
+    )
+    dictation = en / DICTATION_FILE
+    dictation.write_text(
+        dictation.read_text(encoding="utf-8").replace("my_right_hand_is_cold", "gone"),
+        encoding="utf-8",
+    )
+
+    report = run_build(root, l1="tr", l2="en")
+
+    assert report.packs == ()
+    assert [(issue.key, issue.kind, issue.detail) for issue in report.issues] == [
+        (
+            "en.pgram.a1.be_present",
+            "unvalidated_placement_item",
+            "unvalidated: no check of this exact text",
+        ),
+        (
+            "en.pdict.a.1",
+            "unknown_dictation_sentence",
+            "en.sent.gone is not a sentence of the pack",
+        ),
+    ]
 
 
 def test_a_manifest_for_another_audio_version_is_refused(tmp_path: Path) -> None:
@@ -201,6 +299,7 @@ def test_the_report_gathers_what_the_steps_recorded(tmp_path: Path) -> None:
     assert "| cümle | 1 | 3 | 0 | 4 |" in text
     assert "- 1. tur: 4 karar, 4 kabul" in text
     assert "- Ses raporu yok." in text
+    assert "- Gramer ve dikte raporu yok." in text
     assert "`reports/2026-09-29-qa.md`" in text
 
 
@@ -226,6 +325,14 @@ def test_the_report_writes_numbers_the_turkish_way(tmp_path: Path) -> None:
         "pseudo_rejected": {},
     }
     (work / "placement.en.report.json").write_text(json.dumps(placement), encoding="utf-8")
+    tests = {
+        "grammar_by_level": {"A1": 12, "A2": 11},
+        "issues": [{"id": "a2.any", "kind": "disputed", "detail": "the check accepts: any, some"}],
+        "hard_words": {},
+        "dictation": 15,
+        "dictation_eligible": {"A1": 1108, "A2": 35},
+    }
+    (work / "placement_tests.en.report.json").write_text(json.dumps(tests), encoding="utf-8")
 
     result = CliRunner().invoke(app, ["report", "--content-dir", str(root)])
 
@@ -235,6 +342,8 @@ def test_the_report_writes_numbers_the_turkish_way(tmp_path: Path) -> None:
     assert "- Ses başına klip: v1 1.169, v2 1.160, v3 654" in text
     assert "- Uygun kelime: 1. bant 796, 2. bant 918" in text
     assert "- Dışlanan: küratörlükle dışlanan 165, özel ad 40" in text
+    assert "- Gramer maddesi: A1 12, A2 11; bankaya alınmayan 1" in text
+    assert "- Dikte: 15 cümle; uygun cümle: A1 1.108, A2 35" in text
     assert "{" not in text.split("## Sesler")[1]
 
 

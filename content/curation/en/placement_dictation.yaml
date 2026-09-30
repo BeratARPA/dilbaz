@@ -1,0 +1,21 @@
+# Dictation set of the placement test (docs/06-assessment.md §2, part 3;
+# docs/10-content-pipeline.md §5.3).
+#
+# Each version plays five sentences of the pack, easier ones first. The
+# pack's sentences end at A2, so the set can place a learner at A0, A1 or
+# "A2 or above"; levels above A2 join when the pack has their sentences.
+#
+# seed: fixes which sentences are drawn.
+# levels: the level of each sentence of a version.
+# words: fewest and most words of a sentence of each level.
+# voice: the voice of the clips, at normal speed.
+# exclude: sentences left out by hand, with the reason as a comment.
+
+seed: 2026
+versions: [A, B, C]
+levels: [A1, A1, A2, A2, A2]
+words:
+  A1: [5, 7]
+  A2: [7, 9]
+voice: v1
+exclude: []

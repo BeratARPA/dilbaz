@@ -2,7 +2,7 @@
 
 `build/<id>.report.md` gathers what the steps recorded, for the person who
 approves the upload: the built files and their checksums, items by kind and
-level, the independent validation, audio, the placement bank, sources and
+level, the independent validation, audio, the placement test, sources and
 licenses, and the human checks. The report is in Turkish, like the QA
 reports it links to.
 """
@@ -23,6 +23,8 @@ from dilbaz_content.build_step import REPORT_FILE as BUILD_REPORT
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.placement_step import REPORT_FILE as PLACEMENT_REPORT
 from dilbaz_content.placement_step import PlacementReport
+from dilbaz_content.placement_tests import REPORT_FILE as TESTS_REPORT
+from dilbaz_content.placement_tests import PlacementTestsReport
 from dilbaz_content.sentences_step import VALIDATION_FILE
 
 LEVELS = ("A0", "A1", "A2", "B1", "B2", "C1", "C2")
@@ -146,6 +148,19 @@ def build_report(content_dir: Path, *, l1: str, l2: str) -> Path:
         lines.append(f"- Dışlanan: {_counts(placement.excluded, _EXCLUSIONS)}")
     else:
         lines.append("- X_Lex raporu yok.")
+
+    tests = _report(work / TESTS_REPORT.format(l2=l2), PlacementTestsReport)
+    lines += ["", "## Gramer bankası ve dikte (S8)", ""]
+    if tests:
+        banked = ", ".join(f"{level} {count}" for level, count in tests.grammar_by_level.items())
+        left_out = len({issue.id for issue in tests.issues})
+        eligible = ", ".join(
+            f"{level} {_count(count)}" for level, count in tests.dictation_eligible.items()
+        )
+        lines.append(f"- Gramer maddesi: {banked}; bankaya alınmayan {left_out}")
+        lines.append(f"- Dikte: {tests.dictation} cümle; uygun cümle: {eligible}")
+    else:
+        lines.append("- Gramer ve dikte raporu yok.")
 
     lines += ["", "## Kaynaklar ve lisanslar", ""]
     lines += [f"- {s.name}: {s.license}" for s in target.sources]
