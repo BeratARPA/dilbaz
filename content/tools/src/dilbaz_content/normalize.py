@@ -33,6 +33,8 @@ class NormalizationRules(BaseModel):
     version: int
     apostrophes: tuple[str, ...] = ()
     punctuation: str = ""
+    # Hesitation sounds that speech recognition keeps ("uh"); they are dropped.
+    fillers: tuple[str, ...] = ()
     words: dict[str, str] = Field(default_factory=dict)
     endings: dict[str, str] = Field(default_factory=dict)
     # Sign → (singular, plural) word: "$30" is "30 dollars".
@@ -41,6 +43,9 @@ class NormalizationRules(BaseModel):
     # Whole phrases after the words are expanded ("he's got" → "he is got" → "he has got").
     phrases: dict[str, str] = Field(default_factory=dict)
     numbers: NumberWords | None = None
+    # A word said twice in a row counts once ("the the"), as speech recognition
+    # writes a hesitation; off where the language repeats words on purpose.
+    collapse_repeats: bool = False
     tests: tuple[tuple[str, str], ...] = ()
 
 
@@ -61,9 +66,13 @@ class Normalizer:
     def __call__(self, text: str) -> str:
         """The normalized form of [text]."""
         cleaned = text.lower().translate(self._apostrophes).translate(self._punctuation)
-        expanded = " ".join(self._expand(word) for word in cleaned.split())
+        kept = (word for word in cleaned.split() if word not in self.rules.fillers)
+        expanded = " ".join(self._expand(word) for word in kept)
         spelled = " ".join(self._spell(word) for word in expanded.split())
-        return " ".join(self._number(word) for word in self._phrase(spelled).split())
+        numbered = " ".join(self._number(word) for word in self._phrase(spelled).split()).split()
+        if self.rules.collapse_repeats:
+            numbered = [w for i, w in enumerate(numbered) if i == 0 or numbered[i - 1] != w]
+        return " ".join(numbered)
 
     def _expand(self, word: str) -> str:
         sign, amount = word[:1], word[1:]

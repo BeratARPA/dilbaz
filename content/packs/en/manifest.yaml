@@ -7,7 +7,7 @@ id: en@1
 kind: target
 l2: en
 version: 1
-min_engine_version: 1
+min_engine_version: 2
 level_scheme: CEFR
 script: {direction: ltr, word_separator: space}
 tokenizer: {build_time: "spacy:en_core_web_md", runtime: forms_table}

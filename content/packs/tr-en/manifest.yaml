@@ -8,7 +8,7 @@ kind: pair
 l2: en
 l1: tr
 version: 1
-min_engine_version: 1
+min_engine_version: 2
 level_scheme: CEFR
 sources:
   - name: Dilbaz content curation

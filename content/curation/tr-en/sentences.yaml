@@ -326,7 +326,7 @@ en.sent.he_s_old_enough_to_go_to_school: {turkish: "Okula gidecek kadar büyük.
 en.sent.i_have_a_plan: {variants: ["I've got a plan."]}
 en.sent.you_re_free_to_leave: {alternatives: ["You're free to go."]}
 en.sent.plants_die_without_water: {turkish: "Bitkiler susuz ölür."}
-en.sent.now_s_a_bad_time: {turkish: "Şu an kötü bir zaman.", variants: ["Now is a bad time.", "It's a bad time now.", "This is a bad time.", "It's a bad time right now.", "Right now is a bad time."]}
+en.sent.now_s_a_bad_time: {turkish: "Şu an kötü bir zaman.", variants: ["It's a bad time now.", "This is a bad time.", "It's a bad time right now.", "Right now is a bad time."]}
 en.sent.i_swim_once_a_week: {turkish: "Haftada bir kez yüzerim.", variants: ["I go swimming once a week."]}
 en.sent.add_it_to_the_list: {variants: ["Add this to the list.", "Add that to the list."]}
 en.sent.what_time_does_it_close: {variants: ["When does it close?"]}
@@ -377,7 +377,7 @@ en.sent.do_you_want_me_to_check_again: {variants: ["Should I check again?", "Do 
 en.sent.can_i_have_the_check_please: {variants: ["Could I have the check, please?", "May I have the check, please?", "The check, please."], alternatives: ["Can I have the bill, please?", "Could I have the bill, please?"]}
 en.sent.i_do_not_understand_you_very_well: {turkish: "Seni pek iyi anlamıyorum."}
 en.sent.i_have_to_create_a_new_website: {turkish: "Yeni bir web sitesi oluşturmam gerekiyor.", variants: ["I need to create a new website.", "I have to create a new web site.", "I need to create a new web site."]}
-en.sent.my_name_s_on_the_list: {turkish: "Adım listede.", variants: ["My name is on the list."]}
+en.sent.my_name_s_on_the_list: {turkish: "Adım listede."}
 en.sent.the_room_didn_t_have_a_single_window: {variants: ["There wasn't a single window in the room.", "There wasn't even a single window in the room.", "The room didn't even have a single window."]}
 en.sent.do_you_speak_english: {variants: ["Can you speak English?"]}
 en.sent.are_you_a_new_student: {turkish: "Yeni öğrenci misin?"}
@@ -490,7 +490,7 @@ en.sent.my_mother_is_a_teacher: {turkish: "Annem öğretmen."}
 en.sent.do_you_want_to_sit_in_the_front: {variants: ["Would you like to sit in the front?", "Do you want to sit at the front?", "Would you like to sit at the front?", "Do you want to sit in front?"]}
 en.sent.it_s_too_heavy_to_carry: {variants: ["This is too heavy to carry."]}
 en.sent.i_think_you_dropped_this: {variants: ["I think you've dropped this."]}
-en.sent.my_father_s_in_the_garden: {variants: ["My father is in the garden."]}
+en.sent.my_father_s_in_the_garden: {}
 en.sent.do_you_have_any_interest_in_sports: {variants: ["Have you got any interest in sports?", "Do you have an interest in sports?", "Do you have any interest in sport?", "Have you got an interest in sports?", "Are you interested in sports?"]}
 en.sent.don_t_forget_the_party_tonight: {variants: ["Don't forget about the party tonight.", "Don't forget tonight's party."]}
 en.sent.i_wish_you_a_happy_birthday: {}
@@ -550,7 +550,7 @@ en.sent.you_have_to_make_the_right_choice: {variants: ["You must make the right 
 en.sent.i_m_going_to_apply_for_that_job: {variants: ["I will apply for that job.", "I'm going to apply for the job.", "I will apply for the job."]}
 en.sent.pull_the_door_don_t_push_it: {turkish: "Kapıyı çek, itme.", variants: ["Pull the door, don't push."]}
 en.sent.i_m_certain_that_you_can_do_that: {variants: ["I'm certain you can do that.", "I'm certain that you can do it.", "I'm certain you can do it.", "I'm certain you can do this.", "I'm certain that you can do this."], alternatives: ["I'm sure that you can do that.", "I'm sure you can do that."]}
-en.sent.i_wonder_when_the_party_s_going_to_start: {variants: ["I wonder when the party is going to start.", "I wonder when the party will start."]}
+en.sent.i_wonder_when_the_party_s_going_to_start: {variants: ["I wonder when the party will start."]}
 en.sent.i_ve_got_stuff_i_want_to_do: {context: "günlük dil", variants: ["I have stuff I want to do.", "I've got stuff that I want to do.", "There's stuff I want to do.", "I've got some stuff I want to do.", "There's some stuff I want to do."], alternatives: ["I've got things I want to do.", "I have things I want to do.", "There are things I want to do."]}
 en.sent.thank_you_for_your_time_and_effort: {variants: ["Thanks for your time and effort."]}
 en.sent.what_exactly_are_you_going_to_do: {variants: ["What exactly will you do?", "What are you going to do exactly?", "What will you do exactly?", "Exactly what are you going to do?"]}

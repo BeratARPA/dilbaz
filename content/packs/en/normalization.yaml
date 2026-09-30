@@ -5,27 +5,40 @@
 #   1. lowercase
 #   2. apostrophes: every character in `apostrophes` becomes '
 #   3. every character in `punctuation` becomes a space
-#   4. split on spaces; per word, the first rule that applies:
+#   4. split on spaces; a word in `fillers` is dropped ("uh"); per remaining
+#      word, the first rule that applies:
 #      a. `currency`: a sign before digits becomes the digits and the
 #         currency's word ("$30" → "30 dollars", "$1" → "1 dollar")
 #      b. `words`: whole-word replacements (contractions such as "can't")
 #      c. `endings`: a word ending in one of these keys loses it and gets the
-#         value ("didn't" → "did not")
+#         value ("didn't" → "did not", "bedroom's" → "bedroom is")
 #   5. per word again: `spellings` (British → American, variants); then any
-#      remaining apostrophe is removed ("tom's" → "toms") and a hyphen becomes
-#      a space ("twenty-one" → "twenty one")
+#      remaining apostrophe is removed ("o'clock" → "oclock") and a hyphen
+#      becomes a space ("twenty-one" → "twenty one")
 #   6. `phrases`: whole-word phrases are replaced, left to right in the file's
 #      order; they fix what the word rules cannot know ("he's got" → "he is
 #      got" → "he has got")
 #   7. a word of digits (0-999) is written in words ("35" → "thirty five")
-#   8. words are joined by single spaces
+#   8. with `collapse_repeats`, a word that repeats the one before it is
+#      dropped ("the the" → "the"): speech recognition writes hesitations so
+#   9. words are joined by single spaces
 # `tests` hold examples both implementations must pass.
+#
+# "'s" is read as "is" everywhere, the possessive too: both sides of a
+# comparison read it the same way ("Tom's car" → "tom is car"), so only an
+# answer that says "Tom is car" would match "Tom's car".
 
 version: 1
 
 apostrophes: ["’", "‘", "`", "´", "ʼ"]
 
 punctuation: ".,!?;:\"“”()[]{}…/—–"
+
+# Hesitations as Deepgram writes them with filler_words (docs/08 §5.0).
+# "uh-huh" and "mm-mm" are answers (yes, no) and stay.
+fillers: [uh, um, er, erm, ah, hmm, mm]
+
+collapse_repeats: true
 
 words:
   "can't": "can not"
@@ -59,6 +72,7 @@ endings:
   "'ll": " will"
   "'d": " would"
   "'m": " am"
+  "'s": " is"
 
 currency:
   "$": [dollar, dollars]
@@ -140,7 +154,12 @@ tests:
   - ["We'll see.", "we will see"]
   - ["I'd like a coffee.", "i would like a coffee"]
   - ["They've got 305 cats.", "they have got three hundred five cats"]
-  - ["That is Tom's car.", "that is toms car"]
+  - ["That is Tom's car.", "that is tom is car"]
+  - ["My bedroom's too small.", "my bedroom is too small"]
+  - ["It's five o'clock.", "it is five oclock"]
+  - ["Uh, I'm fine, um, thanks.", "i am fine thanks"]
+  - ["I I have a a car.", "i have a car"]
+  - ["Thank you so so much.", "thank you so much"]
   - ["OK, let's go.", "okay let us go"]
   - ["It’s  a   nice day…", "it is a nice day"]
   - ["Send me an e-mail.", "send me an email"]

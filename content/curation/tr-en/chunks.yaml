@@ -21,7 +21,7 @@ en.chunk.how_s_it_going: {meaning: "Nasıl gidiyor?", note: "Samimi; arkadaşlar
 en.chunk.nice_to_meet_you: {meaning: "Tanıştığımıza memnun oldum.", variants: ["It's nice to meet you."], alternatives: ["Pleased to meet you.", "Good to meet you.", "It's good to meet you.", "It's a pleasure to meet you.", "Great to meet you."]}
 en.chunk.see_you_later: {meaning: "Sonra görüşürüz.", variants: ["See you."], alternatives: ["See you soon."]}
 en.chunk.see_you_tomorrow: {meaning: "Yarın görüşürüz.", variants: ["I'll see you tomorrow."]}
-en.chunk.bye: {meaning: "Hoşça kal.", variants: ["Goodbye.", "Bye-bye."]}
+en.chunk.bye: {meaning: "Hoşça kal.", variants: ["Goodbye."]}
 en.chunk.good_night: {meaning: "İyi geceler.", note: "Yalnızca ayrılırken ya da yatarken; akşam selamı good evening.", variants: ["Night."]}
 en.chunk.have_a_nice_day: {meaning: "İyi günler.", context: "ayrılırken", alternatives: ["Have a good day.", "Have a great day.", "Have a lovely day.", "Enjoy your day."]}
 en.chunk.take_care: {meaning: "Kendine iyi bak.", variants: ["Take care of yourself."], alternatives: ["Look after yourself."]}
