@@ -203,6 +203,18 @@ void main() {
           expect(lists.withoutTarget, [say(withoutWord)]);
         });
 
+        test('the target span is the target words, else all of it', () {
+          final card = senses.first;
+          expect(
+            checker.targetSpan(card.key),
+            [for (final i in card.target) card.words[i]].join(Normalizer.space),
+          );
+          expect(
+            checker.targetSpan(card.key.copyWith(targetLemmas: {})),
+            card.key.reference,
+          );
+        });
+
         test('a grammar card keeps the answers that use its structure', () {
           final card = senses.first;
           final other = unrelated(card, 3);

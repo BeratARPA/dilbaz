@@ -9,15 +9,19 @@ part 'card_review.freezed.dart';
 /// automatic rating (docs/03-activities.md §0.2–0.3).
 ///
 /// Immutable: every step returns the next state. A missed answer uses up
-/// one of [maxAttempts] attempts and opens the next hint (H1, H2, …). After
-/// a try the learner may also open the next hint or the answer (H4) on
-/// request (I-01, I-02). Opening H4 ends the review.
+/// one of [maxAttempts] attempts and opens the next hint (H1, H2, …) up to
+/// [autoHintLevel]. After a try the learner may also open the next hint or
+/// the answer (H4) on request (I-01, I-02). Opening H4 ends the review.
 @freezed
 abstract class CardReview with _$CardReview {
   /// A review before its first answer.
   const factory({
     /// Counted attempts allowed; the review ends at this many misses.
     @Default(CardReview.defaultMaxAttempts) int maxAttempts,
+
+    /// Highest hint a miss opens by itself; higher ones open only on
+    /// request (the level's scaffolds, docs/02 §3).
+    @Default(CardReview.answerLevel) int autoHintLevel,
 
     /// Missed answers so far; each used up an attempt.
     @Default(0) int misses,
@@ -74,9 +78,10 @@ abstract class CardReview with _$CardReview {
             : next.copyWith(reprompted: true);
       case AnswerEffect.missed:
         final used = next.copyWith(misses: misses + 1);
-        return used.misses < maxAttempts
-            ? used._show(hintLevel + 1)
-            : used.copyWith(outcome: const ReviewOutcome.notRecalled());
+        if (used.misses >= maxAttempts) {
+          return used.copyWith(outcome: const ReviewOutcome.notRecalled());
+        }
+        return hintLevel < autoHintLevel ? used._show(hintLevel + 1) : used;
     }
   }
 

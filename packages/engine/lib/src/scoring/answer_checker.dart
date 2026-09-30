@@ -1,4 +1,5 @@
 import 'package:dilbaz_engine/src/language/language_services.dart';
+import 'package:dilbaz_engine/src/language/normalizer.dart';
 import 'package:dilbaz_engine/src/language/word_alignment.dart';
 import 'package:dilbaz_engine/src/language/word_diff.dart';
 import 'package:dilbaz_engine/src/scoring/answer_check.dart';
@@ -75,6 +76,18 @@ final class AnswerChecker {
       }
     }
     return _Judgement(nearest, nearestText, key, language).check();
+  }
+
+  /// The words of the reference that carry the card's target, normalized:
+  /// what the LLM is told the card practises (docs/07 §4.1). The whole
+  /// reference when none of its words is a form of a target lemma.
+  String targetSpan(AnswerKey key) {
+    final lemmas = key.targetLemmas;
+    final found = [
+      for (final word in language.tokenize(key.reference))
+        if (language.lemmasOf(word).any(lemmas.contains)) word,
+    ];
+    return found.isEmpty ? key.reference : found.join(Normalizer.space);
   }
 
   /// The key's listed answers split by this card's target: those that say

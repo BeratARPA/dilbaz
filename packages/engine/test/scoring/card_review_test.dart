@@ -218,4 +218,39 @@ void main() {
     expect(after.reps, 1);
     expect(CardMemory.fromJson(after.toJson()), after);
   });
+
+  group('the level decides how much of the ladder opens (I-09)', () {
+    test('a miss opens hints only up to the automatic level', () {
+      final review = const CardReview(autoHintLevel: 1).say(wrong);
+      expect(review.hintLevel, 1);
+      final again = review.say(wrong);
+      expect(again.hintLevel, 1, reason: 'H2 only on request');
+      expect(again.misses, 2);
+      expect(again.nextHint().hintLevel, 2);
+      expect(again.say(wrong).outcome, const ReviewOutcome.notRecalled());
+    });
+
+    test('scaffolds close as the level rises (docs/02 §3)', () {
+      final a0 = Scaffolds.forLevel(CefrLevel.a0);
+      expect(a0.explainInL1, isTrue);
+      expect(a0.slowAudio, isTrue);
+      // The answer opens by itself after two misses.
+      final twice = a0.review().say(wrong).say(wrong);
+      expect(twice.outcome, const ReviewOutcome.notRecalled());
+
+      final a2 = Scaffolds.forLevel(CefrLevel.a2);
+      expect((a2.explainInL1, a2.slowAudio), (true, false));
+      expect(a2.review(), const CardReview());
+
+      expect(Scaffolds.forLevel(CefrLevel.b1).explainInL1, isFalse);
+      expect(
+        [
+          for (final level in CefrLevel.values)
+            Scaffolds.forLevel(level).autoHintLevel,
+        ],
+        [4, 4, 4, 3, 2, 1, 1],
+      );
+      expect(Scaffolds.forLevel(CefrLevel.a1).maxAttempts, 3);
+    });
+  });
 }
