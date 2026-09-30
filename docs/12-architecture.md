@@ -133,7 +133,8 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - `scoring/`: otomatik puan (`03` §0.2–0.3). `Evaluation` (verdict + `target_ok`) → `AnswerEffect` → `CardReview` (deneme, ipucu, yeniden sorma) → `ReviewOutcome.rating`. Easy eşiği için `LatencyProfile` kullanılır.
   - `scoring/`: deterministik değerlendirme (`03` §0.5). `AnswerKey` (referans, varyantlar, alternatifler, hedef lemmalar) → `AnswerChecker` → `Evaluation` ve şablonlu `HintLadder`.
   - `language/`: `PackLanguage` (`LanguageServices`), `Normalizer` + `NormalizationRules` (`pack_meta.normalization`), `WordAlignment` (kelime hizalama; dikte de bunu kullanacak).
-  - `model/`: öğrenci modeli (`04`). `CardRecord` + `ReviewRecord` → `ItemEvidence` (L2 kanıt düzeyleri), `XlexResult` (X_Lex puanı, bant olasılıkları), `LemmaKnowledge` (kişisel kapsama, I-06).
+  - `model/`: öğrenci modeli (`04`). `CardRecord` + `ReviewRecord` → `ItemEvidence` (L2 kanıt düzeyleri), `XlexResult` (X_Lex puanı, bant olasılıkları), `LemmaKnowledge` (kişisel kapsama, I-06), `LearnerSnapshot`.
+  - `planner/`: `Planner.plan` → `TodayPlan` (`05` §3): bütçe, minimum gün, tekrar bloğu, yeni öğe sınırı, seçenekler. `PlannerConfig` tüm eşikleri tutar.
 - **Dart paketinde optimizasyon ve yeniden zamanlama yok:**
   - Kişisel parametreler `tools/fsrs/optimize.py` ile hesaplanır (py-fsrs 6.x, `fsrs[optimizer]`). py-fsrs, farklı günlere yayılmış 512'den az tekrarda varsayılan parametreleri döndürür.
   - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır (`SrsScheduler.replay`).

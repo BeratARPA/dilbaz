@@ -25,6 +25,19 @@ class TodayPlan {
 }
 ```
 
+**Motordaki v1 (F1-09):** `Planner.plan(learner, cards, now, seed, newCandidates, optionCandidates, links, available, partnerAvailable)`.
+
+- Girdiler düz listelerdir:
+  - `cards`: tüm aktif kartlar. Vadesi gelenleri ve önümüzdeki 7 günün tekrar yükünü planlayıcı kendisi hesaplar.
+  - `newCandidates`: müfredat sırasındaki öğe anahtarları (F1-10).
+  - `optionCandidates`: uygunluğu (§4) çağıran tarafından belirlenmiş etkinlik adayları.
+  - `links`: karşıtlık çiftleri için `contrasts_with` bağları.
+- `TodayPlan` alanları: `budget`, `reviews`, `newItems`, `newCardMode`, `options`, `estimate`, `enough` ("Bugünlük yeter"), `minimumDay`, `reviewCap`, `projectedDailyReview`, `backlog`.
+  - Önerilen seçenek `options` listesinin ilkidir; ayrı bir `recommended` alanı yoktur.
+  - `estimate` = tekrarlar + yeni öğeler + önerilen seçenek.
+  - `newCardMode`: yeni öğenin ilk kartı `speak`, sessiz modda `type` (I-05).
+- Sonraya kalanlar: davetler (satır 22), etkinlik uygunluğu (§4), geçmişten süre ve `c` tahmini (§5), seviye aralığı ve kapsama kontrolleri (§8 madde 3–5, 8, 10).
+
 ## 2. Haftalık kol hedefleri
 
 Nation (2007) dört kolun kabaca eşit olmasını önerir. Uçlarda şu gerekçelerle sapıyoruz:
@@ -56,7 +69,7 @@ Bu değerler `PlannerConfig` içindedir ve deneyle ayarlanır.
    ── Tekrar bloğu ──
 4  tekrarTavanı ← minimumGün ? bütçe : min(cfg.reviewCap(10 dk), 0.4 · bütçe)
 5  vadesiGelen ← due(now), öncelik = (1 − R(now)) · modAğırlığı + odakBonusu
-6  sırala(öncelik azalan); 0,1'lik R dilimleri içinde seed ile karıştır           (P12)
+6  sırala(öncelik azalan); 0,1'lik öncelik dilimleri içinde seed ile karıştır     (P12)
 7  contrasts_with çiftlerinin ikisi de vadeliyse aynı bloğa alınıp araya en az 1 kart girer
 8  tekrarlar ← tahmini süre ≤ tekrarTavanı olacak kadar kart
 9  if minimumGün → yalnızca tekrarlar ile dön
@@ -83,6 +96,17 @@ Bu değerler `PlannerConfig` içindedir ve deneyle ayarlanır.
 22 davetler ← aylık test penceresindeyse "Aylık kayıt zamanı"; haftanın ilk oturumuysa öğrenme notu
 23 dön TodayPlan(...)
 ```
+
+**Satır notları (v1):**
+
+- **Satır 5:** Hiç tekrar edilmemiş kartın R değeri 0 sayılır; öncelik sırasında en öne geçer.
+- **Satır 6:** Dilim önceliğe göredir (R'ye değil), çünkü mod ağırlığı ve odak bonusu da önceliğe girer. Dilim içi sıra seed'den çekilir.
+- **Satır 7:** Blokta çiftin biri varsa diğeri de alınır. Blok doluysa, bloktaki çifti olmayan son kartın yerine girer. Üç ve daha fazla kartlı blokta çiftin arasına en az bir kart konur.
+- **Satır 8:** Sığmayan kart atlanır, sıradaki daha kısa kart denenir.
+- **Satır 11:** `projectedDailyReview` = 7 gün içinde vadesi gelecek kartların (gecikmişler dahil) toplam süresi / 7.
+- **Satır 13:** Birikim = vadesi gelen kartların toplam süresi bugünkü tekrar tavanından fazla.
+- **Satır 14:** Yeni öğe sayısı kalan bütçeyle de sınırlıdır. Bir yeni öğenin süresi = tanıtım (30 sn) + ilk kart. Kartı olan öğe aday sayılmaz.
+- **Satır 20:** Eşit puanda sıra etkinlik adına göredir. İki seçenek bulunamıyorsa hiç seçenek sunulmaz.
 
 **Mod ağırlıkları** (`cfg.modeWeight`):
 
@@ -151,7 +175,7 @@ Kişinin geçmişindeki medyan süreler kullanılır. Geçmiş yoksa varsayılan
   - Kabul edilirse iki uygulamada da "Birlikte" seçeneği önerilen olur.
 - **Aylık test daveti** ayın 1–7'si arasında görünür. Kabul edilmezse hafta sonuna kadar ara sıra tekrar görünür, sonra bir sonraki aya kalır. Hatırlatma dili davettir, uyarı değildir.
 - **İskele profili** (seviye + kullanıcı ayarı) her etkinliğe parametre olarak geçer (I-09).
-- **Determinizm:** Aynı girdi ve aynı seed aynı planı üretir (test edilebilirlik).
+- **Determinizm:** Aynı girdi ve aynı seed aynı planı üretir (test edilebilirlik). Girdi listelerinin sırası sonucu değiştirmez. Karıştırma `dart:math` yerine motorun kendi küçük üretecini (`SeededRandom`, xorshift32) kullanır; böylece telefon, masaüstü ve web aynı planı üretir.
 
 ## 7. Yapılandırma (`PlannerConfig`)
 
