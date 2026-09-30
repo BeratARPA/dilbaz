@@ -80,6 +80,9 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      # The engine's generated code is not in git; the app compiles against it.
+      - run: dart pub get && dart run build_runner build
+        working-directory: packages/engine
       - run: flutter pub get
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: dart run build_runner build
@@ -104,6 +107,8 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - run: dart pub get && dart run build_runner build
+        working-directory: packages/engine
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build apk --debug
