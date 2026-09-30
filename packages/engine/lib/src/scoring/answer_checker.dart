@@ -24,6 +24,12 @@ final class AnswerChecker {
   /// shorter answers allow one.
   static const longAnswer = 6;
 
+  /// An answer that misses the target by far, but keeps at least one in
+  /// this many words of the correct answer and is more than a fragment of
+  /// it, may say the same thing another way: undecided rather than off
+  /// target.
+  static const paraphraseKeepsOneIn = 3;
+
   /// The target language's services.
   final LanguageServices language;
 
@@ -164,10 +170,10 @@ final class _Judgement {
                 Verdict.wrong,
                 onTarget.firstWhere((d) => d.kind == WordDiffKind.missing),
               )
-            : _offTarget();
+            : _farMiss();
       case _Target.replaced:
         // Small: perhaps a synonym, which only the LLM can tell.
-        return small ? _undecided(targetOk: false) : _offTarget();
+        return small ? _undecided(targetOk: false) : _farMiss();
     }
   }
 
@@ -200,6 +206,26 @@ final class _Judgement {
       llmPending: true,
     ),
   );
+
+  /// A big miss of the target: off target, unless the answer keeps enough
+  /// of the correct answer and changes more than leaving words out, so that
+  /// it may say the same thing without the target ("Remember to buy
+  /// bread!" for "Don't forget to buy bread!"). A fragment only leaves out.
+  AnswerCheck _farMiss() {
+    final replaced = {
+      for (final diff in alignment.diffs)
+        if (diff.kind == WordDiffKind.other) ...diff.expected,
+    };
+    final kept = alignment.aligned.keys.where((e) => !replaced.contains(e));
+    final fragment = alignment.diffs.every(
+      (d) => d.kind == WordDiffKind.missing,
+    );
+    return !fragment &&
+            kept.length * AnswerChecker.paraphraseKeepsOneIn >=
+                alignment.expected.length
+        ? _undecided(targetOk: false)
+        : _offTarget();
+  }
 
   AnswerCheck _offTarget() => AnswerCheck(
     evaluation: const Evaluation(verdict: Verdict.offTarget, targetOk: false),

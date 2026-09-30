@@ -4,6 +4,7 @@ import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/pack_importer.dart';
 import 'package:dilbaz_app/data/repositories/pack_remote.dart';
+import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/pack_fixture.dart';
@@ -103,7 +104,9 @@ void main() {
     });
 
     test('refuses a pack that needs a newer engine', () async {
-      final pack = await targetPack(manifest: {'min_engine_version': 2});
+      final pack = await targetPack(
+        manifest: {'min_engine_version': engineVersion + 1},
+      );
       expect(await failureOf(pack), PackFailure.unsupported);
       expect(await db.contentDao.packs(), isEmpty);
     });

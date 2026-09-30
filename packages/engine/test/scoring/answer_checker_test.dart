@@ -364,6 +364,34 @@ void main() {
           }
         });
 
+        test(
+          'without the target but mostly the same, it may be a paraphrase',
+          () {
+            var checked = 0;
+            for (final card in senses.where((c) => c.words.length >= 4)) {
+              final t = card.target.single;
+              // Two words for the target: too big a change to be small.
+              final answer = [
+                for (final (i, word) in card.words.indexed)
+                  if (i == t) ...unrelated(card, 2) else word,
+              ];
+              expect(
+                checker.checkWithoutLlm(say(answer), card.key),
+                const AnswerCheck(
+                  evaluation: Evaluation(
+                    verdict: Verdict.uncertain,
+                    targetOk: false,
+                    llmPending: true,
+                  ),
+                ),
+                reason: card.sentence.key,
+              );
+              checked++;
+            }
+            expect(checked, greaterThan(5));
+          },
+        );
+
         test('no target and little in common is off target', () {
           for (final card in senses) {
             final answer = unrelated(card, card.words.length);

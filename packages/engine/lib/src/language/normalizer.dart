@@ -11,7 +11,8 @@ final class Normalizer {
   /// A normalizer for [rules].
   new(this.rules, {this.separator = space})
     : _apostrophes = rules.apostrophes.toSet(),
-      _punctuation = rules.punctuation.runes.toSet() {
+      _punctuation = rules.punctuation.runes.toSet(),
+      _fillers = rules.fillers.toSet() {
     _check(rules, separator);
   }
 
@@ -29,6 +30,7 @@ final class Normalizer {
 
   final Set<String> _apostrophes;
   final Set<int> _punctuation;
+  final Set<String> _fillers;
 
   /// The normalized form of [text].
   String normalize(String text) {
@@ -43,10 +45,18 @@ final class Normalizer {
         cleaned.write(char);
       }
     }
-    final expanded = _join(words(cleaned.toString()).map(_expand));
+    final said = words(cleaned.toString()).where((w) => !_fillers.contains(w));
+    final expanded = _join(said.map(_expand));
     final spelled = _join(words(expanded).map(_spell));
-    return _join(words(_phrase(spelled)).map(_number));
+    final numbered = words(_join(words(_phrase(spelled)).map(_number)));
+    return _join(rules.collapseRepeats ? _once(numbered) : numbered);
   }
+
+  /// [words] without a word that repeats the one before it.
+  static List<String> _once(List<String> words) => [
+    for (final (i, word) in words.indexed)
+      if (i == 0 || words[i - 1] != word) word,
+  ];
 
   /// Words of [text], split at the separator and at whitespace.
   List<String> words(String text) {

@@ -22,6 +22,10 @@ abstract class NormalizationRules with _$NormalizationRules {
     /// Characters that separate words like a space.
     @Default('') String punctuation,
 
+    /// Hesitation sounds that speech recognition keeps ("uh"); they are
+    /// dropped.
+    @Default(<String>[]) List<String> fillers,
+
     /// Whole-word replacements.
     @Default(<String, String>{}) Map<String, String> words,
 
@@ -39,6 +43,11 @@ abstract class NormalizationRules with _$NormalizationRules {
 
     /// Words for numbers; digits stay digits without them.
     NumberWords? numbers,
+
+    /// A word said twice in a row counts once ("the the"), the way speech
+    /// recognition writes a hesitation. Off where the language repeats
+    /// words on purpose.
+    @Default(false) bool collapseRepeats,
 
     /// Examples every implementation must pass: `[text, normalized]`.
     @Default(<List<String>>[]) List<List<String>> tests,

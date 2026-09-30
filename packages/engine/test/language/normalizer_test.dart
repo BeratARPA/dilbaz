@@ -118,6 +118,27 @@ void main() {
         expect(normalize(' \t!'), '');
       });
 
+      test('drops fillers and, when asked, words said twice', () {
+        final hesitant = Normalizer(
+          rules.copyWith(fillers: [w[50], w[51]], collapseRepeats: true),
+          separator: separator,
+        );
+        expect(
+          hesitant.normalize(
+            '${upper(w[50])}, ${w[0]} ${w[0]} ${w[51]} ${w[1]}',
+          ),
+          join([w[0], w[1]]),
+        );
+        // A word may repeat after another one, and without the rule.
+        expect(
+          hesitant.normalize('${w[0]} ${w[1]} ${w[0]}'),
+          join([w[0], w[1], w[0]]),
+        );
+        expect(normalize('${w[0]} ${w[0]}'), join([w[0], w[0]]));
+        // Repeats are counted after numbers are written out: 7 7 → w[27].
+        expect(hesitant.normalize('7 7'), w[27]);
+      });
+
       test('reads its rules back from JSON in order', () {
         final back = NormalizationRules.fromJson(rules.toJson());
         expect(back, rules);
