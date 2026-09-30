@@ -2,6 +2,7 @@ import 'package:dilbaz_app/app/app.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/content/application/content_status.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_auth_repository.dart';
 import 'fake_profile_repository.dart';
+import 'fake_speech.dart';
 import 'placement_fixture.dart';
 
 /// Content as the app has it once the course packs are imported.
@@ -37,6 +39,8 @@ List<Override> appOverrides({
   FakeBankRepository? placements,
   FakePackAudio? audio,
   FakeClipPlayer? player,
+  FakeAnswerRecorder? recorder,
+  FakeSpeechRepository? speech,
 }) => [
   authRepositoryProvider.overrideWithValue(auth),
   profileRepositoryProvider.overrideWithValue(
@@ -55,6 +59,8 @@ List<Override> appOverrides({
   ),
   packAudioProvider.overrideWithValue(audio ?? FakePackAudio()),
   clipPlayerProvider.overrideWithValue(player ?? FakeClipPlayer()),
+  answerRecorderProvider.overrideWithValue(recorder ?? FakeAnswerRecorder()),
+  speechRepositoryProvider.overrideWithValue(speech ?? FakeSpeechRepository()),
 ];
 
 extension PumpApp on WidgetTester {
@@ -69,6 +75,8 @@ extension PumpApp on WidgetTester {
     FakeBankRepository? placements,
     FakePackAudio? audio,
     FakeClipPlayer? player,
+    FakeAnswerRecorder? recorder,
+    FakeSpeechRepository? speech,
   }) async {
     final fake = auth ?? FakeAuthRepository(signedIn: signedIn);
     await pumpWidget(
@@ -82,6 +90,8 @@ extension PumpApp on WidgetTester {
           placements: placements,
           audio: audio,
           player: player,
+          recorder: recorder,
+          speech: speech,
         ),
         child: const DilbazApp(),
       ),

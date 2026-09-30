@@ -14,6 +14,10 @@ abstract interface class ProfileRepository {
   /// knows.
   Stream<bool> watchOnboarded(String userId);
 
+  /// Whether [userId] consented to recording audio (docs/14 §4); false
+  /// before the welcome flow.
+  Stream<bool> watchAudioConsent(String userId);
+
   /// Brings a profile made on another device here. True if there was one.
   Future<Result<bool, ProfileFailure>> restore(String userId);
 

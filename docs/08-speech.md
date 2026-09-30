@@ -96,7 +96,7 @@ interface TextToSpeech {
 }
 ```
 
-Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts`, Türkçe sunucu yedeği için `groq_stt.ts` ya da `gemini_stt.ts`, Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
+Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts` (F1-14), Türkçe sunucu yedeği için `groq_stt.ts` ya da `gemini_stt.ts` (F1-15, Groq ve Gemini adaptörleriyle birlikte), Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
 
 ## 4. Kayıt formatları (istemci)
 
@@ -119,6 +119,14 @@ Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts`, T�
   | 4/3/2 | 4 dk |
 
 ## 5. İşleme hattı
+
+### 5.0 `speech/transcribe` (F1-14)
+
+- **İstek:** `POST /functions/v1/speech/transcribe?lang=en`, gövde ses baytları, `Content-Type` ses türü (`audio/mp4`, `audio/aac`, `audio/wav`, `audio/webm`, `audio/ogg`), en çok 2 MB. Oturum JWT'si fonksiyonun içinde doğrulanır.
+- **Cevap:** `{text, words: [{w, startMs, endMs, conf}], provider, model, durationMs}`. Deepgram'a `model=nova-3&language=en&filler_words=true&smart_format=false&punctuate=false&mip_opt_out=true` ile gider; dolgu sözcükleri ve öğrencinin kendi biçimleri kalır.
+- **Hata kodları** (loga da yalnızca kod yazılır): `unsupported_language` (Türkçe cihazda tanınır), `stt_unavailable` (anahtar yok ya da reddedildi), `stt_quota` (kredi bitti), `stt_busy`, `stt_failed` (sağlayıcıya ulaşılamadı), `bad_audio`, `empty_audio`, `unsupported_audio`, `audio_too_large`. Uygulama bunları sakin metinlere çevirir; söyle kartı gerekirse yazılı karta geçer (§5.3).
+- **Kullanım:** Her başarılı tanıma `speech_usage`'a yazılır (servis rolü; saniye, Deepgram kredisinden düşen tutar). Satır yazılamazsa transkript yine döner, log `usage_not_recorded` der.
+- **Uygulama:** `AnswerRecorder` (kayıt, `record` 7; kart sesi geçici dosyadan okunur ve hemen silinir), `SpeechRepository` (fonksiyon çağrısı). Ayarlar > **Mikrofon denemesi**: bir cümle kaydedilir, duyulan metin gösterilir, hiçbir şey saklanmaz; ses kaydı onayı yoksa kayıt yapılmaz. Web'de kayıt henüz yok.
 
 ### 5.1 Kartlar (düşük gecikme)
 

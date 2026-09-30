@@ -694,5 +694,77 @@
   "placementInviteLater": "Şimdi değil",
   "@placementInviteLater": {
     "description": "Today: hides the invitation for now."
+  },
+  "microphoneCheckTitle": "Mikrofon denemesi",
+  "@microphoneCheckTitle": {
+    "description": "Settings: the microphone check page."
+  },
+  "microphoneCheckBody": "İngilizce bir cümle söyle, Dilbaz ne duyduğunu yazsın. Böylece mikrofonun ve ses tanıma çalışıyor mu görürsün. Kayıt saklanmaz.",
+  "@microphoneCheckBody": {
+    "description": "Microphone check: what the page does."
+  },
+  "microphoneCheckNoConsent": "Ses kaydına onay vermediğin için cevaplarını yazarak veriyorsun. Onayı yakında Ayarlar'dan değiştirebileceksin.",
+  "@microphoneCheckNoConsent": {
+    "description": "Microphone check: no audio consent, nothing is recorded (docs/14 §4)."
+  },
+  "microphoneCheckRecord": "Kaydet",
+  "@microphoneCheckRecord": {
+    "description": "Microphone check: starts recording."
+  },
+  "microphoneCheckStop": "Durdur",
+  "@microphoneCheckStop": {
+    "description": "Microphone check: stops recording."
+  },
+  "microphoneCheckRecognizing": "Dinliyorum…",
+  "@microphoneCheckRecognizing": {
+    "description": "Microphone check: waiting for the recognizer."
+  },
+  "microphoneCheckHeard": "Duyduğum:",
+  "@microphoneCheckHeard": {
+    "description": "Microphone check: what the recognizer heard."
+  },
+  "microphoneCheckNothing": "Hiçbir şey duyamadım.",
+  "@microphoneCheckNothing": {
+    "description": "Microphone check: an empty transcript."
+  },
+  "microphoneCheckLevel": "Ses düzeyi",
+  "@microphoneCheckLevel": {
+    "description": "Microphone check: label of the level meter."
+  },
+  "speechFailureNetwork": "Bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@speechFailureNetwork": {
+    "description": "Speech recognition: no connection."
+  },
+  "speechFailureUnavailable": "Ses tanıma henüz açık değil. Şimdilik cevaplarını yazarak verebilirsin.",
+  "@speechFailureUnavailable": {
+    "description": "Speech recognition: not set up yet."
+  },
+  "speechFailureQuota": "Ses tanımanın ücretsiz payı doldu. Şimdilik cevaplarını yazarak verebilirsin.",
+  "@speechFailureQuota": {
+    "description": "Speech recognition: the free quota or credit is spent (ADR-0009)."
+  },
+  "speechFailureBusy": "Ses tanıma şu an cevap vermiyor. Birazdan yeniden dene.",
+  "@speechFailureBusy": {
+    "description": "Speech recognition: the provider is busy."
+  },
+  "speechFailureBadAudio": "Kayıt okunamadı. Yeniden dener misin?",
+  "@speechFailureBadAudio": {
+    "description": "Speech recognition: the audio could not be read."
+  },
+  "speechFailureUnknown": "Şu an olmadı. Birazdan yeniden dene.",
+  "@speechFailureUnknown": {
+    "description": "Speech recognition: any other problem."
+  },
+  "recordFailurePermission": "Mikrofon izni yok. Telefonun ayarlarından Dilbaz'a mikrofon izni verebilirsin.",
+  "@recordFailurePermission": {
+    "description": "Recording: the system does not let the app use the microphone."
+  },
+  "recordFailureUnsupported": "Bu cihazda kayıt henüz yok.",
+  "@recordFailureUnsupported": {
+    "description": "Recording: the platform cannot record yet (web)."
+  },
+  "recordFailureDevice": "Mikrofon açılamadı.",
+  "@recordFailureDevice": {
+    "description": "Recording: the microphone could not be opened."
   }
 }

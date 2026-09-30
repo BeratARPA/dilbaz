@@ -33,6 +33,12 @@ class FakeProfileRepository implements ProfileRepository {
     yield* _changes.stream;
   }
 
+  /// Whether the learner consented to recording audio.
+  bool audioConsent = true;
+
+  @override
+  Stream<bool> watchAudioConsent(String userId) => Stream.value(audioConsent);
+
   @override
   Future<Result<bool, ProfileFailure>> restore(String userId) async {
     restores++;

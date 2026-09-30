@@ -34,6 +34,19 @@ class DriftProfileRepository implements ProfileRepository {
           .map((row) => row?.settings[onboardedAt] != null);
 
   @override
+  Stream<bool> watchAudioConsent(String userId) =>
+      (_db.select(
+        _db.profiles,
+      )..where((t) => t.id.equals(userId))).watchSingleOrNull().map(
+        (row) => switch (row?.settings[_audioConsent]) {
+          {'granted': true} => true,
+          _ => false,
+        },
+      );
+
+  static const _audioConsent = 'audio_consent';
+
+  @override
   Future<Result<bool, ProfileFailure>> restore(String userId) async {
     switch (await _remote.fetch(userId)) {
       case Err(:final error):
@@ -90,7 +103,7 @@ class DriftProfileRepository implements ProfileRepository {
               goalText: Value(goalText.isEmpty ? null : goalText),
               interests: Value(answers.goals.toList()..sort()),
               settings: Value({
-                'audio_consent': {'granted': answers.audioConsent, 'at': at},
+                _audioConsent: {'granted': answers.audioConsent, 'at': at},
                 'ai_data_consent': {'granted': answers.aiDataConsent, 'at': at},
                 'daily_invitation': answers.notifications,
                 // Without consent or a microphone, answers are typed.

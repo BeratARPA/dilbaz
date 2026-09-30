@@ -154,6 +154,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Ayarlar içinde:** yapay zekâ ve ses kullanımı (kota ve Deepgram kredisi; ADR-0009)
 
 ### 5.12 Ayarlar
+- Mikrofon denemesi: bir cümle söylenir, ses tanımanın duyduğu gösterilir (F1-14; kayıt saklanmaz)
 - Profil, hedef, ilgi alanları
 - Zaman bütçesi, haftalık gün hedefi, çıpa ve bildirim saati, sessiz saatler
 - Sessiz mod (yazılı cevap varsayılanı)

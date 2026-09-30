@@ -162,7 +162,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 | Fonksiyon | Rotalar | Notlar |
 |---|---|---|
 | `tutor` | `07` §4'teki tüm rotalar | Tek dağıtım, rota parametresi. Günlük bütçe kontrolü, şema doğrulaması, merdiven sızıntı kontrolü, `llm_usage` kaydı. |
-| `speech` | `transcribe`, `assess`, `tts` | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede, görev sesi Storage yolundan. `speech_usage` kaydı. |
+| `speech` | `transcribe` (F1-14), `assess`, `tts` (Faz 2) | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede (`08` §5.0), görev sesi Storage yolundan (F1-19). `speech_usage` kaydı; kullanım satırını fonksiyon `SUPABASE_SECRET_KEYS` içindeki gizli anahtarla yazar. |
 | `pair` | `create`, `join`, `submit` | Rol yüklerini yalnızca ilgili katılımcıya verir. Realtime kanalı `pair:{id}` (özel kanal, RLS). |
 | `ops` | `retention_cleanup`, `backup_export` | Yalnızca servis rolü, pg_cron + pg_net ile tetiklenir. |
 

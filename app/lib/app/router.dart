@@ -11,6 +11,7 @@ import 'package:dilbaz_app/features/onboarding/presentation/opening_screen.dart'
 import 'package:dilbaz_app/features/placement/presentation/placement_screen.dart';
 import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
+import 'package:dilbaz_app/features/settings/presentation/microphone_check_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
@@ -113,6 +114,11 @@ GoRouter router(Ref ref) {
         path: AppRoutes.settings,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.microphoneCheck,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const MicrophoneCheckScreen(),
       ),
       GoRoute(
         path: AppRoutes.gapCapture,

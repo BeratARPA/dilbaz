@@ -10,6 +10,7 @@ abstract final class AppRoutes {
   static const together = '/together';
   static const progress = '/progress';
   static const settings = '/progress/settings';
+  static const microphoneCheck = '/progress/settings/microphone';
   static const gapCapture = '/gap/new';
 
   /// The placement test, over the tabs.
