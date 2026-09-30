@@ -83,6 +83,23 @@ Deno.test("model ids appear only in llm_config.ts", async () => {
   assertEquals(offenders, []);
 });
 
+Deno.test("every function deploys with the shared imports", async () => {
+  const functionsDir = join(dirname(fromFileUrl(import.meta.url)), "..");
+  const shared = JSON.parse(
+    await Deno.readTextFile(join(functionsDir, "deno.json")),
+  );
+  let functions = 0;
+  for await (const entry of Deno.readDir(functionsDir)) {
+    if (!entry.isDirectory || entry.name.startsWith("_")) continue;
+    functions++;
+    const own = JSON.parse(
+      await Deno.readTextFile(join(functionsDir, entry.name, "deno.json")),
+    );
+    assertEquals(own.imports, shared.imports, entry.name);
+  }
+  assert(functions >= 2);
+});
+
 Deno.test("English ASR is configured for verbatim transcripts", () => {
   const params = speechConfig.sttEnglish.params;
   assertEquals(params.model, speechConfig.sttEnglish.model);
