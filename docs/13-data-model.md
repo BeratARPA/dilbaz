@@ -323,7 +323,7 @@ create index on llm_usage (profile_id, created_at);
   - **Olay tablolarında update/delete yok** (§1).
 - **Ekip:**
   - `teams`: üyeler ve kurucu okur. Kullanıcı yalnızca kendi adına (`created_by = auth.uid()`) ekip kurar.
-  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır (F1-12).
+  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır: `join_team(p_invite_code)` (SECURITY DEFINER; kodu doğrular, üyeliği ekler, yinelenen katılım zararsızdır). `create_team(p_name)` çağıranın kendi yetkisiyle çalışır: 10 karakterlik davet kodunu sunucuda üretir, ekibi ve kurucunun `owner` üyeliğini birlikte yazar. İkisi de yalnızca `authenticated` rolüne açıktır.
   - Üye yalnızca kendi `share_levels` / `share_monthly` anahtarlarını değiştirir (sütun düzeyinde UPDATE yetkisi); `role` değiştirilemez.
   - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.
