@@ -285,7 +285,13 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 - **Promptların yeri:** Promptlar `supabase/functions/_shared/prompts/*.ts` modüllerinde, sürüm sabitiyle (ör. `answer_check@1`) versiyonlanır. Kenar fonksiyonu paketlemesi `.md` dosyalarını taşımayı garanti etmiyor; TS modülü güvenle paketlenir. Değişiklik → eval zorunlu (§8).
 - **Katalog modülü:** Hata etiketleri ve H3 kural notları çift paketten `_shared/catalogs/<çift>.ts` olarak üretilir: `deno run -A _shared/catalogs/generate.ts`. Bir test paketle eşitliği denetler.
 - **Kart kontrolündeki etiketler:** Yalnızca dilbilgisi, kelime ve edim etiketleri kullanılır. Telaffuz ve algı etiketleri konuşma görevi ve dikte içindir.
-- **`answer_check@1` örnekleri:** 10 örnek var, her verdict için en az bir tane. Örneklerin cümleleri eval setinde kullanılmaz (test).
+- **`answer_check@2` örnekleri:** 12 örnek var, her verdict için en az bir tane. Örneklerin cümleleri eval setinde kullanılmaz (test).
+- **`answer_check@2` (2026-10-08):** @1'in eval'inde (§8) Flash-Lite, anlamı değiştiren ya da dilbilgisi kartının çalıştırdığı yapıyı bozan hataları `minor_error` saydı. Neden istemin kendisindeydi:
+  - Kararlar "uyan ilki" sırasıyla seçiliyordu ve `minor_error` `wrong`'dan önce geliyordu.
+  - `minor_error` örnekleri be'yi ve sorudaki do'yu sayıyordu; `wrong` ise dilbilgisi kartında aynı şeyleri istiyordu.
+  - @2'de sıra şöyle: `wrong`, `minor_error`'dan önce denetlenir. `wrong` anlam değişikliğini örnekler (eksik "not/n't", "bored" yerine "boring"); be ve do yalnızca kart onları çalıştırmıyorsa `minor_error` olur.
+  - Hedef kelimesi olmayan cevap (eş anlamlı ya da `alternatives` gibi) asla `correct` değildir: `acceptable_variant` ve `target_ok=false` (I-04).
+  - İki örnek eklendi: soru kartında do eksikliği ve olumsuzluğu düşüren cevap; ikisi de `wrong`.
 
 ## 6. Pedagojik korkuluklar (özet)
 
@@ -356,6 +362,10 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
 
 - **Sağlayıcı seçimi:** Çalıştırıcı aynı seti her aday sağlayıcı ve modelle çalıştırır. Rota başına sıra (§2) sonuçlara göre belirlenir ve `evals/results/` altına yazılır.
 - **Kotalar:** Eval ücretsiz kotalarda çalışır. Gemini Flash'ın günlük ~20 isteği yüzünden bazı rotaların eval'i birkaç güne yayılır. Çalıştırmadan önce kullanıcıya süre ve kota etkisi söylenir.
+- **İlk sonuçlar (2026-10-08, `evals/results/`):**
+  - `answer_check@1`, Flash-Lite, 285 vaka: doğruluk %77,5 ✗; doğruyu yanlış sayma %2,3 ✓; sunulan sızıntı %0 ✓; şema %100 ✓. 26 çağrı 15 sn'de zaman aşımına uğradı (p50 2,9 sn, p95 13,5 sn). Öğrenciye yansıyan geçti/kaldı sonucu yanıtlı vakalarda %92,3 doğru. Groq 76 vakada durduruldu; p50 1,0 sn. Sonuç: `answer_check@2` (§5).
+  - `gap_suggest@1`: Flash-Lite 44 vaka, seviye %100 ✓, şema %95,5, p50 10,4 sn. 3.5 Flash ilk 20 vakada seviye %100, p50 1,4 sn.
+  - `speaking_annotate@1`: Flash-Lite 30 vaka, F1 0,96 ✓, EFC farkı 0 ✓, görev sonucu %96,7 ✓. Sızıntı denetimi 9 ipucunu boşalttı; öğrenciye sızan yok.
 - **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır (`packages/engine/test/scoring/answer_check_golden_test.dart`). Eşikler:
   - doğru ya da varyant cevabı "yanlış" sayma ≤ %3
   - H1–H3'te cevap sızıntısı %0

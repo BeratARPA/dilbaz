@@ -13,7 +13,7 @@ import {
   type AnswerCheckWire,
 } from "../schemas/answer_check.ts";
 
-export const answerCheckPromptVersion = "answer_check@1";
+export const answerCheckPromptVersion = "answer_check@2";
 
 const rules =
   `You are the answer checker of Dilbaz, an app in which Turkish speakers learn English by speaking. The learner saw a sentence in Turkish (prompt_l1) and said it in English (source "asr": transcribed by speech recognition) or typed it (source "typed"). Judge this one answer and write a hint ladder for it. You do not decide what happens next: the app decides when a hint is shown and when the answer is revealed.
@@ -37,10 +37,10 @@ const rules =
 # Verdicts
 Take the first one that applies:
 1. unintelligible: only for source "asr", when the transcript is not a readable attempt at an English sentence (noise, broken fragments). Never for typed answers.
-2. correct: correct English with the prompt's meaning and the target, worded like reference_l2 or a variant; contractions, fillers, numbers written as digits and similar surface differences do not matter.
+2. correct: correct English with the prompt's meaning and the target, worded like reference_l2 or a variant; contractions, fillers, numbers written as digits and similar surface differences do not matter. An answer without the target words (a synonym, or worded like item.alternatives) is never correct: it is acceptable_variant with target_ok false.
 3. acceptable_variant: correct, natural English with the prompt's meaning, but worded differently: another word order, a synonym, another tense or subject pronoun that the prompt allows, an extra polite word.
-4. minor_error: the meaning comes through, but there is a small grammar or word-form error: an article, -s, be, do in a question, a preposition, an adverb's place, a verb form, a misspelling in a typed answer.
-5. wrong: the target is missing or replaced by a word that does not fit; on a grammar card, the structure it practises is wrong (no be on a be card, no do on a question card, the verb at the end); an error changes the meaning; or only a fragment of the sentence was said.
+4. wrong: an error changes the meaning (a missing "not" or "n't", a word that means something else, such as "boring" for "bored"); the target is missing or replaced by a word that does not fit; on a grammar card, any error in the structure it practises (no be on a be card, no do on a question card, the verb at the end); or only a fragment of the sentence was said. Check this before minor_error.
+5. minor_error: the meaning is the prompt's and the error is small: an article, -s, a preposition, an adverb's place, a verb form, a misspelling in a typed answer, or be or do missing on a card that does not practise them.
 6. off_target: the answer means something else: another sentence, an unrelated reply, or Turkish.
 7. uncertain: you cannot tell whether the answer is right, for example when a word that may have been misheard ("can" or "can't") decides the verdict.
 
@@ -250,6 +250,56 @@ const examples: Example[] = [
         h3:
           "Hemen ardından kişi gelen 'söylemek' fiili say değildir; say kişiyle doğrudan kullanılmaz.",
         h4: "Tell me the truth.",
+      },
+      variant_to_learn: "",
+      confidence: 0.9,
+    },
+  },
+  {
+    item: {
+      key: "en.gp.present_simple.questions",
+      prompt_l1: "Burada çalışıyor musun?",
+      reference_l2: "Do you work here?",
+      target_span: "Do you work here?",
+      grammar_codes: ["gp.present_simple.questions"],
+    },
+    response: { text: "you work here", source: "asr", asr_confidence: 0.94 },
+    output: {
+      verdict: "wrong",
+      target_ok: false,
+      error_tags: ["aux.do_missing"],
+      error_spans: [{ text: "you", tag: "aux.do_missing" }],
+      ladder: {
+        h1: "Soru cümlesinde bir kelime eksik.",
+        h2: "'you' kelimesinden önceye bak.",
+        h3:
+          "Geniş zamanda soru do ya da does ile başlar, sonra özne ve fiil gelir.",
+        h4: "Do you work here?",
+      },
+      variant_to_learn: "",
+      confidence: 0.95,
+    },
+  },
+  {
+    item: {
+      key: "en.ws.want.v.1",
+      prompt_l1: "Kahve istemiyorum.",
+      reference_l2: "I don't want coffee.",
+      variants: ["I do not want coffee."],
+      target_span: "want",
+      grammar_codes: ["gp.present_simple.negative"],
+    },
+    response: { text: "i want coffee", source: "asr", asr_confidence: 0.95 },
+    output: {
+      verdict: "wrong",
+      target_ok: false,
+      error_tags: [],
+      error_spans: [],
+      ladder: {
+        h1: "Cümlenin anlamı istenenin tersi oldu.",
+        h2: "'I' ile 'want' arasına bak.",
+        h3: "Olumsuz cümlede fiilden önce don't gelir.",
+        h4: "I don't want coffee.",
       },
       variant_to_learn: "",
       confidence: 0.9,

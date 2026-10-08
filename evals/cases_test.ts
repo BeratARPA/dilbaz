@@ -58,7 +58,7 @@ Deno.test("no case reuses a sentence of the prompt's examples", () => {
   const shown = [...system.matchAll(/"reference_l2":"([^"]+)"/g)].map((m) =>
     m[1]
   );
-  assertEquals(shown.length, 10);
+  assertEquals(shown.length, 12);
   for (const c of cases) {
     assert(!shown.includes(c.input.item.reference_l2), c.id);
   }
