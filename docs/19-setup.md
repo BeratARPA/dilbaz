@@ -191,7 +191,7 @@ cd app && flutter build apk --release --dart-define-from-file=env/prod.json
 ### 5.3 Senin telefonun
 
 - Telefonda şu an bilgisayardan kurulmuş, hata ayıklama anahtarıyla imzalı eski Dilbaz var. İmza farklı olduğu için yeni APK onun üstüne kurulmaz.
-- **İlk kez:** eski uygulama kaldırılır (veri silme; ajan önce onay ister). Profil ve kurs sunucudan geri gelir. Kartlar, denemeler ve seviye testi sonucu, senkron üretimde açılmadan önce yalnızca telefondaydı (F1-21 migrasyonu `db push` bekliyor); onlar gelmez ve seviye testi yeniden önerilir.
+- **İlk kez:** eski uygulama kaldırılır (veri silme; ajan önce onay ister). Profil ve kurs sunucudan geri gelir. Eski sürümde senkron yoktu: kartlar, denemeler ve seviye testi sonucu yalnızca telefonda. Onlar gelmez ve seviye testi yeniden önerilir. Yeni sürüm her şeyi senkronlar (senkron 2026-10-08'den beri üretimde).
 - Kurulum:
   - USB ile: `adb install -r app/build/app/outputs/flutter-apk/app-release.apk` (`adb install -r`, imza farkında veriyi silmeden durur).
   - Ya da dosyayı telefona gönderip açarak (5.4'teki gibi).
