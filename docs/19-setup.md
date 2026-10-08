@@ -23,19 +23,35 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 
 ### Anahtarları ayarlama (kendin çalıştır)
 
+Supabase CLI bir kez bağlanır (F0-10'da yapıldı):
+
 ```bash
-# Proje klasöründe, Supabase CLI ile (bir kez)
 npx supabase login
 npx supabase link --project-ref <PROJE_REF>
+```
 
-# Sunucu tarafı gizli anahtarlar (uygulamaya asla girmez).
-# Önce anahtarları bir düzenleyiciyle supabase/functions/.env dosyasına yaz (git dışı):
-#   GEMINI_API_KEY=...
-#   GROQ_API_KEY=...
-#   DEEPGRAM_API_KEY=...
-# Sonra dosyadan yükle; böylece anahtar kabuk geçmişine düşmez:
+Sunucu tarafı gizli anahtarlar uygulamaya asla girmez. Aşağıdaki blok PowerShell'de, proje klasöründe çalıştırılır:
+- Her anahtarı gizli olarak sorar: yapıştırınca ekranda `*` görünür. Henüz olmayan anahtar için Enter'a basılır.
+- Anahtarları `supabase/functions/.env` dosyasına yazar (git dışı). Daha önce yazılanlar korunur.
+- Dosyayı Supabase secrets'a yükler.
+- Anahtarlar ekrana, kabuk geçmişine ve sohbete düşmez. Blok, eksik anahtar geldikçe yeniden çalıştırılabilir.
+
+```powershell
+cd C:\Users\berat\source\repos\Dilbaz
+$envFile = "supabase\functions\.env"
+$values = [ordered]@{}
+if (Test-Path $envFile) {
+  Get-Content $envFile | ForEach-Object { if ($_ -cmatch '^([A-Z_]+)=(.*)$') { $values[$Matches[1]] = $Matches[2] } }
+}
+foreach ($name in "GEMINI_API_KEY", "GROQ_API_KEY", "DEEPGRAM_API_KEY") {
+  $value = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "$name (yoksa Enter)")).Password
+  if ($value.Trim()) { $values[$name] = $value.Trim() }
+}
+$values.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" } | Set-Content -Encoding ascii $envFile
 npx supabase secrets set --env-file supabase/functions/.env
 ```
+
+Karşılaştırmalar büyük-küçük harfe duyarlıdır (`-cmatch`). Türkçe dil ayarında duyarsız eşleşme `I` harfini `ı` sayar ve `GEMINI` eşleşmez.
 
 Aynı `supabase/functions/.env` dosyası yerel geliştirmede (`npx supabase functions serve`) ve LLM eval'inde (`cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check`) de kullanılır. Bu dosya git dışıdır.
 
@@ -147,24 +163,34 @@ Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** t
 
 ### 5.1 Yükleme anahtarı (bir kez, kendin yap)
 
-1. Anahtarı oluştur (PowerShell). Parolayı sen belirlersin; sohbete yazma:
+1. Aşağıdaki bloğu PowerShell'de çalıştır. Parolayı sen belirlersin; iki kez sorulur ve ekranda görünmez. Sohbete yazma.
+   - Parola en az 6 karakter olur ve yalnızca İngilizce harf ve rakam içerir. `key.properties` Türkçe harfi bozar, ters bölü de orada özel anlam taşır.
+   - Blok anahtarı `C:\Users\<kullanıcı>\dilbaz-upload.jks` dosyasına koyar ve `app/android/key.properties`'i yazar. Anahtar zaten varsa dokunmaz.
 
    ```powershell
-   keytool -genkey -v -keystore $env:USERPROFILE\dilbaz-upload.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   cd C:\Users\berat\source\repos\Dilbaz
+   $keystore = "$env:USERPROFILE\dilbaz-upload.jks"
+   $keytool = (Get-Command keytool -ErrorAction SilentlyContinue).Source
+   if (-not $keytool) { $keytool = Join-Path $env:ProgramFiles "Android\Android Studio\jbr\bin\keytool.exe" }
+   $pass = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "Parola (en az 6; yalnızca İngilizce harf ve rakam)")).Password
+   $again = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "Parola (tekrar)")).Password
+   if (Test-Path $keystore) {
+     Write-Host "Anahtar zaten var: $keystore"
+   } elseif ($pass -cne $again) {
+     Write-Host "Parolalar aynı değil; bloğu yeniden çalıştır."
+   } elseif ($pass -cnotmatch '^[A-Za-z0-9]{6,}$') {
+     Write-Host "Parola en az 6 karakter olmalı ve yalnızca İngilizce harf ve rakam içermeli."
+   } else {
+     & $keytool -genkeypair -keystore $keystore -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload -dname "CN=Dilbaz" -storepass $pass -keypass $pass
+     if ($LASTEXITCODE -eq 0) {
+       "storePassword=$pass`nkeyPassword=$pass`nkeyAlias=upload`nstoreFile=$($keystore.Replace('\', '/'))" | Set-Content -Encoding ascii app\android\key.properties
+       Write-Host "Hazır: $keystore ve app\android\key.properties"
+     }
+   }
+   Remove-Variable pass, again
    ```
 
-   - `keytool` bulunmazsa: `& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" …`
-   - İsim ve kurum soruları için gerçek bilgi gerekmez (ör. `Dilbaz`).
-2. `app/android/key.properties` dosyasını bir düzenleyiciyle oluştur. Ters bölüler çift yazılır:
-
-   ```properties
-   storePassword=<parola>
-   keyPassword=<parola>
-   keyAlias=upload
-   storeFile=C:\\Users\\<kullanıcı>\\dilbaz-upload.jks
-   ```
-
-3. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
+2. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
    - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
    - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
 
@@ -190,8 +216,9 @@ cd app && flutter build apk --release --dart-define-from-file=env/prod.json
 
 ### 5.3 Senin telefonun
 
-- Telefonda şu an bilgisayardan kurulmuş, hata ayıklama anahtarıyla imzalı eski Dilbaz var. İmza farklı olduğu için yeni APK onun üstüne kurulmaz.
-- **İlk kez:** eski uygulama kaldırılır (veri silme; ajan önce onay ister). Profil ve kurs sunucudan geri gelir. Eski sürümde senkron yoktu: kartlar, denemeler ve seviye testi sonucu yalnızca telefonda. Onlar gelmez ve seviye testi yeniden önerilir. Yeni sürüm her şeyi senkronlar (senkron 2026-10-08'den beri üretimde).
+- Bilgisayardan kurulmuş, hata ayıklama anahtarıyla imzalı eski bir Dilbaz varsa yeni APK onun üstüne kurulmaz; önce o kaldırılır (veri silme; ajan önce onay ister).
+  - 2026-10-08: eski sürüm ve "Dilbaz.local" kullanıcı tarafından kaldırıldı. Eski sürümde senkron yoktu; kartlar, denemeler ve seviye testi sonucu yalnızca telefondaydı ve gitti. Profil ve kurs girişte sunucudan geri gelir, seviye testi yeniden önerilir.
+  - Yeni sürüm her şeyi senkronlar (senkron 2026-10-08'den beri üretimde).
 - Kurulum:
   - USB ile: `adb install -r app/build/app/outputs/flutter-apk/app-release.apk` (`adb install -r`, imza farkında veriyi silmeden durur).
   - Ya da dosyayı telefona gönderip açarak (5.4'teki gibi).
