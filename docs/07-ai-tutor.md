@@ -200,6 +200,13 @@ Output = { l2_natural: string, l2_simple: string,
 - Çıktıdaki kelimeler sunucuda paketin seviye listesiyle kontrol edilir.
 - A seviyelerinde `l2_simple` içinde seviye+1'in üstünde birden fazla kelime varsa tek bir "sadeleştir" yeniden çağrısı yapılır.
 
+**Rota (F1-17):** `POST /functions/v1/tutor/gap_suggest`, prompt `gap_suggest@1` (`_shared/prompts/gap_suggest.ts`, 6 örnek).
+- **Seviye listesi:** Fonksiyonlarda paket yoktur. Hedef paketin sözlüğü (lemma → CEFR seviyesi, biçim → lemmalar) `dilbaz-content levels-module` ile `_shared/levels/<l2>.ts` modülüne yazılır; her hedef paket derlemesinden sonra yeniden çalıştırılır. Birden çok lemmaya giden biçim en düşük seviyeyi alır ("saw": see). Sözlükte olmayan kelimeler (isimler, sayılar) sayılmaz.
+- **Denetim:** A0–A2'de `l2_simple`'ın her cümlesi için öğrencinin seviyesi + 1'in üstündeki kelimeler sayılır. Bir cümlede 1'den fazlaysa model, bu kelimeler ve önceki cümleyle bir kez daha çağrılır (`simplify`). İkinci çağrı öğrencinin payında ilk çağrıyla birlikte sayılır; başarısız olursa ilk cevap kalır. B1 ve üstünde denetim yoktur.
+- **Modelin cevabı:** `notes_l1` boşsa `""` döner, sunucu `null` yapar.
+- **Cevap:** sözleşmedeki alanlar + `above_level` (son `l2_simple`'ın seviye üstü kelimeleri), `simplified`, `provider`, `model`.
+- **Hata kodları:** `answer_check` ile aynı; boş metin `missing_text` (400, cevapsız çağrı yok, I-11), seviye listesi olmayan dil `unsupported_pair`. Hiçbir model cevap vermezse istemci yakalamayı "öneri bekliyor" olarak saklar ve sonra yeniden dener.
+
 ### 4.4 `roleplay_turn` ve `roleplay_debrief` (A13)
 
 ```ts
@@ -304,7 +311,8 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
     - 2. tur: 26 yeni vaka ve 10 çeldirici, 36/36 uyumlu.
     - `target_ok` farkı yalnızca "belirsiz" vakalardaydı. Orada `target_ok` bir tahmin olduğu için puanlanmaz.
     - Kontrolü olmayan ya da kontrolle çelişen vaka sete girmez (`eval-cases`).
-  - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
+  - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check|gap_suggest [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
+  - `gap_suggest` seti v1 (F1-17): 44 vaka (`tutor/gap_suggest/cases.jsonl`): A0–B1, beş bağlamın hepsi, konuşma dökümü gibi noktalamasız metin, hatalı İngilizce, tek kelime, bir ifadenin nasıl söylendiğini soran metin, not. Tek bir doğru cevap olmadığı için otomatik ölçütler şunlardır: seviye kuralı (rotanın sadeleştirmesinden sonra), anahtar kalıbın cevaptan alınması, A seviyesinde 20 kelimeyi aşan not, ilk cevapta şema geçerliliği, başarısız çağrı, gecikme ve token. Anlamı bir insan vakadaki `reference` ile karşılaştırarak okur.
   - Ölçütler: doğruluk (başarısız çağrı ıska sayılır); yanlış sayma (doğru ya da kabul edilebilir cevabın `wrong`, `off_target` ya da hedefte `minor_error` alması); sunulan ipuçlarında sızıntı; ham sızıntı (modelin yazıp korumanın boşalttığı); ilk cevapta şema geçerliliği; `target_ok` uyumu; beklenen etiket isabeti; A seviyesinde 20 kelimeyi aşan ipucu; gecikme ve token.
 - **Vaka kaynakları:**
   1. Türkçe konuşanlara özgü sentetik hatalar
@@ -322,7 +330,7 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   | speaking_annotate | Hata tespiti F1 (30 altın transkript) | ≥ 0,75 |
   | speaking_annotate | EFC oranı mutlak farkı (medyan) | ≤ 0,10 |
   | speaking_annotate | Görev sonucu uyumu | ≥ %85 |
-  | gap_suggest | Seviye üstü kelime (A seviyeleri, `l2_simple`) | ≤ 1 kelime/cümle |
+  | gap_suggest | Seviye üstü kelime (A seviyeleri, `l2_simple`) | ≤ 1 kelime/cümle, A seviyesi cevapların en az %95'inde |
   | roleplay_turn | Seviye+1 üstü kelime oranı | ≤ %5 |
   | roleplay_turn | Konuşma sırasında düzeltme | %0 |
 

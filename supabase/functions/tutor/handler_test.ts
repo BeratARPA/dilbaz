@@ -335,3 +335,173 @@ Deno.test("when every model fails, the code says why", async () => {
   assertEquals(await response.json(), { error: { code: "llm_refused" } });
   assertEquals(recorded[0].calls[0].stopReason, "refused");
 });
+
+const flash = "gemini-3.5-flash";
+
+const gapInput = {
+  ctx: { l1: "tr", l2: "en", level: "A1", explain_in: "l1" },
+  l1_text: "Toplantıyı yarına erteleyebilir miyiz?",
+  context: "daily",
+};
+
+const suggestion = (simple: string) => ({
+  l2_natural: "Could we postpone the meeting until tomorrow?",
+  l2_simple: simple,
+  key_chunk: { text: "the meeting", gloss_l1: "toplantı" },
+  register: "neutral",
+  notes_l1: "",
+});
+
+const suggest = (body: unknown) =>
+  new Request(`${base}/gap_suggest`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+Deno.test("gap_suggest answers with the first model at the level", async () => {
+  const primary = fakeModel(
+    flash,
+    "gemini",
+    () => answer(suggestion("Can we have the meeting tomorrow?")),
+  );
+  const { handle, recorded } = setup({ models: [primary.model] });
+
+  const response = await handle(suggest(gapInput));
+
+  assertEquals(response.status, 200);
+  assertEquals(await response.json(), {
+    l2_natural: "Could we postpone the meeting until tomorrow?",
+    l2_simple: "Can we have the meeting tomorrow?",
+    key_chunk: { text: "the meeting", gloss_l1: "toplantı" },
+    register: "neutral",
+    notes_l1: null,
+    above_level: [],
+    simplified: false,
+    provider: "gemini",
+    model: flash,
+  });
+  const [request] = primary.asked;
+  assertEquals(request.schemaName, "gap_suggest");
+  assertEquals(JSON.parse(request.user).l1_text, gapInput.l1_text);
+  assertEquals(recorded[0].route, "gap_suggest");
+});
+
+Deno.test("too hard for the level: one simplify call, counted in the share", async () => {
+  const answers = [
+    suggestion("Could we postpone the conference indefinitely?"),
+    suggestion("Can we have the meeting tomorrow?"),
+  ];
+  const primary = fakeModel(flash, "gemini", () => answer(answers.shift()));
+  const { handle, recorded } = setup({ models: [primary.model] });
+
+  const response = await handle(suggest(gapInput));
+  const body = await response.json();
+
+  assertEquals(body.l2_simple, "Can we have the meeting tomorrow?");
+  assertEquals(body.simplified, true);
+  assertEquals(primary.asked.length, 2);
+  const retry = JSON.parse(primary.asked[1].user);
+  assertEquals(
+    retry.simplify.previous,
+    "Could we postpone the conference indefinitely?",
+  );
+  assert(retry.simplify.above_level.includes("postpone"));
+  assertEquals(recorded[0].calls.length, 2, "both calls are recorded");
+});
+
+Deno.test("a failed simplify call keeps the first answer and its hard words", async () => {
+  let calls = 0;
+  const primary = fakeModel(
+    flash,
+    "gemini",
+    () =>
+      calls++ === 0
+        ? answer(suggestion("Could we postpone the conference indefinitely?"))
+        : { ok: false, failure: "server" },
+  );
+  const { handle } = setup({ models: [primary.model] });
+
+  const body = await (await handle(suggest(gapInput))).json();
+
+  assertEquals(body.simplified, false);
+  assertEquals(
+    body.l2_simple,
+    "Could we postpone the conference indefinitely?",
+  );
+  assert(body.above_level.includes("postpone"));
+});
+
+Deno.test("the second call stays within the learner's share", async () => {
+  const primary = fakeModel(
+    flash,
+    "gemini",
+    () => answer(suggestion("Could we postpone the conference indefinitely?")),
+  );
+  const { handle } = setup({
+    models: [primary.model],
+    // One request left of the learner's half of 20.
+    state: {
+      consent: true,
+      use: new Map([[flash, { requests: 9, tokens: 0 }]]),
+    },
+  });
+
+  const body = await (await handle(suggest(gapInput))).json();
+
+  assertEquals(primary.asked.length, 1, "no request past the share");
+  assertEquals(body.simplified, false);
+});
+
+Deno.test("gap_suggest needs something to say and a known language", async () => {
+  const primary = fakeModel(flash, "gemini", () => answer(suggestion("x")));
+  const { handle } = setup({ models: [primary.model] });
+
+  for (
+    const [body, code] of [
+      [{ ...gapInput, context: "work" }, "invalid_input"],
+      [{ ...gapInput, l1_text: "   " }, "missing_text"],
+      [{ ...gapInput, ctx: { ...gapInput.ctx, l2: "de" } }, "unsupported_pair"],
+    ] as const
+  ) {
+    const response = await handle(suggest(body));
+    assertEquals(response.status, 400, code);
+    assertEquals(await response.json(), { error: { code } });
+  }
+  assertEquals(primary.asked.length, 0);
+});
+
+Deno.test("gap_suggest without a consent goes to Groq; without models it waits", async () => {
+  const gemini = fakeModel(flash, "gemini", () => answer(suggestion("x")));
+  const groq = fakeModel(
+    oss,
+    "groq",
+    () => answer(suggestion("Can we meet tomorrow?")),
+  );
+  const { handle } = setup({
+    models: [gemini.model, groq.model],
+    state: { consent: false, use: new Map() },
+  });
+  const body = await (await handle(suggest(gapInput))).json();
+  assertEquals(body.provider, "groq");
+  assertEquals(gemini.asked.length, 0);
+
+  const none = setup();
+  const response = await none.handle(suggest(gapInput));
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
+});
+
+Deno.test("gap_suggest logs never carry the learner's text", async () => {
+  const primary = fakeModel(
+    flash,
+    "gemini",
+    () => answer(suggestion("Can we have the meeting tomorrow?")),
+  );
+  const { handle, lines } = setup({ models: [primary.model] });
+  const response = await handle(suggest(gapInput));
+  await response.body?.cancel();
+  for (const line of lines) {
+    assert(!line.includes("Toplantı"), "no Turkish text in logs");
+    assert(!line.includes("meeting"), "no English text in logs");
+  }
+});

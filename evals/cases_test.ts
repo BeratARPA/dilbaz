@@ -5,6 +5,11 @@ import {
   answerCheckUserMessage,
 } from "../supabase/functions/_shared/prompts/answer_check.ts";
 import { catalogs } from "../supabase/functions/_shared/catalogs/index.ts";
+import { exampleTexts } from "../supabase/functions/_shared/prompts/gap_suggest.ts";
+import {
+  gapContexts,
+  GapSuggestInput,
+} from "../supabase/functions/_shared/schemas/gap_suggest.ts";
 import {
   answerCheckCategories,
   AnswerCheckInput,
@@ -61,4 +66,37 @@ Deno.test("the evals use the functions' imports", async () => {
     ),
   );
   assertEquals(own.imports, functions.imports);
+});
+
+const gapCases = (await Deno.readTextFile(
+  join(here, "tutor", "gap_suggest", "cases.jsonl"),
+)).split("\n").filter((line) => line.trim() !== "").map((line) =>
+  JSON.parse(line)
+);
+
+Deno.test("the gap_suggest set covers the levels and the contexts", () => {
+  assert(gapCases.length >= 40, `${gapCases.length}`);
+  assertEquals(new Set(gapCases.map((c) => c.id)).size, gapCases.length);
+  const inputs = gapCases.map((c) => GapSuggestInput.parse(c.input));
+  for (const [index, input] of inputs.entries()) {
+    const id = gapCases[index].id;
+    assert(input.l1_text.trim() !== "", id);
+    assert(gapCases[index].reference.trim() !== "", id);
+    // The level's scaffolds: Turkish notes up to A2.
+    const a = ["A0", "A1", "A2"].includes(input.ctx.level);
+    assertEquals(input.ctx.explain_in, a ? "l1" : "l2", id);
+  }
+  assertEquals(
+    new Set(inputs.map((i) => i.context)),
+    new Set(gapContexts),
+  );
+  assertEquals(
+    new Set(inputs.map((i) => i.ctx.level)),
+    new Set(["A0", "A1", "A2", "B1"]),
+  );
+});
+
+Deno.test("no gap_suggest case reuses a text of the prompt's examples", () => {
+  const shown = new Set(exampleTexts);
+  for (const c of gapCases) assert(!shown.has(c.input.l1_text), c.id);
 });

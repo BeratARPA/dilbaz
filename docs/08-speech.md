@@ -96,7 +96,7 @@ interface TextToSpeech {
 }
 ```
 
-Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts` (F1-14), Türkçe sunucu yedeği için `groq_stt.ts` ya da `gemini_stt.ts` (F1-15, Groq ve Gemini adaptörleriyle birlikte), Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
+Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts` (F1-14), Türkçe sunucu yedeği için `groq_stt.ts` (F1-17: Groq `whisper-large-v3`, `language=tr`, `verbose_json`; ücretsiz katman, `speech_usage`'da maliyet 0; `transcribe?lang=tr`, Groq anahtarı yoksa `stt_unavailable`), Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
 
 ## 4. Kayıt formatları (istemci)
 

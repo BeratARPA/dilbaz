@@ -28,6 +28,11 @@ export interface SpeechDeps {
   verifyUser: UserVerifier;
   /** English recognition; null while its key is not set. */
   english: SpeechToText | null;
+  /**
+   * Turkish recognition for devices that cannot do it themselves; null
+   * while its key is not set (docs/08 §3.1).
+   */
+  turkish: SpeechToText | null;
   recordUsage: (usage: SpeechUsage) => Promise<void>;
   logSink?: LogSink;
   now?: () => number;
@@ -55,6 +60,11 @@ export function sttCost(seconds: number): number {
   const micro = (seconds / 60) * speechConfig.pricing.deepgramPerMinute *
     1_000_000;
   return Math.round(micro) / 1_000_000;
+}
+
+/** What a transcription costs: the free tiers nothing (ADR-0009). */
+export function costOf(provider: string, seconds: number): number {
+  return provider === speechConfig.sttEnglish.provider ? sttCost(seconds) : 0;
 }
 
 export function createSpeechHandler(deps: SpeechDeps) {
@@ -105,10 +115,16 @@ export function createSpeechHandler(deps: SpeechDeps) {
     const fail = (status: number, code: string, logged = code) =>
       finish(jsonError(status, code), logged, userId);
 
-    // Turkish is recognized on the device (docs/08 §3.1).
+    // Turkish comes here only where the device cannot recognize it.
     const lang = new URL(request.url).searchParams.get("lang") ?? "en";
-    if (lang !== "en") return fail(400, "unsupported_language");
-    const transcriber = deps.english;
+    const recognizers: Record<string, SpeechToText | null> = {
+      en: deps.english,
+      tr: deps.turkish,
+    };
+    if (!Object.hasOwn(recognizers, lang)) {
+      return fail(400, "unsupported_language");
+    }
+    const transcriber = recognizers[lang];
     if (transcriber === null) return fail(503, "stt_unavailable");
 
     const contentType = (request.headers.get("content-type") ?? "")
@@ -135,7 +151,7 @@ export function createSpeechHandler(deps: SpeechDeps) {
         provider: transcript.provider,
         kind: "stt",
         seconds,
-        costUsd: sttCost(seconds),
+        costUsd: costOf(transcript.provider, seconds),
       });
     } catch {
       // The learner still gets the transcript; the missing row is logged.

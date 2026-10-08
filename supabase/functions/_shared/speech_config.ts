@@ -29,11 +29,22 @@ export const speechConfig = {
   },
 
   /**
-   * S2: Turkish is recognized on the device (`speech_to_text`). The
-   * server fallback (Groq or Gemini, free tiers) comes with their
-   * adapters (F1-15).
+   * S2: Turkish is recognized on the device (`speech_to_text`). Where the
+   * device cannot (Windows, web, no Turkish installed), Groq's Whisper on
+   * the free tier transcribes it here (docs/08 §3.1; Groq keeps no data,
+   * ZDR). Checked against Groq's documentation on 2026-10-08.
    */
-  sttTurkish: { onDevice: true, locale: "tr-TR", serverFallback: null },
+  sttTurkish: {
+    onDevice: true,
+    locale: "tr-TR",
+    serverFallback: {
+      provider: "groq",
+      model: "whisper-large-v3",
+      endpoint: "https://api.groq.com/openai/v1/audio/transcriptions",
+      keyEnv: "GROQ_API_KEY",
+      language: "tr",
+    },
+  },
 
   /** S3: pronunciation assessment is chosen at the start of Faz 2. */
   pronunciation: null,

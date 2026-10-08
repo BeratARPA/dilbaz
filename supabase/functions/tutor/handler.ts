@@ -8,7 +8,7 @@
 import type { UserVerifier } from "../_shared/auth.ts";
 import { json, jsonError, preflight } from "../_shared/http.ts";
 import { logEvent, type LogSink } from "../_shared/log.ts";
-import { llmConfig } from "../_shared/llm_config.ts";
+import { llmConfig, type TutorRoute } from "../_shared/llm_config.ts";
 import { type ModelUse, quotaDayStart } from "../_shared/llm/quota.ts";
 import {
   type CallRecord,
@@ -19,9 +19,11 @@ import {
 import type { LlmModel } from "../_shared/llm/types.ts";
 import { answerCheckUserMessage } from "../_shared/prompts/answer_check.ts";
 import { AnswerCheckInput } from "../_shared/schemas/answer_check.ts";
+import { GapSuggestInput } from "../_shared/schemas/gap_suggest.ts";
 import { guard, kitFor, parseWire } from "./answer_check.ts";
+import { gapKitFor, parseGapWire, suggestGap } from "./gap_suggest.ts";
 
-export const version = "0.2.0";
+export const version = "0.3.0";
 
 /** What the learner allows and has used today, read with the service role. */
 export interface LearnerState {
@@ -67,6 +69,7 @@ const failureStatus: Record<ChainFailure, number> = {
 const routeMethods: Record<string, string[]> = {
   health: ["GET", "POST"],
   answer_check: ["POST"],
+  gap_suggest: ["POST"],
 };
 
 /** Route name after the `tutor` segment, or null when absent. */
@@ -74,6 +77,23 @@ export function routeOf(url: string): string | null {
   const segments = new URL(url).pathname.split("/").filter(Boolean);
   const index = segments.indexOf("tutor");
   return index >= 0 && index + 1 < segments.length ? segments[index + 1] : null;
+}
+
+/** [use] after [calls]: the learner's share counts them at once. */
+function counted(
+  use: Map<string, ModelUse>,
+  calls: CallRecord[],
+): Map<string, ModelUse> {
+  const next = new Map(use);
+  for (const call of calls) {
+    const before = next.get(call.model) ?? { requests: 0, tokens: 0 };
+    next.set(call.model, {
+      requests: before.requests + 1,
+      tokens: before.tokens + (call.inputTokens ?? 0) -
+        (call.cachedTokens ?? 0) + (call.outputTokens ?? 0),
+    });
+  }
+  return next;
 }
 
 export function createTutorHandler(deps: TutorDeps) {
@@ -129,82 +149,64 @@ export function createTutorHandler(deps: TutorDeps) {
       return finish(json({ status: "ok", version }), undefined, userId);
     }
 
-    // answer_check
     let body: unknown;
     try {
       body = await request.json();
     } catch {
       return fail(400, "bad_json");
     }
-    const parsed = AnswerCheckInput.safeParse(body);
-    if (!parsed.success) return fail(400, "invalid_input");
-    const input = parsed.data;
-    // No answer, no call (I-01, I-11).
-    if (input.response.text.trim() === "") return fail(400, "missing_response");
-    const kit = kitFor(`${input.ctx.l1}-${input.ctx.l2}`);
-    if (!kit) return fail(400, "unsupported_pair");
 
-    const route = llmConfig.routes.answer_check;
-    const models = route.chain
-      .map((id) => deps.llm.models.get(id))
-      .filter((model): model is LlmModel => model !== undefined);
-    if (models.length === 0) return fail(503, "llm_unavailable");
+    /** The route's chain: the models whose key is set, in order. */
+    const chainOf = (route: TutorRoute) =>
+      llmConfig.routes[route].chain
+        .map((id) => deps.llm.models.get(id))
+        .filter((model): model is LlmModel => model !== undefined);
 
-    const today = clock();
-    let state: LearnerState;
-    try {
-      state = await deps.llm.learnerState(
-        userId,
-        models.map((model) => ({
-          id: model.id,
-          since: quotaDayStart(
-            llmConfig.providers[model.provider].quotaDay,
-            today,
-          ),
-        })),
-      );
-    } catch {
-      // Without the learner's state: no consent-bound provider, no share.
-      logEvent("warn", "state_unavailable", {
-        fn: "tutor",
-        requestId,
-        route: name,
-        userId,
-      }, deps.logSink);
-      state = { consent: false, use: new Map() };
-    }
-
-    const result = await runChain(
-      { models, consent: state.consent, use: state.use, cooldown, now },
-      {
-        system: kit.system,
-        user: answerCheckUserMessage(input),
-        schemaName: "answer_check",
-        schema: kit.schema,
-        effort: route.effort,
-        maxTokens: route.maxTokens,
-        timeoutMs: route.timeoutMs,
-      },
-      (text) => parseWire(kit, text),
-    );
-
-    for (const call of result.calls) {
-      logEvent("info", "llm_call", {
-        fn: "tutor",
-        requestId,
-        route: name,
-        userId,
-        model: call.model,
-        stopReason: call.stopReason,
-        inputTokens: call.inputTokens ?? undefined,
-        outputTokens: call.outputTokens ?? undefined,
-        cacheReadTokens: call.cachedTokens ?? undefined,
-        durationMs: call.latencyMs,
-      }, deps.logSink);
-    }
-    if (result.calls.length > 0) {
+    /** Consent and today's use of [models]. */
+    const stateFor = async (models: LlmModel[]): Promise<LearnerState> => {
+      const today = clock();
       try {
-        await deps.llm.recordUsage(userId, name, result.calls);
+        return await deps.llm.learnerState(
+          userId,
+          models.map((model) => ({
+            id: model.id,
+            since: quotaDayStart(
+              llmConfig.providers[model.provider].quotaDay,
+              today,
+            ),
+          })),
+        );
+      } catch {
+        // Without the learner's state: no consent-bound provider, no share.
+        logEvent("warn", "state_unavailable", {
+          fn: "tutor",
+          requestId,
+          route: name,
+          userId,
+        }, deps.logSink);
+        return { consent: false, use: new Map() };
+      }
+    };
+
+    /** Logs the calls and writes them to `llm_usage`. */
+    const record = async (calls: CallRecord[]) => {
+      for (const call of calls) {
+        logEvent("info", "llm_call", {
+          fn: "tutor",
+          requestId,
+          route: name,
+          userId,
+          model: call.model,
+          stopReason: call.stopReason,
+          inputTokens: call.inputTokens ?? undefined,
+          outputTokens: call.outputTokens ?? undefined,
+          cacheReadTokens: call.cachedTokens ?? undefined,
+          durationMs: call.latencyMs,
+        }, deps.logSink);
+      }
+      if (calls.length === 0) return;
+      try {
+        await deps.llm.recordUsage(userId, name, calls);
       } catch {
         logEvent("warn", "usage_not_recorded", {
           fn: "tutor",
@@ -213,23 +215,92 @@ export function createTutorHandler(deps: TutorDeps) {
           userId,
         }, deps.logSink);
       }
-    }
-    if (!result.ok) return fail(failureStatus[result.code], result.code);
+    };
 
-    const { output, leaked } = guard(input, result.value, kit, {
-      provider: result.model.provider,
-      model: result.model.id,
-    });
-    if (leaked.length > 0) {
-      logEvent("warn", "ladder_leak", {
-        fn: "tutor",
-        requestId,
-        route: name,
-        userId,
+    if (name === "answer_check") {
+      const parsed = AnswerCheckInput.safeParse(body);
+      if (!parsed.success) return fail(400, "invalid_input");
+      const input = parsed.data;
+      // No answer, no call (I-01, I-11).
+      if (input.response.text.trim() === "") {
+        return fail(400, "missing_response");
+      }
+      const kit = kitFor(`${input.ctx.l1}-${input.ctx.l2}`);
+      if (!kit) return fail(400, "unsupported_pair");
+
+      const route = llmConfig.routes.answer_check;
+      const models = chainOf("answer_check");
+      if (models.length === 0) return fail(503, "llm_unavailable");
+      const state = await stateFor(models);
+      const result = await runChain(
+        { models, consent: state.consent, use: state.use, cooldown, now },
+        {
+          system: kit.system,
+          user: answerCheckUserMessage(input),
+          schemaName: "answer_check",
+          schema: kit.schema,
+          effort: route.effort,
+          maxTokens: route.maxTokens,
+          timeoutMs: route.timeoutMs,
+        },
+        (text) => parseWire(kit, text),
+      );
+      await record(result.calls);
+      if (!result.ok) return fail(failureStatus[result.code], result.code);
+
+      const { output, leaked } = guard(input, result.value, kit, {
+        provider: result.model.provider,
         model: result.model.id,
-        code: leaked.join("."),
-      }, deps.logSink);
+      });
+      if (leaked.length > 0) {
+        logEvent("warn", "ladder_leak", {
+          fn: "tutor",
+          requestId,
+          route: name,
+          userId,
+          model: result.model.id,
+          code: leaked.join("."),
+        }, deps.logSink);
+      }
+      return finish(json(output), undefined, userId, result.model.id);
     }
-    return finish(json(output), undefined, userId, result.model.id);
+
+    // gap_suggest
+    const parsed = GapSuggestInput.safeParse(body);
+    if (!parsed.success) return fail(400, "invalid_input");
+    const input = parsed.data;
+    // Nothing to say, no call (I-11).
+    if (input.l1_text.trim() === "") return fail(400, "missing_text");
+    const kit = gapKitFor(input.ctx.l2);
+    if (!kit) return fail(400, "unsupported_pair");
+
+    const route = llmConfig.routes.gap_suggest;
+    const models = chainOf("gap_suggest");
+    if (models.length === 0) return fail(503, "llm_unavailable");
+    const state = await stateFor(models);
+    const result = await suggestGap(input, kit, (user, earlier) =>
+      runChain(
+        {
+          models,
+          consent: state.consent,
+          // A second call sees the first in the learner's share.
+          use: counted(state.use, earlier),
+          cooldown,
+          now,
+        },
+        {
+          system: kit.system,
+          user,
+          schemaName: "gap_suggest",
+          schema: kit.schema,
+          effort: route.effort,
+          maxTokens: route.maxTokens,
+          timeoutMs: route.timeoutMs,
+        },
+        parseGapWire,
+      ));
+    await record(result.calls);
+    if (!result.ok) return fail(failureStatus[result.code], result.code);
+    return finish(json(result.output), undefined, userId, result.model.id);
   };
 }

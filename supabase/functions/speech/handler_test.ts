@@ -46,6 +46,7 @@ function setup(
   options: {
     verifyUser?: UserVerifier;
     english?: SpeechToText | null;
+    turkish?: SpeechToText | null;
     recordUsage?: (usage: SpeechUsage) => Promise<void>;
   } = {},
 ) {
@@ -54,6 +55,7 @@ function setup(
   const handle = createSpeechHandler({
     verifyUser: options.verifyUser ?? signedIn,
     english: options.english === undefined ? recognizer().stt : options.english,
+    turkish: options.turkish === undefined ? null : options.turkish,
     recordUsage: options.recordUsage ??
       ((row) => {
         usage.push(row);
@@ -136,13 +138,36 @@ Deno.test("routes and methods are checked before anything else", async () => {
   assertEquals(routeOf("http://x/functions/v1/speech"), null);
 });
 
-Deno.test("Turkish is recognized on the device, not here", async () => {
-  const { handle } = setup();
+Deno.test("Turkish goes to its own recognizer, free of charge", async () => {
+  const turkish: Transcript = {
+    text: "Bulaşıkları ben yıkarım.",
+    words: [],
+    provider: "groq",
+    model: "whisper-large-v3",
+    durationMs: 2000,
+  };
+  const english = recognizer();
+  const { stt, heard } = recognizer({ ok: true, transcript: turkish });
+  const { handle, usage } = setup({ english: english.stt, turkish: stt });
+
   const response = await handle(audio(undefined, undefined, "?lang=tr"));
-  assertEquals(response.status, 400);
-  assertEquals(await response.json(), {
-    error: { code: "unsupported_language" },
-  });
+
+  assertEquals(response.status, 200);
+  assertEquals((await response.json()).text, "Bulaşıkları ben yıkarım.");
+  assertEquals(heard.length, 1);
+  assertEquals(english.heard.length, 0);
+  assertEquals(usage[0].provider, "groq");
+  assertEquals(usage[0].costUsd, 0);
+});
+
+Deno.test("other languages, or Turkish without its key, are not heard", async () => {
+  const { handle } = setup();
+  const other = await handle(audio(undefined, undefined, "?lang=de"));
+  assertEquals(other.status, 400);
+  assertEquals(await other.json(), { error: { code: "unsupported_language" } });
+  const turkish = await handle(audio(undefined, undefined, "?lang=tr"));
+  assertEquals(turkish.status, 503);
+  assertEquals(await turkish.json(), { error: { code: "stt_unavailable" } });
 });
 
 Deno.test("without its key the recognizer is unavailable", async () => {

@@ -163,8 +163,8 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 
 | Fonksiyon | Rotalar | Notlar |
 |---|---|---|
-| `tutor` | `07` §4'teki tüm rotalar; `answer_check` (F1-15) | Tek dağıtım, rota parametresi. Sağlayıcı zinciri: veri onayı, adil pay, kota (`07` §3). Şema doğrulaması, merdiven sızıntı kontrolü, `llm_usage` kaydı (servis rolüyle). |
-| `speech` | `transcribe` (F1-14), `assess`, `tts` (Faz 2) | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede (`08` §5.0), görev sesi Storage yolundan (F1-19). `speech_usage` kaydı; kullanım satırını fonksiyon `SUPABASE_SECRET_KEYS` içindeki gizli anahtarla yazar. |
+| `tutor` | `07` §4'teki tüm rotalar; `answer_check` (F1-15), `gap_suggest` (F1-17) | Tek dağıtım, rota parametresi. Sağlayıcı zinciri: veri onayı, adil pay, kota (`07` §3). Şema doğrulaması, merdiven sızıntı kontrolü, `llm_usage` kaydı (servis rolüyle). |
+| `speech` | `transcribe` (F1-14; Türkçe yedek F1-17), `assess`, `tts` (Faz 2) | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede (`08` §5.0), görev sesi Storage yolundan (F1-19). `speech_usage` kaydı; kullanım satırını fonksiyon `SUPABASE_SECRET_KEYS` içindeki gizli anahtarla yazar. |
 | `pair` | `create`, `join`, `submit` | Rol yüklerini yalnızca ilgili katılımcıya verir. Realtime kanalı `pair:{id}` (özel kanal, RLS). |
 | `ops` | `retention_cleanup`, `backup_export` | Yalnızca servis rolü, pg_cron + pg_net ile tetiklenir. |
 

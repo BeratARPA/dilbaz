@@ -57,6 +57,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `eval-cases` (LLM eval'inin `answer_check` altın seti: `evals/tutor/answer_check/cases.yaml` + kör kontroller → `cases.jsonl`; derlenmiş paketi ve S4 etiketleyicisini kullanır; kullanılamayan vaka varsa çıkış kodu 1; `07` §8).
   - `build [--l1 tr] [--l2 en]` (S9: paket dosyaları; engelleyici sorun varsa hiçbir dosya yazılmaz, çıkış kodu 1).
   - `report [--l1 tr] [--l2 en]` (S10: derleme raporu).
+  - `levels-module [--l2 en]` (derlenmiş hedef paketin sözlük seviyelerini ve biçimlerini fonksiyonlar için `supabase/functions/_shared/levels/<l2>.ts` modülüne yazar; `tutor/gap_suggest`'in seviye denetimi, `07` §4.3; her hedef paket derlemesinden sonra).
   - Diğer aşama komutları sonraki görevlerde eklenir.
 - **Kod:** `content/tools/src/dilbaz_content/`, testler `content/tools/tests/`. `requires-python >= 3.12`, yerel yorumlayıcı 3.14 (`.python-version`). Denetimler: ruff (lint + format), mypy (pydantic eklentisi), pytest.
 - Büyük kaynak dosyaları `content/sources/` altında durur (git dışı, sağlama toplamıyla). Ara çıktılar `content/work/`, paket çıktıları `content/build/` altındadır (git dışı).

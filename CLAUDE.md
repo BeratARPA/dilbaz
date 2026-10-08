@@ -83,9 +83,10 @@ cd supabase/functions && deno test -A && deno lint && deno fmt --check
 cd content/tools && uv sync && uv run dilbaz-content --help && uv run pytest && uv run ruff check . && uv run ruff format --check . && uv run mypy src
 
 # LLM eval (ücretsiz kotaları tüketir; önce kullanıcıya haber ver)
-cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check
+cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check   # ya da gap_suggest
 cd evals && deno fmt --check && deno lint && deno test -A
 cd content/tools && uv run dilbaz-content eval-cases   # altın seti paketten kurar
+cd content/tools && uv run dilbaz-content levels-module   # hedef paket derlemesinden sonra: fonksiyonların seviye listesi
 ```
 
 ## Kod kuralları

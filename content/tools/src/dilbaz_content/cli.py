@@ -30,6 +30,7 @@ from dilbaz_content.ingest import (
     latest_snapshot,
 )
 from dilbaz_content.items import LEVELS, Chunk, GrammarPoint, Level, WordSense
+from dilbaz_content.levels_module import run_levels_module
 from dilbaz_content.lexicon_step import CMUDICT, LEXICON_FILE, WIKTEXTRACT_DUMP, run_lexicon
 from dilbaz_content.manifest import load_manifest
 from dilbaz_content.pair_step import run_pair
@@ -401,6 +402,21 @@ def audio(
         f"by voice {report.by_voice}; slow {report.slow:,}; "
         f"{report.minutes:,} min, {report.megabytes:,} MB"
     )
+
+
+@app.command(name="levels-module")
+def levels_module(
+    content_dir: ContentDir = None,
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """Write the word levels of the built target pack for the functions."""
+    root = _content_dir(content_dir)
+    try:
+        report = run_levels_module(root, l2=l2)
+    except (FileNotFoundError, ValueError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(f"{report.pack}: {report.lemmas} lemmas, {report.forms} forms -> {report.path}")
 
 
 @app.command()
