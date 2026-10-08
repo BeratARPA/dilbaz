@@ -245,9 +245,11 @@ final class Planner {
     if (plan.backlog) return 0;
     final room = plan.reviewCap * config.newLoadShare;
     final spare = room - plan.projectedDailyReview;
+    // The level's cap is per day: items introduced earlier today count.
+    final left = (config.maxNew[learner.level] ?? 0) - learner.newToday;
     var count = (spare.inMicroseconds / config.newCardDailyCost.inMicroseconds)
         .floor()
-        .clamp(0, config.maxNew[learner.level] ?? 0);
+        .clamp(0, left < 0 ? 0 : left);
     final accuracy = learner.recentUnaidedAccuracy;
     if (accuracy != null && accuracy < config.lowAccuracyThreshold) {
       count ~/= 2;

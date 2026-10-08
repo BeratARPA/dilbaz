@@ -19,6 +19,9 @@ abstract class LearnerSnapshot with _$LearnerSnapshot {
     /// Time already spent today.
     @Default(Duration.zero) Duration spentToday,
 
+    /// New items already introduced today; the day's cap counts them.
+    @Default(0) int newToday,
+
     /// Share of first-try recalls among the reviews of the last seven
     /// days; null without any.
     double? recentUnaidedAccuracy,

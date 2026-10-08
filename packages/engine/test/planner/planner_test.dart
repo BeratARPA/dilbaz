@@ -69,7 +69,7 @@ final class World {
         }(),
     ];
     final daily = minutes([10, 15, 20, 30, 45, 60][random.nextInt(6)]);
-    learner = LearnerSnapshot(
+    final snapshot = LearnerSnapshot(
       level: CefrLevel.values[random.nextInt(4)],
       dailyBudget: daily,
       spentToday: minutes(random.nextInt(daily.inMinutes + 5)),
@@ -104,6 +104,8 @@ final class World {
     ];
     partnerAvailable = random.nextBool();
     seed = random.nextInt(1 << 31);
+    // From the world's own seed, so that the shared stream stays as it was.
+    learner = snapshot.copyWith(newToday: seed % 8);
   }
 
   late final List<PlanCard> cards;
@@ -185,8 +187,10 @@ void main() {
           expect(plan.newItems, isEmpty);
         }
         expect(
-          plan.newItems.length,
-          lessThanOrEqualTo(config.maxNew[world.learner.level]!),
+          plan.newItems.length + world.learner.newToday,
+          lessThanOrEqualTo(
+            max(config.maxNew[world.learner.level]!, world.learner.newToday),
+          ),
         );
         final taken = {for (final card in world.cards) card.itemKey};
         expect(plan.newItems.where(taken.contains), isEmpty);
@@ -462,6 +466,23 @@ void main() {
             newCandidates: candidates,
           );
       expect(plan.newItems, hasLength(config.maxNew[CefrLevel.a0]));
+    });
+
+    test('the day cap counts the items introduced earlier today', () {
+      final generous = Planner(
+        config: const PlannerConfig(newCardDailyCost: Duration(seconds: 10)),
+      );
+      TodayPlan after(int newToday) => generous.plan(
+        learner: LearnerSnapshot(level: CefrLevel.a0, newToday: newToday),
+        cards: const [],
+        now: now,
+        seed: 1,
+        newCandidates: candidates,
+      );
+      final cap = config.maxNew[CefrLevel.a0]!;
+      expect(after(2).newItems, hasLength(cap - 2));
+      expect(after(cap).newItems, isEmpty);
+      expect(after(cap + 3).newItems, isEmpty);
     });
 
     test('halved when first-try recalls fall under 70% (P10)', () {
