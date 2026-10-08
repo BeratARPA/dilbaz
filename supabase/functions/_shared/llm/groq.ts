@@ -41,8 +41,11 @@ export function groqFailure(
   body: string,
 ): LlmFailure {
   if (status === 429) {
-    // No requests left today: the daily limit, not the per-minute one.
-    return headers.get("x-ratelimit-remaining-requests") === "0"
+    // A daily limit, not a per-minute one: no requests left today, or the
+    // day's tokens (TPD), which only the message names; the headers count
+    // tokens per minute.
+    return headers.get("x-ratelimit-remaining-requests") === "0" ||
+        body.includes("per day")
       ? "quota"
       : "busy";
   }

@@ -82,7 +82,9 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
   - Sistem promptunda tarih, UUID, sırasız JSON olmaz. Sağlayıcıların örtük önbelleği ancak böyle çalışır. Groq'ta önbellekten okunan tokenlar kotaya sayılmaz.
   - Rol oyununda geçmiş yalnızca sona eklenerek büyür.
 - **Hata yönetimi:**
-  - Günlük kota 429'u (Gemini'de kota kimliğinde `PerDay`, Groq'ta `x-ratelimit-remaining-requests: 0`) → model kota günü bitene kadar "dolu" işaretlenir, sıradaki modele geçilir.
+  - Günlük kota 429'u (Gemini'de kota kimliğinde `PerDay`; Groq'ta `x-ratelimit-remaining-requests: 0` ya da mesajda "per day") → model kota günü bitene kadar "dolu" işaretlenir, sıradaki modele geçilir.
+    - Groq'un günlük token sınırının (TPD, `gpt-oss-120b`'de 200 bin) başlığı yoktur. Başlıklardaki token sayıları dakikalıktır; TPD yalnızca 429 mesajında adıyla geçer: "on tokens per day (TPD)". 2026-10-08'e kadar bu 429 "meşgul" sayılıyordu (eval'de görüldü, düzeltildi).
+    - TPD gece yarısı sıfırlanmaz, sürekli dolar: dakikada ~139 token. Bütçe bitince Groq ~23 dakikada bir kart kontrolüne yeter (~3,2 bin token, önbellek hariç). "Kota günü sonuna kadar dolu" tutumu bu yüzden temkinlidir, ama az şey kaybettirir.
   - Dakika sınırı 429'u ve 503 → model sağlayıcının istediği süre (en çok 10 dk, belirtmezse 30 sn) atlanır. İşaret fonksiyon örneği başınadır.
   - 5xx, zaman aşımı ve ağ hatası → yeniden denenmez, sıradaki modele geçilir. Etkileşimli rotada beklemek gecikmeyi uzatır. Rota başına zaman aşımı `timeoutMs`'dir; `answer_check` için 15 sn.
   - 400/404 yeniden denenmez; olay kodu loglanır, sıradaki modele geçilir.

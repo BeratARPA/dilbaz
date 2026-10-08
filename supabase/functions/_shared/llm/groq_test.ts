@@ -104,6 +104,22 @@ Deno.test("429 tells the daily limit from the per-minute one", async () => {
 
   const spent = new Headers({ "x-ratelimit-remaining-requests": "0" });
   assertEquals(groqFailure(429, spent, ""), "quota");
+
+  // The day's tokens are gone while requests are left (seen 2026-10-08).
+  const requestsLeft = new Headers({
+    "retry-after": "1325",
+    "x-ratelimit-remaining-requests": "990",
+  });
+  assertEquals(
+    groqFailure(
+      429,
+      requestsLeft,
+      '{"error":{"message":"Rate limit reached for model ' +
+        "`openai/gpt-oss-120b` on tokens per day (TPD): Limit 200000, " +
+        'Used 197583, Requested 5482. Please try again in 22m4.08s."}}',
+    ),
+    "quota",
+  );
 });
 
 Deno.test("statuses map to failures", () => {
