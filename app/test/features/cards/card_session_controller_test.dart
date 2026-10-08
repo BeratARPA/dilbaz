@@ -1,5 +1,6 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
+import 'package:dilbaz_app/data/repositories/session_repository.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
@@ -26,6 +27,8 @@ void main() {
   late FakePackAudio audio;
   late FakeClipPlayer player;
   late ProviderContainer container;
+  late CardSessionControllerProvider session;
+  late DateTime now;
   var containerMade = false;
 
   setUp(() async {
@@ -37,6 +40,7 @@ void main() {
     recorder = FakeAnswerRecorder();
     audio = FakePackAudio();
     player = FakeClipPlayer();
+    now = cardNow;
     containerMade = false;
   });
 
@@ -45,15 +49,14 @@ void main() {
     await db.close();
   });
 
-  CardSessionController controller() =>
-      container.read(cardSessionControllerProvider.notifier);
+  CardSessionController controller() => container.read(session.notifier);
 
-  CardSessionState? current() =>
-      container.read(cardSessionControllerProvider).value;
+  CardSessionState? current() => container.read(session).value;
 
   CardView card() => (current()! as CardSessionCard).view;
 
-  Future<CardSessionState> start() async {
+  Future<CardSessionState> start({bool beyondBudget = false}) async {
+    session = cardSessionControllerProvider(beyondBudget: beyondBudget);
     container = ProviderContainer(
       overrides: cardSessionOverrides(
         db: db,
@@ -63,10 +66,11 @@ void main() {
         recorder: recorder,
         audio: audio,
         player: player,
+        clock: () => now,
       ),
-    )..listen(cardSessionControllerProvider, (_, _) {});
+    )..listen(session, (_, _) {});
     containerMade = true;
-    return await container.read(cardSessionControllerProvider.future);
+    return await container.read(session.future);
   }
 
   /// Opens the first new item's card.
@@ -612,6 +616,73 @@ void main() {
           );
       expect(await start(), const CardSessionState.empty());
     });
+
+    test('ends with one row in sessions: its time on cards', () async {
+      await start();
+      // A card left open counts as three minutes at most.
+      for (final (answer, time) in [
+        ('Bada kolu.', const Duration(seconds: 40)),
+        ('Sima dero.', const Duration(minutes: 10)),
+        ('Dero kolu.', const Duration(seconds: 20)),
+      ]) {
+        controller()
+          ..begin()
+          ..switchInput();
+        await controller().submit(answer);
+        now = now.add(time);
+        await finishCard();
+      }
+      final row = (await db.select(db.sessions).get()).single;
+      expect(row.profileId, FakeAuthRepository.id);
+      expect(row.courseId, FakeAssessmentRepository.zzCourse.id);
+      expect(row.startedAt, cardNow);
+      expect(row.endedAt, cardNow.add(const Duration(minutes: 11)));
+      const active = Duration(minutes: 4);
+      expect(row.activeMs, active.inMilliseconds);
+      expect(row.strandMs, {'language': active.inMilliseconds});
+      // Three new items of 30 s and a spoken card of 20 s each.
+      expect(row.planned, {'reviews': 0, 'new': 3, 'estimate_ms': 150000});
+      expect(row.done, {'reviewed': 0, 'introduced': 3});
+      final outbox = await db.select(db.outbox).get();
+      expect(outbox.where((e) => e.targetTable == 'sessions'), hasLength(1));
+    });
+
+    test('leaving records the cards so far, once; no card, no row', () async {
+      await start();
+      await controller().leave();
+      expect(await db.select(db.sessions).get(), isEmpty);
+
+      container.dispose();
+      containerMade = false;
+      await startCard();
+      await say('bada kolu');
+      now = now.add(const Duration(seconds: 30));
+      await controller().leave();
+      await controller().leave();
+      final row = (await db.select(db.sessions).get()).single;
+      expect(row.done, {'reviewed': 0, 'introduced': 1});
+      expect(row.strandMs, {'language': 30000});
+    });
+
+    test(
+      'once the day is spent, cards wait unless the learner goes on',
+      () async {
+        await DriftSessionRepository(db).record(
+          userId: FakeAuthRepository.id,
+          courseId: FakeAssessmentRepository.zzCourse.id,
+          deviceId: 'device-1',
+          startedAt: cardNow.subtract(const Duration(minutes: 40)),
+          endedAt: cardNow.subtract(const Duration(minutes: 5)),
+          strands: {Strand.language: const Duration(minutes: 30)},
+        );
+        expect(await start(), const CardSessionState.enough());
+
+        container.dispose();
+        containerMade = false;
+        final state = await start(beyondBudget: true);
+        expect((state as CardSessionIntroduction).view.total, 3);
+      },
+    );
 
     test('without the packs there is no session', () async {
       await db.delete(db.contentPacks).go();

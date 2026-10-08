@@ -24,4 +24,8 @@ abstract final class AppRoutes {
 
   /// A card session, over the tabs.
   static const cards = '/cards';
+
+  /// A card session after "Bugünlük yeter": the learner goes on
+  /// (docs/05 §6).
+  static const cardsBeyondBudget = '/cards?more=1';
 }

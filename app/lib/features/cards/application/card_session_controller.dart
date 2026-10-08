@@ -6,13 +6,12 @@ import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/audio/recorder_config.dart';
 import 'package:dilbaz_app/data/repositories/attempt_draft.dart';
-import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/card_content.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
-import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/repositories/session_providers.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/data/speech/transcript.dart';
@@ -20,25 +19,12 @@ import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_providers.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
+import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'card_session_controller.g.dart';
-
-/// The planner's seed: the same all day for one learner (docs/05 §1).
-/// Tests fix it.
-@riverpod
-int cardSeed(Ref ref) {
-  final userId = ref.watch(authRepositoryProvider).userId ?? '';
-  final day = ref.watch(clockProvider)().toLocal();
-  var seed = 17;
-  // Small steps keep it exact on the web too.
-  for (final unit in '$userId|${day.year}-${day.month}-${day.day}'.codeUnits) {
-    seed = (seed * 31 + unit) & 0x3FFFFFFF;
-  }
-  return seed;
-}
 
 /// One card of the session: a review, or a new item (no card yet) that is
 /// introduced first (A00).
@@ -145,6 +131,18 @@ class CardSessionController extends _$CardSessionController {
   _Review? _review;
   var _reviewed = 0;
   var _introduced = 0;
+
+  /// The session, for `sessions` (docs/13 §2.4): when it began, its time
+  /// on cards and what was planned.
+  DateTime? _startedAt;
+  Duration _active = Duration.zero;
+  Map<String, Object?> _planned = const {};
+
+  /// When the card on screen opened.
+  DateTime? _openedAt;
+
+  /// Longest time one card counts: a card left open is not study time.
+  static const _cardCap = Duration(minutes: 3);
   final _scheduler = SrsScheduler();
 
   /// From the prompt (or the latest feedback) to the answer.
@@ -155,81 +153,22 @@ class CardSessionController extends _$CardSessionController {
   Timer? _limit;
 
   @override
-  Future<CardSessionState> build() async {
+  Future<CardSessionState> build({bool beyondBudget = false}) async {
     ref.onDispose(() => _limit?.cancel());
     // Kept for the whole session.
     ref
       ..watch(answerRecorderProvider)
       ..watch(clipPlayerProvider);
-    final userId = ref.watch(authRepositoryProvider).userId;
-    final assessments = ref.watch(assessmentRepositoryProvider);
-    final profiles = ref.watch(profileRepositoryProvider);
     final content = ref.watch(cardContentRepositoryProvider);
     final cards = ref.watch(cardRepositoryProvider);
     final devices = ref.watch(deviceRepositoryProvider);
-    final now = ref.watch(clockProvider)();
-    final seed = ref.watch(cardSeedProvider);
-    if (userId == null) return const CardSessionState.unavailable();
-    final course = await assessments.course(userId);
-    final settings = await profiles.studySettings(userId);
-    final language = await content.language();
-    if (course == null || settings == null || language == null) {
-      return const CardSessionState.unavailable();
-    }
-
-    final items = await content.items();
-    final personal = await content.personalItems(course.id, course.level);
-    final links = await content.links();
-    final stored = await cards.cards(course.id);
-    final evidence = await cards.evidence(course.id);
-    final today = _startOfDay(now);
-    final lately = today.subtract(const Duration(days: 2));
-    final introducedToday = {
-      for (final card in stored)
-        if (!card.createdAt.isBefore(today)) card.itemRef,
-    };
-    final candidates = Curriculum(items: [...items, ...personal], links: links)
-        .next(
-          level: course.level,
-          levelOf: (key) =>
-              evidence[key]?.productionLevel(now: now) ?? ItemLevel.unseen,
-          // What the learner asked for comes first (docs/02 §4.3).
-          personal: {for (final item in personal) item.key},
-          introducedToday: introducedToday,
-          introducedLately: {
-            for (final card in stored)
-              if (!card.createdAt.isBefore(lately)) card.itemRef,
-          },
-        );
-    final plan = Planner().plan(
-      learner: LearnerSnapshot(
-        level: course.level,
-        dailyBudget: settings.dailyBudget,
-        silentMode: settings.silentMode,
-        newToday: introducedToday.length,
-      ),
-      cards: [
-        for (final card in stored)
-          PlanCard(
-            id: card.id,
-            itemKey: card.itemRef,
-            mode: card.mode,
-            memory: card.memory,
-          ),
-      ],
-      now: now,
-      seed: seed,
-      newCandidates: candidates,
-      links: links,
-    );
-
-    final knowledge = LemmaKnowledge.fromCards(
-      items: items,
-      evidence: evidence,
-      ranks: _ranks(items),
-      xlex: await assessments.latestXlex(course.id),
-    );
-    final byId = {for (final card in stored) card.id: card};
+    final planned = await planCards(ref, beyondBudget: beyondBudget);
+    if (planned == null) return const CardSessionState.unavailable();
+    if (planned.plan.enough) return const CardSessionState.enough();
+    final course = planned.course;
+    final plan = planned.plan;
+    final knowledge = planned.knowledge;
+    final byId = planned.cards;
     final queue = <_Entry>[];
     Future<void> add(String itemKey, StoredCard? card) async {
       final found = await content.content(itemKey, knowledge: knowledge);
@@ -261,14 +200,14 @@ class CardSessionController extends _$CardSessionController {
     if (queue.isEmpty) return const CardSessionState.empty();
 
     _session = (
-      userId: userId,
+      userId: planned.userId,
       courseId: course.id,
-      deviceId: await devices.deviceId(userId),
+      deviceId: await devices.deviceId(planned.userId),
       l2: course.l2,
       level: course.level,
-      settings: settings,
+      settings: planned.settings,
       scaffolds: Scaffolds.forLevel(course.level),
-      checker: AnswerChecker(language),
+      checker: AnswerChecker(planned.language),
       newCardMode: plan.newCardMode,
       latencies: {
         for (final input in AnswerInput.values)
@@ -281,27 +220,14 @@ class CardSessionController extends _$CardSessionController {
     _index = 0;
     _reviewed = 0;
     _introduced = 0;
+    _active = Duration.zero;
+    _startedAt = ref.read(clockProvider)();
+    _planned = {
+      'reviews': plan.reviews.length,
+      'new': plan.newItems.length,
+      'estimate_ms': plan.estimate.inMilliseconds,
+    };
     return _open(0);
-  }
-
-  /// Lemma → its best frequency rank, for the lemmas' chance of being
-  /// known.
-  static Map<String, int> _ranks(List<ContentItem> items) {
-    final ranks = <String, int>{};
-    for (final item in items) {
-      final rank = item.rank;
-      if (item.kind != ItemKind.wordSense || rank == null) continue;
-      for (final lemma in item.lemmas) {
-        ranks[lemma] = min(rank, ranks[lemma] ?? rank);
-      }
-    }
-    return ranks;
-  }
-
-  /// Midnight of [now]'s day where the learner is, in UTC.
-  static DateTime _startOfDay(DateTime now) {
-    final local = now.toLocal();
-    return DateTime(local.year, local.month, local.day).toUtc();
   }
 
   static CardMode _mode(AnswerInput input) => switch (input) {
@@ -323,6 +249,7 @@ class CardSessionController extends _$CardSessionController {
       introducing: entry.card == null,
     );
     _review = review;
+    _openedAt = ref.read(clockProvider)();
     _restartWatch();
     // After the state is in place; out loud only when that suits the
     // learner (silent mode).
@@ -657,6 +584,8 @@ class CardSessionController extends _$CardSessionController {
       state = AsyncData(_open(_index));
     } else {
       _review = null;
+      await _record();
+      if (!ref.mounted) return;
       state = AsyncData(
         CardSessionState.done(reviewed: _reviewed, introduced: _introduced),
       );
@@ -669,11 +598,33 @@ class CardSessionController extends _$CardSessionController {
     final review = _review;
     _review = null;
     unawaited(ref.read(clipPlayerProvider).stop());
-    if (review == null) return;
-    if (review.phase is CardListening) {
-      await ref.read(answerRecorderProvider).cancel();
+    if (review != null) {
+      if (review.phase is CardListening) {
+        await ref.read(answerRecorderProvider).cancel();
+      }
+      await _save(review);
     }
-    await _save(review);
+    await _record();
+  }
+
+  /// Writes the session to `sessions` once, if a card was stored; the
+  /// Today screen counts its time (I-13).
+  Future<void> _record() async {
+    final startedAt = _startedAt;
+    if (startedAt == null || _reviewed + _introduced == 0) return;
+    _startedAt = null;
+    await ref
+        .read(sessionRepositoryProvider)
+        .record(
+          userId: _session.userId,
+          courseId: _session.courseId,
+          deviceId: _session.deviceId,
+          startedAt: startedAt,
+          endedAt: ref.read(clockProvider)(),
+          strands: {Strand.language: _active},
+          planned: _planned,
+          done: {'reviewed': _reviewed, 'introduced': _introduced},
+        );
   }
 
   Future<void> _answer(_Review review, _Answer answer) async {
@@ -955,6 +906,11 @@ class CardSessionController extends _$CardSessionController {
       _introduced++;
     } else {
       _reviewed++;
+    }
+    final opened = _openedAt;
+    if (opened != null) {
+      final spent = ref.read(clockProvider)().difference(opened);
+      _active += spent > _cardCap ? _cardCap : spent;
     }
   }
 }

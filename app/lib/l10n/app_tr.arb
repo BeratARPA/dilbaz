@@ -1237,5 +1237,114 @@
   "gapListAdd": "Yeni ekle",
   "@gapListAdd": {
     "description": "List: tooltip of the add button."
+  },
+  "todayTimeQuestion": "Bugün ne kadar vaktin var?",
+  "@todayTimeQuestion": {
+    "description": "Today: the quick choice of today's time (docs/05 §6)."
+  },
+  "todayMinutes": "{minutes} dk",
+  "@todayMinutes": {
+    "description": "Today: a time choice in minutes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCardsTitle": "Kartlar",
+  "@todayCardsTitle": {
+    "description": "Today: the planned cards."
+  },
+  "todayCardsSummary": "{reviews} tekrar · {fresh} yeni · yaklaşık {minutes} dk",
+  "@todayCardsSummary": {
+    "description": "Today: the planned reviews, new items and their time.",
+    "placeholders": {
+      "reviews": {
+        "type": "int"
+      },
+      "fresh": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCardsNone": "Şu an sırada kart yok. Yeni kart zamanı gelince burada olacak.",
+  "@todayCardsNone": {
+    "description": "Today: nothing to review or introduce now."
+  },
+  "todayCardsStart": "Başla",
+  "@todayCardsStart": {
+    "description": "Today: starts the card session."
+  },
+  "todayMinimumDay": "Kısa bir gün: yalnızca tekrar.",
+  "@todayMinimumDay": {
+    "description": "Today: a minimum day has reviews only (docs/05 §3)."
+  },
+  "todayWelcomeBack": "Hoş geldin. Önce kısa bir karışık tekrar yapalım.",
+  "@todayWelcomeBack": {
+    "description": "Today: reviews piled up; neutral words, nothing about the days in between (docs/05 §6, I-12)."
+  },
+  "todayWeek": "Bu hafta {days} / {goal} gün",
+  "@todayWeek": {
+    "description": "Today: the week's study days against the goal.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "todayEnoughTitle": "Bugünlük yeter.",
+  "@todayEnoughTitle": {
+    "description": "Today: the day's time is used up (docs/09 §5.14)."
+  },
+  "todaySpent": "Bugün {minutes} dakika çalıştın.",
+  "@todaySpent": {
+    "description": "Today: the time studied today.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayTomorrowMorningCoffee": "Yarın kahvenle görüşürüz.",
+  "@todayTomorrowMorningCoffee": {
+    "description": "Today, enough: tomorrow at the learner's anchor (morning coffee)."
+  },
+  "todayTomorrowLunchBreak": "Yarın öğle arasında görüşürüz.",
+  "@todayTomorrowLunchBreak": {
+    "description": "Today, enough: tomorrow at the learner's anchor (lunch break)."
+  },
+  "todayTomorrowAfterDinner": "Yarın akşam yemeğinden sonra görüşürüz.",
+  "@todayTomorrowAfterDinner": {
+    "description": "Today, enough: tomorrow at the learner's anchor (after dinner)."
+  },
+  "todayTomorrowBeforeBed": "Yarın yatmadan önce görüşürüz.",
+  "@todayTomorrowBeforeBed": {
+    "description": "Today, enough: tomorrow at the learner's anchor (before bed)."
+  },
+  "todayTomorrow": "Yarın görüşürüz.",
+  "@todayTomorrow": {
+    "description": "Today, enough: tomorrow, without an anchor."
+  },
+  "todayGoOn": "Devam etmek istersen",
+  "@todayGoOn": {
+    "description": "Today, enough: a quiet link to go on anyway (docs/09 §5.14)."
+  },
+  "todayGreetingMorning": "Günaydın.",
+  "@todayGreetingMorning": {
+    "description": "Today: the greeting from 05:00 to 11:00; no streak (docs/09 §5.2)."
+  },
+  "todayGreetingDay": "Merhaba.",
+  "@todayGreetingDay": {
+    "description": "Today: the greeting from 11:00 to 18:00."
+  },
+  "todayGreetingEvening": "İyi akşamlar.",
+  "@todayGreetingEvening": {
+    "description": "Today: the greeting from 18:00 to 05:00."
   }
 }

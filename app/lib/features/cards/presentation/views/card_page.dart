@@ -18,8 +18,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// then listening → checking → the result, the hint ladder step by step,
 /// and at the end the correct sentence to hear and say once.
 class CardPage extends ConsumerStatefulWidget {
-  const new({required this.view, super.key});
+  const new({required this.session, required this.view, super.key});
 
+  final CardSessionControllerProvider session;
   final CardView view;
 
   @override
@@ -52,8 +53,7 @@ class _CardPageState extends ConsumerState<CardPage> {
     super.dispose();
   }
 
-  CardSessionController get _controller =>
-      ref.read(cardSessionControllerProvider.notifier);
+  CardSessionController get _controller => ref.read(widget.session.notifier);
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +192,13 @@ class _CardPageState extends ConsumerState<CardPage> {
             ),
         ];
       case CardAsking() || CardListening() when view.input == AnswerInput.speak:
-        return [_SpeakArea(key: const ValueKey('speak'), view: view)];
+        return [
+          _SpeakArea(
+            key: const ValueKey('speak'),
+            session: widget.session,
+            view: view,
+          ),
+        ];
       case CardAsking():
         void send() => unawaited(_controller.submit(_answer.text));
         return [
@@ -296,15 +302,16 @@ class _CardPageState extends ConsumerState<CardPage> {
 
 /// The microphone, what it hears, and the way to type instead.
 class _SpeakArea extends ConsumerWidget {
-  const new({required this.view, super.key});
+  const new({required this.session, required this.view, super.key});
 
+  final CardSessionControllerProvider session;
   final CardView view;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final controller = ref.read(cardSessionControllerProvider.notifier);
+    final controller = ref.read(session.notifier);
     final listening = view.phase is CardListening;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

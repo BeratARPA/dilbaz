@@ -98,6 +98,12 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v7
+      # The APK build ran out of disk; these preinstalled tools are unused here.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost /usr/share/swift
+          df -h /
       - uses: actions/setup-java@v6
         with:
           distribution: temurin

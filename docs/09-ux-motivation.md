@@ -94,6 +94,21 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 - **Haftalık hedef halkası:** bu hafta çalışılan gün / hedef. Partnerin katkısı ayrı renkte, sıralama yok.
 - Bütçe dolunca → "Bugünlük yeter" özeti (§5.14).
 
+**Uygulama notları (F1-18):**
+- **Sıra:**
+  - saate göre selamlama: Günaydın / Merhaba / İyi akşamlar
+  - varsa seviye testi daveti
+  - "Bugün ne kadar vaktin var?" (5 / 15 / bütçe)
+  - Kartlar kutusu: "3 tekrar · 2 yeni · yaklaşık 4 dk" ve "Başla"
+  - haftalık halka: "Bu hafta 2 / 5 gün"
+  - en altta içerik özeti
+- Birikim varsa "Hoş geldin. Önce kısa bir karışık tekrar yapalım." yazar. Kısa günde "Kısa bir gün: yalnızca tekrar." yazar.
+- **Sonraya kalanlar:**
+  - 2–3 seçenek, etkinlikler geldikçe eklenir; ilki F1-19'daki konuşma görevi. O zamana kadar plan kartlardan ibarettir, diğer etkinlikler Pratik sekmesindedir.
+  - Partnerin halkadaki katkısı senkronla gelir (F1-21).
+- Plan aşağı çekince, bir etkinlikten dönünce ve uygulamaya dönünce yenilenir.
+- Listenin sonunda "Söyleyemedim" butonu kadar boşluk vardır.
+
 ### 5.3 Kart oturumu (A01–A04, A08)
 - Tam ekran:
   - büyük Türkçe istem + bağlam notu
@@ -105,7 +120,7 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 - Uzun basınca: "Bu içerikte hata var" bildirimi.
 
 **Uygulama notları (F1-16):**
-- Giriş şimdilik Pratik sekmesindeki "Kartlar"dır; Bugün ekranı F1-18'de.
+- Giriş Bugün ekranındaki "Başla" ya da Pratik sekmesindeki "Kartlar"dır (F1-18). Bütçe dolmuşsa oturum "Bugünlük yeter." der. Altında düşük vurgulu "Devam etmek istersen" vardır.
 - Söyle kartında mikrofon basılı tutulur, bırakınca gönderilir (en fazla 12 sn). Yaz kartında otomatik düzeltme ve öneriler kapalıdır. "Yazarak cevapla" ile "Sesle cevapla" (ses onayı varsa) arasında geçilir.
 - Sonuçta duyulan ya da yazılan cevap gösterilir. LLM'in işaretlediği hata yerleri yumuşak turuncudur. "Tekrar dene." altında açılan ipuçları "İpucu 1, 2…" diye sıralanır.
 - Söyle kartında son cevap için "Yanlış duyuldu" alanı açılır. LLM emin değilse "Bunu mu demek istedin?" sorulur (Evet / Düzelt).
@@ -196,6 +211,17 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - Özet: tekrar edilen kartlar, yeni kalıplar, konuşma dakikası, varsa somut bir gelişme.
 - Düşük vurgulu "Devam etmek istersen" bağlantısı.
 - Yarının çıpa saatine atıf ("Yarın kahvenle görüşürüz").
+
+**Uygulama notları (F1-18):**
+- Bugün ekranında çıkar.
+- **Özet:** bugün çalışılan dakika, tekrar edilen kartlar, yeni öğeler. Konuşma dakikası ve somut gelişme, konuşma görevi ve İlerleme ekranıyla gelir (F1-19, F1-20).
+- Zaman sorusu ve "Başla" gizlenir.
+- **Çıpaya göre veda:**
+  - kahve: "Yarın kahvenle görüşürüz."
+  - öğle arası: "Yarın öğle arasında görüşürüz."
+  - akşam yemeği: "Yarın akşam yemeğinden sonra görüşürüz."
+  - yatmadan önce: "Yarın yatmadan önce görüşürüz."
+  - çıpa yoksa: "Yarın görüşürüz."
 
 ## 6. Bildirimler
 

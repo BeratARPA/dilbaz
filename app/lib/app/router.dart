@@ -149,7 +149,9 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: AppRoutes.cards,
         parentNavigatorKey: rootKey,
-        builder: (context, state) => const CardSessionScreen(),
+        builder: (context, state) => CardSessionScreen(
+          beyondBudget: state.uri.queryParameters['more'] == '1',
+        ),
       ),
     ],
   );

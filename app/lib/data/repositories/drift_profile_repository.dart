@@ -60,6 +60,11 @@ class DriftProfileRepository implements ProfileRepository {
       // Without consent nothing is recorded, whatever the setting says.
       silentMode: row.settings[_silentMode] == true || !consent,
       dailyBudget: Duration(minutes: row.timeBudgetMin),
+      weeklyDaysGoal: row.weeklyDaysGoal,
+      anchor: switch (row.anchors) {
+        [{'label': final String label}, ...] => label,
+        _ => null,
+      },
       audioConsent: consent,
     );
   }

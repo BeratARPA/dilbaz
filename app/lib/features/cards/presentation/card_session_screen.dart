@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/card_page.dart';
@@ -14,15 +15,19 @@ import 'package:go_router/go_router.dart';
 /// confirmation: every finished card is already stored, and nothing is
 /// owed (I-14).
 class CardSessionScreen extends ConsumerWidget {
-  const new({super.key});
+  const new({this.beyondBudget = false, super.key});
+
+  /// The learner goes on after "Bugünlük yeter" (docs/05 §6).
+  final bool beyondBudget;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final state = ref.watch(cardSessionControllerProvider);
+    final session = cardSessionControllerProvider(beyondBudget: beyondBudget);
+    final state = ref.watch(session);
 
     Future<void> leave() async {
-      await ref.read(cardSessionControllerProvider.notifier).leave();
+      await ref.read(session.notifier).leave();
       if (context.mounted && context.canPop()) context.pop();
     }
 
@@ -64,10 +69,20 @@ class CardSessionScreen extends ConsumerWidget {
             AsyncData(:final value) => switch (value) {
               CardSessionUnavailable() => _Note(text: l10n.cardsUnavailable),
               CardSessionEmpty() => _Note(text: l10n.cardsEmpty),
+              // Going on is the learner's choice, and quiet (docs/05 §6).
+              CardSessionEnough() => _Note(
+                text: l10n.todayEnoughTitle,
+                goOn: () =>
+                    context.pushReplacement(AppRoutes.cardsBeyondBudget),
+              ),
               CardSessionIntroduction(:final view) => IntroductionPage(
+                session: session,
                 view: view,
               ),
-              CardSessionCard(:final view) => CardPage(view: view),
+              CardSessionCard(:final view) => CardPage(
+                session: session,
+                view: view,
+              ),
               CardSessionDone(:final reviewed, :final introduced) =>
                 SessionDonePage(reviewed: reviewed, introduced: introduced),
             },
@@ -81,9 +96,10 @@ class CardSessionScreen extends ConsumerWidget {
 }
 
 class _Note extends StatelessWidget {
-  const new({required this.text});
+  const new({required this.text, this.goOn});
 
   final String text;
+  final VoidCallback? goOn;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -102,6 +118,8 @@ class _Note extends StatelessWidget {
             onPressed: () => context.pop(),
             child: Text(context.l10n.cardsClose),
           ),
+          if (goOn case final goOn?)
+            TextButton(onPressed: goOn, child: Text(context.l10n.todayGoOn)),
         ],
       ),
     ),

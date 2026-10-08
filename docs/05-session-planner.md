@@ -37,7 +37,11 @@ class TodayPlan {
   - `estimate` = tekrarlar + yeni öğeler + önerilen seçenek.
   - `newCardMode`: yeni öğenin ilk kartı `speak`, sessiz modda `type` (I-05).
 - Sonraya kalanlar: davetler (satır 22), etkinlik uygunluğu (§4), geçmişten süre ve `c` tahmini (§5), seviye aralığı ve kapsama kontrolleri (§8 madde 3–5, 8, 10).
-- **Kart oturumu (F1-16):** Planı oturum başında bir kez kurar ve kuyruğu sabit tutar ("7 / 12"): önce tekrarlar, sonra yeni öğeler (tanıtım + ilk kart). Seed, öğrenci ve yerel güne göre gün boyu aynıdır. Oturum kaydı ve `spentToday` F1-18'le gelir; o zamana kadar `spentToday` 0'dır.
+- **Kart oturumu (F1-16):** Planı oturum başında bir kez kurar ve kuyruğu sabit tutar ("7 / 12"): önce tekrarlar, sonra yeni öğeler (tanıtım + ilk kart). Seed, öğrenci ve yerel güne göre gün boyu aynıdır.
+- **Oturum kaydı ve girdiler (F1-18):**
+  - Kart oturumu biterken ya da bırakılırken `sessions`'a tek satır yazar. Satır en az bir kart kaydedildiyse yazılır. Kartlarda geçen süre `language` koluna gider. Kart başına en çok 3 dk sayılır, açık bırakılan kart çalışma sayılmaz.
+  - `spentToday` yerel günün oturumlarından, `weekStrandTime` pazartesiden beri kol sürelerinden, `recentUnaidedAccuracy` son 7 günün puanlı tekrarlarındaki Good + Easy payından gelir.
+  - Bugün ekranı ve kart oturumu aynı planı kurar (`planCards`). Bütçe dolunca Pratik'ten açılan kart oturumu da "Bugünlük yeter." der. "Devam etmek istersen" ile açılan oturum `spentToday`'i 0 sayar (§6).
 
 ## 2. Haftalık kol hedefleri
 
@@ -170,6 +174,7 @@ Kişinin geçmişindeki medyan süreler kullanılır. Geçmiş yoksa varsayılan
 - **Bütçe dolunca** "Bugünlük yeter" ekranı gelir: bugün yapılanların somut özeti (yetkinlik bilgisi). "Devam etmek istersen" bağlantısı düşük vurguyla durur. Devam etmek ekstra bir şey kazandırmaz (I-13).
 - **Uzun aradan dönüş:** Tekrar tavanı aynen uygulanır. Birikim varken yeni öğe yoktur. İlk ekran nötrdür: "Hoş geldin. Önce kısa bir karışık tekrar yapalım." Kaç gün geçtiği vurgulanmaz (I-12).
 - **"Bugün ne kadar vaktin var?"** Bugün ekranında 5 / 15 / 30 dk hızlı seçimi vardır. Varsayılan, bütçedir.
+  - Uygulama notu (F1-18): Seçim yalnızca o gün geçerlidir. Bütçeden uzun seçenek gösterilmez; bütçe 20 dk ise seçenekler 5 / 15 / 20'dir. Uygulamaya dönülünce plan yeniden kurulur, çünkü gün değişmiş olabilir.
 - **Birlikte:**
   - Partnerin çevrimiçi olması Supabase presence ile görülür.
   - "Birlikte yapalım mı?" daveti partnere bildirim olarak gider. Kullanıcının izni ve sessiz saat kuralı geçerlidir.

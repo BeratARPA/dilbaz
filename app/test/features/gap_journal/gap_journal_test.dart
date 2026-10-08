@@ -79,6 +79,7 @@ void main() {
       profiles: profiles,
       dictation: dictation,
       shared: shared,
+      db: db,
       extra: cardDataOverrides(db: db, tutor: tutor),
     );
   }

@@ -15,6 +15,13 @@ typedef StudySettings = ({
   /// Time the learner wants to spend a day (I-13).
   Duration dailyBudget,
 
+  /// Days a week the learner wants to study.
+  int weeklyDaysGoal,
+
+  /// When the learner studies: the code of their first habit anchor
+  /// (`morning_coffee`, …); null without one.
+  String? anchor,
+
   /// Recording audio is allowed (docs/14 §4).
   bool audioConsent,
 });

@@ -1,4 +1,6 @@
 import 'package:dilbaz_app/app/app.dart';
+import 'package:dilbaz_app/data/db/app_database.dart';
+import 'package:dilbaz_app/data/db/database_provider.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'fake_auth_repository.dart';
 import 'fake_profile_repository.dart';
 import 'fake_speech.dart';
+import 'pack_fixture.dart';
 import 'placement_fixture.dart';
 
 /// Content as the app has it once the course packs are imported.
@@ -45,8 +48,16 @@ List<Override> appOverrides({
   FakeSpeechRepository? speech,
   FakeDictation? dictation,
   SharedTextSource? shared,
+  AppDatabase? db,
   List<Override> extra = const [],
 }) => [
+  // An empty database in memory unless the test brings its own.
+  appDatabaseProvider.overrideWith((ref) {
+    if (db != null) return db;
+    final database = memoryDatabase();
+    ref.onDispose(database.close);
+    return database;
+  }),
   authRepositoryProvider.overrideWithValue(auth),
   profileRepositoryProvider.overrideWithValue(
     profiles ?? FakeProfileRepository(onboarded: true),
@@ -89,6 +100,7 @@ extension PumpApp on WidgetTester {
     FakeSpeechRepository? speech,
     FakeDictation? dictation,
     SharedTextSource? shared,
+    AppDatabase? db,
     List<Override> extra = const [],
   }) async {
     final fake = auth ?? FakeAuthRepository(signedIn: signedIn);
@@ -107,6 +119,7 @@ extension PumpApp on WidgetTester {
           speech: speech,
           dictation: dictation,
           shared: shared,
+          db: db,
           extra: extra,
         ),
         child: const DilbazApp(),

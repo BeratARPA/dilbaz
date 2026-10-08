@@ -250,6 +250,45 @@ void main() {
       expect(await cards.recentLatencies(courseId, CardMode.type), isEmpty);
     });
 
+    test('first-try recalls since a moment: their share and count', () async {
+      final cards = repository();
+      final card = await cards.introduce(
+        userId: userId,
+        courseId: courseId,
+        itemRef: 'en.ws.chicken.n.1',
+        mode: CardMode.speak,
+      );
+      Future<void> review(ReviewRating rating, {bool missFirst = false}) =>
+          cards.recordReview(
+            userId: userId,
+            courseId: courseId,
+            deviceId: 'device-1',
+            card: card,
+            attempts: [
+              if (missFirst) draft(verdict: 'wrong', targetOk: false),
+              draft(),
+            ],
+            rating: rating,
+            after: card.memory,
+          );
+
+      await review(ReviewRating.again);
+      final since = now.add(const Duration(days: 1));
+      now = now.add(const Duration(days: 2));
+      await review(ReviewRating.good);
+      await review(ReviewRating.hard, missFirst: true);
+      await review(ReviewRating.easy);
+      await review(ReviewRating.again, missFirst: true);
+
+      // Only the rated attempt of a review counts.
+      expect(await cards.reviewsSince(courseId, since), 4);
+      expect(await cards.unaidedAccuracySince(courseId, since), 0.5);
+      final later = now.add(const Duration(minutes: 1));
+      expect(await cards.reviewsSince(courseId, later), 0);
+      expect(await cards.unaidedAccuracySince(courseId, later), isNull);
+      expect(await cards.reviewsSince('another-course', since), 0);
+    });
+
     test(
       "the LLM's accepted answers to a carrier are the learner's own",
       () async {

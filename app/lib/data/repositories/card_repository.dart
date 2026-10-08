@@ -42,6 +42,13 @@ abstract interface class CardRepository {
   /// rating (docs/03 §0.3).
   Future<List<int>> recentLatencies(String courseId, CardMode mode);
 
+  /// Share of first-try recalls (Good, Easy) among the reviews rated since
+  /// [since]; null without any (docs/05 §3, line 12; P10).
+  Future<double?> unaidedAccuracySince(String courseId, DateTime since);
+
+  /// How many reviews were rated since [since].
+  Future<int> reviewsSince(String courseId, DateTime since);
+
   /// The answers to [carrierKey] on the card of [itemRef] that the LLM
   /// accepted; they match without it next time. They are read from the
   /// attempts, which keep them anyway (I-03).
@@ -247,6 +254,32 @@ class DriftCardRepository implements CardRepository {
   });
 
   static const _acceptableVariant = 'acceptable_variant';
+
+  Future<List<int>> _ratingsSince(String courseId, DateTime since) async {
+    final rows =
+        await (_db.select(_db.attempts)..where(
+              (t) =>
+                  t.courseId.equals(courseId) &
+                  t.rating.isNotNull() &
+                  t.createdAtClient.isBiggerOrEqualValue(since),
+            ))
+            .get();
+    return [for (final row in rows) row.rating!];
+  }
+
+  @override
+  Future<double?> unaidedAccuracySince(String courseId, DateTime since) async {
+    final ratings = await _ratingsSince(courseId, since);
+    if (ratings.isEmpty) return null;
+    final unaided = ratings.where(
+      (r) => r == ReviewRating.good.code || r == ReviewRating.easy.code,
+    );
+    return unaided.length / ratings.length;
+  }
+
+  @override
+  Future<int> reviewsSince(String courseId, DateTime since) async =>
+      (await _ratingsSince(courseId, since)).length;
 
   @override
   Future<PersonalAnswers> personalAnswers({

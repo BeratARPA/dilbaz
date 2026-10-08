@@ -11,15 +11,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// it". The answer is shown here, before any try: one of the two
 /// exceptions of I-01.
 class IntroductionPage extends ConsumerWidget {
-  const new({required this.view, super.key});
+  const new({required this.session, required this.view, super.key});
 
+  final CardSessionControllerProvider session;
   final IntroductionView view;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final controller = ref.read(cardSessionControllerProvider.notifier);
+    final controller = ref.read(session.notifier);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(

@@ -165,6 +165,9 @@ sealed class CardSessionState with _$CardSessionState {
   /// Nothing to review and nothing new for now.
   const factory empty() = CardSessionEmpty;
 
+  /// The day's time is used up: "Bugünlük yeter" (docs/05 §6).
+  const factory enough() = CardSessionEnough;
+
   const factory introduction(IntroductionView view) = CardSessionIntroduction;
 
   const factory card(CardView view) = CardSessionCard;

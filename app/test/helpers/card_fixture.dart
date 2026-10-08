@@ -16,7 +16,7 @@ import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_providers.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
-import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
+import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
@@ -258,17 +258,18 @@ List<Override> cardSessionOverrides({
   answerRecorderProvider.overrideWithValue(recorder),
   packAudioProvider.overrideWithValue(audio),
   clipPlayerProvider.overrideWithValue(player),
+  appDatabaseProvider.overrideWithValue(db),
   ...cardDataOverrides(db: db, tutor: tutor, clock: clock),
 ];
 
-/// The card session's own data, on top of the app's fakes: [db] with the
-/// packs of [installCardPacks], the tutor, a fixed clock and seed.
+/// The card session's own data, on top of the app's fakes and its
+/// database [db] (pass it to `pumpDilbazApp` too): the packs of
+/// [installCardPacks] read as `zz`, the tutor, a fixed clock and seed.
 List<Override> cardDataOverrides({
   required AppDatabase db,
   required FakeTutorRepository tutor,
   DateTime Function()? clock,
 }) => [
-  appDatabaseProvider.overrideWithValue(db),
   cardContentRepositoryProvider.overrideWith(
     (ref) => DriftCardContentRepository(db, l2: 'zz'),
   ),

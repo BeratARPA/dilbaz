@@ -42,6 +42,8 @@ class FakeProfileRepository implements ProfileRepository {
   /// Answers are typed by default.
   bool silentMode = false;
   Duration dailyBudget = const Duration(minutes: 30);
+  int weeklyDaysGoal = 5;
+  String? anchor = 'morning_coffee';
 
   @override
   Future<StudySettings?> studySettings(String userId) async => _onboarded
@@ -49,6 +51,8 @@ class FakeProfileRepository implements ProfileRepository {
           l1: 'tr',
           silentMode: silentMode || !audioConsent,
           dailyBudget: dailyBudget,
+          weeklyDaysGoal: weeklyDaysGoal,
+          anchor: anchor,
           audioConsent: audioConsent,
         )
       : null;

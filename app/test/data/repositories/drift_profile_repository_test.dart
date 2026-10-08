@@ -188,6 +188,8 @@ void main() {
         l1: 'tr',
         silentMode: false,
         dailyBudget: const Duration(minutes: 15),
+        weeklyDaysGoal: 4,
+        anchor: 'after_dinner',
         audioConsent: true,
       ));
       await repository.create(

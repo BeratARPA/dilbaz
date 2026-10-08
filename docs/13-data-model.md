@@ -410,6 +410,10 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`).
   - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
   - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
 - **`sync_state`:** profil başına son `server_seq` imleci (`last_server_seq`) ve son başarılı senkron (`last_sync_at`).
+- **`sessions` (F1-18):** Kart oturumu bitince ya da bırakılınca tek satır yazılır. Satır olaydır: outbox'ta `insert` olarak durur. En az bir kart kaydedilmediyse satır yazılmaz.
+  - `strand_ms` anahtarları `Strand.code`'dur. `active_ms` kol sürelerinin toplamıdır; kart başına en çok 3 dk sayılır.
+  - `planned` = `{reviews, new, estimate_ms}`, `done` = `{reviewed, introduced}`.
+  - Bugün ekranı günün süresini ve haftanın çalışılan günlerini buradan okur. Gün yerel gece yarısında, hafta pazartesi başlar.
 - **`devices`:** bu kurulumun kimliği. Profil başına ilk kullanımda bir satır açılır; her deneme onu `device_id` olarak taşır. Sütunlar sunucudaki `devices` ile aynıdır (§2.6), senkronu F1-21'de.
 - **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır (`11` §5). `content_packs.manifest`, paketin `pack_meta` tablosunun tamamıdır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
 - **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.

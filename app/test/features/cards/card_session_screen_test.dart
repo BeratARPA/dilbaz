@@ -48,6 +48,7 @@ void main() {
       profiles: profiles,
       speech: speech,
       player: player,
+      db: db,
       extra: cardDataOverrides(db: db, tutor: tutor),
     );
     await tapText(tester, trStrings.tabPractice);
