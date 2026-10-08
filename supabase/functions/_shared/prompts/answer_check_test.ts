@@ -18,7 +18,7 @@ const system = answerCheckSystemPrompt(catalog);
 
 Deno.test("the system prompt is fixed for a catalog (cacheable)", () => {
   assertEquals(answerCheckSystemPrompt(catalog), system);
-  assertEquals(answerCheckPromptVersion, "answer_check@2");
+  assertEquals(answerCheckPromptVersion, "answer_check@3");
   assertFalse(/\d{4}-\d{2}-\d{2}/.test(system), "no dates");
   assertFalse(
     /[0-9a-f]{8}-[0-9a-f]{4}-/.test(system),
@@ -44,7 +44,7 @@ Deno.test("its examples keep the contract and give nothing away", () => {
     .map((tag) => tag.code) as [string, ...string[]];
   const wire = answerCheckWire(tags);
   const blocks = system.split("Input: ").slice(1);
-  assertEquals(blocks.length, 12);
+  assertEquals(blocks.length, 13);
   const seen = new Set<string>();
   for (const block of blocks) {
     const [inputLine, outputLine] = block.split("\nOutput: ");

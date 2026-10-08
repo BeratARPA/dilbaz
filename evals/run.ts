@@ -76,10 +76,14 @@ import type { SpeakingExpected } from "./speaking_cases.ts";
 
 const here = dirname(fromFileUrl(import.meta.url));
 
-/** Least time between two calls to one provider (its per-minute limit). */
-const pace: Record<ProviderId, number> = { gemini: 6_000, groq: 2_500 };
-/** Wait after a per-minute 429 before the case is tried again. */
-const busyWaitMs = 30_000;
+/**
+ * Least time between two calls to one provider (its per-minute limit). Groq
+ * counts tokens too: 8,000 a minute is two answer checks (~3,200 tokens
+ * past its cache), so a faster pace turns calls into per-minute 429s.
+ */
+const pace: Record<ProviderId, number> = { gemini: 6_000, groq: 30_000 };
+/** Wait after a per-minute 429 before the case is tried again: a window. */
+const busyWaitMs = 60_000;
 const busyTries = 5;
 
 const routes = ["answer_check", "gap_suggest", "speaking_annotate"] as const;

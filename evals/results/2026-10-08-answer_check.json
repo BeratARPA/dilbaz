@@ -1,28 +1,28 @@
 {
   "route": "answer_check",
-  "prompt": "answer_check@1",
+  "prompt": "answer_check@2",
   "date": "2026-10-08",
   "cases": 285,
   "scores": [
     {
       "model": "gemini-3.1-flash-lite",
-      "cases": 285,
-      "failures": 26,
-      "accuracy": 0.775438596491228,
-      "falseWrong": 0.022988505747126436,
+      "cases": 134,
+      "failures": 0,
+      "accuracy": 0.8582089552238806,
+      "falseWrong": 0.011494252873563218,
       "goldCorrect": 87,
-      "targetOk": 0.9227642276422764,
-      "tagHit": 0.9135802469135802,
+      "targetOk": 0.9133858267716536,
+      "tagHit": 1,
       "schemaValid": 1,
       "leakServed": 0,
-      "leakRaw": 0.1053639846743295,
+      "leakRaw": 0.08163265306122448,
       "longHints": 0,
-      "latencyP50": 2935,
-      "latencyP95": 13511,
+      "latencyP50": 2096,
+      "latencyP95": 10176,
       "tokens": {
-        "input": 1346942,
-        "cached": 875442,
-        "output": 68027
+        "input": 771102,
+        "cached": 453577,
+        "output": 38020
       },
       "passes": {
         "accuracy": false,
@@ -30,7 +30,7 @@
         "leakServed": true,
         "schemaValid": true
       },
-      "complete": true
+      "complete": false
     }
   ]
 }

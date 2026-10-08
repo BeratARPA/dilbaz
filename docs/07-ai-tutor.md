@@ -285,13 +285,18 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 - **Promptların yeri:** Promptlar `supabase/functions/_shared/prompts/*.ts` modüllerinde, sürüm sabitiyle (ör. `answer_check@1`) versiyonlanır. Kenar fonksiyonu paketlemesi `.md` dosyalarını taşımayı garanti etmiyor; TS modülü güvenle paketlenir. Değişiklik → eval zorunlu (§8).
 - **Katalog modülü:** Hata etiketleri ve H3 kural notları çift paketten `_shared/catalogs/<çift>.ts` olarak üretilir: `deno run -A _shared/catalogs/generate.ts`. Bir test paketle eşitliği denetler.
 - **Kart kontrolündeki etiketler:** Yalnızca dilbilgisi, kelime ve edim etiketleri kullanılır. Telaffuz ve algı etiketleri konuşma görevi ve dikte içindir.
-- **`answer_check@2` örnekleri:** 12 örnek var, her verdict için en az bir tane. Örneklerin cümleleri eval setinde kullanılmaz (test).
+- **`answer_check@3` örnekleri:** 13 örnek var, her verdict için en az bir tane. Örneklerin cümleleri eval setinde kullanılmaz (test).
 - **`answer_check@2` (2026-10-08):** @1'in eval'inde (§8) Flash-Lite, anlamı değiştiren ya da dilbilgisi kartının çalıştırdığı yapıyı bozan hataları `minor_error` saydı. Neden istemin kendisindeydi:
   - Kararlar "uyan ilki" sırasıyla seçiliyordu ve `minor_error` `wrong`'dan önce geliyordu.
   - `minor_error` örnekleri be'yi ve sorudaki do'yu sayıyordu; `wrong` ise dilbilgisi kartında aynı şeyleri istiyordu.
   - @2'de sıra şöyle: `wrong`, `minor_error`'dan önce denetlenir. `wrong` anlam değişikliğini örnekler (eksik "not/n't", "bored" yerine "boring"); be ve do yalnızca kart onları çalıştırmıyorsa `minor_error` olur.
   - Hedef kelimesi olmayan cevap (eş anlamlı ya da `alternatives` gibi) asla `correct` değildir: `acceptable_variant` ve `target_ok=false` (I-04).
   - İki örnek eklendi: soru kartında do eksikliği ve olumsuzluğu düşüren cevap; ikisi de `wrong`.
+- **`answer_check@3` (2026-10-08):** @2, Flash-Lite'ta @1'in yanlış karar verdiği 38 vakanın 22'sini düzeltti. Aynı 134 vakada katı doğruluk %61,9'dan %85,8'e çıktı. Ama yeni bir sertlik getirdi:
+  - Kelime kartında hedefin dışındaki küçük hatada ("this coffee too strong") `target_ok=false` dedi; 8 vakada hedefi doğru söyleyen öğrenci kaldı (I-17).
+  - Olası neden: olumsuzluk örneğinde hedef kelime doğru ama karar `wrong` olduğu için `target_ok=false`. Model bunu her hataya genelledi.
+  - @3'te `minor_error` için `target_ok` yalnızca hedef kelimelere bakar. Karşıt örnek eklendi: kelime kartında hedef dışında be eksik → `minor_error`, `target_ok=true`.
+  - Hedefin yerine başka bir kelime gelmesi hiçbir zaman `minor_error` değildir. Yanlış duyulmuş olabilecek "leave"/"live" artık geçmez.
 
 ## 6. Pedagojik korkuluklar (özet)
 

@@ -13,7 +13,7 @@ import {
   type AnswerCheckWire,
 } from "../schemas/answer_check.ts";
 
-export const answerCheckPromptVersion = "answer_check@2";
+export const answerCheckPromptVersion = "answer_check@3";
 
 const rules =
   `You are the answer checker of Dilbaz, an app in which Turkish speakers learn English by speaking. The learner saw a sentence in Turkish (prompt_l1) and said it in English (source "asr": transcribed by speech recognition) or typed it (source "typed"). Judge this one answer and write a hint ladder for it. You do not decide what happens next: the app decides when a hint is shown and when the answer is revealed.
@@ -40,14 +40,14 @@ Take the first one that applies:
 2. correct: correct English with the prompt's meaning and the target, worded like reference_l2 or a variant; contractions, fillers, numbers written as digits and similar surface differences do not matter. An answer without the target words (a synonym, or worded like item.alternatives) is never correct: it is acceptable_variant with target_ok false.
 3. acceptable_variant: correct, natural English with the prompt's meaning, but worded differently: another word order, a synonym, another tense or subject pronoun that the prompt allows, an extra polite word.
 4. wrong: an error changes the meaning (a missing "not" or "n't", a word that means something else, such as "boring" for "bored"); the target is missing or replaced by a word that does not fit; on a grammar card, any error in the structure it practises (no be on a be card, no do on a question card, the verb at the end); or only a fragment of the sentence was said. Check this before minor_error.
-5. minor_error: the meaning is the prompt's and the error is small: an article, -s, a preposition, an adverb's place, a verb form, a misspelling in a typed answer, or be or do missing on a card that does not practise them.
+5. minor_error: the meaning is the prompt's and the error is small: an article, -s, a preposition, an adverb's place, a verb form, a misspelling in a typed answer, or be or do missing on a card that does not practise them. Another word in place of the target is never a minor_error.
 6. off_target: the answer means something else: another sentence, an unrelated reply, or Turkish.
 7. uncertain: you cannot tell whether the answer is right, for example when a word that may have been misheard ("can" or "can't") decides the verdict.
 
 # target_ok
 - correct: true.
 - acceptable_variant: true when the answer contains the target words in any correct form; false when it says the same thing without them, e.g. with a synonym.
-- minor_error: false when the error is in the target words or the target is missing; true when the error is elsewhere.
+- minor_error: look only at the target words (target_span). true when they are there and correct, even if the sentence has an error elsewhere (a missing article or be outside the target); false when the error is in them or they are missing.
 - wrong, off_target, unintelligible: false. uncertain: your best guess.
 
 # error_tags and error_spans
@@ -224,6 +224,35 @@ const examples: Example[] = [
       },
       variant_to_learn: "",
       confidence: 0.95,
+    },
+  },
+  {
+    item: {
+      key: "en.ws.cold.adj.1",
+      prompt_l1: "Su çok soğuk.",
+      reference_l2: "The water is very cold.",
+      target_span: "cold",
+      grammar_codes: ["gp.be.present"],
+    },
+    response: {
+      text: "the water very cold",
+      source: "asr",
+      asr_confidence: 0.95,
+    },
+    output: {
+      verdict: "minor_error",
+      target_ok: true,
+      error_tags: ["be.missing"],
+      error_spans: [{ text: "very", tag: "be.missing" }],
+      ladder: {
+        h1: "Cümlede bir kelime eksik.",
+        h2: "'water' ile 'very' arasına bak.",
+        h3:
+          "Cümlede fiil yoksa be gerekir: I ile am, he/she/it ile is, you/we/they ile are.",
+        h4: "The water is very cold.",
+      },
+      variant_to_learn: "",
+      confidence: 0.9,
     },
   },
   {
