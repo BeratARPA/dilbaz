@@ -56,6 +56,9 @@ abstract interface class RecordingRepository {
   /// The tasks recorded since [since] (UTC).
   Future<Set<String>> taskRefsSince(String courseId, DateTime since);
 
+  /// Every recording of the course, oldest first.
+  Future<List<RecordingRow>> recordings(String courseId);
+
   /// The task's attempt, written once when the learner leaves its
   /// feedback; it is linked to the recording. Returns its id.
   Future<String> recordAttempt({
@@ -202,6 +205,13 @@ class DriftRecordingRepository implements RecordingRepository {
   Future<RecordingRow?> recording(String id) => (_db.select(
     _db.recordings,
   )..where((t) => t.id.equals(id))).getSingleOrNull();
+
+  @override
+  Future<List<RecordingRow>> recordings(String courseId) =>
+      (_db.select(_db.recordings)
+            ..where((t) => t.courseId.equals(courseId))
+            ..orderBy([(t) => OrderingTerm(expression: t.createdAt)]))
+          .get();
 
   @override
   Future<Set<String>> taskRefsSince(String courseId, DateTime since) async => {

@@ -56,7 +56,17 @@ Bir öğenin **üretim** düzeyi, üretim modlarındaki kartlarının en iyisind
 - **Kanıt esası (I-04):** Eşikler kartın o anki stabilitesiyle değil, **son kanıtlı tekrardaki stabiliteyle** karşılaştırılır. Kanıtsız biten tekrarlar (LLM'siz `uncertain`, hedefsiz doğru cevap; `03` §0.3) zamanlamayı ilerletir ama düzey yükseltmez.
 - **21 gün hemen önceki tekrardan sayılır.** Aradaki her tekrar, kanıtsız olsa bile, doğru cümleyi gösterip hafızayı tazeler; gerçek aralık odur.
 - **Alıcı düzey** ayrıca hesaplanır (A03, A05, okumadaki aramalar): `recognized` = alıcı kartta (dinle-anla ya da dikte) S ≥ 7 gün, aynı kanıt esasıyla. Arayüzde "Tanıyor" olarak gösterilir.
-- **Motorda:** `CardRecord` (kart + puanlı tekrarları) → `ItemEvidence.productionLevel`, `isRecognized`, `isKnown`. Tekrar kayıtları `attempts`'ten okunur: zaman, puan, kanıt olup olmadığı ve `card_state_after.stability`. `transferred` serbest üretim gelince eklenecek.
+- **Motorda:** `CardRecord` (kart + puanlı tekrarları) → `ItemEvidence.productionLevel`, `isRecognized`, `isKnown`. Tekrar kayıtları `attempts`'ten okunur: zaman, puan, kanıt olup olmadığı ve `card_state_after.stability`. **F1-20'den beri `transferred` de hesaplanır:**
+  - `usedWithoutError` her konuşma kaydında hatasız kullanılan öğeleri bulur. Kaynak, aylık test kayıtları dahil, transkriptin kelimeleri ve işaretlemedir.
+  - Kelime anlamında lemma yeter. Kalıpta lemmalar sırayla gelmelidir. Dolgular atlanır. İşaretli hatanın değdiği kelimeler sayılmaz.
+  - Lemma anlamı ayırt etmez; aynı lemmanın her anlamı kullanılmış sayılır. Bilinen sınırlılıktır.
+  - Düzey, `withTransfer`'le iki ayrı günde (öğrencinin yerel günü) kullanılan ve en az `recallable` olan öğede `transferred` olur. Kullanım öğeyi kalıcı yapmaz.
+
+  **İlerleme sayıları (`countEvidence`):**
+  - Tanıyor: `isKnown` ya da en az `recallable`.
+  - Hatırlıyor: en az `recallable`.
+  - Kalıcı: en az `durable`, yalnız kartlardan.
+  - Kullanıyor: `transferred`.
 - **Unutma:** Kalıcı bir öğe unutulursa (Again), düzey projeksiyonla otomatik düşer. Geçmişte "kullanıyor" olmuş olması arayüzde not olarak kalır ("daha önce kullanmıştın").
 - **İlerleme ekranı** yüzde değil, sayı gösterir. Örnek: "Tanıyor 1840 · Hatırlıyor 612 · Kalıcı 305 · Kullanıyor 97".
 
@@ -85,6 +95,9 @@ Her görev bir ya da daha fazla can-do kodunu destekler. Görev sonucu `done | p
 | `established` | **Farklı günlerde, farklı istemlerle en az 2 `done`**. Sonuncusu son 60 günde olmalı. B1 ve üstünde en az biri hazırlık süresi/kalıp iskelesi olmadan yapılmış olmalı. |
 
 - `established` bir can-do'nun son `done`'ı 120 günden eskiyse "tazelemeye değer" olarak gösterilir. Başarısızlık gibi değil, davet olarak.
+- **Motorda (F1-20, `canDoEvidence`):** Kanıt, konuşma görevlerinin sonucudur (`recordings.outcome`, görevin can-do kodları).
+  - Ölçütleri sağlayan ama son `done`'ı 60 günden eski can-do `shown` görünür; 120 günden eskiyse "tazelemeye değer" daveti de çıkar. İki kural böyle birlikte okundu: `established` yakın kanıt ister.
+  - Sabit görevler iskelesiz, diğerleri iskeleli sayılır (A0–A2'de başlangıçlar açık).
 - Planlayıcı, henüz kanıtlanmamış can-do'ları destekleyen görevlere küçük bir öncelik verir.
 
 ## 6. L4 — Hata profili

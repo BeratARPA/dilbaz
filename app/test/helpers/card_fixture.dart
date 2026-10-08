@@ -72,6 +72,10 @@ Future<void> installCardPacks(AppDatabase db) async {
         'connectors': [
           {'text': 'kolu', 'level': 'A1'},
         ],
+        'can_dos': [
+          {'code': 'cd.zz.A1', 'level': 'A1', 'scale': 'describing'},
+          {'code': 'cd.zz.A2', 'level': 'A2', 'scale': 'describing'},
+        ],
       },
       tasks: [
         for (final (key, level, anchor, phrases) in [
@@ -199,6 +203,16 @@ Future<void> installCardPacks(AppDatabase db) async {
                 if (key != anchorTask) ...['Bada demek', 'Sima demek', 'Kolu'],
               ],
             },
+          ),
+        for (final (code, summary) in [
+          ('cd.zz.A1', 'Kendini anlatabilirsin.'),
+          ('cd.zz.A2', 'Şehrini anlatabilirsin.'),
+        ])
+          ContentPairEntriesCompanion.insert(
+            kind: 'can_do_summary',
+            key: code,
+            packId: pair,
+            data: {'summary': summary},
           ),
         ContentPairEntriesCompanion.insert(
           kind: 'variants',

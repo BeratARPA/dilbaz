@@ -1710,5 +1710,132 @@
   "placementBaselineOffer": "Başlangıç kaydı (isteğe bağlı, 1 dk)",
   "@placementBaselineOffer": {
     "description": "Placement result: offers the baseline recording (docs/06 §2 part 4)."
+  },
+  "progressEvidenceTitle": "Kanıtlar",
+  "@progressEvidenceTitle": {
+    "description": "Progress: the evidence counts (docs/04 §3); counts, never percentages (I-04)."
+  },
+  "progressKnown": "Tanıyor",
+  "@progressKnown": {
+    "description": "Progress: items known, produced or recognized."
+  },
+  "progressRecallable": "Hatırlıyor",
+  "@progressRecallable": {
+    "description": "Progress: items recallable for a week or more."
+  },
+  "progressDurable": "Kalıcı",
+  "@progressDurable": {
+    "description": "Progress: items stable for a month."
+  },
+  "progressUsed": "Kullanıyor",
+  "@progressUsed": {
+    "description": "Progress: items used without error in free speech on two days."
+  },
+  "progressWhatAreThese": "Bu sayılar nedir?",
+  "@progressWhatAreThese": {
+    "description": "Progress: explanations of the counts (docs/06 §6)."
+  },
+  "progressExplainKnown": "Tanıyor: kartlarında hatırladığın ya da dinlerken tanıdığın kelime ve kalıplar.",
+  "@progressExplainKnown": {
+    "description": "Progress: what known means."
+  },
+  "progressExplainRecallable": "Hatırlıyor: en az bir haftadır aklında duran, söyleyebildiğin kelime ve kalıplar.",
+  "@progressExplainRecallable": {
+    "description": "Progress: what recallable means."
+  },
+  "progressExplainDurable": "Kalıcı: bir aydır sağlam duran, araya zaman girince de hatırladığın kelime ve kalıplar.",
+  "@progressExplainDurable": {
+    "description": "Progress: what durable means."
+  },
+  "progressExplainUsed": "Kullanıyor: hatırladıklarından, konuşma görevlerinde iki ayrı gün hatasız kullandıkların.",
+  "@progressExplainUsed": {
+    "description": "Progress: what used means."
+  },
+  "progressVocabulary": "Seviye testine göre yaklaşık {count} kelime tanıyorsun.",
+  "@progressVocabulary": {
+    "description": "Progress: the X_Lex recognition size, an estimate (docs/04 §4.1).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressCanDoTitle": "Yapabildiklerin",
+  "@progressCanDoTitle": {
+    "description": "Progress: the can-do list (docs/04 §5)."
+  },
+  "progressCanDoEstablished": "Kanıtlandı",
+  "@progressCanDoEstablished": {
+    "description": "Progress: a can-do done on different days with different tasks."
+  },
+  "progressCanDoShown": "Gösterildi",
+  "@progressCanDoShown": {
+    "description": "Progress: a can-do done once."
+  },
+  "progressCanDoAttempted": "Denendi",
+  "@progressCanDoAttempted": {
+    "description": "Progress: a can-do tried."
+  },
+  "progressCanDoNone": "Henüz denenmedi",
+  "@progressCanDoNone": {
+    "description": "Progress: a can-do not tried yet."
+  },
+  "progressCanDoRefresh": "Bir süre geçti; tazelemeye değer.",
+  "@progressCanDoRefresh": {
+    "description": "Progress: an invitation to do an old can-do again, never a failure (docs/04 §5)."
+  },
+  "progressMonthlyTitle": "Aylık kayıtlar",
+  "@progressMonthlyTitle": {
+    "description": "Progress: the monthly recordings (docs/06 §3.4)."
+  },
+  "progressMonthlyEmpty": "Aylık kayıt yapınca kayıtlarını burada yan yana dinleyebilirsin.",
+  "@progressMonthlyEmpty": {
+    "description": "Progress: no monthly recording yet."
+  },
+  "progressListenFirst": "İlk kayıt",
+  "@progressListenFirst": {
+    "description": "Progress: plays the first recording of an anchor task."
+  },
+  "progressListenPrevious": "Önceki ay",
+  "@progressListenPrevious": {
+    "description": "Progress: plays the recording of an earlier month."
+  },
+  "progressListenLatest": "Son kayıt",
+  "@progressListenLatest": {
+    "description": "Progress: plays the latest recording."
+  },
+  "progressRate": "dakikada {count} kelime",
+  "@progressRate": {
+    "description": "Progress: speech rate of a month.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPauses": "dakikada {count} uzun duraklama",
+  "@progressPauses": {
+    "description": "Progress: long pauses per minute of a month.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "progressClauses": "{clauses} cümleciğin {errorFree} tanesi hatasız",
+  "@progressClauses": {
+    "description": "Progress: error-free clauses as counts (I-04).",
+    "placeholders": {
+      "clauses": {
+        "type": "int"
+      },
+      "errorFree": {
+        "type": "int"
+      }
+    }
+  },
+  "progressNotMeasured": "henüz ölçülmedi",
+  "@progressNotMeasured": {
+    "description": "Progress: a month whose recording waits."
   }
 }

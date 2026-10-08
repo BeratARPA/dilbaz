@@ -219,6 +219,18 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Haftalık kol dengesi grafiği;** medya dakikaları
 - **Ayarlar içinde:** yapay zekâ ve ses kullanımı (kota ve Deepgram kredisi; ADR-0009)
 
+**Uygulama notları (F1-20, v1):**
+- **Kanıtlar:** dört sayı (Tanıyor / Hatırlıyor / Kalıcı / Kullanıyor) ve "Bu sayılar nedir?". Seviye testi varsa "yaklaşık … kelime tanıyorsun".
+- **Yapabildiklerin:** paketin can-do özetleri ve durumları (Kanıtlandı / Gösterildi / Denendi / Henüz denenmedi), gerekirse "tazelemeye değer".
+- **Aylık kayıtlar:**
+  - Her sabit görev için üç dinleme düğmesi: ilk kayıt, önceki ay, son kayıt (tarihleriyle).
+  - Ay ay satırlar: dakikada kelime, dakikada uzun duraklama, hatasız cümlecik sayısı.
+- Sayfa aşağı çekince yenilenir.
+- **Sonraya kalanlar:**
+  - Beceri başına seviye aralığı ve güven (L5).
+  - Grafikler, hata profili, kol dengesi, medya dakikaları.
+  - Ayarlarda kullanım ve kota.
+
 ### 5.12 Ayarlar
 - Mikrofon denemesi: bir cümle söylenir, ses tanımanın duyduğu gösterilir (F1-14; kayıt saklanmaz)
 - Profil, hedef, ilgi alanları

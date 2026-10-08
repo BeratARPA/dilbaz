@@ -14,7 +14,14 @@ abstract interface class TaskContentRepository {
   /// Frequency rank of each lemma of the pack's lexicon, for the share of
   /// words beyond the frequent ones (docs/06 §3.3).
   Future<Map<String, int>> lemmaRanks();
+
+  /// The pack's can-do codes with their level and the pair pack's summary;
+  /// a code without a summary is left out.
+  Future<List<CanDo>> canDos();
 }
+
+/// A can-do code as the Progress tab lists it (docs/04 §5).
+typedef CanDo = ({String code, CefrLevel level, String summary});
 
 class DriftTaskContentRepository implements TaskContentRepository {
   new(this._db, {this._l2 = 'en'});
@@ -25,6 +32,7 @@ class DriftTaskContentRepository implements TaskContentRepository {
   static const _speaking = 'speaking';
   static const _instruction = 'task_instruction';
   static const _lemma = 'lemma';
+  static const _summary = 'can_do_summary';
 
   static List<String> _strings(Object? value) => switch (value) {
     final List<Object?> list => [
@@ -79,6 +87,26 @@ class DriftTaskContentRepository implements TaskContentRepository {
       }
     }
     return ranks;
+  }
+
+  @override
+  Future<List<CanDo>> canDos() async {
+    final pack = await _db.contentDao.targetPack(_l2);
+    final summaries = await _db.contentDao.pairEntries(_summary);
+    return switch (pack?.manifest) {
+      {'can_dos': final List<Object?> codes} => [
+        for (final entry in codes)
+          if (entry case {
+            'code': final String code,
+            'level': final String levelCode,
+          })
+            if (CefrLevel.values.where((l) => l.code == levelCode).firstOrNull
+                case final level?)
+              if (summaries[code]?['summary'] case final String summary)
+                (code: code, level: level, summary: summary),
+      ],
+      _ => const [],
+    };
   }
 
   @override
