@@ -98,7 +98,8 @@ Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiricile
 ### Telefon (Android)
 - Ayarlar → Telefon hakkında → Yapım numarasına 7 kez dokun → Geliştirici seçenekleri → **USB hata ayıklama** açık.
 - USB ile bağla. `flutter devices` telefonu göstermeli.
-- Sevgilinin telefonuna kurulum: imzalı APK dosyası gönderilir, "bilinmeyen kaynaklardan yükleme" izni verilir. Rehber F1-24'te hazırlanır.
+- Sevgilinin telefonuna kurulum: imzalı APK dosyası gönderilir, "bilinmeyen kaynaklardan yükleme" izni verilir. Rehber: §5.
+- **Asıl uygulamanın kimliğiyle (`com.dilbaz.dilbaz_app`) telefona `flutter run`, `flutter install` ya da `flutter test` yapılmaz.** Flutter kurulum başarısız olunca (ör. imza farkı) eski uygulamayı kaldırıp yeniden kurar; cihazdaki veri gider. Geliştirme derlemeleri telefona her zaman `.local` ile kurulur (aşağıda).
 - **Yerel yığına karşı deneme (F1-21):** Telefondaki uygulamaya dokunmadan, yanına ayrı bir kopya kurulur ("Dilbaz.local"; kendi kimliği ve verisi):
   ```bash
   cd app && DILBAZ_APP_ID_SUFFIX=.local flutter build apk --debug --dart-define-from-file=env/local.json
@@ -107,6 +108,13 @@ Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiricile
   ```
   - `adb reverse`, telefonun `127.0.0.1:54321` adresini bilgisayardaki yerel Supabase'e bağlar. Giriş kodu yerel Mailpit'e düşer (`http://127.0.0.1:54324`).
   - Yerel test e-postası önce yerel veritabanında `private.signup_allowlist`'e eklenir. Paketler yerel yığına `dilbaz-content upload` ile yerel anahtarla yüklenir.
+- **Uçtan uca testler (F1-24, `15` §4):** `app/integration_test/` ekranları, motoru ve cihazın SQLite'ını gerçek haliyle çalıştırır. Sunucu, LLM, ses, izinler ve bildirimler sahtedir; telefonda sistem penceresi açılmaz, bildirim kurulmaz.
+  ```bash
+  cd app && DILBAZ_APP_ID_SUFFIX=.local flutter test integration_test -d <cihaz> --no-uninstall
+  ```
+  - **`--no-uninstall` şart.** `flutter test`, test bitince kaldıracağı paketi derlemeden önce diskteki son APK'dan okur. Son derleme son eksizse asıl uygulamayı verisiyle kaldırabilir.
+  - Telefonun ekranı açık ve kilitsiz olmalı. Test "Dilbaz.local"ı açıp kendi ilerletir (~1 dk); bu sırada telefona dokunulmaz.
+  - Telefonsuz hızlı deneme (aynı senaryolar, ekransız): `flutter test integration_test -d flutter-tester`.
 
 ## 3. Doğrulama
 
@@ -132,3 +140,74 @@ node --version
 | Kod, test, migrasyon, içerik üretimi | Onaylarsın (faz sonları, ücretli işlemler) | ✓ |
 | Üretime migrasyon (`db push`), paket yükleme, web yayını | Onay verirsin | ✓ |
 | İçerik örneklem incelemesi, ASR veri seti kaydı, günlük kullanım | ✓ | Araçları hazırlar |
+
+## 5. Sürüm APK ve iki telefona kurulum (F1-24)
+
+Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** tek bir APK dosyası kurulur. Güncellemeler aynı anahtarla imzalanır ve eskisinin üstüne kurulur.
+
+### 5.1 Yükleme anahtarı (bir kez, kendin yap)
+
+1. Anahtarı oluştur (PowerShell). Parolayı sen belirlersin; sohbete yazma:
+
+   ```powershell
+   keytool -genkey -v -keystore $env:USERPROFILE\dilbaz-upload.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+
+   - `keytool` bulunmazsa: `& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" …`
+   - İsim ve kurum soruları için gerçek bilgi gerekmez (ör. `Dilbaz`).
+2. `app/android/key.properties` dosyasını bir düzenleyiciyle oluştur. Ters bölüler çift yazılır:
+
+   ```properties
+   storePassword=<parola>
+   keyPassword=<parola>
+   keyAlias=upload
+   storeFile=C:\\Users\\<kullanıcı>\\dilbaz-upload.jks
+   ```
+
+3. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
+   - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
+   - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
+
+`key.properties` yoksa sürüm derlemesi hata ayıklama anahtarıyla imzalanır (`flutter run --release` çalışsın diye). Böyle bir APK dağıtılmaz; 5.2'deki imza denetimi bunu yakalar.
+
+### 5.2 Derleme ve imza denetimi (ajan ya da sen)
+
+```bash
+cd app && flutter build apk --release --dart-define-from-file=env/prod.json
+```
+
+- Çıktı: `app/build/app/outputs/flutter-apk/app-release.apk`.
+- Derleme sürerken aynı projede başka `flutter` komutu (test, analyze, run) çalıştırılmaz. O komutlar eklenti kayıt dosyasını geliştirme eklentileriyle yeniden yazar ve sürüm derlemesi `integration_test` paketini bulamadığı için düşer.
+- İmzayı denetle:
+
+  ```powershell
+  & "$env:LOCALAPPDATA\Android\Sdk\build-tools\36.0.0\apksigner.bat" verify --print-certs app\build\app\outputs\flutter-apk\app-release.apk
+  keytool -list -v -keystore $env:USERPROFILE\dilbaz-upload.jks -alias upload
+  ```
+
+  İki çıktıdaki SHA-256 aynı olmalı. `CN=Android Debug` görünürse `key.properties` okunmamıştır; APK dağıtılmaz.
+- Her yeni sürümde `app/pubspec.yaml` içindeki `version` artırılır (`0.1.0+1` → `0.1.1+2`). Android, sayısı küçük ya da eşit olan sürümü güncelleme olarak kabul etmez.
+
+### 5.3 Senin telefonun
+
+- Telefonda şu an bilgisayardan kurulmuş, hata ayıklama anahtarıyla imzalı eski Dilbaz var. İmza farklı olduğu için yeni APK onun üstüne kurulmaz.
+- **İlk kez:** eski uygulama kaldırılır (veri silme; ajan önce onay ister). Profil ve kurs sunucudan geri gelir. Kartlar, denemeler ve seviye testi sonucu, senkron üretimde açılmadan önce yalnızca telefondaydı (F1-21 migrasyonu `db push` bekliyor); onlar gelmez ve seviye testi yeniden önerilir.
+- Kurulum:
+  - USB ile: `adb install -r app/build/app/outputs/flutter-apk/app-release.apk` (`adb install -r`, imza farkında veriyi silmeden durur).
+  - Ya da dosyayı telefona gönderip açarak (5.4'teki gibi).
+- Sonraki güncellemeler eskisinin üstüne kurulur; **kaldırılmaz**.
+- "Dilbaz.local" geliştirme kopyasıdır. Ayrı bir uygulamadır ve istenirse kaldırılır: `adb uninstall com.dilbaz.dilbaz_app.local`.
+
+### 5.4 Sevgilinin telefonu
+
+1. E-postası Supabase'de kayıt izin listesinde olmalı (§1, "Kayıt izin listesi").
+2. APK dosyasını gönder: Quick Share, Google Drive ya da WhatsApp'ta **belge olarak**.
+3. Telefonda dosyaya dokun. "Bu kaynaktan yüklemeye izin ver" sorulursa izin ver. Bu, telefonun sahibinin verdiği bir sistem iznidir; yalnızca o uygulama (ör. Dosyalarım, Chrome) için açılır.
+4. Play Protect "tanınmayan uygulama" uyarısı gösterebilir: **Ayrıntılar → Yine de yükle.** Uyarı, Play'den gelmeyen her uygulamada çıkar.
+5. Uygulamayı aç: e-posta → kod → karşılama akışı. Birlikte çalışmak için karşılamadaki ekip adımında senin verdiğin davet kodu girilir (ya da sonra Birlikte sekmesinden).
+6. Bildirim ve mikrofon izinlerini uygulama gerektiğinde sorar; vermek telefonun sahibinin kararıdır.
+
+### 5.5 Güncelleme
+
+1. `version` artırılır ve 5.2'deki gibi derlenip imza denetlenir.
+2. Dosya iki telefona da 5.3 / 5.4'teki gibi gönderilip eskisinin üstüne kurulur. Veri yerinde kalır.

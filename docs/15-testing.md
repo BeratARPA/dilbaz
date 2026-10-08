@@ -11,7 +11,7 @@ Kalite burada iki anlama gelir:
 | Motor birim + özellik testleri | `dart test` (packages/engine) | Satır kapsamı ≥ %90 | Her commit (CI) |
 | Uygulama birim/controller testleri | `flutter test` | ≥ %70 (application katmanı) | Her commit |
 | Widget ve golden testler | `flutter test` | Ana akışlar (kart, merdiven, bugün, ilerleme) | Her commit |
-| Entegrasyon testleri | `integration_test` (Android emülatör) | Uçtan uca çekirdek akış, sahte (mock) servislerle | Faz sonu + haftalık |
+| Entegrasyon testleri | `integration_test` (Android telefon ya da emülatör; ekransız `flutter-tester`) | Uçtan uca çekirdek akış, sahte (mock) servislerle (§4) | Faz sonu + haftalık, elle |
 | Veritabanı testleri | pgTAP (`supabase test db`) | Her tablo için RLS, RPC'ler, tetikleyiciler | Her commit (CI'da Docker ile) |
 | Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, sağlayıcı sırası ve kota | Her commit |
 | İçerik hattı testleri | `pytest` | Doğrulayıcılar, kapsama hesabı, derleme | Her commit (content/ değişirse) |
@@ -60,6 +60,17 @@ Kalite burada iki anlama gelir:
 5. Çevrimdışı: kart (yazılı) → deneme outbox'ta → bağlantı gelince senkron → sunucuda satır var
 6. İkili görev: iki sahte istemci → rol yükleri ayrı → cevap → sonuç
 7. Aylık test: 5 görev → rapor ekranı → "önce/sonra" oynatma
+
+**Uygulama (F1-24):** `app/integration_test/core_flows_test.dart` senaryo 1, 2, 3 ve 5'i koşturur.
+- **Gerçek olan:** ekranlar, denetleyiciler, depolar, motor ve cihazın SQLite'ı (bellekte). Paketler uygulamanın kendi içe aktarıcısıyla kurulur (sentetik dil `zz`).
+- **Sahte olan:** giriş, sunucu (`sync_push`/`sync_pull` kurallarıyla bellekte; çevrimdışı anahtarı var), LLM, ASR, ses, sistem izinleri ve bildirimler. Telefonda sistem penceresi açılmaz, bildirim kurulmaz.
+- **Saat senaryonun elindedir:** kart süresi ve "ertesi gün" böyle kurulur. Depolar satırları bu saatle damgalar.
+- **Nasıl koşturulur:** telefonda `.local` kimliğiyle ve `--no-uninstall` ile (`19` §2, "Uçtan uca testler"). Telefonsuz: `flutter test integration_test -d flutter-tester`. CI'da koşmaz: emülatör dakikaları sıfır bütçeye sığmaz.
+- **Plan/gerçek farkları:**
+  - **Senaryo 1:** 15 dakikalık ilk günde planlayıcı 4 yeni öğe verir, 5 değil. Neden: yeni kartların tekrar yükü tavanın %80'inde kalır (I-07). Kart başına en çok 3 dk sayıldığı için oturum 12 dk tutar; kalan 3 dk kısa gündür ve sırada kart yoktur. "Bugünlük yeter", öğrenci bugünkü süresini 5 dk seçince gelir.
+    - Not: Hiçbir bütçede tek bir ilk kart oturumu bütçeyi tek başına doldurmaz (yeni öğe sınırı × 3 dk < bütçe). İlk gün kalan süre seçeneklerle (konuşma görevi vb.) dolar ya da "Şu an sırada kart yok" görünür.
+  - **Senaryo 3:** Ertesi gün ilk iki kart, kişisel cümle ve kalıbıdır. İkisinin sırası belirsizdir: öncelikleri aynıdır ve kimlikleri aynı milisaniyede üretilmiş UUIDv7'dir. Test hangisi önce gelirse onu cevaplar.
+  - **Senaryo 4, 6 ve 7** uçtan uca test olarak henüz yok. Parçaları widget testlerinde: konuşma görevi, aylık test ve önce/sonra oynatma. İkili görev Faz 2'de gelir.
 
 ## 5. CI (GitHub Actions)
 

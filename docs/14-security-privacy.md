@@ -74,6 +74,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 - **Yerel geliştirme:** `supabase/functions/.env` (git dışı).
 - **Uygulama:** `env/*.json` (git dışı). Yalnızca URL + publishable key.
 - **CI:** GitHub Actions secrets (DB parolası, gerekirse test anahtarları).
+- **Android yükleme anahtarı (F1-24):** `dilbaz-upload.jks` ve parolasını taşıyan `app/android/key.properties` yalnızca geliştiricinin bilgisayarında ve yedeğinde durur, git dışıdır (`19` §5.1). Parolayı kullanıcı belirler; ajan görmez. Anahtar kaybolursa uygulama güncellenemez.
 - **Commit öncesi kontrol:** `gitleaks` ya da basit bir desen taraması (pre-commit hook + CI adımı).
 
 ## 7. Bağımlılık güvenliği

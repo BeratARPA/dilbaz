@@ -43,6 +43,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^4.0.2
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.14.1
   plugin_platform_interface: ^2.1.8
   riverpod_generator: ^4.0.9
