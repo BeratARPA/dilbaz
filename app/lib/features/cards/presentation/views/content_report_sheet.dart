@@ -73,66 +73,74 @@ class _ReportSheetState extends State<_ReportSheet> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final reason = _reason;
+    // Above the keyboard, and above the system's navigation bar, which the
+    // sheet otherwise reaches under.
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 8,
-          children: [
-            Semantics(
-              header: true,
-              child: Text(l10n.reportTitle, style: theme.textTheme.titleLarge),
-            ),
-            Text(l10n.reportQuestion),
-            RadioGroup<ReportReason>(
-              groupValue: reason,
-              onChanged: (chosen) => setState(() => _reason = chosen),
-              child: Column(
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 8,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.reportTitle,
+                  style: theme.textTheme.titleLarge,
+                ),
+              ),
+              Text(l10n.reportQuestion),
+              RadioGroup<ReportReason>(
+                groupValue: reason,
+                onChanged: (chosen) => setState(() => _reason = chosen),
+                child: Column(
+                  children: [
+                    for (final option in const [
+                      ReportReason.meaning,
+                      ReportReason.sentence,
+                      ReportReason.audio,
+                      ReportReason.other,
+                    ])
+                      RadioListTile<ReportReason>(
+                        value: option,
+                        title: Text(_label(l10n, option)),
+                      ),
+                  ],
+                ),
+              ),
+              TextField(
+                controller: _note,
+                minLines: 1,
+                maxLines: 4,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  labelText: l10n.reportNoteLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 12,
+                runSpacing: 8,
                 children: [
-                  for (final option in const [
-                    ReportReason.meaning,
-                    ReportReason.sentence,
-                    ReportReason.audio,
-                    ReportReason.other,
-                  ])
-                    RadioListTile<ReportReason>(
-                      value: option,
-                      title: Text(_label(l10n, option)),
-                    ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(l10n.reportCancel),
+                  ),
+                  FilledButton(
+                    onPressed: reason == null
+                        ? null
+                        : () => Navigator.of(context)
+                              .pop<_Report>((reason: reason, note: _note.text)),
+                    child: Text(l10n.reportSend),
+                  ),
                 ],
               ),
-            ),
-            TextField(
-              controller: _note,
-              minLines: 1,
-              maxLines: 4,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l10n.reportNoteLabel,
-                border: const OutlineInputBorder(),
-              ),
-            ),
-            Wrap(
-              alignment: WrapAlignment.end,
-              spacing: 12,
-              runSpacing: 8,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(l10n.reportCancel),
-                ),
-                FilledButton(
-                  onPressed: reason == null
-                      ? null
-                      : () => Navigator.of(context)
-                            .pop<_Report>((reason: reason, note: _note.text)),
-                  child: Text(l10n.reportSend),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

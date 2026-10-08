@@ -4,6 +4,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// A build against the local Supabase stack can install next to the app on the
+// phone: DILBAZ_APP_ID_SUFFIX=.local gives it its own id, label and data.
+val appIdSuffix = System.getenv("DILBAZ_APP_ID_SUFFIX").orEmpty()
+
 android {
     namespace = "com.dilbaz.dilbaz_app"
     // permission_handler_android 14.1 requires compiling against API 37;
@@ -19,7 +23,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.dilbaz.dilbaz_app"
+        applicationId = "com.dilbaz.dilbaz_app$appIdSuffix"
+        manifestPlaceholders["appLabel"] = "Dilbaz$appIdSuffix"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

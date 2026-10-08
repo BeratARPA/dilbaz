@@ -350,18 +350,6 @@ begin
   -- One push of a learner at a time, and no pull while it runs (sync_pull).
   perform pg_advisory_xact_lock(hashtextextended('sync:' || v_uid::text, 0));
 
-  insert into public.devices (id, profile_id, platform, app_version, last_sync_at)
-  values (
-    p_device_id,
-    v_uid,
-    coalesce(p_batch -> 'device' ->> 'platform', 'unknown'),
-    p_batch -> 'device' ->> 'app_version',
-    now()
-  )
-  on conflict (id) do update
-    set last_sync_at = now(), app_version = excluded.app_version
-    where public.devices.profile_id = v_uid;
-
   -- The profile and its courses first: every other row refers to them.
   insert into public.profiles (
     id, display_name, l1, ui_locale, time_budget_min, weekly_days_goal,
@@ -385,6 +373,24 @@ begin
     where excluded.updated_at >= public.profiles.updated_at;
   get diagnostics v_n = row_count;
   v_accepted := v_accepted + v_n;
+
+  -- Every other row refers to the profile: without one nothing can go in,
+  -- and the client tries again later.
+  if not exists (select 1 from public.profiles where id = v_uid) then
+    raise exception 'profile_missing' using errcode = 'P0002';
+  end if;
+
+  insert into public.devices (id, profile_id, platform, app_version, last_sync_at)
+  values (
+    p_device_id,
+    v_uid,
+    coalesce(p_batch -> 'device' ->> 'platform', 'unknown'),
+    p_batch -> 'device' ->> 'app_version',
+    now()
+  )
+  on conflict (id) do update
+    set last_sync_at = now(), app_version = excluded.app_version
+    where public.devices.profile_id = v_uid;
 
   -- One course per language (unique (profile_id, l2)): another course of
   -- the same language is refused.

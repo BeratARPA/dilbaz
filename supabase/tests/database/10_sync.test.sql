@@ -3,7 +3,7 @@
 -- rows are last-writer-wins, and a pull pages through the learner's rows.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(60);
+select plan(62);
 
 -- ---------------------------------------------------------------------------
 -- Privileges
@@ -56,7 +56,8 @@ select ok(
 -- ---------------------------------------------------------------------------
 insert into auth.users (id, email) values
   ('11111111-1111-4111-8111-111111111111', 'a@dilbaz.test'),
-  ('22222222-2222-4222-8222-222222222222', 'b@dilbaz.test');
+  ('22222222-2222-4222-8222-222222222222', 'b@dilbaz.test'),
+  ('33333333-3333-4333-8333-333333333333', 'c@dilbaz.test');
 insert into public.profiles (id, display_name, updated_at) values
   ('11111111-1111-4111-8111-111111111111', 'A', '2026-09-01T00:00:00Z'),
   ('22222222-2222-4222-8222-222222222222', 'B', '2026-09-01T00:00:00Z');
@@ -491,6 +492,34 @@ select is(
   ),
   0,
   'another learner pulls nothing of A'
+);
+
+-- Signed in as C, whose profile is not on the server yet.
+select set_config('request.jwt.claims',
+  '{"sub": "33333333-3333-4333-8333-333333333333", "role": "authenticated"}', true);
+select throws_ok(
+  $$select public.sync_push('d3333333-3333-4333-8333-333333333333', '{}'::jsonb)$$,
+  'P0002', 'profile_missing',
+  'nothing goes in before the profile'
+);
+select is(
+  public.sync_push('d3333333-3333-4333-8333-333333333333', $${
+    "profiles": [
+      {"id": "33333333-3333-4333-8333-333333333333", "display_name": "C",
+       "updated_at": "2026-10-01T09:00:00Z"}
+    ],
+    "courses": [
+      {"id": "c3333333-3333-4333-8333-333333333333", "l2": "en", "pair_pack": "tr-en",
+       "updated_at": "2026-10-01T09:00:00Z"}
+    ],
+    "sessions": [
+      {"id": "0192f5a0-0000-7000-8000-000000000503",
+       "course_id": "c3333333-3333-4333-8333-333333333333",
+       "device_id": "d3333333-3333-4333-8333-333333333333",
+       "started_at": "2026-10-01T09:00:00Z"}
+    ]}$$) -> 'accepted',
+  '3'::jsonb,
+  'a first push brings the profile, its course and their rows together'
 );
 
 -- Checked with full privileges.

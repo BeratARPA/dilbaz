@@ -99,6 +99,14 @@ Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiricile
 - Ayarlar → Telefon hakkında → Yapım numarasına 7 kez dokun → Geliştirici seçenekleri → **USB hata ayıklama** açık.
 - USB ile bağla. `flutter devices` telefonu göstermeli.
 - Sevgilinin telefonuna kurulum: imzalı APK dosyası gönderilir, "bilinmeyen kaynaklardan yükleme" izni verilir. Rehber F1-24'te hazırlanır.
+- **Yerel yığına karşı deneme (F1-21):** Telefondaki uygulamaya dokunmadan, yanına ayrı bir kopya kurulur ("Dilbaz.local"; kendi kimliği ve verisi):
+  ```bash
+  cd app && DILBAZ_APP_ID_SUFFIX=.local flutter build apk --debug --dart-define-from-file=env/local.json
+  adb install -r build/app/outputs/flutter-apk/app-debug.apk
+  adb reverse tcp:54321 tcp:54321
+  ```
+  - `adb reverse`, telefonun `127.0.0.1:54321` adresini bilgisayardaki yerel Supabase'e bağlar. Giriş kodu yerel Mailpit'e düşer (`http://127.0.0.1:54324`).
+  - Yerel test e-postası önce yerel veritabanında `private.signup_allowlist`'e eklenir. Paketler yerel yığına `dilbaz-content upload` ile yerel anahtarla yüklenir.
 
 ## 3. Doğrulama
 

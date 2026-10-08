@@ -246,6 +246,25 @@ void main() {
     expect([for (final r in reports!) (r.reason, r.note)], [('meaning', null)]);
   });
 
+  testWidgets('the report sheet stays above the navigation bar', (
+    tester,
+  ) async {
+    // A phone with a system navigation bar under the app.
+    tester.view
+      ..physicalSize = const Size(400, 800)
+      ..devicePixelRatio = 1
+      ..padding = const FakeViewPadding(bottom: 48)
+      ..viewPadding = const FakeViewPadding(bottom: 48);
+    addTearDown(tester.view.reset);
+    await openCards(tester);
+    await tester.tap(find.byTooltip(trStrings.reportTitle));
+    await tester.pumpAndSettle();
+    final send = find.widgetWithText(FilledButton, trStrings.reportSend);
+    await tester.ensureVisible(send);
+    await tester.pumpAndSettle();
+    expect(tester.getRect(send).bottom, lessThanOrEqualTo(800 - 48));
+  });
+
   testWidgets('leaving needs no confirmation', (tester) async {
     await openCards(tester);
     await tester.tap(find.byTooltip(trStrings.cardsLeave));
