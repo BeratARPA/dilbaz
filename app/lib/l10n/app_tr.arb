@@ -1346,5 +1346,202 @@
   "todayGreetingEvening": "İyi akşamlar.",
   "@todayGreetingEvening": {
     "description": "Today: the greeting from 18:00 to 05:00."
+  },
+  "practiceSpeakingTitle": "Konuşma görevi",
+  "@practiceSpeakingTitle": {
+    "description": "Practice: the speaking task (A11)."
+  },
+  "practiceSpeakingBody": "Bir konuyu bir iki dakika anlatırsın; sonra iyi gidenleri ve üç düzeltmeyi görürsün.",
+  "@practiceSpeakingBody": {
+    "description": "Practice: what a speaking task is."
+  },
+  "speakingTitle": "Konuşma görevi",
+  "@speakingTitle": {
+    "description": "Speaking task: the screen's title."
+  },
+  "speakingLeave": "Görevi bırak",
+  "@speakingLeave": {
+    "description": "Speaking task: leaves without a question; nothing is owed (I-14)."
+  },
+  "speakingUnavailable": "Konuşma görevleri için içerik bu cihazda henüz hazır değil. İçerik inince burada olacak.",
+  "@speakingUnavailable": {
+    "description": "Speaking task: no packs or course yet."
+  },
+  "speakingNeedsConsent": "Konuşma görevi sesini kaydeder. Ses kaydına izin verilmediği için şimdilik kapalı.",
+  "@speakingNeedsConsent": {
+    "description": "Speaking task: the learner did not agree to audio recordings (I-18)."
+  },
+  "speakingChooseTitle": "Ne anlatmak istersin?",
+  "@speakingChooseTitle": {
+    "description": "Speaking task: the tasks to choose from (I-14)."
+  },
+  "speakingOtherTasks": "Başka görevler",
+  "@speakingOtherTasks": {
+    "description": "Speaking task: the tasks beyond the suggestions."
+  },
+  "speakingPreparation": "Hazırlanmak için {seconds} sn",
+  "@speakingPreparation": {
+    "description": "Speaking task: the time left to prepare (docs/02 §3).",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingPreparationOver": "Hazır olduğunda başla.",
+  "@speakingPreparationOver": {
+    "description": "Speaking task: the preparation time is over; nothing starts by itself."
+  },
+  "speakingPhrases": "İşine yarayabilir",
+  "@speakingPhrases": {
+    "description": "Speaking task: the task's sentence starters."
+  },
+  "speakingShowPhrases": "Kalıpları göster",
+  "@speakingShowPhrases": {
+    "description": "Speaking task: opens the sentence starters above A2."
+  },
+  "speakingStart": "Konuşmaya başla",
+  "@speakingStart": {
+    "description": "Speaking task: starts the recording."
+  },
+  "speakingOtherTask": "Başka görev seç",
+  "@speakingOtherTask": {
+    "description": "Speaking task: back to the list before speaking."
+  },
+  "speakingListening": "Dinliyorum. Bitince \"Bitti\"ye bas.",
+  "@speakingListening": {
+    "description": "Speaking task: while recording."
+  },
+  "speakingElapsed": "{elapsed} / {limit}",
+  "@speakingElapsed": {
+    "description": "Speaking task: time recorded and the limit, as m:ss.",
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "speakingStop": "Bitti",
+  "@speakingStop": {
+    "description": "Speaking task: stops the recording."
+  },
+  "speakingTranscribing": "Söylediklerin yazıya geçiriliyor…",
+  "@speakingTranscribing": {
+    "description": "Speaking task: transcribing the recording."
+  },
+  "speakingMarking": "Geri bildirim hazırlanıyor…",
+  "@speakingMarking": {
+    "description": "Speaking task: the tutor marks the transcript."
+  },
+  "speakingFailedPermission": "Mikrofon izni olmadan kayıt yapılamıyor. İzni telefonun ayarlarından verebilirsin.",
+  "@speakingFailedPermission": {
+    "description": "Speaking task: no microphone permission."
+  },
+  "speakingFailedMicrophone": "Mikrofon açılamadı. Bir kez daha dener misin?",
+  "@speakingFailedMicrophone": {
+    "description": "Speaking task: the microphone could not be opened."
+  },
+  "speakingFailedSilent": "Bir şey duyamadım. Bir kez daha dener misin?",
+  "@speakingFailedSilent": {
+    "description": "Speaking task: nothing was heard."
+  },
+  "speakingFailedNetwork": "Bağlantı yok gibi. Kaydın saklandı; bağlantı gelince yeniden deneyebilirsin.",
+  "@speakingFailedNetwork": {
+    "description": "Speaking task: no connection; the recording is kept."
+  },
+  "speakingFailedSpeech": "Ses şu an yazıya geçirilemedi. Kaydın saklandı; biraz sonra yeniden deneyebilirsin.",
+  "@speakingFailedSpeech": {
+    "description": "Speaking task: recognition failed; the recording is kept."
+  },
+  "speakingRetry": "Yeniden dene",
+  "@speakingRetry": {
+    "description": "Speaking task: processes the kept recording again."
+  },
+  "speakingRecordAgain": "Yeniden kaydet",
+  "@speakingRecordAgain": {
+    "description": "Speaking task: back to the task card for a new recording."
+  },
+  "speakingStats": "{minutes} dk {seconds} sn konuştun · {words} kelime",
+  "@speakingStats": {
+    "description": "Speaking task: how long the learner spoke and how many words; no grade (I-04).",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingStrengths": "İyi gidenler",
+  "@speakingStrengths": {
+    "description": "Speaking task: what went well (docs/03 A11 4a)."
+  },
+  "speakingWaiting": "Ayrıntılı geri bildirim şimdilik hazır değil; kaydın saklandı.",
+  "@speakingWaiting": {
+    "description": "Speaking task: the tutor's marks could not be had now."
+  },
+  "speakingNoCorrections": "Düzeltilecek bir şey görülmedi.",
+  "@speakingNoCorrections": {
+    "description": "Speaking task: the marks found nothing to practise."
+  },
+  "speakingCorrections": "Düzeltmeler",
+  "@speakingCorrections": {
+    "description": "Speaking task: the corrections to practise (docs/03 A11 4b)."
+  },
+  "speakingCorrectionNumber": "Düzeltme {number} / {total}",
+  "@speakingCorrectionNumber": {
+    "description": "Speaking task: which correction is being practised.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingYourSentence": "Senin cümlen",
+  "@speakingYourSentence": {
+    "description": "Speaking task: the learner's sentence as said."
+  },
+  "speakingSayCorrected": "Düzelterek söyle.",
+  "@speakingSayCorrected": {
+    "description": "Speaking task: say the sentence corrected."
+  },
+  "speakingTypeCorrected": "Düzelterek yaz.",
+  "@speakingTypeCorrected": {
+    "description": "Speaking task: type the sentence corrected (silent mode)."
+  },
+  "speakingNext": "Sonraki",
+  "@speakingNext": {
+    "description": "Speaking task: on to the next correction."
+  },
+  "speakingRedo": "Görevi yeniden yap",
+  "@speakingRedo": {
+    "description": "Speaking task: the same task once more (docs/03 A11 4c)."
+  },
+  "speakingFinish": "Bitir",
+  "@speakingFinish": {
+    "description": "Speaking task: ends the task; corrected sentences become cards."
+  },
+  "speakingDoneTitle": "Görev bitti.",
+  "@speakingDoneTitle": {
+    "description": "Speaking task: the end."
+  },
+  "speakingDoneCards": "{count, plural, =0{Kartlarına yeni cümle eklenmedi.} other{{count} düzeltilmiş cümle kartlarına eklendi.}}",
+  "@speakingDoneCards": {
+    "description": "Speaking task: corrected sentences added as cards (docs/03 A11 step 5).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

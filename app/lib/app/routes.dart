@@ -28,4 +28,7 @@ abstract final class AppRoutes {
   /// A card session after "Bugünlük yeter": the learner goes on
   /// (docs/05 §6).
   static const cardsBeyondBudget = '/cards?more=1';
+
+  /// A speaking task, over the tabs (A11).
+  static const speaking = '/speaking';
 }

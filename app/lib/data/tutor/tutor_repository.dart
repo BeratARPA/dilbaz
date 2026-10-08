@@ -1,8 +1,10 @@
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/gap/gap_entry.dart';
+import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:json_annotation/json_annotation.dart'
     show CheckedFromJsonException;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -42,6 +44,11 @@ abstract interface class TutorRepository {
   Future<Result<GapSuggestion, TutorFailure>> gapSuggest(
     GapSuggestRequest request,
   );
+
+  /// Marks a speaking task's transcript (A11, A23).
+  Future<Result<AnnotatedSpeech, TutorFailure>> speakingAnnotate(
+    SpeakingAnnotateRequest request,
+  );
 }
 
 class SupabaseTutorRepository implements TutorRepository {
@@ -49,11 +56,13 @@ class SupabaseTutorRepository implements TutorRepository {
     this._client, {
     this._wait = answerCheckWait,
     this._gapWait = gapSuggestWait,
+    this._annotateWait = speakingAnnotateWait,
   });
 
   final SupabaseClient _client;
   final Duration _wait;
   final Duration _gapWait;
+  final Duration _annotateWait;
 
   /// How long a card waits for the check: the route's limit for one model
   /// (docs/07 §3). After it the request is cut off and the card judges
@@ -64,8 +73,14 @@ class SupabaseTutorRepository implements TutorRepository {
   /// call. After it the capture keeps waiting for a later try.
   static const gapSuggestWait = Duration(seconds: 25);
 
+  /// How long a speaking task waits for its marks: two models of up to a
+  /// minute each. After it the marks wait for a later try, and the
+  /// feedback starts from the word times alone.
+  static const speakingAnnotateWait = Duration(seconds: 100);
+
   static const _answerCheck = 'tutor/answer_check';
   static const _gapSuggest = 'tutor/gap_suggest';
+  static const _speakingAnnotate = 'tutor/speaking_annotate';
 
   @override
   Future<Result<LlmAnswerCheck, TutorFailure>> answerCheck(
@@ -76,6 +91,16 @@ class SupabaseTutorRepository implements TutorRepository {
   Future<Result<GapSuggestion, TutorFailure>> gapSuggest(
     GapSuggestRequest request,
   ) => _call(_gapSuggest, request.toJson(), _gapWait, GapSuggestion.fromJson);
+
+  @override
+  Future<Result<AnnotatedSpeech, TutorFailure>> speakingAnnotate(
+    SpeakingAnnotateRequest request,
+  ) => _call(
+    _speakingAnnotate,
+    request.toJson(),
+    _annotateWait,
+    AnnotatedSpeech.fromJson,
+  );
 
   Future<Result<T, TutorFailure>> _call<T>(
     String route,

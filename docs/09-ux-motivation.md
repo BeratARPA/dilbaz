@@ -152,6 +152,26 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 2. 3 düzeltme mini kartı (merdiven + sesli tekrar)
 3. "Görevi yeniden yap" (isteğe bağlı)
 
+**Uygulama notları (F1-19):**
+- **Giriş ve seçim:** Pratik → "Konuşma görevi". "Ne anlatmak istersin?" altında motorun önerdiği 3 görev, kalanlar "Başka görevler"de (I-14). Sabit görevler (ANC) yalnızca aylık testte çıkar.
+- **Görev kartı:**
+  - Başlık, yönerge, üç başlangıç ve anlamları. B1 ve üstünde başlangıçlar "Kalıpları göster" ile açılır.
+  - Hazırlık sayacı. Süre bitince kayıt kendiliğinden başlamaz.
+  - "Konuşmaya başla" ve "Başka görev seç".
+- **Kayıt:** süre / 2:00 ve ses düzeyi çubuğu (dalga formu yerine). "Bitti" ile ya da 2 dakikada kendiliğinden durur.
+- **İşleniyor:** iki adımdır, "Söylediklerin yazıya geçiriliyor…" ve "Geri bildirim hazırlanıyor…".
+- **Sorunlar:** Bağlantı yoksa ya da ses yazıya geçirilemezse kayıt saklanır, "Yeniden dene" çıkar. Bir şey duyulmadıysa ya da mikrofon açılamadıysa "Yeniden kaydet" çıkar. Ses kaydı izni yoksa görev açılmaz (I-18).
+- **Geri bildirim:**
+  - "1 dk 12 sn konuştun · 86 kelime". Not ve puan yok (I-04).
+  - Açılır "Duyduğum" metni, "İyi gidenler".
+  - Düzeltmeler tek tek gelir: "Düzeltme 1 / 3", "Senin cümlen", "Düzelterek söyle." ve basılı tut-konuş (sessiz modda yazarak).
+  - Her yanlışta bir ipucu açılır. "İpucu" ve "Göster" yalnızca bir denemeden sonra çıkar; düzeltilmiş cümle de ancak o zaman görünür (I-01, I-02).
+  - İşaretleme yoksa düzeltme bölümü yerine "Ayrıntılı geri bildirim şimdilik hazır değil; kaydın saklandı." yazar.
+- **Bitiş:**
+  - Düzeltmelerden sonra "Bitir" ve "Görevi yeniden yap".
+  - Son ekranda "Görev bitti." ve kaç düzeltilmiş cümlenin kartlara eklendiği.
+  - Görevden onaysız çıkılır: yapılan saklanır, hiçbir şey borç kalmaz (I-14).
+
 ### 5.7 4/3/2 (A12)
 Üç tur sayacı. Tur arasında dakikadaki kelime ve uzun duraklama sayısı gösterilir. Sonunda üç turun küçük grafiği.
 

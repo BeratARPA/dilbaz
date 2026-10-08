@@ -15,6 +15,9 @@ class FakeAnswerRecorder implements AnswerRecorder {
   /// Whether the next stop hands over nothing.
   bool silent = false;
 
+  /// How long each recording is.
+  Duration duration = const Duration(seconds: 2);
+
   int starts = 0;
   int cancels = 0;
   bool recording = false;
@@ -37,7 +40,7 @@ class FakeAnswerRecorder implements AnswerRecorder {
     return (
       bytes: Uint8List.fromList([1, 2, 3]),
       contentType: 'audio/mp4',
-      duration: const Duration(seconds: 2),
+      duration: duration,
     );
   }
 
@@ -72,12 +75,18 @@ class FakeSpeechRepository implements SpeechRepository {
     asked.add(audio);
     final failure = this.failure;
     if (failure != null) return Err(failure);
+    final words = heard.split(' ').where((w) => w.isNotEmpty);
     return Ok(
       Transcript(
         text: heard,
         provider: 'fake',
         model: 'fake',
         durationMs: audio.duration.inMilliseconds,
+        // Each word 400 ms, then 100 ms of silence.
+        words: [
+          for (final (i, w) in words.indexed)
+            TranscriptWord(w: w, startMs: i * 500, endMs: i * 500 + 400),
+        ],
       ),
     );
   }

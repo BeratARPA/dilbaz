@@ -59,6 +59,7 @@ export 'src/planner/planner.dart';
 export 'src/planner/planner_config.dart';
 export 'src/planner/seeded_random.dart';
 export 'src/planner/strand.dart';
+export 'src/planner/task_choice.dart';
 export 'src/planner/today_plan.dart';
 export 'src/scoring/answer_check.dart';
 export 'src/scoring/answer_checker.dart';

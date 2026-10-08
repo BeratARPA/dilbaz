@@ -53,7 +53,7 @@ Not: Roman ve film gibi otantik içeriği rahat anlamak için 8–9 bin kelime a
 
 Okumada anlam aramaları loglanır ve bilinmeyen kelime sinyali olarak kullanılır.
 
-**Motorda (F1-16):** `Scaffolds.forLevel` kartların iskelelerini verir: açıklama dili, varsayılan yavaş ses, bir hatanın kendiliğinden açtığı en yüksek ipucu ve deneme hakkı. A0'da deneme hakkı 2'dir; ikinci hatada cevap açılır ("2 hatadan sonra otomatik"). Kendiliğinden açılmayan ipuçları "ipucu" ve "göster" düğmeleriyle açılır. İskeleleri Ayarlar'dan elle açıp kapatmak F1-23'le gelir.
+**Motorda (F1-16):** `Scaffolds.forLevel` kartların iskelelerini verir: açıklama dili, varsayılan yavaş ses, bir hatanın kendiliğinden açtığı en yüksek ipucu ve deneme hakkı. A0'da deneme hakkı 2'dir; ikinci hatada cevap açılır ("2 hatadan sonra otomatik"). Kendiliğinden açılmayan ipuçları "ipucu" ve "göster" düğmeleriyle açılır. İskeleleri Ayarlar'dan elle açıp kapatmak F1-23'le gelir. F1-19'dan beri konuşma görevinin iskelelerini de verir: hazırlık süresi (`taskPreparation`) ve başlangıçların kendiliğinden açık olup olmadığı (`taskPhrases`). C1–C2 için tablodaki "0–15 sn"den 15 sn alındı.
 
 ## 4. Müfredat haritası (curriculum graph)
 

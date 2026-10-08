@@ -13,6 +13,7 @@ part 'content_dao.g.dart';
     ContentLinks,
     ContentForms,
     ContentPairEntries,
+    ContentTasks,
   ],
 )
 class ContentDao extends DatabaseAccessor<AppDatabase> with _$ContentDaoMixin {
@@ -77,6 +78,19 @@ class ContentDao extends DatabaseAccessor<AppDatabase> with _$ContentDaoMixin {
     }
     return forms;
   }
+
+  /// The tasks of the packs (speaking, role play…), by key.
+  Future<List<ContentTaskRow>> tasks() => (select(
+    contentTasks,
+  )..orderBy([(t) => OrderingTerm(expression: t.key)])).get();
+
+  /// Every pair-pack entry of one [kind], by key.
+  Future<Map<String, Map<String, Object?>>> pairEntries(String kind) async => {
+    for (final row in await (select(
+      contentPairEntries,
+    )..where((t) => t.kind.equals(kind))).get())
+      row.key: row.data,
+  };
 
   /// A pair-pack entry, such as the `gloss` or the `variants` of an item.
   Future<Map<String, Object?>?> pairEntry(String kind, String key) async {

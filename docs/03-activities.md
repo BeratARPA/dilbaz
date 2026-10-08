@@ -237,6 +237,21 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   - Can-do kanıtı (görev bağlıysa)
   - Aktarım: transkriptte doğru kullanılan öğeler
   - Hata profili güncellemesi
+- **Uygulama (F1-19):**
+  - **Kayıtlar:**
+    - Her kayıt bir `recordings` satırıdır. Ses cihazda kalır; transkript, işaretleme ve ölçümler geldikçe eklenir.
+    - Görevden çıkarken kayıt başına bir deneme yazılır (`activity = speaking_task`, `task_ref`; I-03).
+    - Düzeltme pratiğinin her cevabı da bir denemedir (`speaking_task.correction`). Bu denemeler görev denemesine zincirlenir.
+  - **Düzeltme pratiği:** Kartın merdivenini kullanır (`CardReview`, seviyenin iskeleleri). Boş ipucunu şablon doldurur.
+    - Cevap, normalizasyondan sonra düzeltilmiş cümleyle aynıysa doğru sayılır. Pratik düzeltmenin kendisi içindir; kartlarda hedef dışı sayılan küçük kayma da burada yanlıştır.
+  - **Kişisel öğeler:** Seçilen düzeltmeler (en çok 3, `pickCorrections`) kişisel öğe olur (`source = speaking_task`).
+    - Kartın istemi, işaretlemenin verdiği Türkçe anlamdır (`meaning_l1`).
+    - Aynı cümle bir kez eklenir. Anlamı olmayan düzeltme karta dönmez.
+  - **Süre:** Oturum `output` koluna yazılır: konuşma süresi ve geri bildirimde geçen süre (en çok 5 dk).
+  - **Sonraya kalanlar:**
+    - Aktarım ve can-do kanıtı (F1-20).
+    - Kaydı dinleme (önce/sonra, F1-20).
+    - Bekleyen işaretlemenin bağlantı gelince istenmesi (F1-21).
 
 ## A12 — 4/3/2 akıcılık (`fluency_432`)
 - **Amaç:** Tanıdık konuyu artan zaman baskısıyla tekrar anlatmak (P16).

@@ -136,7 +136,7 @@ Konuşma hedefi olduğu için sesli üretim önde (P3). **Odak bonusu:** haftal�
 
 | Etkinlik | Kol | Uygunluk koşulu |
 |---|---|---|
-| A11 Konuşma görevi | output | Seviye görevleri mevcut |
+| A11 Konuşma görevi | output | Seviye görevleri mevcut. F1-19: `suggestTasks` önce öğrencinin seviyesindeki, sonra daha alttaki görevleri sıralar. A1'in altında A1 görevleri verilir. Son 14 günde yapılan görev sona kalır; seviye içinde sıra, günün seed'iyle belirlenir. |
 | A13 Rol oyunu | output | A1+ |
 | A20 Yazma | output | A2+ (A2'de kısa mesaj) |
 | A21 Aracılık | output | B1+ |

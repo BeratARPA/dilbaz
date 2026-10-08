@@ -414,6 +414,16 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`).
   - `strand_ms` anahtarları `Strand.code`'dur. `active_ms` kol sürelerinin toplamıdır; kart başına en çok 3 dk sayılır.
   - `planned` = `{reviews, new, estimate_ms}`, `done` = `{reviewed, introduced}`.
   - Bugün ekranı günün süresini ve haftanın çalışılan günlerini buradan okur. Gün yerel gece yarısında, hafta pazartesi başlar.
+- **Konuşma görevleri (F1-19):**
+  - **`recordings`:** Kayıt biter bitmez satır açılır. `audio_path`, cihazdaki dosyadır (uygulama destek klasöründe `recordings/<id>.m4a`); `audio-private`'a yükleme senkronla gelir (F1-21).
+    - Sonra sırayla dolar: `asr` (`{provider, model, words: [{w, start_ms, end_ms, conf}]}`), `annotation` (`{runs: [rota cevabı], merged: işaretleme}`), `outcome`, `metrics` (`SpeechMetrics`) ve en son `attempt_id`.
+    - Durum satırıdır: her değişiklik outbox'a `upsert` olarak düşer.
+  - **`attempts`:** Görev denemesinde:
+    - `prompt` = `{prompt_l1}`, `response` = `{source: 'asr', recording_id, text?, asr?: {provider, model}}`
+    - `error_tags` işaretlemedeki etiketlerdir, her biri bir kez. `duration_ms` kaydın süresidir.
+    - `llm` = `{route: 'speaking_annotate', pending, provider?, model?, catalog?, code?}`
+  - **Pratik denemeleri:** `prompt` = `{original, reference, tag}`, `response` = `{text, source}`. Önceki denemeye `parent_attempt_id` ile bağlıdır.
+  - **`personal_items`:** `source = speaking_task`.
 - **`devices`:** bu kurulumun kimliği. Profil başına ilk kullanımda bir satır açılır; her deneme onu `device_id` olarak taşır. Sütunlar sunucudaki `devices` ile aynıdır (§2.6), senkronu F1-21'de.
 - **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır (`11` §5). `content_packs.manifest`, paketin `pack_meta` tablosunun tamamıdır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
 - **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.

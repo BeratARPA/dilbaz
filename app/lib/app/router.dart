@@ -16,6 +16,7 @@ import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/microphone_check_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
+import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
 import 'package:flutter/material.dart';
@@ -152,6 +153,11 @@ GoRouter router(Ref ref) {
         builder: (context, state) => CardSessionScreen(
           beyondBudget: state.uri.queryParameters['more'] == '1',
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.speaking,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SpeakingScreen(),
       ),
     ],
   );

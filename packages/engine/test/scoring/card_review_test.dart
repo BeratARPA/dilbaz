@@ -252,5 +252,22 @@ void main() {
       );
       expect(Scaffolds.forLevel(CefrLevel.a1).maxAttempts, 3);
     });
+
+    test('speaking tasks: preparation shortens, phrases go on request', () {
+      expect(
+        [
+          for (final level in CefrLevel.values)
+            Scaffolds.forLevel(level).taskPreparation.inSeconds,
+        ],
+        [90, 60, 60, 30, 15, 15, 15],
+      );
+      expect(
+        [
+          for (final level in CefrLevel.values)
+            Scaffolds.forLevel(level).taskPhrases,
+        ],
+        [true, true, true, false, false, false, false],
+      );
+    });
   });
 }

@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/core/result.dart';
+import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
 import 'package:dilbaz_app/data/db/pack_importer.dart';
@@ -11,13 +14,19 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
+import 'package:dilbaz_app/data/tasks/recording_store.dart';
+import 'package:dilbaz_app/data/tasks/task_content_repository.dart';
+import 'package:dilbaz_app/data/tasks/task_providers.dart';
+import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:dilbaz_app/data/tutor/tutor_providers.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -37,9 +46,16 @@ const sima = 'zz.ws.sima.n.1';
 const deroKolu = 'zz.chunk.dero_kolu';
 const badaSentence = 'zz.sent.0001';
 
+/// Speaking tasks of the synthetic language: an anchor of the monthly
+/// test, an A1 task and an A2 task.
+const anchorTask = 'zz.task.anc_1';
+const homeTask = 'zz.task.home';
+const cityTask = 'zz.task.city';
+
 /// Packs of the synthetic language for card sessions: two words with a
 /// carrier each and a chunk. For a learner at A2 the curriculum takes
-/// bada, then sima, then the chunk (it is C1).
+/// bada, then sima, then the chunk (it is C1). The packs also hold three
+/// speaking tasks and the connectors.
 Future<void> installCardPacks(AppDatabase db) async {
   const target = 'zz@1';
   const pair = 'qq-zz@1';
@@ -53,7 +69,29 @@ Future<void> installCardPacks(AppDatabase db) async {
       },
       meta: {
         'audio': {'prefix': 'zz/'},
+        'connectors': [
+          {'text': 'kolu', 'level': 'A1'},
+        ],
       },
+      tasks: [
+        for (final (key, level, anchor, phrases) in [
+          (anchorTask, 'A1', 'ANC-1', <String>[]),
+          (homeTask, 'A1', null, ['Bada ...', 'Sima ...', 'Kolu ...']),
+          (cityTask, 'A2', null, ['Dero ...', 'Bada ...', 'Sima ...']),
+        ])
+          ContentTasksCompanion.insert(
+            key: key,
+            packId: target,
+            kind: 'speaking',
+            level: level,
+            data: Value({
+              'anchor': anchor,
+              'can_do': ['cd.zz.$level'],
+              'goal': 'Talk about $key.',
+              'phrases': phrases,
+            }),
+          ),
+      ],
       normalization: soundNormalization,
       items: [
         item(
@@ -145,6 +183,23 @@ Future<void> installCardPacks(AppDatabase db) async {
             packId: pair,
             data: data,
           ),
+        for (final (key, title) in [
+          (anchorTask, 'Kendini tanıt'),
+          (homeTask, 'Evin'),
+          (cityTask, 'Şehrin'),
+        ])
+          ContentPairEntriesCompanion.insert(
+            kind: 'task_instruction',
+            key: key,
+            packId: pair,
+            data: {
+              'title': title,
+              'prompt': '$title: anlat.',
+              'phrases': [
+                if (key != anchorTask) ...['Bada demek', 'Sima demek', 'Kolu'],
+              ],
+            },
+          ),
         ContentPairEntriesCompanion.insert(
           kind: 'variants',
           key: badaSentence,
@@ -219,6 +274,21 @@ class FakeTutorRepository implements TutorRepository {
     final suggestion = this.suggestion;
     return suggestion == null ? Err(gapFailure) : Ok(suggestion);
   }
+
+  /// The next marks; null makes [speakingAnnotate] fail with
+  /// [annotateFailure].
+  AnnotatedSpeech? annotated;
+  TutorFailure annotateFailure = TutorFailure.unavailable;
+  final annotateAsked = <SpeakingAnnotateRequest>[];
+
+  @override
+  Future<Result<AnnotatedSpeech, TutorFailure>> speakingAnnotate(
+    SpeakingAnnotateRequest request,
+  ) async {
+    annotateAsked.add(request);
+    final annotated = this.annotated;
+    return annotated == null ? Err(annotateFailure) : Ok(annotated);
+  }
 }
 
 /// A suggestion of `gap_suggest`.
@@ -273,7 +343,29 @@ List<Override> cardDataOverrides({
   cardContentRepositoryProvider.overrideWith(
     (ref) => DriftCardContentRepository(db, l2: 'zz'),
   ),
+  taskContentRepositoryProvider.overrideWith(
+    (ref) => DriftTaskContentRepository(db, l2: 'zz'),
+  ),
+  recordingStoreProvider.overrideWithValue(FakeRecordingStore()),
   tutorRepositoryProvider.overrideWithValue(tutor),
   clockProvider.overrideWithValue(clock ?? () => cardNow),
   cardSeedProvider.overrideWithValue(1),
 ];
+
+/// Recordings kept in memory.
+class FakeRecordingStore implements RecordingStore {
+  final files = <String, Uint8List>{};
+
+  @override
+  Future<String?> save(String id, RecordedAudio audio) async {
+    final path = '/recordings/$id.${recordingExtension(audio.contentType)}';
+    files[path] = audio.bytes;
+    return path;
+  }
+
+  @override
+  Future<Uint8List?> read(String path) async => files[path];
+
+  @override
+  Future<void> delete(String path) async => files.remove(path);
+}

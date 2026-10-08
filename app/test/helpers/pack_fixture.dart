@@ -39,6 +39,7 @@ Future<BuiltPack> buildPack({
   List<ContentLinksCompanion> links = const [],
   List<ContentFormsCompanion> forms = const [],
   List<ContentPairEntriesCompanion> pairEntries = const [],
+  List<ContentTasksCompanion> tasks = const [],
   Map<String, Object?> manifest = const {},
   Map<String, Object?>? normalization,
   Map<String, Object?> meta = const {},
@@ -54,7 +55,8 @@ Future<BuiltPack> buildPack({
         ..insertAll(db.contentItems, items)
         ..insertAll(db.contentLinks, links)
         ..insertAll(db.contentForms, forms)
-        ..insertAll(db.contentPairEntries, pairEntries);
+        ..insertAll(db.contentPairEntries, pairEntries)
+        ..insertAll(db.contentTasks, tasks);
     });
     await db.customStatement(
       'CREATE TABLE pack_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)',

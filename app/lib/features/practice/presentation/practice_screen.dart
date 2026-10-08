@@ -15,28 +15,39 @@ class PracticeScreen extends StatelessWidget {
     final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.tabPractice)),
-      body: ListView(
+      // A short list, built whole: every activity can be found and reached.
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        children: [
-          _Activity(
-            icon: Icons.style_outlined,
-            title: l10n.practiceCardsTitle,
-            body: l10n.practiceCardsBody,
-            route: AppRoutes.cards,
-          ),
-          const SizedBox(height: 12),
-          _Activity(
-            icon: Icons.record_voice_over_outlined,
-            title: l10n.practiceGapsTitle,
-            body: l10n.practiceGapsBody,
-            route: AppRoutes.gaps,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            l10n.practiceMoreSoon,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Activity(
+              icon: Icons.style_outlined,
+              title: l10n.practiceCardsTitle,
+              body: l10n.practiceCardsBody,
+              route: AppRoutes.cards,
+            ),
+            const SizedBox(height: 12),
+            _Activity(
+              icon: Icons.record_voice_over_outlined,
+              title: l10n.practiceGapsTitle,
+              body: l10n.practiceGapsBody,
+              route: AppRoutes.gaps,
+            ),
+            const SizedBox(height: 12),
+            _Activity(
+              icon: Icons.mic_none,
+              title: l10n.practiceSpeakingTitle,
+              body: l10n.practiceSpeakingBody,
+              route: AppRoutes.speaking,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              l10n.practiceMoreSoon,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }

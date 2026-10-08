@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/gap/gap_entry.dart';
+import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:flutter_test/flutter_test.dart' hide Evaluation;
@@ -63,6 +65,7 @@ Response json(Request request, int status, Object? body) => Response(
 
 void main() {
   gapSuggestTests();
+  speakingAnnotateTests();
   group('SupabaseTutorRepository (docs/07-ai-tutor.md §4.1)', () {
     test('sends the route its body and reads the verdict', () async {
       late Request seen;
@@ -318,5 +321,98 @@ void gapSuggestTests() {
         TutorFailure.invalid,
       );
     });
+  });
+}
+
+void speakingAnnotateTests() {
+  const annotateRequest = SpeakingAnnotateRequest(
+    l1: 'tr',
+    l2: 'en',
+    level: CefrLevel.a1,
+    explainInL1: true,
+    prompt: 'Evini anlat.',
+    goal: 'Describe your home.',
+    canDoCodes: ['cd.describe_experience.a1'],
+    words: [
+      TimedWord(text: 'my', startMs: 0, endMs: 200),
+      TimedWord(text: 'home', startMs: 300, endMs: 600),
+    ],
+  );
+  const marks = <String, Object?>{
+    'clauses': [
+      {'start_i': 0, 'end_i': 1, 'as_unit': 0, 'error_free': true},
+    ],
+    'errors': <Object?>[],
+    'fillers': <Object?>[],
+    'repairs': <Object?>[],
+    'structures_used': <Object?>[],
+    'task_outcome': 'not_done',
+    'strengths': <Object?>[],
+    'corrections': <Object?>[],
+    'catalog': 'tr-en@1',
+    'prompt_version': 'speaking_annotate@1',
+    'provider': 'gemini',
+    'model': 'gemini-3.5-flash',
+  };
+
+  group('speaking_annotate (docs/07-ai-tutor.md §4.2)', () {
+    test(
+      'sends the transcript and reads the marks with their source',
+      () async {
+        late Request seen;
+        final repository = repositoryWith((sent) async {
+          seen = sent;
+          return json(sent, 200, marks);
+        });
+        final result = await repository.speakingAnnotate(annotateRequest);
+        final value = (result as Ok<AnnotatedSpeech, TutorFailure>).value;
+        expect(value.annotation.taskOutcome, TaskOutcome.notDone);
+        expect(value.annotation.clauses.single.errorFree, isTrue);
+        expect(value.catalog, 'tr-en@1');
+        expect(value.promptVersion, 'speaking_annotate@1');
+        expect(value.toJson()['model'], 'gemini-3.5-flash');
+        expect(seen.url.path, '/functions/v1/tutor/speaking_annotate');
+        expect(jsonDecode(seen.body), {
+          'ctx': {'l1': 'tr', 'l2': 'en', 'level': 'A1', 'explain_in': 'l1'},
+          'task': {
+            'prompt_l1': 'Evini anlat.',
+            'goal': 'Describe your home.',
+            'can_do_codes': ['cd.describe_experience.a1'],
+          },
+          'words': [
+            {'i': 0, 'w': 'my', 'start_ms': 0, 'end_ms': 200},
+            {'i': 1, 'w': 'home', 'start_ms': 300, 'end_ms': 600},
+          ],
+          'assessment': false,
+        });
+      },
+    );
+
+    test(
+      'its codes are failures; marks off the contract are invalid',
+      () async {
+        final unavailable = repositoryWith(
+          (sent) async => json(sent, 503, {
+            'error': {'code': 'llm_unavailable'},
+          }),
+        );
+        expect(
+          (await unavailable.speakingAnnotate(annotateRequest) as Err).error,
+          TutorFailure.unavailable,
+        );
+        for (final broken in [
+          {...marks, 'task_outcome': 'maybe'},
+          {...marks, 'catalog': 3},
+        ]) {
+          final repository = repositoryWith(
+            (sent) async => json(sent, 200, broken),
+          );
+          expect(
+            (await repository.speakingAnnotate(annotateRequest) as Err).error,
+            TutorFailure.invalid,
+          );
+        }
+      },
+    );
   });
 }
