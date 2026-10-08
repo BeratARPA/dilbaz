@@ -48,8 +48,10 @@ foreach ($name in "GEMINI_API_KEY", "GROQ_API_KEY", "DEEPGRAM_API_KEY") {
   if ($value.Trim()) { $values[$name] = $value.Trim() }
 }
 $values.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" } | Set-Content -Encoding ascii $envFile
-npx supabase secrets set --env-file supabase/functions/.env
+npx.cmd supabase secrets set --env-file supabase/functions/.env
 ```
+
+PowerShell'de `npx` yerine `npx.cmd` yazılır. Betik çalıştırma kapalıyken (Windows'un varsayılanı) `npx.ps1` engellenir; bu güvenlik ayarı değiştirilmez.
 
 Karşılaştırmalar büyük-küçük harfe duyarlıdır (`-cmatch`). Türkçe dil ayarında duyarsız eşleşme `I` harfini `ı` sayar ve `GEMINI` eşleşmez.
 
