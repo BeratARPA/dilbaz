@@ -168,7 +168,7 @@ Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** t
    - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
    - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
 
-`key.properties` yoksa sürüm derlemesi hata ayıklama anahtarıyla imzalanır (`flutter run --release` çalışsın diye). Böyle bir APK dağıtılmaz; 5.2'deki imza denetimi bunu yakalar.
+`key.properties` yoksa sürüm derlemesi hata ayıklama anahtarıyla imzalanır (`flutter run --release` çalışsın diye) ve derleme çıktısında `WARNING: android/key.properties not found` yazar. Böyle bir APK dağıtılmaz; 5.2'deki imza denetimi de bunu yakalar.
 
 ### 5.2 Derleme ve imza denetimi (ajan ya da sen)
 
