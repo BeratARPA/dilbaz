@@ -1049,5 +1049,193 @@
         "type": "int"
       }
     }
+  },
+  "practiceGapsTitle": "Söyleyemediklerim",
+  "@practiceGapsTitle": {
+    "description": "Practice: the list of things the learner could not say (A19)."
+  },
+  "practiceGapsBody": "Söyleyemediklerin ve önerileri; istediklerin karta dönüşür.",
+  "@practiceGapsBody": {
+    "description": "Practice: what the list holds."
+  },
+  "gapCaptureIntro": "Söylemek isteyip söyleyemediğin şeyi Türkçe yaz ya da söyle. İngilizcesini birlikte bulalım.",
+  "@gapCaptureIntro": {
+    "description": "Capture page: what to do."
+  },
+  "gapCaptureTextLabel": "Ne demek istedin?",
+  "@gapCaptureTextLabel": {
+    "description": "Capture page: label of the text field."
+  },
+  "gapCaptureDictate": "Sesle söyle",
+  "@gapCaptureDictate": {
+    "description": "Capture page: starts Turkish dictation."
+  },
+  "gapCaptureStop": "Bitti",
+  "@gapCaptureStop": {
+    "description": "Capture page: stops dictation."
+  },
+  "gapCaptureListening": "Dinliyorum…",
+  "@gapCaptureListening": {
+    "description": "Capture page: while dictating."
+  },
+  "gapCaptureContext": "Nerede aklına geldi?",
+  "@gapCaptureContext": {
+    "description": "Capture page: title of the context chips."
+  },
+  "gapContextLiveClass": "Canlı derste",
+  "@gapContextLiveClass": {
+    "description": "Context chip: in a live lesson."
+  },
+  "gapContextDaily": "Gün içinde",
+  "@gapContextDaily": {
+    "description": "Context chip: in daily life."
+  },
+  "gapContextPair": "Partnerle",
+  "@gapContextPair": {
+    "description": "Context chip: with the partner."
+  },
+  "gapContextSpeakingTask": "Konuşma görevinde",
+  "@gapContextSpeakingTask": {
+    "description": "Context chip: in a speaking task."
+  },
+  "gapContextMedia": "Dizi ya da filmde",
+  "@gapContextMedia": {
+    "description": "Context chip: while watching or reading."
+  },
+  "gapCaptureNoteLabel": "Not (isteğe bağlı)",
+  "@gapCaptureNoteLabel": {
+    "description": "Capture page: label of the note field."
+  },
+  "gapCaptureSave": "Kaydet ve öneri al",
+  "@gapCaptureSave": {
+    "description": "Capture page: saves and asks for the suggestion."
+  },
+  "dictationFailurePermission": "Mikrofon izni yok. Telefonun ayarlarından izin verebilir ya da yazabilirsin.",
+  "@dictationFailurePermission": {
+    "description": "Dictation: no microphone permission."
+  },
+  "dictationFailureUnavailable": "Türkçe ses tanıma şu an yok. Yazarak devam edebilirsin.",
+  "@dictationFailureUnavailable": {
+    "description": "Dictation: no recognizer for Turkish here."
+  },
+  "dictationFailureNetwork": "Bağlantı yok gibi. Yazarak devam edebilirsin.",
+  "@dictationFailureNetwork": {
+    "description": "Dictation: no connection."
+  },
+  "dictationFailureQuota": "Ses tanımanın ücretsiz payı doldu. Şimdilik yazarak devam edebilirsin.",
+  "@dictationFailureQuota": {
+    "description": "Dictation: the free quota is spent (ADR-0009)."
+  },
+  "dictationFailureBusy": "Ses tanıma şu an cevap vermiyor. Birazdan yeniden dene.",
+  "@dictationFailureBusy": {
+    "description": "Dictation: the recognizer is busy."
+  },
+  "dictationFailureNothingHeard": "Bir şey duyamadım. Bir daha söyleyebilir ya da yazabilirsin.",
+  "@dictationFailureNothingHeard": {
+    "description": "Dictation: nothing was heard."
+  },
+  "dictationFailureUnknown": "Şu an olmadı. Yazarak devam edebilirsin.",
+  "@dictationFailureUnknown": {
+    "description": "Dictation: any other problem."
+  },
+  "gapEntryTitle": "Öneri",
+  "@gapEntryTitle": {
+    "description": "Suggestion page: title."
+  },
+  "gapEntryYouWanted": "Demek istediğin",
+  "@gapEntryYouWanted": {
+    "description": "Suggestion page: label of the learner's own words."
+  },
+  "gapEntryWaiting": "Öneri hazırlanıyor…",
+  "@gapEntryWaiting": {
+    "description": "Suggestion page: while gap_suggest runs."
+  },
+  "gapEntryPending": "Öneri şu an alınamadı. Kaydın duruyor; sonra yeniden denenecek.",
+  "@gapEntryPending": {
+    "description": "Suggestion page: no suggestion yet; it is kept and tried again later."
+  },
+  "gapEntryRetry": "Yeniden dene",
+  "@gapEntryRetry": {
+    "description": "Suggestion page: asks for the suggestion again."
+  },
+  "gapEntryNatural": "Doğal hâli",
+  "@gapEntryNatural": {
+    "description": "Suggestion page: label of l2_natural."
+  },
+  "gapEntrySimple": "Sade hâli",
+  "@gapEntrySimple": {
+    "description": "Suggestion page: label of l2_simple."
+  },
+  "gapEntryChunk": "Akılda tutulacak kalıp",
+  "@gapEntryChunk": {
+    "description": "Suggestion page: label of the key chunk."
+  },
+  "gapEntryChunkLine": "{chunk}: {gloss}",
+  "@gapEntryChunkLine": {
+    "description": "Suggestion page: the key chunk and its meaning.",
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "gloss": {
+        "type": "String"
+      }
+    }
+  },
+  "gapEntryCardWhich": "Hangisi kart olsun?",
+  "@gapEntryCardWhich": {
+    "description": "Suggestion page: which version becomes the card."
+  },
+  "gapEntryWithChunk": "Kalıp da ayrı kart olsun",
+  "@gapEntryWithChunk": {
+    "description": "Suggestion page: the key chunk also becomes a card."
+  },
+  "gapEntryAddToCards": "Karta ekle",
+  "@gapEntryAddToCards": {
+    "description": "Suggestion page: makes the personal items."
+  },
+  "gapEntryDismiss": "Vazgeç",
+  "@gapEntryDismiss": {
+    "description": "Suggestion page: dismisses the capture."
+  },
+  "gapEntryCarded": "Karta eklendi. Yeni öğeler arasında ilk sırada; sırası gelince tanıtılacak.",
+  "@gapEntryCarded": {
+    "description": "Suggestion page: the capture became personal items, introduced within the day's new items."
+  },
+  "gapEntryDismissed": "Bunu kenara koydun. İstersen yine de karta ekleyebilirsin.",
+  "@gapEntryDismissed": {
+    "description": "Suggestion page: the capture was dismissed."
+  },
+  "gapListEmptyFresh": "Yeni bir şey yok. Söyleyemediğin bir şey olunca \"Söyleyemedim\" düğmesine bas.",
+  "@gapListEmptyFresh": {
+    "description": "List: no new captures."
+  },
+  "gapListEmptyCarded": "Henüz karta dönüşen yok.",
+  "@gapListEmptyCarded": {
+    "description": "List: nothing carded yet."
+  },
+  "gapListEmptyDismissed": "Vazgeçilen yok.",
+  "@gapListEmptyDismissed": {
+    "description": "List: nothing dismissed."
+  },
+  "gapListFresh": "Yeni",
+  "@gapListFresh": {
+    "description": "List filter: new captures."
+  },
+  "gapListCarded": "Karta dönüştü",
+  "@gapListCarded": {
+    "description": "List filter: carded captures."
+  },
+  "gapListDismissed": "Vazgeçildi",
+  "@gapListDismissed": {
+    "description": "List filter: dismissed captures."
+  },
+  "gapListWaiting": "Öneri bekliyor",
+  "@gapListWaiting": {
+    "description": "List: a capture without its suggestion yet."
+  },
+  "gapListAdd": "Yeni ekle",
+  "@gapListAdd": {
+    "description": "List: tooltip of the add button."
   }
 }

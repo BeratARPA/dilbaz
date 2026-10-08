@@ -532,6 +532,35 @@ void main() {
       expect(current(), isA<CardSessionIntroduction>());
     });
 
+    test('what the learner asked for is introduced first (A19)', () async {
+      await db
+          .into(db.personalItems)
+          .insert(
+            PersonalItemsCompanion.insert(
+              id: 'p1',
+              profileId: FakeAuthRepository.id,
+              courseId: FakeAssessmentRepository.zzCourse.id,
+              kind: 'sentence',
+              textL2: 'Kolu sima dero.',
+              source: 'gap',
+              glossL1: const Value('kolu sima dero demek istedim'),
+            ),
+          );
+      final state = await start();
+      final view = (state as CardSessionIntroduction).view;
+      expect(view.headword, 'Kolu sima dero.');
+      expect(view.meaning, 'kolu sima dero demek istedim');
+      expect(view.total, 4);
+      controller()
+        ..begin()
+        ..switchInput();
+      expect(card().prompt, 'kolu sima dero demek istedim');
+      await controller().submit('Kolu sima dero.');
+      expect((card().phase as CardEnded).outcome, isA<Recalled>());
+      await finishCard();
+      expect((await db.select(db.cards).get()).single.itemRef, 'personal:p1');
+    });
+
     test('ends with what was done', () async {
       await start();
       for (final answer in ['Bada kolu.', 'Sima dero.', 'Dero kolu.']) {

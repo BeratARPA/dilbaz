@@ -13,6 +13,12 @@ abstract final class AppRoutes {
   static const microphoneCheck = '/progress/settings/microphone';
   static const gapCapture = '/gap/new';
 
+  /// "Söyleyemediklerim", over the tabs.
+  static const gaps = '/gap';
+
+  /// One capture and its suggestion.
+  static String gapEntry(String id) => '/gap/$id';
+
   /// The placement test, over the tabs.
   static const placement = '/placement';
 

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
+import 'package:dilbaz_app/data/speech/dictation.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/data/speech/transcript.dart';
 
@@ -80,4 +81,35 @@ class FakeSpeechRepository implements SpeechRepository {
       ),
     );
   }
+}
+
+/// A dictation that hears one text, or fails as told.
+class FakeDictation implements Dictation {
+  new({this.heard = 'canım sıkıldı'});
+
+  String heard;
+
+  /// Why the next start or stop fails; null means they work.
+  DictationFailure? startFailure;
+  DictationFailure? stopFailure;
+  int starts = 0;
+  int stops = 0;
+  int cancels = 0;
+
+  @override
+  Future<Result<void, DictationFailure>> start() async {
+    starts++;
+    final failure = startFailure;
+    return failure == null ? const Ok(null) : Err(failure);
+  }
+
+  @override
+  Future<Result<String, DictationFailure>> stop() async {
+    stops++;
+    final failure = stopFailure;
+    return failure == null ? Ok(heard) : Err(failure);
+  }
+
+  @override
+  Future<void> cancel() async => cancels++;
 }

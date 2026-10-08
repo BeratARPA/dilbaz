@@ -178,6 +178,7 @@ class CardSessionController extends _$CardSessionController {
     }
 
     final items = await content.items();
+    final personal = await content.personalItems(course.id, course.level);
     final links = await content.links();
     final stored = await cards.cards(course.id);
     final evidence = await cards.evidence(course.id);
@@ -187,16 +188,19 @@ class CardSessionController extends _$CardSessionController {
       for (final card in stored)
         if (!card.createdAt.isBefore(today)) card.itemRef,
     };
-    final candidates = Curriculum(items: items, links: links).next(
-      level: course.level,
-      levelOf: (key) =>
-          evidence[key]?.productionLevel(now: now) ?? ItemLevel.unseen,
-      introducedToday: introducedToday,
-      introducedLately: {
-        for (final card in stored)
-          if (!card.createdAt.isBefore(lately)) card.itemRef,
-      },
-    );
+    final candidates = Curriculum(items: [...items, ...personal], links: links)
+        .next(
+          level: course.level,
+          levelOf: (key) =>
+              evidence[key]?.productionLevel(now: now) ?? ItemLevel.unseen,
+          // What the learner asked for comes first (docs/02 §4.3).
+          personal: {for (final item in personal) item.key},
+          introducedToday: introducedToday,
+          introducedLately: {
+            for (final card in stored)
+              if (!card.createdAt.isBefore(lately)) card.itemRef,
+          },
+        );
     final plan = Planner().plan(
       learner: LearnerSnapshot(
         level: course.level,

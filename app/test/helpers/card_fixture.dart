@@ -3,6 +3,7 @@ import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
 import 'package:dilbaz_app/data/db/pack_importer.dart';
+import 'package:dilbaz_app/data/gap/gap_entry.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/card_content_repository.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
@@ -11,6 +12,7 @@ import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
+import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_providers.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
@@ -203,7 +205,36 @@ class FakeTutorRepository implements TutorRepository {
         ? Err(failure)
         : Ok(llmCheck(Verdict.uncertain, targetOk: false));
   }
+
+  /// The next suggestion; null makes [gapSuggest] fail with [gapFailure].
+  GapSuggestion? suggestion = gapSuggestion();
+  TutorFailure gapFailure = TutorFailure.quota;
+  final gapAsked = <GapSuggestRequest>[];
+
+  @override
+  Future<Result<GapSuggestion, TutorFailure>> gapSuggest(
+    GapSuggestRequest request,
+  ) async {
+    gapAsked.add(request);
+    final suggestion = this.suggestion;
+    return suggestion == null ? Err(gapFailure) : Ok(suggestion);
+  }
 }
+
+/// A suggestion of `gap_suggest`.
+GapSuggestion gapSuggestion({
+  String natural = "Let's go out, I'm bored.",
+  String simple = 'I am bored. We can go out.',
+  String? notes = "'bored' sıkılmış demektir.",
+}) => GapSuggestion(
+  l2Natural: natural,
+  l2Simple: simple,
+  keyChunk: const KeyChunk(text: 'go out', glossL1: 'dışarı çıkmak'),
+  register: 'informal',
+  notesL1: notes,
+  provider: 'fake',
+  model: 'fake-model',
+);
 
 /// Everything a card session reaches outside itself, on [db] with the
 /// packs of [installCardPacks].

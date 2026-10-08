@@ -389,6 +389,7 @@ Kullanıcıdan gelen içerik (Söyleyemediklerim, altyazı replikleri, konuşma 
 - Anahtar biçimi: `personal:<uuid>`.
 - Aynı motor kurallarıyla çalışır.
 - Lemma listesi kayıt anında bir `normalize_lemmatize` fonksiyonuyla çıkarılır: pakette `forms` tablosu, yoksa sunucu fonksiyonu.
+- **Uygulama (F1-17):** Söyleyemediklerim'den gelen öğeler `source = gap` ile yazılır. Lemmalar hedef paketin dil hizmetleriyle (normalizasyon + `forms`) çıkarılır; paketin tanımadığı kelime kendi lemmasıdır. Sunucu yedeği yok: paket yoksa lemma listesi boş kalır.
 
 ## 8. Kalite geri bildirimi
 

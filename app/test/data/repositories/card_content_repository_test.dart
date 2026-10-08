@@ -4,6 +4,7 @@ import 'package:dilbaz_app/data/db/pack_importer.dart';
 import 'package:dilbaz_app/data/repositories/card_content_repository.dart';
 import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/pack_fixture.dart';
@@ -119,6 +120,7 @@ Future<void> install(AppDatabase db) async {
 }
 
 void main() {
+  personalTests();
   late AppDatabase db;
   late DriftCardContentRepository content;
 
@@ -204,5 +206,94 @@ void main() {
     ]);
     final language = (await content.language())!;
     expect(language.normalize('Bada kolu.'), 'bada kolu');
+  });
+}
+
+void personalTests() {
+  group('personal items (A19)', () {
+    late AppDatabase db;
+    late DriftCardContentRepository content;
+
+    setUp(() async {
+      db = memoryDatabase();
+      await install(db);
+      content = DriftCardContentRepository(db, l2: 'zz');
+      await db.batch((batch) {
+        batch.insertAll(db.personalItems, [
+          PersonalItemsCompanion.insert(
+            id: 'p1',
+            profileId: 'u',
+            courseId: 'c1',
+            kind: 'sentence',
+            textL2: 'Kolu bada sima.',
+            source: 'gap',
+            glossL1: const Value('kolu bada demek istedim'),
+            variants: const Value(['Bada kolu sima.']),
+            notes: const Value('not'),
+          ),
+          PersonalItemsCompanion.insert(
+            id: 'p2',
+            profileId: 'u',
+            courseId: 'c1',
+            kind: 'chunk',
+            textL2: 'sima dero',
+            source: 'gap',
+            glossL1: const Value('sima dero'),
+            cefr: const Value('B1'),
+          ),
+          // Without a meaning there is nothing to ask with.
+          PersonalItemsCompanion.insert(
+            id: 'p3',
+            profileId: 'u',
+            courseId: 'c1',
+            kind: 'chunk',
+            textL2: 'x',
+            source: 'gap',
+          ),
+          PersonalItemsCompanion.insert(
+            id: 'p4',
+            profileId: 'u',
+            courseId: 'other',
+            kind: 'chunk',
+            textL2: 'y',
+            source: 'gap',
+            glossL1: const Value('y'),
+          ),
+        ]);
+      });
+    });
+    tearDown(() => db.close());
+
+    test("are phrases to say, at their own level or the learner's", () async {
+      final items = await content.personalItems('c1', CefrLevel.a2);
+      expect(items.map((i) => (i.key, i.kind, i.level, i.text)), [
+        ('personal:p1', ItemKind.chunk, CefrLevel.a2, 'Kolu bada sima.'),
+        ('personal:p2', ItemKind.chunk, CefrLevel.b1, 'sima dero'),
+      ]);
+    });
+
+    test("are asked with the learner's own words", () async {
+      final card = (await content.content(
+        'personal:p1',
+        knowledge: const LemmaKnowledge(known: {}, ranks: {}),
+      ))!;
+      expect(card.prompt, 'kolu bada demek istedim');
+      expect(card.carrierKey, 'personal:p1');
+      expect(card.answerKey.reference, 'Kolu bada sima.');
+      expect(card.answerKey.variants, ['Bada kolu sima.']);
+      expect(card.answerKey.targetLemmas, isEmpty);
+      expect(card.targetSpan, 'Kolu bada sima.');
+      expect(card.headword, 'Kolu bada sima.');
+      expect(card.meaning, 'kolu bada demek istedim');
+      expect(card.usageNote, 'not');
+      expect(card.clip, isNull);
+      expect(
+        await content.content(
+          'personal:p3',
+          knowledge: const LemmaKnowledge(known: {}, ranks: {}),
+        ),
+        isNull,
+      );
+    });
   });
 }

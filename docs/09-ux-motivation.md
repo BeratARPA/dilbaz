@@ -125,6 +125,12 @@ F1-16'da kalıp cümle içinde ayrıca işaretlenmez: öğe başlık olarak, ta�
 - **Öneri ekranı:** doğal ve basit sürüm + anahtar kalıp → "Karta ekle".
 - **Android erişim noktaları:** paylaş menüsü hedefi, hızlı ayarlar kutucuğu, ana ekran widget'ı.
 
+**Uygulama notları (F1-17):**
+- Liste Pratik sekmesinde "Söyleyemediklerim"dir; üstte Yeni / Karta dönüştü / Vazgeçildi seçimi vardır.
+- Yakalama sayfası: metin alanı, "Sesle söyle" (ses onayı varsa; dokununca dinler, "Bitti" ile durur, en çok 30 sn), bağlam çipleri, isteğe bağlı not, "Kaydet ve öneri al".
+- Öneri sayfası: demek istenen, doğal hâl, sade hâl, akılda tutulacak kalıp ve Türkçe karşılığı, varsa not; "Hangisi kart olsun?", "Kalıp da ayrı kart olsun", "Karta ekle" ve "Vazgeç". Öneri gelmezse sakin bir not ve "Yeniden dene".
+- Hızlı ayarlar kutucuğu ve ana ekran widget'ı sonraya kaldı.
+
 ### 5.6 Konuşma görevi (A11)
 Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + süre) → "işleniyor" → geri bildirim:
 1. İyi gidenler

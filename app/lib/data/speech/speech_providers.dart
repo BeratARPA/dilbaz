@@ -1,4 +1,6 @@
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
+import 'package:dilbaz_app/data/speech/device_recognizer.dart';
+import 'package:dilbaz_app/data/speech/dictation.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:record/record.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,3 +25,16 @@ AnswerRecorder answerRecorder(Ref ref) {
 @riverpod
 Stream<double> answerLevel(Ref ref) =>
     ref.watch(answerRecorderProvider).level();
+
+/// The dictation of one screen, in the learner's language; it is freed
+/// with the screen.
+@riverpod
+Dictation dictation(Ref ref) {
+  final recorder = AnswerRecorder(AudioRecorder());
+  ref.onDispose(recorder.dispose);
+  return DeviceFirstDictation(
+    SpeechToTextRecognizer(),
+    recorder,
+    ref.watch(speechRepositoryProvider),
+  );
+}

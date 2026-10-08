@@ -6,6 +6,8 @@ import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/features/auth/presentation/sign_in_screen.dart';
 import 'package:dilbaz_app/features/cards/presentation/card_session_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
+import 'package:dilbaz_app/features/gap_journal/presentation/gap_entry_screen.dart';
+import 'package:dilbaz_app/features/gap_journal/presentation/gap_list_screen.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/opening_screen.dart';
@@ -122,9 +124,22 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const MicrophoneCheckScreen(),
       ),
       GoRoute(
+        path: AppRoutes.gaps,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const GapListScreen(),
+      ),
+      // Before `/gap/:id`, so that "new" is not taken for an id.
+      GoRoute(
         path: AppRoutes.gapCapture,
         parentNavigatorKey: rootKey,
-        builder: (context, state) => const GapCaptureScreen(),
+        builder: (context, state) =>
+            GapCaptureScreen(sharedText: state.extra as String?),
+      ),
+      GoRoute(
+        path: '${AppRoutes.gaps}/:id',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) =>
+            GapEntryScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
         path: AppRoutes.placement,

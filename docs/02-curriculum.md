@@ -102,7 +102,7 @@ puan = 3.0 · kişisel_ilgi      (Söyleyemediklerim'den geldiyse 1, ilgi alanı
 - **Eşit puanda** sıklık sırası küçük olan, sonra anahtarı küçük olan öndedir. Sonuç, paket listelerinin sırasından bağımsızdır.
 - **Aynı gün kuralı:** Liste, birbiriyle `contrasts_with` olan iki öğeyi birlikte içermez; puanı yüksek olan kalır. Bugün tanıtılmış bir öğenin karşıtı da listede olmaz. Böylece planlayıcı listenin başından kaç öğe alırsa alsın kural sağlanır (`05` §8 madde 10).
 - **Aynı kelimenin iki anlamı** da aynı gün tanıtılmaz (only: "sadece" ve "tek"). Gerekçe aynıdır: yeni öğrenilen iki benzer şey birbirini bozar.
-- **v1:** Kişisel ilgi yalnızca Söyleyemediklerim'den gelen öğeler için 1'dir; ilgi alanı etiketi sonraya kaldı.
+- **v1:** Kişisel ilgi yalnızca Söyleyemediklerim'den gelen öğeler için 1'dir; ilgi alanı etiketi sonraya kaldı. Bu öğeler (F1-17) müfredata kalıp gibi girer: kendi seviyeleri yoksa öğrencinin seviyesinde sayılır, sıklıkları yoktur.
 
 Ağırlıklar motor yapılandırmasındadır ve deneylerle ayarlanır. Son satır bilinçli bir tercih: karışan öğeler **aynı gün birlikte tanıtılmaz**, önce biri oturur, sonra karşıtlık çalışılır (Nation'ın "interference" uyarısı). Birlikte karışık çalışma ancak ikisi de öğrenildikten sonra başlar (I-10).
 

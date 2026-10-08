@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dilbaz_app/core/result.dart';
+import 'package:dilbaz_app/data/gap/gap_entry.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
+import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
@@ -60,6 +62,7 @@ Response json(Request request, int status, Object? body) => Response(
 );
 
 void main() {
+  gapSuggestTests();
   group('SupabaseTutorRepository (docs/07-ai-tutor.md §4.1)', () {
     test('sends the route its body and reads the verdict', () async {
       late Request seen;
@@ -247,4 +250,73 @@ class _NeverAnswers extends BaseClient {
     await abort;
     throw RequestAbortedException(request.url);
   }
+}
+
+void gapSuggestTests() {
+  const gapRequest = GapSuggestRequest(
+    l1: 'tr',
+    l2: 'en',
+    level: CefrLevel.a1,
+    explainInL1: true,
+    l1Text: 'canım sıkıldı',
+    context: GapContext.pair,
+    note: 'akşam',
+  );
+  const suggestion = <String, Object?>{
+    'l2_natural': "Let's go out, I'm bored.",
+    'l2_simple': 'I am bored. We can go out.',
+    'key_chunk': {'text': 'go out', 'gloss_l1': 'dışarı çıkmak'},
+    'register': 'informal',
+    'notes_l1': null,
+    'above_level': <String>[],
+    'simplified': false,
+    'provider': 'gemini',
+    'model': 'gemini-3.5-flash',
+  };
+
+  group('gap_suggest (docs/07-ai-tutor.md §4.3)', () {
+    test('sends what could not be said and reads the suggestion', () async {
+      late Request seen;
+      final repository = repositoryWith((sent) async {
+        seen = sent;
+        return json(sent, 200, suggestion);
+      });
+      final result = await repository.gapSuggest(gapRequest);
+      final value = (result as Ok<GapSuggestion, TutorFailure>).value;
+      expect(value.l2Simple, 'I am bored. We can go out.');
+      expect(
+        value.keyChunk,
+        const KeyChunk(text: 'go out', glossL1: 'dışarı çıkmak'),
+      );
+      expect(value.notesL1, isNull);
+      expect(seen.url.path, '/functions/v1/tutor/gap_suggest');
+      expect(jsonDecode(seen.body), {
+        'ctx': {'l1': 'tr', 'l2': 'en', 'level': 'A1', 'explain_in': 'l1'},
+        'l1_text': 'canım sıkıldı',
+        'context': 'pair',
+        'note': 'akşam',
+      });
+    });
+
+    test('its codes are failures too', () async {
+      for (final (code, failure) in [
+        ('missing_text', TutorFailure.invalid),
+        ('quota_exhausted', TutorFailure.quota),
+      ]) {
+        final repository = repositoryWith(
+          (sent) async => json(sent, 400, {
+            'error': {'code': code},
+          }),
+        );
+        expect((await repository.gapSuggest(gapRequest) as Err).error, failure);
+      }
+      final broken = repositoryWith(
+        (sent) async => json(sent, 200, {...suggestion, 'key_chunk': 'x'}),
+      );
+      expect(
+        (await broken.gapSuggest(gapRequest) as Err).error,
+        TutorFailure.invalid,
+      );
+    });
+  });
 }

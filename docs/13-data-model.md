@@ -164,6 +164,8 @@ create table attempt_amendments (        -- değişmez denemelere sonradan gelen
 
 ### 2.4 Kişisel içerik, kayıtlar, değerlendirme
 
+**F1-17:** `gap_entries.suggestion`, `gap_suggest` rotasının cevabıdır, olduğu gibi saklanır. "Karta ekle" aynı işlemde kişisel öğeleri (`source = gap`; cümle `kind = sentence`, kalıp `chunk`) yazar, yakalamayı `carded` yapar ve kimlikleri `personal_item_ids`'e koyar. Kişisel öğenin kartı `cards.item_ref = personal:<id>` taşır (`10` §7).
+
 ```sql
 create table gap_entries (
   id uuid primary key, profile_id uuid not null references profiles on delete cascade,

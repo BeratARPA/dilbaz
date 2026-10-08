@@ -1,12 +1,14 @@
 import 'package:dilbaz_app/core/result.dart';
+import 'package:dilbaz_app/data/gap/gap_entry.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
+import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:json_annotation/json_annotation.dart'
     show CheckedFromJsonException;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Why the tutor gave no answer. The card then judges without it
-/// (docs/03 §0.5 step 4, docs/07-ai-tutor.md §7).
+/// Why the tutor gave no answer. A card then judges without it (docs/03
+/// §0.5 step 4, docs/07-ai-tutor.md §7); a capture waits for a later try.
 enum TutorFailure {
   /// No connection, or no answer in time.
   network,
@@ -35,34 +37,61 @@ abstract interface class TutorRepository {
   Future<Result<LlmAnswerCheck, TutorFailure>> answerCheck(
     AnswerCheckRequest request,
   );
+
+  /// The English for what the learner could not say (A19).
+  Future<Result<GapSuggestion, TutorFailure>> gapSuggest(
+    GapSuggestRequest request,
+  );
 }
 
 class SupabaseTutorRepository implements TutorRepository {
-  const new(this._client, {this._wait = answerCheckWait});
+  const new(
+    this._client, {
+    this._wait = answerCheckWait,
+    this._gapWait = gapSuggestWait,
+  });
 
   final SupabaseClient _client;
   final Duration _wait;
+  final Duration _gapWait;
 
   /// How long a card waits for the check: the route's limit for one model
   /// (docs/07 §3). After it the request is cut off and the card judges
   /// without the LLM.
   static const answerCheckWait = Duration(seconds: 15);
 
+  /// How long a capture waits for its suggestion: a model and a simplify
+  /// call. After it the capture keeps waiting for a later try.
+  static const gapSuggestWait = Duration(seconds: 25);
+
   static const _answerCheck = 'tutor/answer_check';
+  static const _gapSuggest = 'tutor/gap_suggest';
 
   @override
   Future<Result<LlmAnswerCheck, TutorFailure>> answerCheck(
     AnswerCheckRequest request,
+  ) => _call(_answerCheck, request.toJson(), _wait, LlmAnswerCheck.fromJson);
+
+  @override
+  Future<Result<GapSuggestion, TutorFailure>> gapSuggest(
+    GapSuggestRequest request,
+  ) => _call(_gapSuggest, request.toJson(), _gapWait, GapSuggestion.fromJson);
+
+  Future<Result<T, TutorFailure>> _call<T>(
+    String route,
+    Map<String, Object?> body,
+    Duration wait,
+    T Function(Map<String, Object?> json) read,
   ) async {
     try {
       final response = await _client.functions.invoke(
-        _answerCheck,
-        body: request.toJson(),
-        abortSignal: Future<void>.delayed(_wait),
+        route,
+        body: body,
+        abortSignal: Future<void>.delayed(wait),
       );
       return switch (response.data) {
-        final Map<String, Object?> json => Ok(LlmAnswerCheck.fromJson(json)),
-        _ => const Err(TutorFailure.invalid),
+        final Map<String, Object?> json => Ok<T, TutorFailure>(read(json)),
+        _ => Err<T, TutorFailure>(TutorFailure.invalid),
       };
     } on RequestAbortedException {
       return const Err(TutorFailure.network);
@@ -89,6 +118,7 @@ TutorFailure tutorFailure(Object? details) => switch (details) {
     'bad_json' ||
     'invalid_input' ||
     'missing_response' ||
+    'missing_text' ||
     'unsupported_pair' => TutorFailure.invalid,
     _ => TutorFailure.unknown,
   },

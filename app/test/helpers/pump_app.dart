@@ -2,6 +2,8 @@ import 'package:dilbaz_app/app/app.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/share/share_providers.dart';
+import 'package:dilbaz_app/data/share/shared_text_source.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/content/application/content_status.dart';
@@ -41,6 +43,8 @@ List<Override> appOverrides({
   FakeClipPlayer? player,
   FakeAnswerRecorder? recorder,
   FakeSpeechRepository? speech,
+  FakeDictation? dictation,
+  SharedTextSource? shared,
   List<Override> extra = const [],
 }) => [
   authRepositoryProvider.overrideWithValue(auth),
@@ -62,6 +66,10 @@ List<Override> appOverrides({
   clipPlayerProvider.overrideWithValue(player ?? FakeClipPlayer()),
   answerRecorderProvider.overrideWithValue(recorder ?? FakeAnswerRecorder()),
   speechRepositoryProvider.overrideWithValue(speech ?? FakeSpeechRepository()),
+  dictationProvider.overrideWithValue(dictation ?? FakeDictation()),
+  sharedTextSourceProvider.overrideWithValue(
+    shared ?? const NoSharedTextSource(),
+  ),
   ...extra,
 ];
 
@@ -79,6 +87,8 @@ extension PumpApp on WidgetTester {
     FakeClipPlayer? player,
     FakeAnswerRecorder? recorder,
     FakeSpeechRepository? speech,
+    FakeDictation? dictation,
+    SharedTextSource? shared,
     List<Override> extra = const [],
   }) async {
     final fake = auth ?? FakeAuthRepository(signedIn: signedIn);
@@ -95,6 +105,8 @@ extension PumpApp on WidgetTester {
           player: player,
           recorder: recorder,
           speech: speech,
+          dictation: dictation,
+          shared: shared,
           extra: extra,
         ),
         child: const DilbazApp(),
