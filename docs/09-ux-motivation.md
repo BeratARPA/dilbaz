@@ -284,6 +284,18 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Asla:** seri hatırlatması, "seni özledik", art arda bildirim.
 - **Platform notu:** Web'de zamanlanmış bildirim yoktur. Windows'ta yinelenen bildirim sınırlıdır. Birincil platform Android'dir.
 
+**Uygulama (F1-22):**
+- **Kurulum:** Davetler bir hafta ilerisi için kurulur, her gün çıpa saatinde bir tane (motorda `invitationTimes`).
+  - O gün çalışıldıysa bugünkü kurulmaz. Çıpa saati sessiz saatlere düşüyorsa hiç kurulmaz.
+  - Profil değişince, her oturumdan sonra ve uygulamaya dönünce yeniden kurulur.
+  - Uygulama bir hafta açılmazsa davetler durur, açılınca yeniden başlar. Uzak kalan öğrenciye bildirim sonsuza dek gitmez.
+- **Metin** günlere göre değişir, her gün aynı okunmasın diye. Çift günlerde çıpaya göredir ("Kahve hazırsa 5 dakikalık tekrar seni bekliyor."), tek günlerde "Bugün kısa bir konuşma görevine ne dersin?".
+- **Koşul:** Karşılamada "İzin ver" denip sistem izni verildiyse (`daily_invitation`) ve izin hâlâ açıksa kurulur. Bildirim kanalının adı "Günlük davet"tir.
+- **Platform:** Yalnızca Android. Windows'ta F3-09'da denenecek; web'de yok.
+- **Sonraya kalanlar:**
+  - Ayarlarda davet açma/kapama, çıpa saati ve sessiz saatler: F1-23.
+  - "Geri bildirimin hazır": F2-02. Geçmiş bir kaydın geri bildirim ekranını gerektiriyor.
+
 ## 7. Çift özellikleri ve mahremiyet
 
 - **Eşleşme:** davet kodu / QR ile `team`. İkiden fazla üye desteklenir ama tasarım iki kişiye göredir.

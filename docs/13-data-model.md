@@ -407,7 +407,9 @@ create function sync_pull(p_since bigint, p_limit int default 1000) returns json
 
 Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok altındadır.
 
-`audio-private` F1-21 göçünde açıldı: dosya başına en çok 10 MB, yalnızca ses türleri (`audio/mp4`, `audio/aac`, `audio/wav`, `audio/webm`, `audio/ogg`). Okuma, ekleme, değiştirme ve silme yolun ilk klasörü `auth.uid()` ise serbesttir. Uygulamanın yüklemesi F1-22'de.
+`audio-private` F1-21 göçünde açıldı: dosya başına en çok 10 MB, yalnızca ses türleri (`audio/mp4`, `audio/aac`, `audio/wav`, `audio/webm`, `audio/ogg`). Okuma, ekleme, değiştirme ve silme yolun ilk klasörü `auth.uid()` ise serbesttir.
+
+F1-22'den beri aylık test ve başlangıç kayıtlarının sesi senkrondan sonra yüklenir (`RecordingFiles`). Görev kayıtlarının sesi cihazda kalır: onay metnindeki 30 günlük silme sunucuda F3-08'de kurulacak.
 
 ## 7. Zamanlanmış işler (pg_cron → pg_net → `ops`)
 
@@ -429,6 +431,7 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `c
 - **`outbox`:** `id` (artan), `target_table`, `row_id`, `op` (`insert` olay / `upsert` durum), `created_at`, `attempts`, `next_attempt_at`, `last_error` (yalnızca hata kodu).
   - Kayıt yalnızca satırı adlandırır. Push satırın o anki hâlini okur, aynı durum satırının birden çok güncellemesi tek gönderime iner.
   - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
+  - `upload` kaydı satırı değil kaydın sesini adlandırır. Onu senkron değil `RecordingFiles` işler (F1-22).
   - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
   - Senkron v1'in taşıdığı tablolar (`SyncRows`, `data/sync/sync_rows.dart`): profil, kurs, kişisel öğe, kart, deneme, ek, yakalama, kayıt, değerlendirme, oturum, içerik bildirimi. Yazılar, medya günlüğü ve altyazılar kendi fazlarıyla gelir; kayıtları outbox'ta bekler.
   - Satırlar drift'in sütun bilgisinden çevrilir: zamanlar UTC ISO-8601, JSON sütunları JSON olarak gider. `server_seq` ve `pending_push` gönderilmez.
@@ -438,7 +441,9 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `c
   - `planned` = `{reviews, new, estimate_ms}`, `done` = `{reviewed, introduced}`.
   - Bugün ekranı günün süresini ve haftanın çalışılan günlerini buradan okur. Gün yerel gece yarısında, hafta pazartesi başlar.
 - **Konuşma görevleri (F1-19):**
-  - **`recordings`:** Kayıt biter bitmez satır açılır. `audio_path`, cihazdaki dosyadır (uygulama destek klasöründe `recordings/<id>.m4a`); `audio-private`'a yükleme F1-22'de, bekleyen kayıtların otomatik işlenmesiyle birlikte gelir.
+  - **`recordings`:** Kayıt biter bitmez satır açılır.
+    - **Ses yolu:** `audio_path`, sesin sunucudaki yoludur (§6; `{uid}/{yyyy}/{mm}/{id}.{ext}`, ay UTC). Cihazdaki dosya aynı adla uygulama destek klasöründe `recordings/` altında durur (`RecordingStore.find`). F1-22'den önceki kayıtlarda cihazdaki tam yol kalmıştır; bulucu ikisini de tanır.
+    - **Yükleme:** Aylık test ve başlangıç kayıtlarının sesi outbox'a `upload` kaydıyla düşer ve senkrondan sonra yüklenir. Başka cihazda yapılmış bir kayıt dinlenirken sunucudan indirilir ve saklanır.
     - Sonra sırayla dolar: `asr` (`{provider, model, words: [{w, start_ms, end_ms, conf}]}`), `annotation` (`{runs: [rota cevabı], merged: işaretleme}`), `outcome`, `metrics` (`SpeechMetrics`) ve en son `attempt_id`.
     - Durum satırıdır: her değişiklik outbox'a `upsert` olarak düşer.
   - **`attempts`:** Görev denemesinde:

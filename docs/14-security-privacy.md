@@ -45,6 +45,10 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
   | Aylık test ve seviye testi kayıtları | Kullanıcı silene kadar ("önce/sonra" için) |
 
 - **Silme hakkı:** Ayarlar > Veri > "Tüm verimi sil" (onaylı, geri alınamaz uyarısıyla) ve tekil kayıt silme.
+- **Uygulamadaki durum (F1-22):**
+  - Aylık test ve seviye testi kayıtlarının sesi `audio-private`'a da yedeklenir; yalnızca sahibi okur (I-18).
+  - Görev kayıtlarının sesi yalnızca cihazda kalır.
+  - **Açık nokta:** Görev seslerini 30 gün sonra silen iş henüz yok, ne cihazda ne sunucuda. F3-08'de gelecek, o zamana kadar görev sesleri de sunucuya yüklenmez.
 - **Taşınabilirlik:** Ayarlar > Veri > "Dışa aktar" (JSON + ses dosyaları, zip).
 - **Bölge:** Supabase projesi AB bölgesinde (Frankfurt) açılır.
 

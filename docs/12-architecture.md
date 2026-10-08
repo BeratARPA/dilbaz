@@ -138,7 +138,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - `language/`: `PackLanguage` (`LanguageServices`), `Normalizer` + `NormalizationRules` (`pack_meta.normalization`), `WordAlignment` (kelime hizalama; dikte de bunu kullanacak).
   - `model/`: öğrenci modeli (`04`). `CardRecord` + `ReviewRecord` → `ItemEvidence` (L2 kanıt düzeyleri), `XlexResult` (X_Lex puanı, bant olasılıkları), `LemmaKnowledge` (kişisel kapsama, I-06), `LearnerSnapshot`.
   - `curriculum/`: `Curriculum.next` (sıradaki yeni öğeler, `02` §4.3) ve `CarrierPicker.pick` (i+1 taşıyıcı seçimi, `02` §4.4).
-  - `planner/`: `Planner.plan` → `TodayPlan` (`05` §3): bütçe, minimum gün, tekrar bloğu, yeni öğe sınırı, seçenekler. `PlannerConfig` tüm eşikleri tutar.
+  - `planner/`: `Planner.plan` → `TodayPlan` (`05` §3): bütçe, minimum gün, tekrar bloğu, yeni öğe sınırı, seçenekler. `PlannerConfig` tüm eşikleri tutar. `invitationTimes`: günlük davetin zamanları (`09` §6, F1-22).
 - **Dart paketinde optimizasyon ve yeniden zamanlama yok:**
   - Kişisel parametreler `tools/fsrs/optimize.py` ile hesaplanır (py-fsrs 6.x, `fsrs[optimizer]`). py-fsrs, farklı günlere yayılmış 512'den az tekrarda varsayılan parametreleri döndürür.
   - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır (`SrsScheduler.replay`).
@@ -165,7 +165,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - **İki cihazda aynı öğenin kartı:** Sunucu ilk geleni tutar. Diğer cihaz çekince iki kart birleşir: kimlik sunucununki, hafıza daha yeni incelemeninki. Eski kartın denemeleri kendi kimliğini korur (I-03); kanıt hesabı onları öğenin kartına sayar.
   - **Sıra güvencesi:** `server_seq` satır yazılırken alınır, işlemler ise farklı sırada bitebilir. Bu yüzden `sync_push` öğrenci başına bir danışma kilidi (advisory lock) tutar, `sync_pull` aynı kilidin paylaşımlı hâlini bekler. Çekme, sürmekte olan bir gönderimin satırlarını atlayıp imleci ilerletemez.
   - **Tetikleyiciler:** Ana kabuk açıkken uygulama açılışı, uygulamaya dönüş, ön planda 5 dakikada bir, yerel yazmalar 20 sn durulunca (oturum sonu da böyle yakalanır) ve uygulama ekrandan çıkarken. "Bağlantı geri gelince" ayrıca izlenmiyor; dönüş ve 5 dakikalık tur bunu karşılıyor.
-  - Başarılı her senkrondan sonra LLM'i bekleyen cevaplar sorulur (`03` §0.5, `LateChecks`). Satır inmişse ya da cevap sonradan kontrol edilmişse Bugün ekranı yenilenir.
+  - Başarılı her senkrondan sonra LLM'i bekleyen cevaplar sorulur (`03` §0.5, `LateChecks`), ardından aylık test kayıtlarının sesi yüklenir (`RecordingFiles`, F1-22). Satır inmişse ya da cevap sonradan kontrol edilmişse Bugün ekranı yenilenir.
   - Profil ve kurs karşılama akışında ve seviye testinden sonra ayrıca hemen, doğrudan tabloya yazılır (`ProfileRepository.push`; ekip adımı profili sunucuda bekler). Bu yol LWW karşılaştırması yapmaz ve kilidi tutmaz. F3-07'de tek yola indirilecek.
 - **Paketler** senkron dışındadır: manifest kontrolü + indirme (`11` §5).
 - **Kart gösterimi (F1-16):** Denemeler gösterim bitince tek işlemde yazılır: zincirli denemeler (puan ve `card_state_after` sonuncusunda), kartın yeni FSRS durumu ve outbox kayıtları.

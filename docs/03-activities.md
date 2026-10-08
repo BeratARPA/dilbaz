@@ -253,7 +253,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   - **Sonraya kalanlar:**
     - Aktarım ve can-do kanıtı (F1-20).
     - Kaydı dinleme (önce/sonra, F1-20).
-    - Bekleyen işaretlemenin bağlantı gelince istenmesi: F1-22'de, "Geri bildirimin hazır" bildirimiyle birlikte.
+    - Bekleyen işaretlemenin bağlantı gelince istenmesi: F2-02'de, "Geri bildirimin hazır" bildirimi ve geçmiş kaydın geri bildirim ekranıyla birlikte.
 
 ## A12 — 4/3/2 akıcılık (`fluency_432`)
 - **Amaç:** Tanıdık konuyu artan zaman baskısıyla tekrar anlatmak (P16).
