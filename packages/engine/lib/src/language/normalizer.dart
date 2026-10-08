@@ -52,6 +52,9 @@ final class Normalizer {
     return _join(rules.collapseRepeats ? _once(numbered) : numbered);
   }
 
+  /// Whether [word] is one of the rules' fillers, which [normalize] drops.
+  bool isFiller(String word) => _fillers.contains(word.trim().toLowerCase());
+
   /// [words] without a word that repeats the one before it.
   static List<String> _once(List<String> words) => [
     for (final (i, word) in words.indexed)

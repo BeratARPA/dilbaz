@@ -156,11 +156,12 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 
 ## 6. Akıcılık ölçümleri (deterministik)
 
-`dilbaz_engine` içindeki `FluencyMetrics.compute(words, clauses?)` fonksiyonu, `06` §3.3'teki tanımları uygular:
+`dilbaz_engine` içindeki `SpeechMetrics.of(words, language, annotation?, connectors, rankOf)` fonksiyonu (F1-19), `06` §3.3'teki tanımları uygular. Akıcılığın yanında işaretlemeden çıkan doğruluk ve karmaşıklık ölçümlerini de hesaplar. Sonuç `recordings.metrics`'e yazılır.
 
 - İki kelime arasındaki sessizlik = `words[i+1].startMs − words[i].endMs`. ≥ 250 ms ise sessiz duraklama, ≥ 1000 ms ise uzun duraklama.
 - Baştaki ve sondaki sessizlik hesaba katılmaz.
-- Dolgu sözcükleri: ASR'nin işaretlediği `uh/um` + LLM işaretlemesindeki `fillers`. Türkçe dolgular ("ıı", "şey") İngilizce ASR'de kaybolabilir. Bu, `l1_fillers_per_min` ölçümünün bilinen bir sınırlılığıdır ve raporda belirtilir.
+- Kelime sayısına dolgu sözcükleri girmez. Akış (`mlr`), iki sessiz duraklama arasındaki dolgusuz kelime sayısıdır.
+- Dolgu sözcükleri: ASR'nin yazdığı `uh/um` + LLM işaretlemesindeki `fillers`. İngilizce dolgular paketin normalizasyon listesinden okunur (`normalization.yaml` `fillers`; motorda `LanguageServices.isFiller`). Bu yüzden ayrı bir `fillers.jsonl` yoktur. İşaretleme bir kelimeye Türkçe dolgu derse o kelime Türkçe dolgu sayılır. Türkçe dolgular ("ıı", "şey") İngilizce ASR'de kaybolabilir. Bu, `l1_fillers_per_min` ölçümünün bilinen bir sınırlılığıdır ve raporda belirtilir.
 - Cümlecik sınırları gerektiren ölçümler (`mid_clause_pause_ratio`, EFC) LLM işaretlemesinden sonra hesaplanır.
 
 ## 7. Telaffuz değerlendirmesinin kullanımı (A07)

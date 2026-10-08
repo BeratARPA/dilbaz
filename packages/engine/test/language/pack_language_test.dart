@@ -46,6 +46,17 @@ void main() {
         expect(language.knows(form), isTrue);
         expect(language.knows('${form}q'), isFalse);
       });
+
+      test('tells hesitation sounds by the rules, in any case', () {
+        final hesitating = PackLanguage(
+          rules: const NormalizationRules(version: 1, fillers: ['eh']),
+          forms: zz.forms,
+          separator: separator,
+        );
+        expect(hesitating.isFiller(' Eh'), isTrue);
+        expect(hesitating.isFiller(zz.forms.keys.first), isFalse);
+        expect(language.isFiller('eh'), isFalse);
+      });
     });
   }
 }

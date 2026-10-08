@@ -12,4 +12,8 @@ abstract interface class LanguageServices {
 
   /// Whether [token] is a word form the pack knows.
   bool knows(String token);
+
+  /// Whether [word] is a hesitation sound ("uh"), as speech recognition
+  /// writes it (`normalization.yaml` fillers).
+  bool isFiller(String word);
 }

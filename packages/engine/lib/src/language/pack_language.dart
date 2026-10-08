@@ -27,4 +27,7 @@ final class PackLanguage implements LanguageServices {
 
   @override
   bool knows(String token) => _forms.containsKey(token);
+
+  @override
+  bool isFiller(String word) => _normalizer.isFiller(word);
 }

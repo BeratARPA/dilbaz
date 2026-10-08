@@ -124,6 +124,12 @@ Konuşma performansı, SLA araştırmasının standart üç boyutunda ölçülü
 
 **Görev:** `outcome` = `done` | `partial` | `not_done`.
 
+**Motorda (F1-19):** `SpeechMetrics.of` (`08` §6).
+- Veri yetmeyen ölçüm boş kalır, sayı uydurulmaz: işaretleme yoksa cümlecik ölçümleri, 100 kelimeden azsa `mtld`, sıralı kelime yoksa `beyond_2k_share`.
+- `beyond_2k_share`, sıklık sırası bilinen kelimeler arasındaki oranı verir. Sözlükte olmayan kelimeler (isimler, sayılar) sayılmaz. Birden çok lemmaya giden biçim en iyi sırayı alır.
+- `connector_types` paketin bağlaç listesindeki her ifadeyi bir kez sayar; çok kelimeli bağlaçlar da sayılır.
+- `errors_by_tag` etiket başına 100 kelimedeki hatayı verir.
+
 ### 3.4 Rapor
 - **Önce/sonra dinleme:** ilk kayıt, geçen ay ve bu ay aynı sabit görevde yan yana.
 - Her ölçümün aylık eğilimi. Sabit görevler karşılaştırmanın esasıdır; seviye görevleri ayrı gösterilir, çünkü zorlukları değişir.
