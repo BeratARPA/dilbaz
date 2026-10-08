@@ -26,4 +26,11 @@ void main() {
     await verifier.migrateAndValidate(db, 2);
     await db.close();
   });
+
+  test('a v2 database upgrades to v3: content reports appear', () async {
+    final schema = await verifier.schemaAt(2);
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 3);
+    await db.close();
+  });
 }

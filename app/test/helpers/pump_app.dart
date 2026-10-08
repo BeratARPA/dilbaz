@@ -9,6 +9,7 @@ import 'package:dilbaz_app/data/share/shared_text_source.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/content/application/content_status.dart';
+import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,6 +68,10 @@ List<Override> appOverrides({
     permissions ?? FakePermissionGateway(),
   ),
   contentControllerProvider.overrideWithBuild((ref, notifier) => readyContent),
+  // The sync has its own tests; here the app stays on the device.
+  syncControllerProvider.overrideWithBuild(
+    (ref, notifier) => (lastSyncAt: null, pulledAt: null, failure: null),
+  ),
   assessmentRepositoryProvider.overrideWithValue(
     assessments ?? FakeAssessmentRepository(open: false),
   ),

@@ -32,6 +32,7 @@ part 'app_database.g.dart';
     Sessions,
     MediaLogs,
     SubtitleImports,
+    ContentReports,
     Outbox,
     SyncState,
     Devices,
@@ -49,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
   new(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration =>
@@ -62,5 +63,7 @@ extension on GeneratedDatabase {
   OnUpgrade get _schemaUpgrade => stepByStep(
     // v2: the device an attempt was made on (F1-16).
     from1To2: (m, schema) => m.createTable(schema.devices),
+    // v3: content reports, synced from F1-21.
+    from2To3: (m, schema) => m.createTable(schema.contentReports),
   );
 }

@@ -18,6 +18,7 @@ const syncedTables = {
   'sessions',
   'media_logs',
   'subtitle_imports',
+  'content_reports',
 };
 
 /// State tables merge by last-writer-wins and carry `updated_at`.

@@ -4,6 +4,9 @@ import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/session_providers.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
+import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ProviderListenableSelect;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -66,6 +69,8 @@ abstract class TodayView with _$TodayView {
 /// The Today screen's view; null before the welcome flow or the packs.
 @riverpod
 Future<TodayView?> today(Ref ref) async {
+  // Rows from another device change the day.
+  ref.watch(syncControllerProvider.select((status) => status.pulledAt));
   final planned = await planCards(ref);
   if (planned == null) return null;
   final now = ref.watch(clockProvider)();

@@ -133,3 +133,22 @@ class SubtitleImports extends Table with UpdatedAtColumn, SyncColumns {
   @override
   Set<Column<Object>> get primaryKey => {id};
 }
+
+/// "Bu içerikte hata var" (docs/10-content-pipeline.md §8): what the
+/// learner reported about the content. Only the maintainers change
+/// `status`, on the server.
+@DataClassName('ContentReportRow')
+class ContentReports extends Table with SyncColumns {
+  TextColumn get id => text()();
+  TextColumn get profileId => text()();
+  TextColumn get itemRef => text()();
+  TextColumn get reason => text()();
+  TextColumn get note => text().nullable()();
+  TextColumn get context => text()
+      .map(const JsonObjectConverter())
+      .withDefault(const Constant('{}'))();
+  TextColumn get status => text().withDefault(const Constant('open'))();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
