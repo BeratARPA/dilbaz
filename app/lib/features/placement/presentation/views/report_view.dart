@@ -1,3 +1,4 @@
+import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/features/placement/application/placement_state.dart';
 import 'package:dilbaz_app/features/placement/presentation/level_text.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -43,12 +44,22 @@ class ReportView extends StatelessWidget {
           if (report.listeningLevel case final level?)
             _Skill(title: l10n.placementSkillListening(levelText(l10n, level))),
           Text(l10n.placementResultNote, style: theme.textTheme.bodyMedium),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () => context.pop(),
-              child: Text(l10n.placementDone),
-            ),
+          OverflowBar(
+            alignment: MainAxisAlignment.end,
+            spacing: 8,
+            overflowAlignment: OverflowBarAlignment.end,
+            children: [
+              // The optional first recording, kept for before/after
+              // listening (docs/06 §2 part 4).
+              TextButton(
+                onPressed: () => context.pushReplacement(AppRoutes.baseline),
+                child: Text(l10n.placementBaselineOffer),
+              ),
+              FilledButton(
+                onPressed: () => context.pop(),
+                child: Text(l10n.placementDone),
+              ),
+            ],
           ),
         ],
       ),

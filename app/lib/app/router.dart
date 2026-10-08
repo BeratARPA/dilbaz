@@ -8,6 +8,7 @@ import 'package:dilbaz_app/features/cards/presentation/card_session_screen.dart'
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_entry_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_list_screen.dart';
+import 'package:dilbaz_app/features/monthly/presentation/monthly_screen.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/opening_screen.dart';
@@ -158,6 +159,13 @@ GoRouter router(Ref ref) {
         path: AppRoutes.speaking,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SpeakingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.monthly,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => MonthlyScreen(
+          baseline: state.uri.queryParameters['baseline'] == '1',
+        ),
       ),
     ],
   );

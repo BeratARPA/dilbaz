@@ -1543,5 +1543,172 @@
         "type": "int"
       }
     }
+  },
+  "monthlyInviteTitle": "Bu ayın konuşma kaydı",
+  "@monthlyInviteTitle": {
+    "description": "Today: the invitation to the monthly speaking test (docs/06 §3); an invitation, not a demand."
+  },
+  "monthlyInviteBody": "Beş kısa görev, yaklaşık 15 dakika. Kayıtlarını aydan aya karşılaştırmak için.",
+  "@monthlyInviteBody": {
+    "description": "Today: what the monthly test is."
+  },
+  "monthlyInviteLater": "Şimdi değil",
+  "@monthlyInviteLater": {
+    "description": "Today: puts the monthly invitation aside until the next start (I-14)."
+  },
+  "monthlyInviteStart": "Kayda başla",
+  "@monthlyInviteStart": {
+    "description": "Today: opens the monthly test."
+  },
+  "monthlyTitle": "Aylık konuşma kaydı",
+  "@monthlyTitle": {
+    "description": "Monthly test: the screen's title."
+  },
+  "monthlyBaselineTitle": "Başlangıç kaydı",
+  "@monthlyBaselineTitle": {
+    "description": "Baseline: the screen's title (docs/06 §2 part 4)."
+  },
+  "monthlyLeave": "Kaydı bırak",
+  "@monthlyLeave": {
+    "description": "Monthly test: leaves; what was recorded is kept (I-14)."
+  },
+  "monthlyUnavailable": "Aylık kayıt için içerik bu cihazda henüz hazır değil.",
+  "@monthlyUnavailable": {
+    "description": "Monthly test: no tasks or course yet."
+  },
+  "monthlyIntro": "{tasks} kısa görev var: üçü her ay aynı, gerisi seviyene göre. Her görevde hazırlanır, en çok {minutes} dakika konuşursun. Not yok; kayıtların aydan aya karşılaştırmak için saklanır.",
+  "@monthlyIntro": {
+    "description": "Monthly test: what the test is (docs/06 §3.1).",
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyIntroPlace": "Sessiz bir yer ve mümkünse hep aynı telefon karşılaştırmayı kolaylaştırır.",
+  "@monthlyIntroPlace": {
+    "description": "Monthly test: the same place and phone help comparison (docs/06 §5)."
+  },
+  "monthlyBaselineIntro": "Bir dakika kendini tanıt. Bu kayıt seviyeni etkilemez; aylar sonra bugünkü sesini dinleyip karşılaştırmak için saklanır.",
+  "@monthlyBaselineIntro": {
+    "description": "Baseline: what the recording is for (docs/06 §2 part 4)."
+  },
+  "monthlyBegin": "Başla",
+  "@monthlyBegin": {
+    "description": "Monthly test: starts with the microphone check."
+  },
+  "monthlyMicCheck": "Önce mikrofonu deneyelim: \"Mikrofonu dene\"ye bas ve bir şey söyle. Çubuk hareket ediyorsa ses geliyor.",
+  "@monthlyMicCheck": {
+    "description": "Monthly test: the microphone check before recording (docs/06 §3.1)."
+  },
+  "monthlyMicTry": "Mikrofonu dene",
+  "@monthlyMicTry": {
+    "description": "Monthly test: listens for the level meter; nothing is kept."
+  },
+  "monthlyMicOk": "Devam",
+  "@monthlyMicOk": {
+    "description": "Monthly test: on to the first task."
+  },
+  "monthlyTaskNumber": "Görev {number} / {total}",
+  "@monthlyTaskNumber": {
+    "description": "Monthly test: which task.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyAnchorNote": "Bu görev her ay aynı.",
+  "@monthlyAnchorNote": {
+    "description": "Monthly test: an anchor task, the same every month."
+  },
+  "monthlyFinishing": "Kayıtların işleniyor…",
+  "@monthlyFinishing": {
+    "description": "Monthly test: the last recordings are processed."
+  },
+  "monthlyReportTitle": "Bu ayın kaydı",
+  "@monthlyReportTitle": {
+    "description": "Monthly test report: the title; no grade (docs/06 §6)."
+  },
+  "monthlyReportIntro": "Not yok. Bunlar kendi geçmişinle karşılaştırman için ölçümler.",
+  "@monthlyReportIntro": {
+    "description": "Monthly test report: measures to compare with oneself."
+  },
+  "monthlySpeechRate": "Dakikada {count} kelime",
+  "@monthlySpeechRate": {
+    "description": "Monthly test report: speech rate.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyLongPauses": "Dakikada {count} uzun duraklama",
+  "@monthlyLongPauses": {
+    "description": "Monthly test report: long pauses per minute.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyErrorFree": "{clauses} cümleciğin {errorFree} tanesi hatasız",
+  "@monthlyErrorFree": {
+    "description": "Monthly test report: error-free clauses as counts, not a percentage (I-04).",
+    "placeholders": {
+      "clauses": {
+        "type": "int"
+      },
+      "errorFree": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyPrevious": "Geçen ay: {value}",
+  "@monthlyPrevious": {
+    "description": "Monthly test report: last month's value of the same anchor task.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyNotProcessed": "Bu kayıt henüz işlenmedi; saklandı.",
+  "@monthlyNotProcessed": {
+    "description": "Monthly test report: the recording waits for processing."
+  },
+  "monthlyNotMarked": "Ayrıntılı işaretleme daha sonra gelecek.",
+  "@monthlyNotMarked": {
+    "description": "Monthly test report: the marks are not there yet."
+  },
+  "monthlyWhatIsThis": "Bu ölçümler nedir?",
+  "@monthlyWhatIsThis": {
+    "description": "Monthly test report: explanations (docs/06 §6)."
+  },
+  "monthlyExplainRate": "Dakikada kelime: duraksamalar dahil konuşma hızın.",
+  "@monthlyExplainRate": {
+    "description": "Monthly test report: what speech rate is."
+  },
+  "monthlyExplainPauses": "Uzun duraklama: bir saniyeden uzun sessizlik. Azalması, akıcılığın arttığını gösterir.",
+  "@monthlyExplainPauses": {
+    "description": "Monthly test report: what long pauses are."
+  },
+  "monthlyExplainErrorFree": "Hatasız cümlecik: içinde hata işaretlenmemiş cümle parçaları. Konuşma uzayıp karmaşıklaştığında bir süre azalabilir; bu doğaldır.",
+  "@monthlyExplainErrorFree": {
+    "description": "Monthly test report: what error-free clauses are; a dip is neutral (docs/06 §3.4)."
+  },
+  "monthlyBaselineDone": "Kaydın saklandı. İlk aylık kaydınla yan yana dinleyebileceksin.",
+  "@monthlyBaselineDone": {
+    "description": "Baseline: done."
+  },
+  "placementBaselineOffer": "Başlangıç kaydı (isteğe bağlı, 1 dk)",
+  "@placementBaselineOffer": {
+    "description": "Placement result: offers the baseline recording (docs/06 §2 part 4)."
   }
 }

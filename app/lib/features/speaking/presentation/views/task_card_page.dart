@@ -15,7 +15,8 @@ class TaskCardPage extends StatelessWidget {
     required this.recording,
     required this.onStart,
     required this.onStop,
-    required this.onOtherTask,
+    this.onOtherTask,
+    this.header = const [],
     super.key,
   });
 
@@ -23,7 +24,12 @@ class TaskCardPage extends StatelessWidget {
   final bool recording;
   final VoidCallback onStart;
   final VoidCallback onStop;
-  final VoidCallback onOtherTask;
+
+  /// Back to the list; none in a test.
+  final VoidCallback? onOtherTask;
+
+  /// Shown above the task, such as its number in a test.
+  final List<Widget> header;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,7 @@ class TaskCardPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 16,
         children: [
+          ...header,
           Text(task.title, style: theme.textTheme.titleLarge),
           Text(task.prompt, style: theme.textTheme.bodyLarge),
           if (task.phrases.isNotEmpty) _Phrases(task: task),
@@ -54,10 +61,11 @@ class TaskCardPage extends StatelessWidget {
               icon: const Icon(Icons.mic),
               label: Text(l10n.speakingStart),
             ),
-            TextButton(
-              onPressed: onOtherTask,
-              child: Text(l10n.speakingOtherTask),
-            ),
+            if (onOtherTask case final otherTask?)
+              TextButton(
+                onPressed: otherTask,
+                child: Text(l10n.speakingOtherTask),
+              ),
           ],
         ],
       ),

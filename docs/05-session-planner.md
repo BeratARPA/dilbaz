@@ -180,6 +180,9 @@ Kişinin geçmişindeki medyan süreler kullanılır. Geçmiş yoksa varsayılan
   - "Birlikte yapalım mı?" daveti partnere bildirim olarak gider. Kullanıcının izni ve sessiz saat kuralı geçerlidir.
   - Kabul edilirse iki uygulamada da "Birlikte" seçeneği önerilen olur.
 - **Aylık test daveti** ayın 1–7'si arasında görünür. Kabul edilmezse hafta sonuna kadar ara sıra tekrar görünür, sonra bir sonraki aya kalır. Hatırlatma dili davettir, uyarı değildir.
+  - Uygulama notu (F1-19): Davet Bugün ekranında, öğrencinin yerel ayının 1–7'sinde görünür. Bu ay test yapıldıysa görünmez; başlangıç kaydı sayılmaz.
+  - Seviye testi daveti varken çıkmaz.
+  - "Şimdi değil" daveti bir sonraki açılışa kadar kaldırır. "Ara sıra tekrar" bu açılışlarla olur.
 - **İskele profili** (seviye + kullanıcı ayarı) her etkinliğe parametre olarak geçer (I-09).
 - **Determinizm:** Aynı girdi ve aynı seed aynı planı üretir (test edilebilirlik). Girdi listelerinin sırası sonucu değiştirmez. Karıştırma `dart:math` yerine motorun kendi küçük üretecini (`SeededRandom`, xorshift32) kullanır; böylece telefon, masaüstü ve web aynı planı üretir.
 

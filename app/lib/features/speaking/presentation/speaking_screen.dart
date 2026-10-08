@@ -70,7 +70,6 @@ class SpeakingScreen extends ConsumerWidget {
                 recording: true,
                 onStart: () {},
                 onStop: () => unawaited(controller.stopRecording()),
-                onOtherTask: () {},
               ),
               SpeakingProcessing(:final step) => _Processing(step: step),
               SpeakingFailed(:final failure, :final canRetry) => _Failed(

@@ -140,6 +140,8 @@ void main() {
       );
       expect(find.text(trStrings.placementResultVocabulary(0)), findsOneWidget);
       expect(assessments.saved, hasLength(1));
+      // The optional first recording (docs/06 §2 part 4).
+      expect(find.text(trStrings.placementBaselineOffer), findsOneWidget);
 
       await tapText(tester, trStrings.placementDone);
       expect(find.byType(TodayScreen), findsOneWidget);

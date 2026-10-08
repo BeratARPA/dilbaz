@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_app/features/content/presentation/content_status_view.dart';
+import 'package:dilbaz_app/features/monthly/presentation/monthly_invitation_card.dart';
 import 'package:dilbaz_app/features/placement/presentation/placement_invitation_card.dart';
 import 'package:dilbaz_app/features/today/application/today_controller.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -47,24 +48,31 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       body: ContentStatusView(
         ready: (context, content) => RefreshIndicator(
           onRefresh: () => ref.refresh(todayProvider.future),
-          child: ListView(
-            // The end of the list scrolls clear of the "Söyleyemedim" button.
+          // A short page, built whole: everything on it can be found and
+          // reached; it scrolls even when short, for the refresh.
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            // The end scrolls clear of the "Söyleyemedim" button.
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-            children: [
-              const _Greeting(),
-              const PlacementInvitationCard(),
-              const _Today(),
-              const SizedBox(height: 24),
-              Text(
-                l10n.contentReady(
-                  content.words,
-                  content.chunks,
-                  content.sentences,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _Greeting(),
+                const PlacementInvitationCard(),
+                const MonthlyInvitationCard(),
+                const _Today(),
+                const SizedBox(height: 24),
+                Text(
+                  l10n.contentReady(
+                    content.words,
+                    content.chunks,
+                    content.sentences,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

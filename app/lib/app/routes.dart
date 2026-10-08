@@ -31,4 +31,10 @@ abstract final class AppRoutes {
 
   /// A speaking task, over the tabs (A11).
   static const speaking = '/speaking';
+
+  /// The monthly speaking test, over the tabs (A23).
+  static const monthly = '/monthly';
+
+  /// The placement test's baseline recording (docs/06 §2 part 4).
+  static const baseline = '/monthly?baseline=1';
 }

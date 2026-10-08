@@ -172,6 +172,19 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
   - Son ekranda "Görev bitti." ve kaç düzeltilmiş cümlenin kartlara eklendiği.
   - Görevden onaysız çıkılır: yapılan saklanır, hiçbir şey borç kalmaz (I-14).
 
+### 5.6a Aylık konuşma kaydı (A23, F1-19)
+- **Bugün daveti:** "Bu ayın konuşma kaydı", "Şimdi değil" / "Kayda başla".
+- **Tanıtım:** görev sayısı, süre, "Not yok; kayıtların aydan aya karşılaştırmak için saklanır." ve aynı yer ve telefon önerisi.
+- **Mikrofon denemesi:** "Mikrofonu dene" ve ses düzeyi çubuğu, ardından "Devam".
+- **Görevler:** konuşma görevinin kartı, üstünde "Görev 1 / 5" ve sabit görevde "Bu görev her ay aynı." Başka görev seçme yok.
+- **Rapor:**
+  - "Bu ayın kaydı" ve görev başına ölçümler; sabit görevde "Geçen ay: …".
+  - İşlenmemiş kayıt için "Bu kayıt henüz işlenmedi; saklandı."
+  - "Bu ölçümler nedir?"
+- **Başlangıç kaydı:** seviye testi sonucunda düşük vurgulu bir bağlantıdır. Aynı ekran tek görevle açılır; sonunda "Kaydın saklandı." yazar.
+- Testten onaysız çıkılır, yapılan saklanır (I-14).
+- **Bugün ekranı:** Davet kartları eklenince ekran, Pratik gibi tümüyle kurulan bir kaydırma görünümüne geçti. Böylece küçük ekranda da her şeye ulaşılır.
+
 ### 5.7 4/3/2 (A12)
 Üç tur sayacı. Tur arasında dakikadaki kelime ve uzun duraklama sayısı gösterilir. Sonunda üç turun küçük grafiği.
 

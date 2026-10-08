@@ -45,7 +45,9 @@
 
 ### Bölüm 4 — Başlangıç kaydı (isteğe bağlı, 1 dk)
 - ANC-1 görevi kaydedilir. **Seviye puanlamasına girmez.** Amacı "önce/sonra" karşılaştırmasının ilk kaydı olmaktır.
-- **Durum (F1-13):** Kayıt altyapısı (F1-14) ve sabit görevler (aylık test, F1-19) gelince eklenecek; ilk aylık testin ANC-1 kaydı başlangıç kaydı olur.
+- **Durum (F1-19):** Seviye testi sonucunda isteğe bağlı "Başlangıç kaydı (1 dk)" düğmesi var. Kayıt ANC-1'dir: 30 sn hazırlık, en çok 1 dakika, aylık testin işleme hattı.
+  - Ayrı bir `monthly_speaking` değerlendirmesi olarak saklanır (`results.baseline = true`); ayın testi sayılmaz.
+  - Yapılmadıysa ilk aylık testin ANC-1 kaydı başlangıç olur.
 
 ### Çıktılar
 - **Bölümler ve bırakma:** Bölümler sırayla gelir (kelime, gramer, dikte). Test her an bırakılabilir: bitmiş bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Kelime bölümü bitmeden bırakılan testten hiçbir şey kaydedilmez. Test sırasında hiçbir cevap doğru ya da yanlış diye gösterilmez.
@@ -131,6 +133,26 @@ Konuşma performansı, SLA araştırmasının standart üç boyutunda ölçülü
 - `beyond_2k_share`, sıklık sırası bilinen kelimeler arasındaki oranı verir. Sözlükte olmayan kelimeler (isimler, sayılar) sayılmaz. Birden çok lemmaya giden biçim en iyi sırayı alır.
 - `connector_types` paketin bağlaç listesindeki her ifadeyi bir kez sayar; çok kelimeli bağlaçlar da sayılır.
 - `errors_by_tag` etiket başına 100 kelimedeki hatayı verir.
+
+### 3.3a v1 (F1-19)
+- **Görevler** (`monthlyTasks`, motor):
+  - Önce sabit görevler sırayla: 30 sn hazırlık, başlangıç yok, A0–A1'de 1, diğer seviyelerde 2 dakika.
+  - Sonra seviyenin görevlerinden 2'si, seviyenin iskeleleriyle.
+  - Seviye görevleri anahtar sırasıyla aydan aya döner. Seviyede görev yoksa en yakın alt seviye alınır.
+- **Akış:**
+  - Tanıtım ve mikrofon denemesi (ses düzeyi çubuğu; hiçbir şey saklanmaz).
+  - Görevler sırayla. Her kayıt arka planda işlenir, öğrenci sıradaki göreve geçer: transkript, `speaking_annotate` (`assessment: true`, effort high, tek işaretleme), ölçümler.
+  - Hepsi bitince rapor.
+- **Kayıt:**
+  - Kayıtlar `is_assessment = true` ve testin kimliğiyle saklanır.
+  - Test bir `monthly_speaking` satırıdır: `results` = `{month, baseline, complete, tasks: [{task_ref, recording_id, anchor, metrics, clauses, error_free}]}`.
+  - Yarıda bırakılan test, kaydedilen görevlerle `complete: false` saklanır; işleme arka planda sürer.
+  - Oturum `output` koluna yazılır.
+- **Rapor (v1):**
+  - Her görev için konuşma süresi ve kelime sayısı, dakikada kelime, dakikada uzun duraklama, "10 cümleciğin 7 tanesi hatasız" (yüzde değil, sayı; I-04).
+  - Sabit görevlerde geçen ayın aynı değerleri yanında yazar.
+  - "Bu ölçümler nedir?" açıklamaları var; not ve renk yok.
+  - Önce/sonra dinleme ve eğilimler F1-20'de.
 
 ### 3.4 Rapor
 - **Önce/sonra dinleme:** ilk kayıt, geçen ay ve bu ay aynı sabit görevde yan yana.
