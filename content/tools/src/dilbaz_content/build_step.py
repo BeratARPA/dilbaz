@@ -14,7 +14,11 @@ Nothing is written when a check fails:
 - every sentence, chunk and word sense has its clips (S6), and their files
   exist;
 - every item has a gloss in the pair pack (S5);
-- every link names an item of the packs.
+- every link names an item of the packs;
+- every speaking task has its instruction in the pair pack.
+
+Speaking tasks, can-do codes and connectors are optional: a pack may have
+none (`dilbaz-content tasks` writes them).
 """
 
 from __future__ import annotations
@@ -50,6 +54,13 @@ from dilbaz_content.placement_tests import (
 )
 from dilbaz_content.select_step import read_lexicon
 from dilbaz_content.sentences_step import VALIDATION_FILE, read_validation
+from dilbaz_content.tasks_step import (
+    CAN_DOS_FILE,
+    CONNECTORS_FILE,
+    INSTRUCTIONS_FILE,
+    SUMMARIES_FILE,
+    TASKS_FILE,
+)
 
 MANIFEST_FILE = "manifest.yaml"
 # Bumped when the tables of the pack file change; the app checks it.
@@ -96,6 +107,11 @@ _PAIR_FILES = {
     "rule_note": ("rule_notes.jsonl", "code"),
     "error_tag": ("error_tags.jsonl", "code"),
 }
+# Pair files a pack may lack: those of the speaking tasks.
+_OPTIONAL_PAIR_FILES = {
+    "task_instruction": (INSTRUCTIONS_FILE, "key"),
+    "can_do_summary": (SUMMARIES_FILE, "code"),
+}
 
 IssueKind = Literal[
     "unvalidated_sentence",
@@ -105,6 +121,7 @@ IssueKind = Literal[
     "unknown_link",
     "unvalidated_placement_item",
     "unknown_dictation_sentence",
+    "missing_task_instruction",
 ]
 
 
@@ -174,6 +191,10 @@ def _read_dicts(path: Path) -> list[dict[str, object]]:
         raise BuildError(f"{path} is missing")
     with path.open(encoding="utf-8") as stream:
         return [json.loads(line) for line in stream if line.strip()]
+
+
+def _read_optional(path: Path) -> list[dict[str, object]]:
+    return _read_dicts(path) if path.is_file() else []
 
 
 def _slug(text: str) -> str:
@@ -497,10 +518,18 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
     rows, lexicon = _target_rows(content_dir, l2, audio)
     item_keys = {row.key for row in rows}
 
+    tasks = _read_optional(packs / l2 / TASKS_FILE)
     pair_dir = packs / f"{l1}-{l2}"
     pair_rows: list[tuple[object, ...]] = []
-    for kind, (name, key_field) in _PAIR_FILES.items():
-        for entry in _read_dicts(pair_dir / name):
+    pair_files = [
+        (kind, _read_dicts(pair_dir / name), key_field)
+        for kind, (name, key_field) in _PAIR_FILES.items()
+    ] + [
+        (kind, _read_optional(pair_dir / name), key_field)
+        for kind, (name, key_field) in _OPTIONAL_PAIR_FILES.items()
+    ]
+    for kind, entries, key_field in pair_files:
+        for entry in entries:
             key = str(entry.pop(key_field))
             pair_rows.append((kind, key, pair.id, _json(entry)))
     contrast_links: set[tuple[str, str]] = set()
@@ -523,6 +552,7 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
         for code in row.grammar
     }
     glossed = {str(key) for kind, key, _, _ in pair_rows if kind == "gloss"}
+    instructed = {str(key) for kind, key, _, _ in pair_rows if kind == "task_instruction"}
     issues = _validation_issues(content_dir, l2, rows)
     issues += _placement_issues(content_dir, l2, rows)
     issues += _audio_issues(rows, audio, content_dir / "build" / "audio" / l2 / str(PACK_VERSION))
@@ -538,12 +568,24 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
         )
         if a not in item_keys or b not in item_keys
     ]
+    issues += [
+        Issue(
+            key=str(task["key"]),
+            kind="missing_task_instruction",
+            detail="no instruction in the pair pack",
+        )
+        for task in tasks
+        if task["key"] not in instructed
+    ]
     if issues:
         return BuildReport(packs=(), issues=tuple(issues))
 
     out = content_dir / "build"
     out.mkdir(parents=True, exist_ok=True)
-    counts = dict(sorted(Counter(row.kind for row in rows).items()))
+    kinds = Counter(row.kind for row in rows)
+    if tasks:
+        kinds["task"] = len(tasks)
+    counts = dict(sorted(kinds.items()))
     normalization = yaml.safe_load((packs / l2 / NORMALIZATION_FILE).read_text(encoding="utf-8"))
     voices = yaml.safe_load((packs / l2 / VOICES_FILE).read_text(encoding="utf-8"))
     meta_target: dict[str, object] = {
@@ -553,6 +595,9 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
         "normalization": normalization,
         "voices": voices,
         "audio": {"bucket": "pack-audio", "prefix": f"{l2}/{PACK_VERSION}/"},
+        # For the speech measures (docs/06 §3.3) and can-do evidence (docs/04 §5).
+        "connectors": _read_optional(packs / l2 / CONNECTORS_FILE),
+        "can_dos": _read_optional(packs / l2 / CAN_DOS_FILE),
     }
     target_path = out / f"{target.id}.sqlite"
     target_counts = _write_pack(
@@ -578,6 +623,16 @@ def run_build(content_dir: Path, *, l1: str, l2: str) -> BuildReport:
             ],
             "content_links": [(a, b, kind, target.id) for a, b, kind in sorted(target_links)],
             "content_forms": [(form, lemma, target.id) for form, lemma in sorted(_forms(lexicon))],
+            "content_tasks": [
+                (
+                    str(task["key"]),
+                    target.id,
+                    str(task["kind"]),
+                    str(task["level"]),
+                    _json({k: v for k, v in task.items() if k not in ("key", "kind", "level")}),
+                )
+                for task in tasks
+            ],
         },
     )
     pair_counts_by_kind = dict(sorted(Counter(str(row[0]) for row in pair_rows).items()))

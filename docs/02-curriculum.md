@@ -230,7 +230,15 @@ Paket, Companion Volume'dan şu ölçeklerdeki tanımları içerir (her seviye i
 - **Aracılık:** belirli bilgiyi aktarma, metni açıklama.
 - **Stratejiler:** telafi.
 
-Tanımların tam metni pakete kopyalanmaz; yalnızca kod ve kendi kısa Türkçe özetimiz tutulur (lisans: `10-content-pipeline.md` §2). Her görev, desteklediği can-do kodlarını taşır. Can-do kanıtı görev sonuçlarından birikir (`04-learner-model.md`).
+Tanımların tam metni pakete kopyalanmaz; yalnızca kod ve kendi kısa Türkçe özetimiz tutulur (lisans: `10-content-pipeline.md` §2). Her görev, desteklediği can-do kodlarını taşır.
+
+**`en@1` (F1-19):** Kodlar `cd.<ölçek>.<seviye>` biçimindedir. Altı kod vardır:
+- deneyim anlatma, A1 ve A2
+- mal ve hizmet edinme, A1 ve A2
+- bilgi alışverişi, A2
+- görüş bildirme, A2
+
+Görevler `curation/en/tasks.yaml`'dadır (`10` §5.4). Can-do kanıtı görev sonuçlarından birikir (`04-learner-model.md`).
 
 ## 9. Başlangıç kapsamı (paket sürümlerine göre)
 

@@ -54,6 +54,7 @@ Dil paketlerini (kelimeler, kalıplar, cümleler, gramer noktaları, sesler, met
   - `audio [--l2 en]` (S6: paket sesleri; `content/tts` işçisini çağırır).
   - `placement [--l1 tr] [--l2 en]` (S8: X_Lex bankası).
   - `placement-tests [--l2 en]` (S8: gramer bankası ve dikte seti; bankaya giremeyen madde varsa çıkış kodu 1).
+  - `tasks [--l1 tr] [--l2 en]` (S7: konuşma görevleri, can-do kodları ve bağlaçlar; `curation/<l2>/tasks.yaml` + `curation/<l1>-<l2>/tasks.yaml` + bağımsız kontrol → `packs/<l2>/{tasks,can_dos,connectors}.jsonl`, `packs/<l1>-<l2>/{task_instructions,can_do_summaries}.jsonl`; kontrolü olmayan madde varsa çıkış kodu 1).
   - `eval-cases` (LLM eval'inin `answer_check` altın seti: `evals/tutor/answer_check/cases.yaml` + kör kontroller → `cases.jsonl`; derlenmiş paketi ve S4 etiketleyicisini kullanır; kullanılamayan vaka varsa çıkış kodu 1; `07` §8).
   - `build [--l1 tr] [--l2 en]` (S9: paket dosyaları; engelleyici sorun varsa hiçbir dosya yazılmaz, çıkış kodu 1).
   - `report [--l1 tr] [--l2 en]` (S10: derleme raporu).
@@ -310,7 +311,29 @@ S0 ingest ─▶ S1 lexicon ─▶ S2 select ─▶ S3 carriers ─▶ S4 senten
   - 48 madde (A1, A2, B1, B2: 12'şer). 1. kontrolde 48 maddenin hepsinde tek doğru seçenek bulundu; notlara göre 5 madde düzeltildi (ör. "She ___ like coffee": "isn't like" de İngilizce; "market" A1 maddesinde A2 kelimesi) ve 2. kontrolden geçti.
   - Dikte: A1'de 108, A2'de 35 uygun cümle; 15 cümle seçildi.
 
-### 5.4 Metinler (S7)
+### 5.4 Konuşma görevleri (S7, F1-19)
+- **Kaynak:** Görevler Claude Code oturumunda yazılır (lisans: kendi).
+  - `curation/en/tasks.yaml`: hedef dilde hedef (`goal`), üç cümle başlangıcı, seviye, can-do kodları; sabit görevlerde `anchor`.
+  - `curation/tr-en/tasks.yaml`: başlık, öğrencinin okuduğu yönerge, başlangıçların anlamı, can-do özetleri.
+  - Hedef paket öğrencinin dilinden bağımsız kalır.
+- **Kurallar:**
+  - Sabit görevlerin (ANC-1…3) başlangıcı yoktur, çünkü aylık testte kalıp ipucu yoktur.
+  - Diğer görevlerin tam üç başlangıcı ve aynı sayıda anlamı vardır.
+  - Can-do kodu listede olmalıdır. Kimlik ve sabit görev tekrar etmez.
+- **Bağımsız kontrol (I-16):** Ayrı bir ajan oturumu her görevi ve can-do özetini dört açıdan yargılar:
+  - Türkçe açık ve doğal mı?
+  - İki dil aynı şeyi söylüyor mu?
+  - İngilizce doğru ve doğal mı (ABD İngilizcesi)?
+  - Seviyeye uygun mu?
+
+  Kontrol, gördüğü metinlerle birlikte `curation/tr-en/tasks.validation.jsonl`'a yazılır. Metin değişirse yeni kontrol gerekir.
+- **`en@1` (2026-10-08):** 3 sabit ve 20 seviye görevi (A1 10, A2 10), 6 can-do kodu, 32 bağlaç.
+  - 1. tur: 29 maddenin 22'si geçti.
+  - Düzeltilenler: İngiliz kullanımları ABD'ye çevrildi ("check", "Go straight", "store"). B1 yapısı "used to" çıkarıldı. Bir hedef "and why" ile tamamlandı. A2 can-do özeti seviyeye çekildi. Bir başlık ve bir anlam düzeltildi.
+  - 2. tur: 10 maddenin 10'u geçti.
+  - Paketin iki eski kalıbı ("The bill, please.", "Go straight on.") İngiliz kullanımıdır. Anahtar değişmediği için ayrı bir görevle değiştirilecek.
+
+### 5.5 Metinler (S7)
 - **Seviye metni:** metindeki lemmaların ≥ %98'i ≤ seviye listesinde. Kalan %2 önce öğretilecek kelimeler olarak işaretlenir.
 - Sorular ve cevap anahtarı üretilir. Cevaplanamayan ya da belirsiz sorular bağımsız doğrulama geçişinde elenir.
 

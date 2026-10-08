@@ -7,6 +7,12 @@ import {
 import { catalogs } from "../supabase/functions/_shared/catalogs/index.ts";
 import { exampleTexts } from "../supabase/functions/_shared/prompts/gap_suggest.ts";
 import {
+  exampleTranscripts,
+  speakingCategories,
+} from "../supabase/functions/_shared/prompts/speaking_annotate.ts";
+import { SpeakingAnnotateInput } from "../supabase/functions/_shared/schemas/speaking_annotate.ts";
+import { buildCases, casesDir, casesText } from "./speaking_cases.ts";
+import {
   gapContexts,
   GapSuggestInput,
 } from "../supabase/functions/_shared/schemas/gap_suggest.ts";
@@ -99,4 +105,40 @@ Deno.test("the gap_suggest set covers the levels and the contexts", () => {
 Deno.test("no gap_suggest case reuses a text of the prompt's examples", () => {
   const shown = new Set(exampleTexts);
   for (const c of gapCases) assert(!shown.has(c.input.l1_text), c.id);
+});
+
+Deno.test("the speaking gold set is built from its source and the tasks", async () => {
+  const built = await buildCases();
+  const stored = await Deno.readTextFile(
+    join(casesDir, "cases.jsonl"),
+  );
+  assertEquals(stored, casesText(built), "run speaking_cases.ts");
+  assertEquals(built.length, 30);
+  assertEquals(new Set(built.map((c) => c.id)).size, built.length);
+});
+
+Deno.test("every speaking case is what the app would send, with a gold", async () => {
+  const catalog = catalogs["tr-en"];
+  const tags = new Set(
+    catalog.errorTags
+      .filter((t) => speakingCategories.includes(t.category))
+      .map((t) => t.code),
+  );
+  const outcomes = new Set<string>();
+  for (const c of await buildCases()) {
+    const input = SpeakingAnnotateInput.parse(c.input);
+    assert(input.words.length > 0, c.id);
+    const last = input.words.length - 1;
+    for (const error of c.expected.errors) {
+      assert(tags.has(error.tag), `${c.id}: ${error.tag}`);
+      assert(error.start_i <= error.end_i && error.end_i <= last, c.id);
+    }
+    assert(c.expected.clauses >= 1, c.id);
+    assert(c.expected.efc >= 0 && c.expected.efc <= 1, c.id);
+    outcomes.add(c.expected.outcome);
+    // No transcript repeats one of the prompt's examples.
+    const said = input.words.map((w) => w.w).join(" ");
+    assert(!exampleTranscripts.includes(said), c.id);
+  }
+  assertEquals(outcomes, new Set(["done", "partial", "not_done"]));
 });

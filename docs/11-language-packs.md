@@ -171,7 +171,9 @@ created_at: 2026-10-…
     - `contains`: cümle → hedef anlam
     - `example_of`: cümle → gramer noktası
   - `content_forms`: biçim → lemma. Her lemma, yazım varyantları ve çekimli biçimleri S1 sözlüğünden gelir.
-  - `content_texts`, `content_tasks`: en@1'de boş.
+  - `content_texts`: en@1'de boş.
+  - `content_tasks` (F1-19): `kind = speaking`, `level`, `data` = `{anchor, can_do, goal, phrases, provenance}`. Anahtar `en.task.<kimlik>`.
+  - `pack_meta`'da ayrıca `connectors` (`[{text, level}]`, `06` §3.3) ve `can_dos` (`[{code, level, scale}]`, `04` §5) bulunur. Görevler isteğe bağlıdır: görevsiz paket de derlenir. Manifest sayılarında `task`.
 - **Çift paketi** (`tr-en@1.sqlite`):
   - `content_pair_entries`, `kind`'e göre:
     - `gloss` (anahtar: öğe)
@@ -179,6 +181,7 @@ created_at: 2026-10-…
     - `rule_note` (anahtar: gramer kodu)
     - `contrast_note` (anahtar: öğeler `|` ile)
     - `error_tag` (anahtar: kod)
+    - `task_instruction` (anahtar: görev; `title`, `prompt`, `phrases`: başlangıçların anlamı) ve `can_do_summary` (anahtar: kod; `summary`). F1-19'dan. Yönergesi olmayan görev derlemeyi durdurur (`missing_task_instruction`).
   - `content_links`: karşıtlık notlarından `contrasts_with`. Bağ simetriktir, küçük anahtar `from_key`'dedir. Karşıtlıklar anadile göre değiştiği için çift paketindedir.
 
 ## 6. Motorun dile özgü işlemleri: veri ile çözmek

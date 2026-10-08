@@ -505,3 +505,126 @@ Deno.test("gap_suggest logs never carry the learner's text", async () => {
     assert(!line.includes("meeting"), "no English text in logs");
   }
 });
+
+const spoken = "my home big uh i like it".split(" ");
+const speakingInput = {
+  ctx: { l1: "tr", l2: "en", level: "A1", explain_in: "l1" },
+  task: { prompt_l1: "Evini anlat.", goal: "Describe your home." },
+  words: spoken.map((w, i) => ({
+    i,
+    w,
+    start_ms: i * 400,
+    end_ms: i * 400 + 300,
+  })),
+};
+
+const annotation = {
+  clauses: [
+    { start_i: 0, end_i: 2, as_unit: 0, error_free: true },
+    { start_i: 3, end_i: 6, as_unit: 1, error_free: true },
+  ],
+  errors: [
+    {
+      start_i: 1,
+      end_i: 1,
+      tag: "be.missing",
+      correction: "home is",
+      severity: 2,
+    },
+  ],
+  fillers: [{ i: 3, kind: "l2" }],
+  repairs: [],
+  structures_used: [],
+  task_outcome: "partial",
+  strengths: ["'I like it' doğru."],
+  corrections: [{
+    original: "my home big",
+    corrected: "My home is big.",
+    meaning_l1: "Evim büyük.",
+    tag: "be.missing",
+    severity: 2,
+    ladder: {
+      h1: "Bir kelime eksik.",
+      h2: "'home' ile 'big' arasına bak.",
+      h3: "Şöyle de: My home is big.",
+    },
+  }],
+};
+
+const annotate = (body: unknown) =>
+  new Request(`${base}/speaking_annotate`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+Deno.test("speaking_annotate marks the transcript with the first model", async () => {
+  const primary = fakeModel(flash, "gemini", () => answer(annotation));
+  const { handle, recorded, lines } = setup({ models: [primary.model] });
+
+  const response = await handle(annotate(speakingInput));
+
+  assertEquals(response.status, 200);
+  const body = await response.json();
+  assertEquals(body.clauses[0].error_free, false);
+  assertEquals(body.task_outcome, "partial");
+  // The hint that gave the sentence away is blank for the client's template.
+  assertEquals(body.corrections[0].ladder.h3, "");
+  assertEquals(body.catalog, "tr-en@1");
+  assertEquals(body.prompt_version, "speaking_annotate@1");
+  assertEquals(body.model, flash);
+  const request = primary.asked[0];
+  assertEquals(request.schemaName, "speaking_annotate");
+  assertEquals(request.effort, "medium");
+  assertEquals(request.maxTokens, 12000);
+  assert(request.user.includes("[0]my [1]home"));
+  assertEquals(recorded[0].route, "speaking_annotate");
+  assert(lines.some((line) => line.includes("ladder_leak")));
+  for (const line of lines) {
+    assert(!line.includes("home"), "no transcript in logs");
+  }
+});
+
+Deno.test("the monthly test's annotation thinks deeper", async () => {
+  const primary = fakeModel(flash, "gemini", () => answer(annotation));
+  const { handle } = setup({ models: [primary.model] });
+  const response = await handle(
+    annotate({ ...speakingInput, assessment: true }),
+  );
+  await response.body?.cancel();
+  assertEquals(primary.asked[0].effort, "high");
+});
+
+Deno.test("speaking_annotate needs words in order and a known pair", async () => {
+  const primary = fakeModel(flash, "gemini", () => answer(annotation));
+  const { handle } = setup({ models: [primary.model] });
+  const swapped = [...speakingInput.words];
+  [swapped[0], swapped[1]] = [swapped[1], swapped[0]];
+  for (
+    const [body, code] of [
+      [{ ...speakingInput, words: [] }, "missing_response"],
+      [{ ...speakingInput, words: swapped }, "invalid_input"],
+      [{ ...speakingInput, task: { goal: "x" } }, "invalid_input"],
+      [
+        { ...speakingInput, ctx: { ...speakingInput.ctx, l2: "de" } },
+        "unsupported_pair",
+      ],
+    ] as const
+  ) {
+    const response = await handle(annotate(body));
+    assertEquals(response.status, 400, code);
+    assertEquals(await response.json(), { error: { code } });
+  }
+  assertEquals(primary.asked.length, 0);
+});
+
+Deno.test("speaking_annotate asks no one without consent: the marks wait", async () => {
+  const primary = fakeModel(flash, "gemini", () => answer(annotation));
+  const { handle } = setup({
+    models: [primary.model],
+    state: { consent: false, use: new Map() },
+  });
+  const response = await handle(annotate(speakingInput));
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
+  assertEquals(primary.asked.length, 0);
+});

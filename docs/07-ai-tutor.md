@@ -187,6 +187,21 @@ Output = {
 - Öğe kullanımı (aktarım) deterministik lemma eşleşmesiyle bulunur. LLM yalnızca hata aralıklarını verir.
 - `top_corrections` seçim önceliği: kalıcı hata etiketi > anlamı bozan (severity 3) > sıklık.
 
+**Rota (F1-19):** `POST /functions/v1/tutor/speaking_annotate`, prompt `speaking_annotate@1` (`_shared/prompts/speaking_annotate.ts`, 6 örnek: tamam, kısmi ve yapılmamış görev; Türkçe dolgu, onarım, bağımlı cümlecik).
+- **Zincir:** Gemini 3.5 Flash → Flash-Lite. Groq'un dakikalık token sınırı uzun transkripte yetmez. Gemini veri onayı ister; onay yoksa rota `llm_unavailable` döner, istemci yalnızca kelime zamanlarından ölçer ve işaretleme bekler. Effort `medium`, aylık testte (`assessment: true`) `high`.
+- **Girdi eklemeleri:** `words[].i` sırayla 0, 1, 2…; değilse `invalid_input`. Boş transkript `missing_response` (cevapsız çağrı yok, I-11). Modele zamanlar gitmez, yalnızca `[i]kelime` dizisi gider.
+- **Sözleşmeden ayrılan yerler:**
+  - `top_corrections` yerine `corrections`: en çok 5 aday. Hangi 3'ünün çalışılacağını motor seçer (`pickCorrections`), çünkü kalıcı hata etiketlerini model bilmez ve seçim pedagojik bir karardır (I-11).
+  - Her düzeltme `severity` ve `meaning_l1` taşır. `meaning_l1`, düzeltilmiş cümlenin öğrencinin dilindeki anlamıdır; cümle kişisel karta dönüşünce kartın istemi olur.
+  - `original` cümlenin tamamıdır (AS-birimi).
+  - Etiketler yalnızca dilbilgisi, kelime ve edim kategorilerindendir. Telaffuz metinden güvenilir okunmaz; Faz 2'de ses değerlendirmesiyle gelir (`08` §3, S3).
+- **Sunucu korumaları:**
+  - Transkript dışındaki işaretler atılır. Cümlecikler sıralanır, örtüşen atılır.
+  - `error_free`, işaretli hatalardan yeniden hesaplanır.
+  - Aynı kelimedeki ikinci dolgu atılır. En çok 2 güçlü yan ve 5 düzeltme kalır; boş ya da düzeltmesiz aday atılır.
+  - Düzeltmeyi ele veren ipucu boşaltılır (`_shared/leak.ts`, kural notu izni yok); istemci boş ipucunu şablonla doldurur.
+- **Cevap:** işaretler + `catalog`, `prompt_version`, `provider`, `model`. Hiçbir sayı sunucuda hesaplanmaz (`06` §3.3).
+
 ### 4.3 `gap_suggest` — Söyleyemediklerim (A19)
 
 ```ts
@@ -311,8 +326,13 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
     - 2. tur: 26 yeni vaka ve 10 çeldirici, 36/36 uyumlu.
     - `target_ok` farkı yalnızca "belirsiz" vakalardaydı. Orada `target_ok` bir tahmin olduğu için puanlanmaz.
     - Kontrolü olmayan ya da kontrolle çelişen vaka sete girmez (`eval-cases`).
-  - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check|gap_suggest [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
+  - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check|gap_suggest|speaking_annotate [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
   - `gap_suggest` seti v1 (F1-17): 44 vaka (`tutor/gap_suggest/cases.jsonl`): A0–B1, beş bağlamın hepsi, konuşma dökümü gibi noktalamasız metin, hatalı İngilizce, tek kelime, bir ifadenin nasıl söylendiğini soran metin, not. Tek bir doğru cevap olmadığı için otomatik ölçütler şunlardır: seviye kuralı (rotanın sadeleştirmesinden sonra), anahtar kalıbın cevaptan alınması, A seviyesinde 20 kelimeyi aşan not, ilk cevapta şema geçerliliği, başarısız çağrı, gecikme ve token. Anlamı bir insan vakadaki `reference` ile karşılaştırarak okur.
+  - `speaking_annotate` seti v1 (F1-19): 30 transkript (`tutor/speaking_annotate/cases.yaml`). `evals/speaking_cases.ts` görevlerin istemi ve hedefini içerik küratörlüğünden alır ve `cases.jsonl`'ı kurar.
+    - İçerik: A1–A2, paketin 17 görevi ve üç sabit görev; 23 tamam, 5 kısmi, 2 yapılmamış (biri konu dışı); 39 altın hata, 24 farklı etiket; 7 hatasız transkript; Türkçe dolgu, onarım ve bağımlı cümlecik.
+    - Altın hatalar kelime alıntısıyla yazılır; eksik kelimede boşluğun iki yanı alınır.
+    - Kör kontrol, üretenden ayrı bir ajan oturumunda yapıldı (`validation.jsonl`). Kontrolcü altın işaretleri görmeden 39 hata işaretledi; 39'u da aynı yerde ve aynı etiketle eşleşti. 30 görev sonucunun hepsi aynı çıktı. Hatasız cümlecik oranı 29 vakada 0,1'den az farklıydı; tek farklı vakada (sa28) kontrolcünün cümlecik bölmesi alındı.
+    - Puanlama (`score_speaking.ts`): Model işareti altın hatayla örtüşürse bulunmuş sayılır, her altın hata bir kez eşleşir. Ölçütler: hata tespiti F1, eşleşenlerde etiket uyumu, EFC farkının medyanı, görev sonucu uyumu, sızan ipucu, ilk cevapta şema geçerliliği, gecikme ve token. Başarısız çağrı bütün altın hataları ıskalar, EFC farkı 1 sayılır.
   - Ölçütler: doğruluk (başarısız çağrı ıska sayılır); yanlış sayma (doğru ya da kabul edilebilir cevabın `wrong`, `off_target` ya da hedefte `minor_error` alması); sunulan ipuçlarında sızıntı; ham sızıntı (modelin yazıp korumanın boşalttığı); ilk cevapta şema geçerliliği; `target_ok` uyumu; beklenen etiket isabeti; A seviyesinde 20 kelimeyi aşan ipucu; gecikme ve token.
 - **Vaka kaynakları:**
   1. Türkçe konuşanlara özgü sentetik hatalar

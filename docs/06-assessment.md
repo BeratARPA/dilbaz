@@ -86,6 +86,8 @@ ses ─▶ ASR (kelimesi kelimesine, dolgu sözcükleri açık, kelime zamanlar�
     ─▶ rapor + kalıcı kayıt (assessments, recordings.is_assessment = true)
 ```
 
+**v1 (F1-19):** Aylık test tek işaretlemeyle çalışır. Çift işaretleme ve uyum kontrolü, eval sonuçları ve kota görüldükten sonra eklenir. `recordings.annotation`, işaretlemeleri `runs` dizisinde tutar; v1'de tek bir eleman vardır.
+
 Neden iki çağrı: Kullanılan modelde örnekleme ayarları (temperature) kapalıdır. Tutarlılık, yapılandırılmış çıktı, ayrıntılı rubrik, örnekler ve çift işaretlemeyle sağlanır.
 
 ### 3.3 Ölçüm tanımları

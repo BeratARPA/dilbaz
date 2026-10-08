@@ -1,4 +1,5 @@
 import 'package:dilbaz_engine/dilbaz_engine.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,6 +32,7 @@ void main() {
         {
           'original': 'Bada kulu.',
           'corrected': 'Bada kolu.',
+          'meaning_l1': 'Bada kolu demek.',
           'tag': 'zz.form',
           'severity': 2,
           'ladder': {'h1': 'tür', 'h2': 'yer', 'h3': 'kural'},
@@ -44,6 +46,7 @@ void main() {
     expect(annotation.repairs.single, const WordSpan(startI: 0, endI: 1));
     expect(annotation.structuresUsed.single.code, 'zz.gp.1');
     expect(annotation.corrections.single.ladder.h3, 'kural');
+    expect(annotation.corrections.single.meaningL1, 'Bada kolu demek.');
     expect(SpeechAnnotation.fromJson(annotation.toJson()), annotation);
   });
 
@@ -52,7 +55,20 @@ void main() {
       SpeechAnnotation.fromJson(const {'task_outcome': 'done'}).errors,
       isEmpty,
     );
-    expect(() => SpeechAnnotation.fromJson(const {}), throwsA(isA<Object>()));
+    for (final json in [
+      const <String, Object?>{},
+      const {
+        'task_outcome': 'done',
+        'clauses': [
+          {'start_i': 'one', 'end_i': 2, 'as_unit': 0, 'error_free': true},
+        ],
+      },
+    ]) {
+      expect(
+        () => SpeechAnnotation.fromJson(json),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    }
   });
 
   test('words keep their times as recognized', () {

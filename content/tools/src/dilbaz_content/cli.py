@@ -46,6 +46,7 @@ from dilbaz_content.sources import (
     find_content_dir,
     load_registry,
 )
+from dilbaz_content.tasks_step import TasksError, run_tasks
 from dilbaz_content.upload_step import (
     KEY_ENV,
     URL_ENV,
@@ -348,6 +349,29 @@ def placement_tests(
     )
     for item, words in report.hard_words.items():
         console.print(f"[yellow]{item}[/yellow]: words above the level: {', '.join(words)}")
+    for issue in report.issues:
+        console.print(f"[red]{issue.id}[/red]: {issue.kind}: {issue.detail}")
+    if report.issues:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def tasks(
+    content_dir: ContentDir = None,
+    l1: Annotated[str, typer.Option(help="The learner's language.")] = "tr",
+    l2: Annotated[str, typer.Option(help="The target language.")] = "en",
+) -> None:
+    """Speaking tasks, can-do codes and connectors of the packs (A11, A23)."""
+    root = _content_dir(content_dir)
+    try:
+        report = run_tasks(root, l1=l1, l2=l2)
+    except (TasksError, FileNotFoundError, ValidationError) as error:
+        console.print(f"[red]{error}[/red]")
+        raise typer.Exit(code=1) from error
+    console.print(
+        f"tasks per level {report.tasks_by_level}; anchors {', '.join(report.anchors)}; "
+        f"{report.can_dos} can-do codes, {report.connectors} connectors"
+    )
     for issue in report.issues:
         console.print(f"[red]{issue.id}[/red]: {issue.kind}: {issue.detail}")
     if report.issues:

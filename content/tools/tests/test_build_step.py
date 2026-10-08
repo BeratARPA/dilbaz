@@ -202,6 +202,71 @@ def test_the_packs_are_built_with_the_app_tables(tmp_path: Path) -> None:
     assert (root / "work" / "build.report.json").is_file()
 
 
+def write_jsonl(path: Path, items: list[dict[str, object]]) -> None:
+    path.write_text(
+        "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in items), encoding="utf-8"
+    )
+
+
+def test_speaking_tasks_go_in_with_their_instructions(tmp_path: Path) -> None:
+    root = ready(tmp_path)
+    en = root / "packs" / "en"
+    pair = root / "packs" / "tr-en"
+    own = {"source": "dilbaz curation", "license": "own"}
+    task = {
+        "key": "en.task.daily_routine",
+        "kind": "speaking",
+        "level": "A1",
+        "anchor": None,
+        "can_do": ["cd.describe_experience.a1"],
+        "goal": "Describe a usual day.",
+        "phrases": ["I usually get up at ..."],
+        "provenance": own,
+    }
+    write_jsonl(en / "tasks.jsonl", [task])
+    write_jsonl(en / "connectors.jsonl", [{"text": "because", "level": "A1"}])
+    can_do = {"code": "cd.describe_experience.a1", "level": "A1", "scale": "describing"}
+    write_jsonl(en / "can_dos.jsonl", [can_do])
+    write_jsonl(pair / "can_do_summaries.jsonl", [{"code": can_do["code"], "summary": "Özet."}])
+
+    # Without its instruction, the task stops the build.
+    report = run_build(root, l1="tr", l2="en")
+    assert [(i.key, i.kind) for i in report.issues] == [
+        ("en.task.daily_routine", "missing_task_instruction")
+    ]
+
+    instruction = {
+        "key": "en.task.daily_routine",
+        "title": "Sıradan bir gün",
+        "prompt": "Sıradan bir gününü anlat.",
+        "phrases": ["Genelde saat ...'te kalkarım."],
+        "provenance": own,
+    }
+    write_jsonl(pair / "task_instructions.jsonl", [instruction])
+    report = run_build(root, l1="tr", l2="en")
+
+    assert report.issues == ()
+    target = root / "build" / "en@1.sqlite"
+    ((key, kind, level, data),) = rows(target, "SELECT key, kind, level, data FROM content_tasks")
+    assert (key, kind, level) == ("en.task.daily_routine", "speaking", "A1")
+    assert json.loads(data) == {
+        "anchor": None,
+        "can_do": ["cd.describe_experience.a1"],
+        "goal": "Describe a usual day.",
+        "phrases": ["I usually get up at ..."],
+        "provenance": own,
+    }
+    meta = dict(rows(target, "SELECT key, value FROM pack_meta"))
+    assert json.loads(meta["connectors"]) == [{"text": "because", "level": "A1"}]
+    assert json.loads(meta["can_dos"]) == [can_do]
+    assert json.loads(meta["manifest"])["counts"]["task"] == 1
+    entries = dict(
+        rows(root / "build" / "tr-en@1.sqlite", "SELECT kind, data FROM content_pair_entries")
+    )
+    assert json.loads(entries["task_instruction"])["prompt"] == "Sıradan bir gününü anlat."
+    assert json.loads(entries["can_do_summary"])["summary"] == "Özet."
+
+
 def test_unvalidated_sentences_and_missing_audio_stop_the_build(tmp_path: Path) -> None:
     root = ready(tmp_path)
     validation = root / "curation" / "en" / VALIDATION_FILE

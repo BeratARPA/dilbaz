@@ -19,11 +19,18 @@ import {
 import type { LlmModel } from "../_shared/llm/types.ts";
 import { answerCheckUserMessage } from "../_shared/prompts/answer_check.ts";
 import { AnswerCheckInput } from "../_shared/schemas/answer_check.ts";
+import { speakingAnnotateUserMessage } from "../_shared/prompts/speaking_annotate.ts";
 import { GapSuggestInput } from "../_shared/schemas/gap_suggest.ts";
+import { SpeakingAnnotateInput } from "../_shared/schemas/speaking_annotate.ts";
 import { guard, kitFor, parseWire } from "./answer_check.ts";
 import { gapKitFor, parseGapWire, suggestGap } from "./gap_suggest.ts";
+import {
+  annotateKitFor,
+  annotationOutput,
+  parseAnnotateWire,
+} from "./speaking_annotate.ts";
 
-export const version = "0.3.0";
+export const version = "0.4.0";
 
 /** What the learner allows and has used today, read with the service role. */
 export interface LearnerState {
@@ -70,6 +77,7 @@ const routeMethods: Record<string, string[]> = {
   health: ["GET", "POST"],
   answer_check: ["POST"],
   gap_suggest: ["POST"],
+  speaking_annotate: ["POST"],
 };
 
 /** Route name after the `tutor` segment, or null when absent. */
@@ -260,6 +268,55 @@ export function createTutorHandler(deps: TutorDeps) {
           userId,
           model: result.model.id,
           code: leaked.join("."),
+        }, deps.logSink);
+      }
+      return finish(json(output), undefined, userId, result.model.id);
+    }
+
+    if (name === "speaking_annotate") {
+      const parsed = SpeakingAnnotateInput.safeParse(body);
+      if (!parsed.success) return fail(400, "invalid_input");
+      const input = parsed.data;
+      // Nothing said, no call (I-01, I-11).
+      if (input.words.length === 0) return fail(400, "missing_response");
+      if (!input.words.every((word, i) => word.i === i)) {
+        return fail(400, "invalid_input");
+      }
+      const kit = annotateKitFor(`${input.ctx.l1}-${input.ctx.l2}`);
+      if (!kit) return fail(400, "unsupported_pair");
+
+      const route = llmConfig.routes.speaking_annotate;
+      const models = chainOf("speaking_annotate");
+      if (models.length === 0) return fail(503, "llm_unavailable");
+      const state = await stateFor(models);
+      const result = await runChain(
+        { models, consent: state.consent, use: state.use, cooldown, now },
+        {
+          system: kit.system,
+          user: speakingAnnotateUserMessage(input),
+          schemaName: "speaking_annotate",
+          schema: kit.schema,
+          effort: input.assessment ? llmConfig.assessmentEffort : route.effort,
+          maxTokens: route.maxTokens,
+          timeoutMs: route.timeoutMs,
+        },
+        (text) => parseAnnotateWire(kit, text),
+      );
+      await record(result.calls);
+      if (!result.ok) return fail(failureStatus[result.code], result.code);
+
+      const { output, leaked } = annotationOutput(input, result.value, kit, {
+        provider: result.model.provider,
+        model: result.model.id,
+      });
+      if (leaked.length > 0) {
+        logEvent("warn", "ladder_leak", {
+          fn: "tutor",
+          requestId,
+          route: name,
+          userId,
+          model: result.model.id,
+          code: leaked.join(","),
         }, deps.logSink);
       }
       return finish(json(output), undefined, userId, result.model.id);

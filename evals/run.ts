@@ -4,7 +4,8 @@
  *
  *   cd evals
  *   deno run -A --env-file=../supabase/functions/.env run.ts \
- *     --route answer_check|gap_suggest [--models <id>,<id>] [--limit <n>]
+ *     --route answer_check|gap_suggest|speaking_annotate [--models <id>,<id>]
+ *     [--limit <n>]
  *     [--ids <id>,<id>]
  *
  * Each case goes the way the app's request goes in the tutor function: the
@@ -41,8 +42,13 @@ import {
   answerCheckUserMessage,
 } from "../supabase/functions/_shared/prompts/answer_check.ts";
 import { gapSuggestPromptVersion } from "../supabase/functions/_shared/prompts/gap_suggest.ts";
+import {
+  speakingAnnotatePromptVersion,
+  speakingAnnotateUserMessage,
+} from "../supabase/functions/_shared/prompts/speaking_annotate.ts";
 import { AnswerCheckInput } from "../supabase/functions/_shared/schemas/answer_check.ts";
 import { GapSuggestInput } from "../supabase/functions/_shared/schemas/gap_suggest.ts";
+import { SpeakingAnnotateInput } from "../supabase/functions/_shared/schemas/speaking_annotate.ts";
 import {
   guard,
   kitFor,
@@ -54,12 +60,19 @@ import {
   suggestGap,
 } from "../supabase/functions/tutor/gap_suggest.ts";
 import {
+  annotateKitFor,
+  annotationOutput,
+  parseAnnotateWire,
+} from "../supabase/functions/tutor/speaking_annotate.ts";
+import {
   type CallResult,
   type CaseResult,
   type Expected,
   score,
 } from "./score.ts";
 import { type GapCaseResult, scoreGap } from "./score_gap.ts";
+import { scoreSpeaking, type SpeakingCaseResult } from "./score_speaking.ts";
+import type { SpeakingExpected } from "./speaking_cases.ts";
 
 const here = dirname(fromFileUrl(import.meta.url));
 
@@ -69,13 +82,14 @@ const pace: Record<ProviderId, number> = { gemini: 6_000, groq: 2_500 };
 const busyWaitMs = 30_000;
 const busyTries = 5;
 
-const routes = ["answer_check", "gap_suggest"] as const;
+const routes = ["answer_check", "gap_suggest", "speaking_annotate"] as const;
 type EvalRoute = typeof routes[number];
 
 interface GoldCase {
   id: string;
   input: unknown;
-  expected?: Expected;
+  /** The route's own gold: `Expected` or `SpeakingExpected`. */
+  expected?: unknown;
 }
 
 interface Args {
@@ -206,7 +220,7 @@ async function runAnswerCheck(
     model: model.id,
     prompt: answerCheckPromptVersion,
     level: input.ctx.level,
-    expected: gold.expected!,
+    expected: gold.expected as Expected,
     calls: [],
   };
   const result = await withRetries(async () => {
@@ -304,19 +318,80 @@ async function runGapSuggest(
   };
 }
 
+/** One speaking_annotate case through the tutor's chain with [model] alone. */
+async function runSpeakingAnnotate(
+  model: LlmModel,
+  gold: GoldCase,
+  paced: () => Promise<void>,
+): Promise<SpeakingCaseResult | "quota"> {
+  const input = SpeakingAnnotateInput.parse(gold.input);
+  const kit = annotateKitFor(`${input.ctx.l1}-${input.ctx.l2}`);
+  if (!kit) throw new Error(`${gold.id}: no catalog`);
+  const base: SpeakingCaseResult = {
+    id: gold.id,
+    model: model.id,
+    prompt: speakingAnnotatePromptVersion,
+    level: input.ctx.level,
+    expected: gold.expected as SpeakingExpected,
+    calls: [],
+  };
+  const result = await withRetries(async () => {
+    await paced();
+    return chainOf(
+      model,
+      {
+        system: kit.system,
+        user: speakingAnnotateUserMessage(input),
+        schemaName: "speaking_annotate",
+        schema: kit.schema,
+      },
+      "speaking_annotate",
+      (text) => parseAnnotateWire(kit, text),
+    );
+  });
+  if (result === "quota") return result;
+  const calls = callResults(result.calls);
+  if (!result.ok) return { ...base, code: result.code, calls };
+  const { output, leaked } = annotationOutput(input, result.value, kit, {
+    provider: model.provider,
+    model: model.id,
+  });
+  const clauses = output.clauses;
+  return {
+    ...base,
+    errors: output.errors.map(({ start_i, end_i, tag }) => ({
+      start_i,
+      end_i,
+      tag,
+    })),
+    clauses: clauses.length,
+    efc: clauses.length === 0
+      ? null
+      : clauses.filter((c) => c.error_free).length / clauses.length,
+    outcome: output.task_outcome,
+    leaked,
+    calls,
+  };
+}
+
+const promptOf: Record<EvalRoute, string> = {
+  answer_check: answerCheckPromptVersion,
+  gap_suggest: gapSuggestPromptVersion,
+  speaking_annotate: speakingAnnotatePromptVersion,
+};
+
 async function main() {
   const args = parseArgs(Deno.args);
   if (!args) {
     console.error(
-      "usage: run.ts --route answer_check|gap_suggest [--models a,b] " +
+      "usage: run.ts --route answer_check|gap_suggest|speaking_annotate " +
+        "[--models a,b] " +
         "[--limit n] [--ids x,y]",
     );
     Deno.exit(2);
   }
   const route = args.route;
-  const prompt = route === "answer_check"
-    ? answerCheckPromptVersion
-    : gapSuggestPromptVersion;
+  const prompt = promptOf[route];
   const lines = await Deno.readTextFile(
     join(here, "tutor", route, "cases.jsonl"),
   );
@@ -330,10 +405,9 @@ async function main() {
   const scores = [];
   for (const model of models) {
     const path = join(here, "results", `${route}.${slug(model.id)}.jsonl`);
-    const results = await readResults<CaseResult | GapCaseResult>(
-      path,
-      prompt,
-    );
+    const results = await readResults<
+      CaseResult | GapCaseResult | SpeakingCaseResult
+    >(path, prompt);
     const todo = gold.filter((c) => !results.has(c.id));
     console.log(`${model.id}: ${results.size} done, ${todo.length} to run`);
     let last = 0;
@@ -345,7 +419,9 @@ async function main() {
     for (const [index, goldCase] of todo.entries()) {
       const result = route === "answer_check"
         ? await runAnswerCheck(model, goldCase, paced)
-        : await runGapSuggest(model, goldCase, paced);
+        : route === "gap_suggest"
+        ? await runGapSuggest(model, goldCase, paced)
+        : await runSpeakingAnnotate(model, goldCase, paced);
       if (result === "quota") {
         console.log(
           `${model.id}: daily quota reached; run again after it resets`,
@@ -366,7 +442,12 @@ async function main() {
     scores.push(
       route === "answer_check"
         ? { ...score(model.id, scored as CaseResult[]), complete }
-        : { ...scoreGap(model.id, scored as GapCaseResult[]), complete },
+        : route === "gap_suggest"
+        ? { ...scoreGap(model.id, scored as GapCaseResult[]), complete }
+        : {
+          ...scoreSpeaking(model.id, scored as SpeakingCaseResult[]),
+          complete,
+        },
     );
   }
 

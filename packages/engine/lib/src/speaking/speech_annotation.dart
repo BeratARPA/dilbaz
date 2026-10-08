@@ -12,7 +12,10 @@ part 'speech_annotation.g.dart';
 /// (`SpeechMetrics`), never by the model.
 @freezed
 abstract class SpeechAnnotation with _$SpeechAnnotation {
-  /// Creates an annotation.
+  /// Creates an annotation. Reading one that is off the contract throws a
+  /// `CheckedFromJsonException`.
+  // ignore: invalid_annotation_target
+  @JsonSerializable(checked: true)
   const factory({
     required TaskOutcome taskOutcome,
     @Default(<AnnotatedClause>[]) List<AnnotatedClause> clauses,
@@ -149,6 +152,10 @@ abstract class SpeechCorrection with _$SpeechCorrection {
     /// As the error's severity.
     required int severity,
     required CorrectionLadder ladder,
+
+    /// What [corrected] means in the learner's language: the prompt of its
+    /// card (docs/03 A11 step 5).
+    @JsonKey(name: 'meaning_l1') String? meaningL1,
   }) = _SpeechCorrection;
 
   /// Reads a stored correction.
