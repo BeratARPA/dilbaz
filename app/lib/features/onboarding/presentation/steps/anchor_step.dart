@@ -1,3 +1,4 @@
+import 'package:dilbaz_app/app/day_time_picker.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_controller.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/steps/step_header.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -19,8 +20,6 @@ Map<String, String> anchorLabels(AppLocalizations l10n) => {
   'before_bed': l10n.anchorBeforeBed,
 };
 
-String _twoDigits(int value) => value.toString().padLeft(2, '0');
-
 /// Step 5: the existing habit the daily practice is tied to, and its time.
 class AnchorStep extends ConsumerWidget {
   const new({super.key});
@@ -34,26 +33,9 @@ class AnchorStep extends ConsumerWidget {
     );
 
     Future<void> pickTime() async {
-      final [hour, minute] = answers.anchorTime.split(':');
-      final picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay(
-          hour: int.parse(hour),
-          minute: int.parse(minute),
-        ),
-        // The anchor time is kept and shown as `HH:mm`, whatever the
-        // clock setting of the device.
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child!,
-        ),
-      );
+      final picked = await pickDayTime(context, answers.anchorTime);
       if (picked == null) return;
-      controller.answer(
-        (a) => a.copyWith(
-          anchorTime: '${_twoDigits(picked.hour)}:${_twoDigits(picked.minute)}',
-        ),
-      );
+      controller.answer((a) => a.copyWith(anchorTime: picked));
     }
 
     return Column(

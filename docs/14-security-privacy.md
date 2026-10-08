@@ -50,6 +50,10 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
   - Görev kayıtlarının sesi yalnızca cihazda kalır.
   - **Açık nokta:** Görev seslerini 30 gün sonra silen iş henüz yok, ne cihazda ne sunucuda. F3-08'de gelecek, o zamana kadar görev sesleri de sunucuya yüklenmez.
 - **Taşınabilirlik:** Ayarlar > Veri > "Dışa aktar" (JSON + ses dosyaları, zip).
+- **Uygulamadaki durum (F1-23):**
+  - **Dışa aktarma:** tek JSON dosyası (`dilbaz-export@1`; sunucunun tablo ve sütun adlarıyla, cihazdaki tüm satırlar), sistemin paylaşım penceresiyle. Sesler henüz dosyaya girmiyor; zip sonraya kaldı.
+  - **"Tüm verimi sil":** Sıra şöyle: önce sunucudaki sesler (Storage API), sonra `delete_my_data()` (`13` §2.7), en son cihazdaki satırlar ve ses dosyaları. Sunucu kısmı başarısız olursa cihazda hiçbir şey silinmez. Hesap kalır; karşılama akışı yeniden başlar.
+  - **Bilinen sınır:** Başka bir cihazdaki kopya o cihazda kalır; silmeler senkronla taşınmaz (F3-07). Tekil kayıt silme henüz yok.
 - **Bölge:** Supabase projesi AB bölgesinde (Frankfurt) açılır.
 
 ## 5. Sağlayıcılara giden veri

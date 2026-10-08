@@ -5,6 +5,7 @@ import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/drift_profile_repository.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
+import 'package:dilbaz_app/data/repositories/settings_change.dart';
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -191,6 +192,76 @@ void main() {
       (quiet.from, quiet.to),
       ((hour: 22, minute: 30), (hour: 8, minute: 0)),
     );
+  });
+
+  test('settings change one at a time, each queued for the server', () async {
+    await repository.create(userId, answers, finished: true);
+    await db.delete(db.outbox).go();
+    final seen = <ProfileSettings?>[];
+    final sub = repository.watchSettings(userId).listen(seen.add);
+    addTearDown(sub.cancel);
+    await pumpEventQueue();
+    expect(seen.last, (
+      timeBudgetMin: 15,
+      weeklyDaysGoal: 4,
+      anchor: 'after_dinner',
+      anchorTime: '20:00',
+      dailyInvitation: true,
+      quietHours: null,
+      silentMode: false,
+      audioConsent: true,
+      aiDataConsent: false,
+    ));
+
+    for (final change in const [
+      SettingsChange.budget(45),
+      SettingsChange.daysGoal(6),
+      SettingsChange.anchor(anchor: 'before_bed', time: '22:15'),
+      SettingsChange.invitation(wanted: false),
+      SettingsChange.quietHours((from: '23:00', to: '07:30')),
+      SettingsChange.silentMode(on: true),
+      SettingsChange.audioConsent(granted: false),
+      SettingsChange.aiDataConsent(granted: true),
+    ]) {
+      await repository.changeSettings(userId, change);
+    }
+    await pumpEventQueue();
+    expect(seen.last, (
+      timeBudgetMin: 45,
+      weeklyDaysGoal: 6,
+      anchor: 'before_bed',
+      anchorTime: '22:15',
+      dailyInvitation: false,
+      quietHours: (from: '23:00', to: '07:30'),
+      silentMode: true,
+      audioConsent: false,
+      aiDataConsent: true,
+    ));
+    final row = await profile();
+    expect(row.settings['audio_consent'], {
+      'granted': false,
+      'at': now.toIso8601String(),
+    });
+    expect(row.updatedAt, now);
+    expect(row.pendingPush, isTrue);
+    final outbox = await db.select(db.outbox).get();
+    expect(outbox, hasLength(8));
+    expect(outbox.map((e) => (e.targetTable, e.rowId, e.op)).toSet(), {
+      ('profiles', userId, 'upsert'),
+    });
+
+    await repository.changeSettings(
+      userId,
+      const SettingsChange.quietHours(null),
+    );
+    await pumpEventQueue();
+    expect(seen.last!.quietHours, isNull);
+  });
+
+  test('without a profile there is nothing to change', () async {
+    await repository.changeSettings(userId, const SettingsChange.budget(5));
+    expect(await db.select(db.outbox).get(), isEmpty);
+    expect(await repository.watchSettings(userId).first, isNull);
   });
 
   test('the welcome flow is over only once it is finished', () async {

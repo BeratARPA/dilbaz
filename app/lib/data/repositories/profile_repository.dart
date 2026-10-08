@@ -1,5 +1,6 @@
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
+import 'package:dilbaz_app/data/repositories/settings_change.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 
 /// Why the profile could not be read from or written to the server.
@@ -60,6 +61,13 @@ abstract interface class ProfileRepository {
   /// The daily invitation of [userId], and again whenever the profile
   /// changes; null before the welcome flow.
   Stream<InvitationSettings?> watchInvitation(String userId);
+
+  /// The settings of [userId] as they change; null before the welcome
+  /// flow.
+  Stream<ProfileSettings?> watchSettings(String userId);
+
+  /// Saves [change] to the profile of [userId], queued for the server.
+  Future<void> changeSettings(String userId, SettingsChange change);
 
   /// The study settings of [userId]; null before the welcome flow.
   Future<StudySettings?> studySettings(String userId);

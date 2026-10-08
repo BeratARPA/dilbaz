@@ -123,6 +123,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip(trStrings.settingsTitle));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(trStrings.microphoneCheckTitle));
+      await tester.pumpAndSettle();
       await tester.tap(find.text(trStrings.microphoneCheckTitle));
       await tester.pumpAndSettle();
 
@@ -156,6 +158,8 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip(trStrings.settingsTitle));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(trStrings.microphoneCheckTitle));
       await tester.pumpAndSettle();
       await tester.tap(find.text(trStrings.microphoneCheckTitle));
       await tester.pumpAndSettle();
@@ -192,6 +196,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip(trStrings.settingsTitle));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(trStrings.microphoneCheckTitle));
     await tester.pumpAndSettle();
     await tester.tap(find.text(trStrings.microphoneCheckTitle));
     await tester.pumpAndSettle();

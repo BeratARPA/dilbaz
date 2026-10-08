@@ -1917,5 +1917,107 @@
   "notifyInvitationSpeaking": "Bugün kısa bir konuşma görevine ne dersin?",
   "@notifyInvitationSpeaking": {
     "description": "Daily invitation on alternate days: a speaking task (docs/09 §6 example)."
+  },
+  "settingsStudySection": "Çalışma",
+  "@settingsStudySection": {
+    "description": "Settings section: daily time, days and anchor."
+  },
+  "settingsInvitationSection": "Davet",
+  "@settingsInvitationSection": {
+    "description": "Settings section: the daily invitation and quiet hours."
+  },
+  "settingsInvitation": "Günde tek davet",
+  "@settingsInvitation": {
+    "description": "Settings switch: the daily invitation notification (docs/09 §6)."
+  },
+  "settingsQuietHours": "Sessiz saatler",
+  "@settingsQuietHours": {
+    "description": "Settings switch: hours with no invitation."
+  },
+  "settingsQuietFrom": "Başlangıç {time}",
+  "@settingsQuietFrom": {
+    "description": "Settings: start of the quiet hours.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQuietTo": "Bitiş {time}",
+  "@settingsQuietTo": {
+    "description": "Settings: end of the quiet hours.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAnswersSection": "Cevaplar",
+  "@settingsAnswersSection": {
+    "description": "Settings section: how answers are given."
+  },
+  "settingsSilentMode": "Sessiz mod",
+  "@settingsSilentMode": {
+    "description": "Settings switch: typed answers by default."
+  },
+  "settingsSilentModeNote": "Cevaplarını yazarak verirsin.",
+  "@settingsSilentModeNote": {
+    "description": "Settings: what silent mode does."
+  },
+  "settingsConsentsSection": "Onaylar",
+  "@settingsConsentsSection": {
+    "description": "Settings section: audio and AI data consents."
+  },
+  "settingsDataSection": "Verilerin",
+  "@settingsDataSection": {
+    "description": "Settings section: export and delete (docs/14 §4)."
+  },
+  "settingsExport": "Verilerimi dışa aktar",
+  "@settingsExport": {
+    "description": "Settings: export the learner's data as a JSON file."
+  },
+  "settingsExportNote": "Kartların, denemelerin, kayıtların ve ayarların tek bir JSON dosyasında.",
+  "@settingsExportNote": {
+    "description": "Settings: what the export holds."
+  },
+  "settingsDeleteAll": "Tüm verimi sil",
+  "@settingsDeleteAll": {
+    "description": "Settings: delete all of the learner's data."
+  },
+  "settingsDeleteTitle": "Tüm verin silinsin mi?",
+  "@settingsDeleteTitle": {
+    "description": "Delete-all dialog title."
+  },
+  "settingsDeleteBody": "Kartların, denemelerin, kayıtların ve ayarların bu cihazdan ve sunucudan silinir. Bu geri alınamaz. İstersen önce dışa aktar.",
+  "@settingsDeleteBody": {
+    "description": "Delete-all dialog body."
+  },
+  "settingsDeleteConfirm": "Sil",
+  "@settingsDeleteConfirm": {
+    "description": "Delete-all dialog: deletes."
+  },
+  "settingsDeleteCancel": "Vazgeç",
+  "@settingsDeleteCancel": {
+    "description": "Delete-all dialog: closes without deleting."
+  },
+  "settingsDeleting": "Siliniyor…",
+  "@settingsDeleting": {
+    "description": "Delete-all in progress."
+  },
+  "settingsNotificationsDenied": "Bildirim izni kapalı. Telefonun ayarlarından açabilirsin.",
+  "@settingsNotificationsDenied": {
+    "description": "Settings: the system did not allow notifications."
+  },
+  "settingsMicrophoneDenied": "Mikrofon izni kapalı. Telefonun ayarlarından açabilirsin.",
+  "@settingsMicrophoneDenied": {
+    "description": "Settings: the system did not allow the microphone."
+  },
+  "settingsOffline": "Bunun için bağlantı gerekiyor.",
+  "@settingsOffline": {
+    "description": "Settings: the server could not be reached."
+  },
+  "settingsFailed": "Şu an olmadı. Birazdan yeniden dene.",
+  "@settingsFailed": {
+    "description": "Settings: the request did not go through."
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
@@ -24,6 +25,12 @@ abstract interface class AudioRemote {
   Future<Result<void, AudioFailure>> upload(String path, Uint8List bytes);
 
   Future<Result<Uint8List, AudioFailure>> download(String path);
+
+  /// Every audio file in the folder of [userId] (`{uid}/{yyyy}/{mm}/…`).
+  Future<Result<List<String>, AudioFailure>> listOwn(String userId);
+
+  /// Removes [paths]; files already gone are no trouble.
+  Future<Result<void, AudioFailure>> remove(List<String> paths);
 }
 
 class SupabaseAudioRemote implements AudioRemote {
@@ -58,6 +65,45 @@ class SupabaseAudioRemote implements AudioRemote {
     () => _client.storage.from(bucket).download(path),
     (bytes) => bytes,
   );
+
+  @override
+  Future<Result<List<String>, AudioFailure>> listOwn(String userId) =>
+      _call(() => _walk(userId, 2), (paths) => paths);
+
+  /// The files under [prefix], down [depth] more folders (years, months).
+  Future<List<String>> _walk(String prefix, int depth) async {
+    final found = <String>[];
+    for (var offset = 0; ; offset += _page) {
+      final objects = await _client.storage
+          .from(bucket)
+          .list(
+            path: prefix,
+            searchOptions: SearchOptions(limit: _page, offset: offset),
+          );
+      for (final object in objects) {
+        final path = '$prefix/${object.name}';
+        // A folder has no id.
+        if (object.id != null) {
+          found.add(path);
+        } else if (depth > 0) {
+          found.addAll(await _walk(path, depth - 1));
+        }
+      }
+      if (objects.length < _page) return found;
+    }
+  }
+
+  static const _page = 1000;
+
+  @override
+  Future<Result<void, AudioFailure>> remove(List<String> paths) =>
+      _call(() async {
+        for (var start = 0; start < paths.length; start += 100) {
+          await _client.storage
+              .from(bucket)
+              .remove(paths.sublist(start, min(start + 100, paths.length)));
+        }
+      }, (_) {});
 
   Future<Result<R, AudioFailure>> _call<T, R>(
     Future<T> Function() call,

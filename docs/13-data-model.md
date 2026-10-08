@@ -325,7 +325,9 @@ create table app_config (key text primary key, value jsonb not null);
   - birlikte görev sayısı
   - (`share_levels` açıksa) seviye aralıkları
   - (`share_monthly` açıksa) aylık özet
-- **`delete_my_data()`** (security definer): kullanıcının tüm satırlarını ve Storage nesnelerini siler (servis çağrısıyla).
+- **`delete_my_data()`** (security definer, F1-23; `20261008154225_delete_my_data.sql`): öğrencinin kurduğu ekipleri ve profilini siler. Profile bağlı her tablo zincirleme gider; kullanım sayıları (`llm_usage`, `speech_usage`) adsız kalır; partnerin kendi verisi kalır.
+  - Storage nesnelerini fonksiyon değil uygulama siler (Storage API), çünkü Storage doğrudan silmeye izin vermez. Uygulama önce sesleri, sonra bu fonksiyonu çağırır.
+  - Hesap (`auth.users`) kalır. Yalnızca `authenticated` çağırabilir. pgTAP: `11_delete_my_data.test.sql`.
 - **`llm_usage_counts(p_profile_id, p_models[], p_since[])`** (security invoker, yalnızca servis rolü; F1-15). Bir kullanıcının her modeldeki çağrı sayısını ve önbellek dışı token sayısını (`input − cache_read + output`) o modelin kota gününün başından beri verir. `tutor` adil payı bununla denetler (`07` §3).
 
 ## 3. İndeksler

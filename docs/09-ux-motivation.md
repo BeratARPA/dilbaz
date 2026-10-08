@@ -249,6 +249,21 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **"Neden böyle?":** her tasarım kararının kısa bilimsel açıklaması (P20)
 - **Gelişmiş:** FSRS hedef hatırlama (0,85–0,95, tahmini günlük yükle birlikte)
 
+**Uygulama notları (F1-23, v1):**
+- **Bölümler:**
+  - Çalışma: günlük süre (5, 10, 15, 20, 30, 45, 60 dk), haftada 3–7 gün, çıpa ve saati.
+  - Davet: günde tek davet, sessiz saatler (açılınca 22:30–08:00; iki ucu ayrı seçilir).
+  - Cevaplar: sessiz mod, mikrofon denemesi.
+  - Onaylar: ses kaydı ve Gemini'ye gönderim, karşılamadaki metinlerle.
+  - Verilerin: dışa aktar, tüm verimi sil. En altta çıkış.
+- Her değişiklik anında kaydedilir ve senkronla gider.
+- **İzinler:**
+  - Davet açılırken sistemin bildirim izni istenir. Verilmezse davet kapalı kalır ve "Bildirim izni kapalı. Telefonun ayarlarından açabilirsin." görünür.
+  - Ses onayı açılırken mikrofon izni istenir. İzin verilmese de onay kaydedilir, çünkü onay öğrencinindir.
+- **"Tüm verimi sil"** önce sorar: "Kartların, denemelerin, kayıtların ve ayarların bu cihazdan ve sunucudan silinir. Bu geri alınamaz. İstersen önce dışa aktar." Bağlantı yoksa silmez ve bağlantı gerektiğini söyler. Silince karşılama akışı kendiliğinden açılır.
+- Liste tembel değildir: küçük ekranda 2 kat yazıyla alt satırlar da kurulur.
+- **Sonraya kalanlar:** profil, hedef ve ilgi alanları; iskele ayarları ve "Neden böyle?" (F3-10); sesler ve hız; partnerle paylaşım anahtarları; kart kayıtlarını saklama; deney katılımı; FSRS hedef hatırlama; tekil kayıt silme.
+
 ### 5.13 Haftalık özet (pazar ya da haftanın ilk açılışı)
 - Bu hafta yapılanlar (somut)
 - Önümüzdeki haftanın odağı (hata odağı)

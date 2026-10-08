@@ -4,6 +4,7 @@ import 'package:dilbaz_app/core/permissions/permission_gateway.dart';
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
+import 'package:dilbaz_app/data/repositories/settings_change.dart';
 import 'package:dilbaz_app/data/repositories/team_repository.dart';
 
 /// In-memory profile for widget and controller tests.
@@ -58,6 +59,124 @@ class FakeProfileRepository implements ProfileRepository {
   Stream<InvitationSettings?> watchInvitation(String userId) async* {
     yield invitation;
     yield* _invitations.stream;
+  }
+
+  /// The settings as the Settings screen sees them; changes apply to it.
+  ProfileSettings settings = (
+    timeBudgetMin: 30,
+    weeklyDaysGoal: 5,
+    anchor: 'morning_coffee',
+    anchorTime: '08:30',
+    dailyInvitation: false,
+    quietHours: null,
+    silentMode: false,
+    audioConsent: true,
+    aiDataConsent: false,
+  );
+  final changes = <SettingsChange>[];
+  final _settings = StreamController<ProfileSettings?>.broadcast();
+
+  @override
+  Stream<ProfileSettings?> watchSettings(String userId) async* {
+    yield _onboarded ? settings : null;
+    yield* _settings.stream;
+  }
+
+  @override
+  Future<void> changeSettings(String userId, SettingsChange change) async {
+    changes.add(change);
+    final s = settings;
+    settings = switch (change) {
+      BudgetChange(:final minutes) => (
+        timeBudgetMin: minutes,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      DaysGoalChange(:final days) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: days,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      AnchorChange(:final anchor, :final time) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: anchor,
+        anchorTime: time,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      InvitationChange(:final wanted) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: wanted,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      QuietHoursChange(:final hours) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: hours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      SilentModeChange(:final on) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: on,
+        audioConsent: s.audioConsent,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      AudioConsentChange(:final granted) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: granted,
+        aiDataConsent: s.aiDataConsent,
+      ),
+      AiDataConsentChange(:final granted) => (
+        timeBudgetMin: s.timeBudgetMin,
+        weeklyDaysGoal: s.weeklyDaysGoal,
+        anchor: s.anchor,
+        anchorTime: s.anchorTime,
+        dailyInvitation: s.dailyInvitation,
+        quietHours: s.quietHours,
+        silentMode: s.silentMode,
+        audioConsent: s.audioConsent,
+        aiDataConsent: granted,
+      ),
+    };
+    _settings.add(settings);
   }
 
   @override

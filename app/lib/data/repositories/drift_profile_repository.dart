@@ -6,6 +6,7 @@ import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
 import 'package:dilbaz_app/data/repositories/profile_remote.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
 import 'package:dilbaz_app/data/repositories/profile_rows.dart';
+import 'package:dilbaz_app/data/repositories/settings_change.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
@@ -75,6 +76,104 @@ class DriftProfileRepository implements ProfileRepository {
   }
 
   static const _audioConsent = 'audio_consent';
+  static const _aiDataConsent = 'ai_data_consent';
+  static const _dailyInvitation = 'daily_invitation';
+
+  @override
+  Stream<ProfileSettings?> watchSettings(String userId) =>
+      (_db.select(_db.profiles)..where((t) => t.id.equals(userId)))
+          .watchSingleOrNull()
+          .map((row) => row == null ? null : _settingsOf(row));
+
+  static ProfileSettings _settingsOf(ProfileRow row) {
+    final (anchor, time) = switch (row.anchors) {
+      [{'label': final String label, 'time': final String time}, ...] => (
+        label,
+        time,
+      ),
+      _ => ('morning_coffee', '08:30'),
+    };
+    return (
+      timeBudgetMin: row.timeBudgetMin,
+      weeklyDaysGoal: row.weeklyDaysGoal,
+      anchor: anchor,
+      anchorTime: time,
+      dailyInvitation: row.settings[_dailyInvitation] == true,
+      quietHours: switch (row.quietHours) {
+        {'from': final String from, 'to': final String to} => (
+          from: from,
+          to: to,
+        ),
+        _ => null,
+      },
+      silentMode: row.settings[_silentMode] == true,
+      audioConsent: _consented(row.settings),
+      aiDataConsent: switch (row.settings[_aiDataConsent]) {
+        {'granted': true} => true,
+        _ => false,
+      },
+    );
+  }
+
+  @override
+  Future<void> changeSettings(
+    String userId,
+    SettingsChange change,
+  ) => _db.transaction(() async {
+    final row = await (_db.select(
+      _db.profiles,
+    )..where((t) => t.id.equals(userId))).getSingleOrNull();
+    if (row == null) return;
+    final now = _now();
+    Map<String, Object?> setting(String key, Object? value) => {
+      ...row.settings,
+      key: value,
+    };
+    Map<String, Object?> consent(String key, {required bool granted}) =>
+        setting(key, {'granted': granted, 'at': now.toIso8601String()});
+    final changed = switch (change) {
+      BudgetChange(:final minutes) => ProfilesCompanion(
+        timeBudgetMin: Value(minutes),
+      ),
+      DaysGoalChange(:final days) => ProfilesCompanion(
+        weeklyDaysGoal: Value(days),
+      ),
+      AnchorChange(:final anchor, :final time) => ProfilesCompanion(
+        anchors: Value([
+          {'label': anchor, 'time': time},
+        ]),
+      ),
+      InvitationChange(:final wanted) => ProfilesCompanion(
+        settings: Value(setting(_dailyInvitation, wanted)),
+      ),
+      QuietHoursChange(:final hours) => ProfilesCompanion(
+        quietHours: Value(
+          hours == null ? null : {'from': hours.from, 'to': hours.to},
+        ),
+      ),
+      SilentModeChange(:final on) => ProfilesCompanion(
+        settings: Value(setting(_silentMode, on)),
+      ),
+      AudioConsentChange(:final granted) => ProfilesCompanion(
+        settings: Value(consent(_audioConsent, granted: granted)),
+      ),
+      AiDataConsentChange(:final granted) => ProfilesCompanion(
+        settings: Value(consent(_aiDataConsent, granted: granted)),
+      ),
+    };
+    await (_db.update(_db.profiles)..where((t) => t.id.equals(userId))).write(
+      changed.copyWith(updatedAt: Value(now), pendingPush: const Value(true)),
+    );
+    await _db
+        .into(_db.outbox)
+        .insert(
+          OutboxCompanion.insert(
+            targetTable: _profiles,
+            rowId: userId,
+            op: _upsert,
+          ),
+        );
+  });
   static const _silentMode = 'silent_mode';
 
   static bool _consented(Map<String, Object?>? settings) =>

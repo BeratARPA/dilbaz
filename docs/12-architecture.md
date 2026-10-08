@@ -209,7 +209,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   2. `ops/backup_export`, kullanıcı tablolarını JSON olarak `backups/{tarih}/` (servis rolü) altına yazar.
   3. Son 14 gün tutulur.
 - **Haftalık tam döküm:** GitHub Actions (zamanlanmış) `supabase db dump` çalıştırır, sonuç şifreli artifact olarak saklanır. DB parolası GitHub secret'tır; kullanıcı ekler.
-- **Uygulama içi dışa aktarma:** Ayarlar > Veri > Dışa aktar (JSON + sesler, zip).
+- **Uygulama içi dışa aktarma:** Ayarlar > Veri > Dışa aktar (JSON + sesler, zip). F1-23'te yalnızca JSON var (`14` §4).
 
 ## 10. Platform notları
 

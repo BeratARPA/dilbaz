@@ -394,6 +394,24 @@ class FakeAudioRemote implements AudioRemote {
     final bytes = files[path];
     return bytes == null ? const Err(AudioFailure.refused) : Ok(bytes);
   }
+
+  @override
+  Future<Result<List<String>, AudioFailure>> listOwn(String userId) async {
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    return Ok([
+      for (final path in files.keys)
+        if (path.startsWith('$userId/')) path,
+    ]);
+  }
+
+  @override
+  Future<Result<void, AudioFailure>> remove(List<String> paths) async {
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    paths.forEach(files.remove);
+    return const Ok(null);
+  }
 }
 
 /// Recordings kept in memory.
