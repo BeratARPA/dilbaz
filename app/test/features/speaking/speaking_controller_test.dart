@@ -362,8 +362,8 @@ void main() {
       expect(row.attemptId, task.id);
       final items = await db.select(db.personalItems).get();
       expect(items.map((i) => (i.textL2, i.glossL1, i.source)), {
-        ('Sima dero.', 'Sima dero de.', 'speaking_task'),
-        ('Dero kolu.', 'Dero kolu de.', 'speaking_task'),
+        ('Sima dero.', 'Sima dero de.', 'task_correction'),
+        ('Dero kolu.', 'Dero kolu de.', 'task_correction'),
       });
       final session = (await db.select(db.sessions).get()).single;
       expect(session.strandMs, {'output': 30000});

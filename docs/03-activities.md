@@ -244,7 +244,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
     - Düzeltme pratiğinin her cevabı da bir denemedir (`speaking_task.correction`). Bu denemeler görev denemesine zincirlenir.
   - **Düzeltme pratiği:** Kartın merdivenini kullanır (`CardReview`, seviyenin iskeleleri). Boş ipucunu şablon doldurur.
     - Cevap, normalizasyondan sonra düzeltilmiş cümleyle aynıysa doğru sayılır. Pratik düzeltmenin kendisi içindir; kartlarda hedef dışı sayılan küçük kayma da burada yanlıştır.
-  - **Kişisel öğeler:** Seçilen düzeltmeler (en çok 3, `pickCorrections`) kişisel öğe olur (`source = speaking_task`).
+  - **Kişisel öğeler:** Seçilen düzeltmeler (en çok 3, `pickCorrections`) kişisel öğe olur (`source = task_correction`, `13` §2.2).
     - Kartın istemi, işaretlemenin verdiği Türkçe anlamdır (`meaning_l1`).
     - Aynı cümle bir kez eklenir. Anlamı olmayan düzeltme karta dönmez.
   - **Süre:** Oturum `output` koluna yazılır: konuşma süresi ve geri bildirimde geçen süre (en çok 5 dk).

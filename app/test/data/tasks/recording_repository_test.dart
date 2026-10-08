@@ -250,7 +250,7 @@ void main() {
     expect(item.kind, 'sentence');
     expect(item.textL2, 'Bada kolu.');
     expect(item.glossL1, 'Bada kolu de.');
-    expect(item.source, 'speaking_task');
+    expect(item.source, 'task_correction');
     expect(item.lemmas, ['bada']);
     final outbox = (await db.select(db.outbox).get()).single;
     expect((outbox.targetTable, outbox.op), ('personal_items', 'upsert'));

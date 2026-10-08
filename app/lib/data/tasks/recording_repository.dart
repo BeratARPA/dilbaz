@@ -110,7 +110,7 @@ class DriftRecordingRepository implements RecordingRepository {
   static const _activity = 'speaking_task';
   static const _practice = 'speaking_task.correction';
   static const _route = 'speaking_annotate';
-  static const _source = 'speaking_task';
+  static const _source = 'task_correction';
 
   Future<void> _queue(String table, String rowId, String op) => _db
       .into(_db.outbox)

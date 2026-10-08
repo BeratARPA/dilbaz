@@ -423,7 +423,7 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`).
     - `error_tags` işaretlemedeki etiketlerdir, her biri bir kez. `duration_ms` kaydın süresidir.
     - `llm` = `{route: 'speaking_annotate', pending, provider?, model?, catalog?, code?}`
   - **Pratik denemeleri:** `prompt` = `{original, reference, tag}`, `response` = `{text, source}`. Önceki denemeye `parent_attempt_id` ile bağlıdır.
-  - **`personal_items`:** `source = speaking_task`.
+  - **`personal_items`:** `source = task_correction`.
 - **Aylık konuşma kaydı (F1-19):** `assessments.kind = monthly_speaking`, `results` = `{month: 'YYYY-MM' (yerel), baseline, complete, tasks: [{task_ref, recording_id, anchor, metrics, clauses, error_free}]}`. Test bitince ya da bırakılınca bir kez yazılır. Kayıtları `is_assessment = true` ve `assessment_id` taşır. `recordings` ve `assessments` satırlarının zamanı uygulamanın saatinden gelir.
 - **`devices`:** bu kurulumun kimliği. Profil başına ilk kullanımda bir satır açılır; her deneme onu `device_id` olarak taşır. Sütunlar sunucudaki `devices` ile aynıdır (§2.6), senkronu F1-21'de.
 - **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır (`11` §5). `content_packs.manifest`, paketin `pack_meta` tablosunun tamamıdır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
