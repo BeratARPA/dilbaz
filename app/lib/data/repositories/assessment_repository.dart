@@ -22,6 +22,10 @@ abstract interface class AssessmentRepository {
   /// How many placement tests were taken in the course [courseId].
   Future<int> placementsTaken(String courseId);
 
+  /// The X_Lex result of the course's latest placement test; null before
+  /// one (docs/06-assessment.md §2).
+  Future<XlexResult?> latestXlex(String courseId);
+
   /// Whether the course of [userId] has no placement test yet.
   Stream<bool> watchPlacementOpen(String userId);
 
@@ -83,6 +87,29 @@ class DriftAssessmentRepository implements AssessmentRepository {
       );
     final row = await query.getSingle();
     return row.read<int>(count) ?? 0;
+  }
+
+  @override
+  Future<XlexResult?> latestXlex(String courseId) async {
+    final row =
+        await (_db.select(_db.assessments)
+              ..where(
+                (t) => t.courseId.equals(courseId) & t.kind.equals(_placement),
+              )
+              ..orderBy([
+                (t) => OrderingTerm(
+                  expression: t.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+              ])
+              ..limit(1))
+            .getSingleOrNull();
+    return switch (row?.results['xlex']) {
+      final Map<String, Object?> xlex
+          when xlex['band_rates'] is Map && xlex['false_alarm_rate'] is num =>
+        XlexResult.fromJson(xlex),
+      _ => null,
+    };
   }
 
   @override

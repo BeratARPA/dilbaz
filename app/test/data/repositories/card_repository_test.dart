@@ -30,14 +30,18 @@ void main() {
     String verdict = 'correct',
     bool targetOk = true,
     int latencyMs = 1800,
+    String text = 'i eat chicken every day',
+    String carrier = 'en.sent.i_eat_chicken',
+    Map<String, Object?>? llm,
   }) => AttemptDraft(
     activity: cardActivity(CardMode.speak),
-    prompt: const {'prompt_l1': 'Her gün tavuk yerim.'},
-    response: const {'text': 'i eat chicken every day', 'source': 'asr'},
+    prompt: {'prompt_l1': 'Her gün tavuk yerim.', 'carrier': carrier},
+    response: {'text': text, 'source': 'asr'},
     createdAtClient: now,
     verdict: verdict,
     targetOk: targetOk,
     latencyMs: latencyMs,
+    llm: llm,
   );
 
   group('DeviceRepository', () {
@@ -76,6 +80,8 @@ void main() {
       expect(again.id, card.id);
       expect(card.memory.state, MemoryState.learning);
       expect(card.memory.due, now);
+      expect(card.createdAt, now);
+      expect((await cards.cards(courseId)).single.createdAt, now);
       expect(await cards.cards(courseId), hasLength(1));
       final outbox = await db.select(db.outbox).get();
       expect(outbox.map((e) => (e.targetTable, e.rowId, e.op)), [
@@ -185,6 +191,7 @@ void main() {
             itemRef: recalled.itemRef,
             mode: recalled.mode,
             memory: memory,
+            createdAt: recalled.createdAt,
           ),
           attempts: [draft()],
           rating: ReviewRating.good,
@@ -242,5 +249,64 @@ void main() {
       ]);
       expect(await cards.recentLatencies(courseId, CardMode.type), isEmpty);
     });
+
+    test(
+      "the LLM's accepted answers to a carrier are the learner's own",
+      () async {
+        final cards = repository();
+        final card = await cards.introduce(
+          userId: userId,
+          courseId: courseId,
+          itemRef: 'en.ws.chicken.n.1',
+          mode: CardMode.speak,
+        );
+        const judged = {'route': 'answer_check', 'provider': 'groq'};
+        await cards.recordReview(
+          userId: userId,
+          courseId: courseId,
+          deviceId: 'device-1',
+          card: card,
+          attempts: [
+            draft(
+              verdict: 'acceptable_variant',
+              targetOk: false,
+              text: 'I have chicken daily',
+              llm: judged,
+            ),
+            draft(
+              verdict: 'acceptable_variant',
+              text: 'Every day I eat chicken',
+              llm: judged,
+            ),
+            // Listed answers match without the LLM.
+            draft(verdict: 'acceptable_variant', text: 'I eat chicken daily'),
+            // Another carrier, another prompt.
+            draft(
+              verdict: 'acceptable_variant',
+              text: 'Chicken is my food',
+              carrier: 'en.sent.other',
+              llm: judged,
+            ),
+            draft(verdict: 'wrong', targetOk: false, text: 'I eat chickens'),
+          ],
+          rating: ReviewRating.hard,
+          after: card.memory,
+        );
+
+        final own = await cards.personalAnswers(
+          courseId: courseId,
+          itemRef: 'en.ws.chicken.n.1',
+          carrierKey: 'en.sent.i_eat_chicken',
+        );
+        expect(own.variants, ['Every day I eat chicken']);
+        expect(own.alternatives, ['I have chicken daily']);
+        final none = await cards.personalAnswers(
+          courseId: courseId,
+          itemRef: 'en.ws.milk.n.1',
+          carrierKey: 'en.sent.i_eat_chicken',
+        );
+        expect([...none.variants, ...none.alternatives], isEmpty);
+      },
+    );
   });
 }

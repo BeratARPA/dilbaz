@@ -1,31 +1,14 @@
 import 'dart:async';
 
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
+import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/features/settings/application/microphone_check_controller.dart';
 import 'package:dilbaz_app/features/settings/application/microphone_check_state.dart';
+import 'package:dilbaz_app/l10n/audio_failure_text.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// The calm text for a speech [failure].
-String speechFailureText(AppLocalizations l10n, SpeechFailure failure) =>
-    switch (failure) {
-      SpeechFailure.network => l10n.speechFailureNetwork,
-      SpeechFailure.unavailable => l10n.speechFailureUnavailable,
-      SpeechFailure.quota => l10n.speechFailureQuota,
-      SpeechFailure.busy => l10n.speechFailureBusy,
-      SpeechFailure.badAudio => l10n.speechFailureBadAudio,
-      SpeechFailure.unknown => l10n.speechFailureUnknown,
-    };
-
-/// The calm text for a recording [failure].
-String recordFailureText(AppLocalizations l10n, RecordFailure failure) =>
-    switch (failure) {
-      RecordFailure.permission => l10n.recordFailurePermission,
-      RecordFailure.unsupported => l10n.recordFailureUnsupported,
-      RecordFailure.device => l10n.recordFailureDevice,
-    };
 
 /// Records a sentence and shows what the recognizer heard. Nothing is
 /// kept (docs/08-speech.md §5.1).
@@ -136,7 +119,7 @@ class _LevelMeter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final level = ref.watch(microphoneLevelProvider).value ?? 0;
+    final level = ref.watch(answerLevelProvider).value ?? 0;
     return LinearProgressIndicator(
       value: level,
       minHeight: 8,

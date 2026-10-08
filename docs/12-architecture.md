@@ -156,6 +156,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - **Pull:** `sync_pull(since_seq bigint)` RPC'si. Kullanıcının tablolarında `server_seq > since` olan satırları döner (sayfalı), yeni imleci verir. `server_seq` global bir dizidir; ekleme ve güncellemede tetikleyiciyle atanır.
 - **Tetikleyiciler:** uygulama açılışı, oturum sonu, 5 dakikada bir (ön planda), bağlantı geri gelince.
 - **Paketler** senkron dışındadır: manifest kontrolü + indirme (`11` §5).
+- **Kart gösterimi (F1-16):** Denemeler gösterim bitince tek işlemde yazılır: zincirli denemeler (puan ve `card_state_after` sonuncusunda), kartın yeni FSRS durumu ve outbox kayıtları.
 - **Plan B:** Özel senkron bakım yükü yaratırsa PowerSync (Flutter SDK 2.x, Supabase entegrasyonu, drift uyumlu) değerlendirilir.
 
 ## 7. Edge Functions

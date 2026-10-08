@@ -35,16 +35,34 @@ class DriftProfileRepository implements ProfileRepository {
 
   @override
   Stream<bool> watchAudioConsent(String userId) =>
-      (_db.select(
-        _db.profiles,
-      )..where((t) => t.id.equals(userId))).watchSingleOrNull().map(
-        (row) => switch (row?.settings[_audioConsent]) {
-          {'granted': true} => true,
-          _ => false,
-        },
-      );
+      (_db.select(_db.profiles)..where((t) => t.id.equals(userId)))
+          .watchSingleOrNull()
+          .map((row) => _consented(row?.settings));
 
   static const _audioConsent = 'audio_consent';
+  static const _silentMode = 'silent_mode';
+
+  static bool _consented(Map<String, Object?>? settings) =>
+      switch (settings?[_audioConsent]) {
+        {'granted': true} => true,
+        _ => false,
+      };
+
+  @override
+  Future<StudySettings?> studySettings(String userId) async {
+    final row = await (_db.select(
+      _db.profiles,
+    )..where((t) => t.id.equals(userId))).getSingleOrNull();
+    if (row == null) return null;
+    final consent = _consented(row.settings);
+    return (
+      l1: row.l1,
+      // Without consent nothing is recorded, whatever the setting says.
+      silentMode: row.settings[_silentMode] == true || !consent,
+      dailyBudget: Duration(minutes: row.timeBudgetMin),
+      audioConsent: consent,
+    );
+  }
 
   @override
   Future<Result<bool, ProfileFailure>> restore(String userId) async {
@@ -107,7 +125,7 @@ class DriftProfileRepository implements ProfileRepository {
                 'ai_data_consent': {'granted': answers.aiDataConsent, 'at': at},
                 'daily_invitation': answers.notifications,
                 // Without consent or a microphone, answers are typed.
-                'silent_mode': !(answers.audioConsent && answers.microphone),
+                _silentMode: !(answers.audioConsent && answers.microphone),
                 if (finished) onboardedAt: at,
               }),
               updatedAt: Value(now),

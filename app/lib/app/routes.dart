@@ -15,4 +15,7 @@ abstract final class AppRoutes {
 
   /// The placement test, over the tabs.
   static const placement = '/placement';
+
+  /// A card session, over the tabs.
+  static const cards = '/cards';
 }

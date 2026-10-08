@@ -4,6 +4,7 @@ import 'package:dilbaz_app/app/home_shell.dart';
 import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/features/auth/presentation/sign_in_screen.dart';
+import 'package:dilbaz_app/features/cards/presentation/card_session_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/onboarding_screen.dart';
@@ -129,6 +130,11 @@ GoRouter router(Ref ref) {
         path: AppRoutes.placement,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const PlacementScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.cards,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const CardSessionScreen(),
       ),
     ],
   );

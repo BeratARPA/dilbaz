@@ -25,6 +25,8 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 | `uncertain` | LLM emin değil | Kullanıcıya "Bunu mu demek istedin?" sorulur; belirsiz kalırsa doğru sayılır ve öğe incelemeye düşer |
 | `uncertain` (LLM'siz) | Deterministik değerlendirme karar veremedi (§0.5, adım 4) | Üretim kanıtı sayılmaz. FSRS: Hard. LLM sonucu gelince kanıt ona göre işlenir. |
 
+**"Bunu mu demek istedin?" (F1-16):** Kart, LLM'in emin olmadığı cevabı gösterir. "Evet" denirse cevap doğru sayılır; deneme `verdict = uncertain` ile kaydedilir, inceleme bu satırlardan bulunur. "Düzelt" denirse yazılan cevap aynı denemenin yerine geçer, ilk hâli `response.corrected_from` alanında kalır.
+
 ### 0.3 Otomatik FSRS puanı (öz değerlendirme yok)
 
 | FSRS | Koşul |
@@ -46,6 +48,8 @@ Puan tek bir denemeye değil, kartın o gösterimine verilir. Gösterim doğru c
 - Yeniden sorulunca kullanıcı "göster" derse sonuç aynıdır (**Hard**, kanıt yok). Arada yanlış cevap varsa "göster" her zamanki gibi **Again**'dir.
 
 Ses tanımanın yanlış duyduğu durumlar için kullanıcı "yanlış duyuldu" deyip cevabını yazabilir. Yazılı cevap aynı denemenin parçası olarak değerlendirilir ve `asr_override=true` loglanır.
+
+Uygulamada (F1-16) bir gösterimin denemeleri, gösterim bitip kullanıcı "Devam" deyince tek işlemde yazılır. Yazarak düzeltme bu yüzden aynı deneme satırına girer: `response` = `{text: yazılan, source: 'typed', transcript: duyulan, asr, asr_override: true}`. Kayıttan sonra gelen bir düzeltme `attempt_amendments` (`asr_override`) olur.
 
 ### 0.4 Ortak deneme logu
 
@@ -70,6 +74,7 @@ Her denemede şu alanlar doldurulur (tam şema `13-data-model.md`):
   4. Hemen ardından A01 (Söyle kartı) bu öğe için bir kez yapılır.
 - **FSRS:** Kart bu adımda oluşturulur. İlk değerlendirme A01'in sonucudur.
 - **Not:** I-01'in iki istisnasından biridir (tanıtım ekranı cevabı gösterir).
+- **Uygulama (F1-16):** Kart, tanıtımdan sonraki ilk değerlendirme kaydedilirken oluşturulur. Tanıtım ya da ilk kart yarıda bırakılırsa kart oluşmaz; öğe bir sonraki oturumda yeniden tanıtılır. Taşıyıcının sesi tanıtımda ve kart sonunda kendiliğinden bir kez çalar, sessiz modda çalmaz. Bugün tanıtılan öğeler günlük yeni öğe tavanına sayılır (`05` §3, satır 11).
 
 ## A01 — Söyle kartı (`card.produce_speak`) — **varsayılan kart**
 - **Amaç:** Türkçe anlamdan İngilizce sesli üretim (P1, P3, P4).
@@ -84,6 +89,7 @@ Her denemede şu alanlar doldurulur (tam şema `13-data-model.md`):
   7. Sonunda doğru cümle sesiyle gösterilir, kullanıcı bir kez sesli tekrar eder (mini gölgeleme; puanlanmaz).
 - **Değerlendirme:** Deterministik → LLM → (LLM yoksa) hizalama. Telaffuz bu kartta puanlanmaz; transkript anlaşılmazsa `unintelligible` döner.
 - **Kanıt:** Üretim (konuşma) kanıtı.
+- **Uygulama (F1-16):** Basılı tut-konuş; bırakınca gönderilir. LLM çağrısında istemci en çok 15 sn bekler, sonra §0.5'in 4. adımı çalışır. Deneme hakkı ve kendiliğinden açılan ipucu `02` §3'ten gelir (`Scaffolds`). "İpucu" ve "göster" düğmeleri ancak bir denemeden sonra görünür (I-01). LLM'in işaretlediği hata yerleri (`error_spans`) cevabın içinde yumuşak turuncuyla gösterilir.
 
 ### 0.5 Deterministik değerlendirme (A01, A02, A04, A08)
 
@@ -102,7 +108,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - Referans her zaman `correct`'tir.
    - Karar listeye göre değil hedefe göre verilir, çünkü bir cümle birden çok öğe taşır ve paket listeleri cümlenin seçilmiş hedeflerine göre yazılmıştır. Örnek: "I've got homework to do." cümlesinin varyantı "I have homework to do", `homework` kartında doğrudur, `get` kartında hedefsizdir.
    - Hedef kelime referansın kendisinde bile bulunamıyorsa (kalıp kartları, biçim tablosunda olmayan yazımlar) liste belirleyicidir: `variants` hedefli, `alternatives` hedefsiz sayılır.
-3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir.
+3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir. Kişisel listeler ayrı bir tabloda tutulmaz: aynı taşıyıcıya verilip LLM'in `acceptable_variant` dediği cevaplar denemelerden okunur (`CardRepository.personalAnswers`, F1-16). Deneme günlüğü bunları zaten değiştirilemez olarak saklar (I-03).
 4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, hedefi içeren doğru cevapların en yakınıyla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
    - **Fark türleri:** eksik kelime, fazla kelime, aynı lemmanın başka biçimi, sıra (yan yana iki kelimenin yer değiştirmesi ya da bir kelimenin başka yere taşınması), başka kelime. İlk dördü sınıflanabilir farktır. "Başka kelime" sınıflanamaz, çünkü eş anlamlı mı yanlış mı olduğunu yalnızca LLM söyleyebilir.
    - **Küçük fark:** en fazla 1 fark. Doğru cevap 6 kelime ya da daha uzunsa en fazla 2 fark.
@@ -121,7 +127,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
 
    - **`uncertain` (LLM'siz):**
      - Üretim kanıtı sayılmaz; FSRS'e Hard yazılır (§0.3).
-     - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir.
+     - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir. Bu sonradan kontrol F1-21'de senkronla gelir; o zamana kadar deneme bekler.
    - **Hata etiketi eklenmez.** Paketlerde etiketleri kelime farkından kesin çıkaracak kural verisi yok; etiketler LLM'den gelir.
    - **İpucu merdiveni şablonludur** ve yalnızca yanlış sayılan cevapta üretilir. H1–H3 doğru cevaptan hiçbir kelime taşımaz (I-02):
      - H1: fark türü (kelime eksik, kelime fazla, biçim yanlış, sıra yanlış; `off_target`'ta "istenen anlam bu değil"). Metni ARB'den gelir.
@@ -133,6 +139,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - İtiraz `attempt_amendments` (`user_dispute`) olarak yazılır.
    - LLM varsa yeniden kontrol edilir; ayrıca içerik bildirimi olarak kaydedilir (`10` §8).
    - Kendi kendine kabul yoktur (§0.3: öz değerlendirme yok).
+   - F1-21'e kaldı: itiraz satırı senkronla birlikte gelir.
 
 ## A02 — Yaz kartı (`card.produce_type`)
 - A01 ile aynıdır; cevap klavyeyle verilir. **Sessiz mod** açıkken varsayılan budur.

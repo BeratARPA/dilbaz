@@ -129,7 +129,7 @@ Sayısal ölçek: A0 = 0, A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6. "+" al
 
 ## 8. Planlayıcıya verilen sinyaller
 
-Motor, planlayıcıya şu özet yapıyı verir (Dart, saf). **v1 (F1-09)** yalnızca planlayıcının kullandığı alanları taşır: `level`, `dailyBudget`, `spentToday`, `recentUnaidedAccuracy`, `weekStrandTime`, `silentMode`. Vadesi gelen kartları ve öngörülen tekrar yükünü planlayıcı kart listesinden kendisi hesaplar. Diğer alanlar ilgili görevlerle eklenir.
+Motor, planlayıcıya şu özet yapıyı verir (Dart, saf). **v1 (F1-09)** yalnızca planlayıcının kullandığı alanları taşır: `level`, `dailyBudget`, `spentToday`, `recentUnaidedAccuracy`, `weekStrandTime`, `silentMode`; F1-16'dan beri `newToday` (bugün tanıtılan yeni öğe sayısı; günlük tavan bunları da sayar). Vadesi gelen kartları ve öngörülen tekrar yükünü planlayıcı kart listesinden kendisi hesaplar. Diğer alanlar ilgili görevlerle eklenir.
 
 ```dart
 class LearnerSnapshot {

@@ -766,5 +766,288 @@
   "recordFailureDevice": "Mikrofon açılamadı.",
   "@recordFailureDevice": {
     "description": "Recording: the microphone could not be opened."
+  },
+  "practiceCardsTitle": "Kartlar",
+  "@practiceCardsTitle": {
+    "description": "Practice: the card session entry."
+  },
+  "practiceCardsBody": "Zamanı gelen tekrarlar ve yeni kelimeler: Türkçesini görüp İngilizcesini söylersin.",
+  "@practiceCardsBody": {
+    "description": "Practice: what the card session is."
+  },
+  "practiceMoreSoon": "Diğer etkinlikler hazırlanıyor.",
+  "@practiceMoreSoon": {
+    "description": "Practice: the other activities come later."
+  },
+  "cardsTitle": "Kartlar",
+  "@cardsTitle": {
+    "description": "Card session: page title."
+  },
+  "cardsProgress": "{number} / {total}",
+  "@cardsProgress": {
+    "description": "Card session: which card of how many (no percentage, docs/09 §5.3).",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsLeave": "Kartları bırak",
+  "@cardsLeave": {
+    "description": "Card session: tooltip of the close button."
+  },
+  "cardsUnavailable": "Kartlar için içerik bu cihazda henüz hazır değil. İçerik inince burada olacak.",
+  "@cardsUnavailable": {
+    "description": "Card session: no course or packs on the device yet."
+  },
+  "cardsEmpty": "Şu an sırada kart yok. Tekrar zamanı gelen kartlar ve yeni kelimeler burada olacak.",
+  "@cardsEmpty": {
+    "description": "Card session: nothing to review and nothing new now."
+  },
+  "cardsClose": "Tamam",
+  "@cardsClose": {
+    "description": "Card session: closes the page."
+  },
+  "cardsNew": "Yeni",
+  "@cardsNew": {
+    "description": "Card session: label of a new item's introduction (A00)."
+  },
+  "cardsListen": "Dinle",
+  "@cardsListen": {
+    "description": "Card session: plays the sentence."
+  },
+  "cardsSaySentence": "Örnek cümle",
+  "@cardsSaySentence": {
+    "description": "Card session introduction: label of the carrier sentence."
+  },
+  "cardsTrySpeak": "Şimdi sen söyle",
+  "@cardsTrySpeak": {
+    "description": "Card session introduction: goes on to saying it (A00 → A01)."
+  },
+  "cardsTryType": "Şimdi sen yaz",
+  "@cardsTryType": {
+    "description": "Card session introduction: goes on to typing it in silent mode (A02)."
+  },
+  "cardsSayIt": "Bunu İngilizce söyle",
+  "@cardsSayIt": {
+    "description": "Card session: what to do with the prompt, spoken card."
+  },
+  "cardsTypeIt": "Bunu İngilizce yaz",
+  "@cardsTypeIt": {
+    "description": "Card session: what to do with the prompt, typed card."
+  },
+  "cardsHoldToSpeak": "Basılı tut ve konuş",
+  "@cardsHoldToSpeak": {
+    "description": "Card session: the hold-to-talk microphone button."
+  },
+  "cardsRecording": "Konuş; bırakınca bakarım.",
+  "@cardsRecording": {
+    "description": "Card session: while recording."
+  },
+  "cardsChecking": "Bakıyorum…",
+  "@cardsChecking": {
+    "description": "Card session: while the answer is recognized and checked."
+  },
+  "cardsTypeInstead": "Yazarak cevapla",
+  "@cardsTypeInstead": {
+    "description": "Card session: switches to typing."
+  },
+  "cardsSpeakInstead": "Sesle cevapla",
+  "@cardsSpeakInstead": {
+    "description": "Card session: switches to speaking."
+  },
+  "cardsAnswerLabel": "Cevabın",
+  "@cardsAnswerLabel": {
+    "description": "Card session: label of the answer field."
+  },
+  "cardsSend": "Gönder",
+  "@cardsSend": {
+    "description": "Card session: sends a typed answer."
+  },
+  "cardsHeard": "Duyduğum",
+  "@cardsHeard": {
+    "description": "Card session: label of what speech recognition heard."
+  },
+  "cardsYourAnswer": "Cevabın",
+  "@cardsYourAnswer": {
+    "description": "Card session: label of the typed answer."
+  },
+  "cardsTryAgain": "Tekrar dene.",
+  "@cardsTryAgain": {
+    "description": "Card session: a miss; another try with a hint."
+  },
+  "cardsWithoutTarget": "Doğru! Bu kart başka bir kelimeyi çalışıyor, başka nasıl söylersin?",
+  "@cardsWithoutTarget": {
+    "description": "Card session: correct without the card's target (docs/03 §0.2)."
+  },
+  "cardsUnheard": "Anlaşılamadı. Bir daha söyleyebilir ya da yazabilirsin.",
+  "@cardsUnheard": {
+    "description": "Card session: nothing usable was heard; it does not count."
+  },
+  "cardsHintNumber": "İpucu {number}",
+  "@cardsHintNumber": {
+    "description": "Card session: label of a hint of the ladder.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsHint": "İpucu",
+  "@cardsHint": {
+    "description": "Card session: opens the next hint."
+  },
+  "cardsReveal": "Göster",
+  "@cardsReveal": {
+    "description": "Card session: shows the answer (H4)."
+  },
+  "cardsMisheard": "Yanlış duyuldu",
+  "@cardsMisheard": {
+    "description": "Card session: speech recognition got the answer wrong; type it instead (docs/03 §0.3)."
+  },
+  "cardsMisheardLabel": "Ne dediğini yaz",
+  "@cardsMisheardLabel": {
+    "description": "Card session: field for the answer typed over what was heard."
+  },
+  "cardsFixLabel": "Demek istediğini yaz",
+  "@cardsFixLabel": {
+    "description": "Card session: field for the corrected answer after \"did you mean\"."
+  },
+  "cardsFixSave": "Tamam",
+  "@cardsFixSave": {
+    "description": "Card session: sends the typed correction."
+  },
+  "cardsDidYouMean": "Bunu mu demek istedin?",
+  "@cardsDidYouMean": {
+    "description": "Card session: the LLM was not sure (docs/03 §0.2)."
+  },
+  "cardsDidYouMeanYes": "Evet",
+  "@cardsDidYouMeanYes": {
+    "description": "Card session: confirms the answer."
+  },
+  "cardsDidYouMeanFix": "Düzelt",
+  "@cardsDidYouMeanFix": {
+    "description": "Card session: corrects the answer."
+  },
+  "cardsOfflineNetwork": "Bağlantı yok gibi; cevabına basit kontrolle baktım.",
+  "@cardsOfflineNetwork": {
+    "description": "Card session: checked without the LLM, no connection (docs/07 §7)."
+  },
+  "cardsOfflineQuota": "Bugünkü yapay zekâ payı doldu; cevabına basit kontrolle baktım.",
+  "@cardsOfflineQuota": {
+    "description": "Card session: checked without the LLM, the free quota is used up (ADR-0009)."
+  },
+  "cardsOfflineOther": "Yapay zekâ şu an cevap vermedi; cevabına basit kontrolle baktım.",
+  "@cardsOfflineOther": {
+    "description": "Card session: checked without the LLM for another reason."
+  },
+  "hintMissingWord": "Bir kelime eksik.",
+  "@hintMissingWord": {
+    "description": "Hint H1: a word is missing."
+  },
+  "hintExtraWord": "Fazladan bir kelime var.",
+  "@hintExtraWord": {
+    "description": "Hint H1: a word too many."
+  },
+  "hintWrongForm": "Bir kelimenin biçimi farklı olmalı.",
+  "@hintWrongForm": {
+    "description": "Hint H1: a word is in another form."
+  },
+  "hintWordOrder": "Kelimelerin sırası farklı olmalı.",
+  "@hintWordOrder": {
+    "description": "Hint H1: the word order."
+  },
+  "hintMeaning": "İstenen anlam bu değil.",
+  "@hintMeaning": {
+    "description": "Hint H1: the answer says something else."
+  },
+  "hintPlaceAt": "\"{word}\" kelimesinde.",
+  "@hintPlaceAt": {
+    "description": "Hint H2: at the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "hintPlaceBefore": "\"{word}\" kelimesinden önce.",
+  "@hintPlaceBefore": {
+    "description": "Hint H2: before the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "hintPlaceAfter": "\"{word}\" kelimesinden sonra.",
+  "@hintPlaceAfter": {
+    "description": "Hint H2: after the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsCorrect": "Doğru.",
+  "@cardsCorrect": {
+    "description": "Card session: recalled."
+  },
+  "cardsAlmost": "Neredeyse.",
+  "@cardsAlmost": {
+    "description": "Card session: recalled with a small error elsewhere."
+  },
+  "cardsTheSentence": "Doğru cümle bu:",
+  "@cardsTheSentence": {
+    "description": "Card session: the answer after the tries or on request."
+  },
+  "cardsWithoutTargetEnd": "Senin cevabın da doğruydu. Bu kartın cümlesi:",
+  "@cardsWithoutTargetEnd": {
+    "description": "Card session: ended with correct answers without the target."
+  },
+  "cardsUndecided": "Cevabını şimdi kesinleştiremedim; bağlantı gelince yeniden bakılacak. Cümle bu:",
+  "@cardsUndecided": {
+    "description": "Card session: undecided without the LLM (docs/03 §0.5)."
+  },
+  "cardsCorrection": "Düzeltilmiş hâli: {text}",
+  "@cardsCorrection": {
+    "description": "Card session: the learner's answer corrected.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsSayOnce": "Bir kez de sen söyle.",
+  "@cardsSayOnce": {
+    "description": "Card session: say the correct sentence once (A01 step 7)."
+  },
+  "cardsNext": "Devam",
+  "@cardsNext": {
+    "description": "Card session: stores the card and goes on."
+  },
+  "cardsDoneTitle": "Bu tur bitti.",
+  "@cardsDoneTitle": {
+    "description": "Card session: the session is over."
+  },
+  "cardsDoneReviewed": "{count} kart tekrarladın.",
+  "@cardsDoneReviewed": {
+    "description": "Card session summary: cards reviewed.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsDoneIntroduced": "{count} yeni kelime ya da kalıpla tanıştın.",
+  "@cardsDoneIntroduced": {
+    "description": "Card session summary: new items introduced.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -39,6 +39,20 @@ class FakeProfileRepository implements ProfileRepository {
   @override
   Stream<bool> watchAudioConsent(String userId) => Stream.value(audioConsent);
 
+  /// Answers are typed by default.
+  bool silentMode = false;
+  Duration dailyBudget = const Duration(minutes: 30);
+
+  @override
+  Future<StudySettings?> studySettings(String userId) async => _onboarded
+      ? (
+          l1: 'tr',
+          silentMode: silentMode || !audioConsent,
+          dailyBudget: dailyBudget,
+          audioConsent: audioConsent,
+        )
+      : null;
+
   @override
   Future<Result<bool, ProfileFailure>> restore(String userId) async {
     restores++;

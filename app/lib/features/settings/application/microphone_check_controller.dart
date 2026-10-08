@@ -67,8 +67,3 @@ class MicrophoneCheckController extends _$MicrophoneCheckController {
     });
   }
 }
-
-/// Loudness while recording, for the level meter.
-@riverpod
-Stream<double> microphoneLevel(Ref ref) =>
-    ref.watch(answerRecorderProvider).level();

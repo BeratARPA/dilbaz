@@ -104,8 +104,20 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 - "Yanlış duyuldu" bağlantısı → yazarak düzeltme.
 - Uzun basınca: "Bu içerikte hata var" bildirimi.
 
+**Uygulama notları (F1-16):**
+- Giriş şimdilik Pratik sekmesindeki "Kartlar"dır; Bugün ekranı F1-18'de.
+- Söyle kartında mikrofon basılı tutulur, bırakınca gönderilir (en fazla 12 sn). Yaz kartında otomatik düzeltme ve öneriler kapalıdır. "Yazarak cevapla" ile "Sesle cevapla" (ses onayı varsa) arasında geçilir.
+- Sonuçta duyulan ya da yazılan cevap gösterilir. LLM'in işaretlediği hata yerleri yumuşak turuncudur. "Tekrar dene." altında açılan ipuçları "İpucu 1, 2…" diye sıralanır.
+- Söyle kartında son cevap için "Yanlış duyuldu" alanı açılır. LLM emin değilse "Bunu mu demek istedin?" sorulur (Evet / Düzelt).
+- Son ekran: "Doğru." / "Neredeyse." / "Doğru cümle bu:", cümle, "Dinle", "Bir kez de sen söyle.", "Devam". Sessiz modda ses kendiliğinden çalmaz.
+- Kapatma onay istemez: biten her kart kaydedilmiştir, yarım kalan kart kaydedilmez.
+- Oturum sonunda somut sayılar: "Bu tur bitti. 12 kart tekrarladın."
+- "Bu içerikte hata var" bildirimi `content_reports` senkronuyla F1-21'de.
+
 ### 5.4 Tanıtım (A00)
 Taşıyıcı cümle, ses, Türkçe anlam, işaretli kalıp, karşıtlık notu → "Şimdi sen söyle."
+
+F1-16'da kalıp cümle içinde ayrıca işaretlenmez: öğe başlık olarak, taşıyıcı cümle altında anlamıyla gösterilir. Sessiz modda düğme "Şimdi sen yaz" olur.
 
 ### 5.5 Söyleyemediklerim (A19)
 - **Liste:** yeni / karta dönüştü / vazgeçildi.

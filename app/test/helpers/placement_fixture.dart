@@ -279,6 +279,12 @@ class FakeAssessmentRepository implements AssessmentRepository {
   @override
   Future<int> placementsTaken(String courseId) async => saved.length;
 
+  /// The vocabulary result of the latest test; none unless set.
+  XlexResult? xlex;
+
+  @override
+  Future<XlexResult?> latestXlex(String courseId) async => xlex;
+
   @override
   Stream<bool> watchPlacementOpen(String userId) async* {
     yield _open;

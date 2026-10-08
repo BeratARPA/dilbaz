@@ -93,6 +93,51 @@ void main() {
     });
   });
 
+  group('DriftAssessmentRepository.latestXlex', () {
+    test('none before a placement test', () async {
+      await course();
+      expect(await repository.latestXlex('course-1'), isNull);
+    });
+
+    test('the vocabulary result of the latest test', () async {
+      await course();
+      var clock = now;
+      final dated = DriftAssessmentRepository(
+        db,
+        now: () => clock,
+        newId: () => 'assessment-${clock.minute}',
+      );
+      for (final (minute, score) in [(1, 900), (2, 1400)]) {
+        clock = now.add(Duration(minutes: minute));
+        await dated.savePlacement(
+          userId: userId,
+          courseId: 'course-1',
+          results: {
+            'xlex': {
+              ...XlexResult(
+                score: score,
+                bandRates: const {1: 0.9, 2: 0.5},
+                falseAlarmRate: 0.05,
+              ).toJson(),
+              'answers': const <Object>[],
+            },
+          },
+          outcome: outcome(),
+        );
+      }
+      final latest = (await repository.latestXlex('course-1'))!;
+      expect(latest.score, 1400);
+      expect(latest.bandRates, {1: 0.9, 2: 0.5});
+      expect(latest.falseAlarmRate, 0.05);
+    });
+
+    test('a result it cannot read is no result', () async {
+      await course();
+      await save();
+      expect(await repository.latestXlex('course-1'), isNull);
+    });
+  });
+
   group('DriftAssessmentRepository placement', () {
     test('is open once there is a course and until a test is saved', () async {
       final seen = <bool>[];

@@ -37,6 +37,7 @@ class TodayPlan {
   - `estimate` = tekrarlar + yeni öğeler + önerilen seçenek.
   - `newCardMode`: yeni öğenin ilk kartı `speak`, sessiz modda `type` (I-05).
 - Sonraya kalanlar: davetler (satır 22), etkinlik uygunluğu (§4), geçmişten süre ve `c` tahmini (§5), seviye aralığı ve kapsama kontrolleri (§8 madde 3–5, 8, 10).
+- **Kart oturumu (F1-16):** Planı oturum başında bir kez kurar ve kuyruğu sabit tutar ("7 / 12"): önce tekrarlar, sonra yeni öğeler (tanıtım + ilk kart). Seed, öğrenci ve yerel güne göre gün boyu aynıdır. Oturum kaydı ve `spentToday` F1-18'le gelir; o zamana kadar `spentToday` 0'dır.
 
 ## 2. Haftalık kol hedefleri
 
@@ -103,7 +104,7 @@ Bu değerler `PlannerConfig` içindedir ve deneyle ayarlanır.
 - **Satır 6:** Dilim önceliğe göredir (R'ye değil), çünkü mod ağırlığı ve odak bonusu da önceliğe girer. Dilim içi sıra seed'den çekilir.
 - **Satır 7:** Blokta çiftin biri varsa diğeri de alınır. Blok doluysa, bloktaki çifti olmayan son kartın yerine girer. Üç ve daha fazla kartlı blokta çiftin arasına en az bir kart konur.
 - **Satır 8:** Sığmayan kart atlanır, sıradaki daha kısa kart denenir.
-- **Satır 11:** `projectedDailyReview` = 7 gün içinde vadesi gelecek kartların (gecikmişler dahil) toplam süresi / 7.
+- **Satır 11:** `projectedDailyReview` = 7 gün içinde vadesi gelecek kartların (gecikmişler dahil) toplam süresi / 7. `cfg.maxNew` günlüktür: gün içinde birden çok oturum açılabildiği için bugün tanıtılan öğeler (`LearnerSnapshot.newToday`) tavandan düşülür (F1-16).
 - **Satır 13:** Birikim = vadesi gelen kartların toplam süresi bugünkü tekrar tavanından fazla.
 - **Satır 14:** Yeni öğe sayısı kalan bütçeyle de sınırlıdır. Bir yeni öğenin süresi = tanıtım (30 sn) + ilk kart. Kartı olan öğe aday sayılmaz.
 - **Satır 20:** Eşit puanda sıra etkinlik adına göredir. İki seçenek bulunamıyorsa hiç seçenek sunulmaz.

@@ -156,6 +156,11 @@ create table attempt_amendments (        -- değişmez denemelere sonradan gelen
 ```
 
 - `attempts.card_state_after` motorun `CardMemory` JSON'udur: `{fsrs_card_id, state, step, stability, difficulty, due, last_review, reps, lapses}`. Bu alanlar `cards` satırının FSRS sütunlarının tamamıdır, bu yüzden kart satırı son puanlı denemeden yeniden kurulabilir (I-03).
+- **Kart denemeleri (F1-16):**
+  - `prompt` = `{prompt_l1, reference, carrier, context?}`
+  - `response` = `{text, source: 'asr'|'typed', transcript?, asr?: {provider, model, conf?}, asr_override?, corrected_from?}`
+  - `llm` = `{route, pending, provider?, model?, catalog?, confidence?, code?}` (`07` §7); deterministik eşleşmede `null`.
+  - `hints_used`, `hint_max_level`: cevaptan önce açılan ipuçları. Puanlı son denemede gösterimin en yüksek ipucudur; istekle açılan cevap (H4) dahil.
 
 ### 2.4 Kişisel içerik, kayıtlar, değerlendirme
 
@@ -390,7 +395,7 @@ Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok 
 
 ## 8. Yerel veritabanı (drift) aynası
 
-Kod: `app/lib/data/db/` (şema v1, F0-05).
+Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`).
 
 - **Kullanıcı tabloları:** Sunucuda senkronlanan 13 tablonun aynısı (§2.2–2.4 ile `profiles`, `courses`; aynı sütun adları, `server_seq` dahil) + `pending_push boolean`.
   - Yerelde `server_seq` sunucu atayana kadar `null`dır.
@@ -403,6 +408,7 @@ Kod: `app/lib/data/db/` (şema v1, F0-05).
   - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
   - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
 - **`sync_state`:** profil başına son `server_seq` imleci (`last_server_seq`) ve son başarılı senkron (`last_sync_at`).
+- **`devices`:** bu kurulumun kimliği. Profil başına ilk kullanımda bir satır açılır; her deneme onu `device_id` olarak taşır. Sütunlar sunucudaki `devices` ile aynıdır (§2.6), senkronu F1-21'de.
 - **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır (`11` §5). `content_packs.manifest`, paketin `pack_meta` tablosunun tamamıdır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
 - **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.
 - **drift migrasyonları** şema sürümüyle ilerler. Her sürüm artışında `dart run drift_dev make-migrations` çalıştırılır: anlık görüntü `app/drift_schemas/` altına, doğrulama yardımcıları `app/test/drift/` altına üretilir ve her geçiş için bir yükseltme testi yazılır. `migration_test.dart`, koddaki şemanın dışa aktarılan son anlık görüntüyle aynı olduğunu denetler.

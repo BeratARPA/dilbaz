@@ -41,6 +41,7 @@ List<Override> appOverrides({
   FakeClipPlayer? player,
   FakeAnswerRecorder? recorder,
   FakeSpeechRepository? speech,
+  List<Override> extra = const [],
 }) => [
   authRepositoryProvider.overrideWithValue(auth),
   profileRepositoryProvider.overrideWithValue(
@@ -61,6 +62,7 @@ List<Override> appOverrides({
   clipPlayerProvider.overrideWithValue(player ?? FakeClipPlayer()),
   answerRecorderProvider.overrideWithValue(recorder ?? FakeAnswerRecorder()),
   speechRepositoryProvider.overrideWithValue(speech ?? FakeSpeechRepository()),
+  ...extra,
 ];
 
 extension PumpApp on WidgetTester {
@@ -77,6 +79,7 @@ extension PumpApp on WidgetTester {
     FakeClipPlayer? player,
     FakeAnswerRecorder? recorder,
     FakeSpeechRepository? speech,
+    List<Override> extra = const [],
   }) async {
     final fake = auth ?? FakeAuthRepository(signedIn: signedIn);
     await pumpWidget(
@@ -92,6 +95,7 @@ extension PumpApp on WidgetTester {
           player: player,
           recorder: recorder,
           speech: speech,
+          extra: extra,
         ),
         child: const DilbazApp(),
       ),

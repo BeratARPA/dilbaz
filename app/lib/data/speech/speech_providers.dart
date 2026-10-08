@@ -18,3 +18,8 @@ AnswerRecorder answerRecorder(Ref ref) {
   ref.onDispose(recorder.dispose);
   return recorder;
 }
+
+/// Loudness while recording, for a level meter.
+@riverpod
+Stream<double> answerLevel(Ref ref) =>
+    ref.watch(answerRecorderProvider).level();

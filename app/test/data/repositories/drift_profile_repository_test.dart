@@ -5,7 +5,7 @@ import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/drift_profile_repository.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository.dart';
-import 'package:drift/drift.dart' show driftRuntimeOptions;
+import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_profile_remote.dart';
@@ -175,6 +175,50 @@ void main() {
     await pumpEventQueue();
     await repository.create(userId, answers, finished: true);
     await seen;
+  });
+
+  group('DriftProfileRepository.studySettings', () {
+    test('none before the welcome flow', () async {
+      expect(await repository.studySettings(userId), isNull);
+    });
+
+    test('the budget and how answers are given', () async {
+      await repository.create(userId, answers, finished: true);
+      expect(await repository.studySettings(userId), (
+        l1: 'tr',
+        silentMode: false,
+        dailyBudget: const Duration(minutes: 15),
+        audioConsent: true,
+      ));
+      await repository.create(
+        userId,
+        answers.copyWith(microphone: false),
+        finished: true,
+      );
+      expect((await repository.studySettings(userId))!.silentMode, isTrue);
+    });
+
+    test(
+      'without audio consent answers are typed, whatever the setting',
+      () async {
+        await repository.create(
+          userId,
+          answers.copyWith(audioConsent: false),
+          finished: true,
+        );
+        final row = await profile();
+        await db
+            .update(db.profiles)
+            .write(
+              ProfilesCompanion(
+                settings: Value({...row.settings, 'silent_mode': false}),
+              ),
+            );
+        final settings = (await repository.studySettings(userId))!;
+        expect(settings.silentMode, isTrue);
+        expect(settings.audioConsent, isFalse);
+      },
+    );
   });
 
   group('DriftProfileRepository.push', () {

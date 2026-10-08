@@ -6,6 +6,7 @@ import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/features/settings/application/microphone_check_controller.dart';
 import 'package:dilbaz_app/features/settings/application/microphone_check_state.dart';
 import 'package:dilbaz_app/features/settings/presentation/microphone_check_screen.dart';
+import 'package:dilbaz_app/l10n/audio_failure_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

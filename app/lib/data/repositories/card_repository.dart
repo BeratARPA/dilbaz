@@ -11,7 +11,15 @@ typedef StoredCard = ({
   String itemRef,
   CardMode mode,
   CardMemory memory,
+
+  /// When the item was introduced.
+  DateTime createdAt,
 });
+
+/// The learner's own correct answers to one carrier: those the LLM
+/// accepted as variants, with the card's target or without it
+/// (docs/03 §0.5 step 3).
+typedef PersonalAnswers = ({List<String> variants, List<String> alternatives});
 
 /// The activity code of a card answer in [mode] (docs/03-activities.md).
 String cardActivity(CardMode mode) => switch (mode) {
@@ -33,6 +41,15 @@ abstract interface class CardRepository {
   /// Latencies of the latest answers in [mode], newest first, for the Easy
   /// rating (docs/03 §0.3).
   Future<List<int>> recentLatencies(String courseId, CardMode mode);
+
+  /// The answers to [carrierKey] on the card of [itemRef] that the LLM
+  /// accepted; they match without it next time. They are read from the
+  /// attempts, which keep them anyway (I-03).
+  Future<PersonalAnswers> personalAnswers({
+    required String courseId,
+    required String itemRef,
+    required String carrierKey,
+  });
 
   /// The card of a newly introduced item; the existing one if it has one.
   Future<StoredCard> introduce({
@@ -95,6 +112,7 @@ class DriftCardRepository implements CardRepository {
       reps: row.reps,
       lapses: row.lapses,
     ),
+    createdAt: row.createdAt,
   );
 
   @override
@@ -219,8 +237,46 @@ class DriftCardRepository implements CardRepository {
         .insert(
           OutboxCompanion.insert(targetTable: _cards, rowId: id, op: _upsert),
         );
-    return (id: id, itemRef: itemRef, mode: mode, memory: memory);
+    return (
+      id: id,
+      itemRef: itemRef,
+      mode: mode,
+      memory: memory,
+      createdAt: now,
+    );
   });
+
+  static const _acceptableVariant = 'acceptable_variant';
+
+  @override
+  Future<PersonalAnswers> personalAnswers({
+    required String courseId,
+    required String itemRef,
+    required String carrierKey,
+  }) async {
+    final rows =
+        await (_db.select(_db.attempts)
+              ..where(
+                (t) =>
+                    t.courseId.equals(courseId) &
+                    t.itemRef.equals(itemRef) &
+                    t.verdict.equals(_acceptableVariant),
+              )
+              ..orderBy([(t) => OrderingTerm(expression: t.createdAtClient)]))
+            .get();
+    final variants = <String>{};
+    final alternatives = <String>{};
+    for (final row in rows) {
+      // Only the LLM's verdicts: a listed answer matches anyway.
+      if (row.prompt['carrier'] != carrierKey || row.llm?['provider'] == null) {
+        continue;
+      }
+      if (row.response['text'] case final String text) {
+        (row.targetOk == true ? variants : alternatives).add(text);
+      }
+    }
+    return (variants: [...variants], alternatives: [...alternatives]);
+  }
 
   @override
   Future<void> recordReview({

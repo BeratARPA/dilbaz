@@ -53,6 +53,8 @@ Not: Roman ve film gibi otantik içeriği rahat anlamak için 8–9 bin kelime a
 
 Okumada anlam aramaları loglanır ve bilinmeyen kelime sinyali olarak kullanılır.
 
+**Motorda (F1-16):** `Scaffolds.forLevel` kartların iskelelerini verir: açıklama dili, varsayılan yavaş ses, bir hatanın kendiliğinden açtığı en yüksek ipucu ve deneme hakkı. A0'da deneme hakkı 2'dir; ikinci hatada cevap açılır ("2 hatadan sonra otomatik"). Kendiliğinden açılmayan ipuçları "ipucu" ve "göster" düğmeleriyle açılır. İskeleleri Ayarlar'dan elle açıp kapatmak F1-23'le gelir.
+
 ## 4. Müfredat haritası (curriculum graph)
 
 ### 4.1 Düğümler
