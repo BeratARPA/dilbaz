@@ -41,4 +41,27 @@ class PlatformRecordingStore implements RecordingStore {
       // Already gone.
     }
   }
+
+  Future<String> _here(String audioPath) async =>
+      '${await _directory()}/recordings/${audioPath.split('/').last}';
+
+  @override
+  Future<String?> find(String audioPath) async {
+    for (final path in [audioPath, await _here(audioPath)]) {
+      if (File(path).isAbsolute && File(path).existsSync()) return path;
+    }
+    return null;
+  }
+
+  @override
+  Future<String?> keepFetched(String audioPath, Uint8List bytes) async {
+    try {
+      final path = await _here(audioPath);
+      await File(path).parent.create(recursive: true);
+      await File(path).writeAsBytes(bytes, flush: true);
+      return path;
+    } on FileSystemException {
+      return null;
+    }
+  }
 }

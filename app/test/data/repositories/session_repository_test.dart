@@ -33,6 +33,21 @@ void main() {
     strands: strands,
   );
 
+  test('the latest session start comes again after each session', () async {
+    final seen = <DateTime?>[];
+    final sub = sessions.watchLatestStart(userId).listen(seen.add);
+    addTearDown(sub.cancel);
+    await pumpEventQueue();
+    final first = DateTime.utc(2026, 10, 7, 9);
+    final second = DateTime.utc(2026, 10, 8, 9);
+    await record(second, {Strand.language: const Duration(minutes: 5)});
+    await pumpEventQueue();
+    await record(first, {Strand.language: const Duration(minutes: 5)});
+    await pumpEventQueue();
+    expect(seen.first, isNull);
+    expect(seen.last, second);
+  });
+
   test('a session is one row, queued for the server', () async {
     final start = DateTime.utc(2026, 10, 1, 9);
     await sessions.record(

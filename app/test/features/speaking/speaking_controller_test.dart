@@ -208,7 +208,12 @@ void main() {
 
       final row = (await db.select(db.recordings).get()).single;
       expect(row.taskRef, cityTask);
-      expect(row.audioPath, '/recordings/${row.id}.m4a');
+      // Named for where it goes on the server; kept here by that name.
+      expect(row.audioPath, '${FakeAuthRepository.id}/2026/10/${row.id}.m4a');
+      // A task's audio stays here until the server can delete it after
+      // 30 days too (F3-08).
+      final queued = await db.select(db.outbox).get();
+      expect(queued.where((e) => e.op == 'upload'), isEmpty);
       expect(row.durationMs, 30000);
       expect((row.asr!['words']! as List).length, 6);
       expect(row.annotation!['merged'], marks.annotation.toJson());

@@ -1885,5 +1885,37 @@
   "reportThanks": "Teşekkürler. Bakacağız.",
   "@reportThanks": {
     "description": "After a report was sent."
+  },
+  "notifyInvitationChannel": "Günlük davet",
+  "@notifyInvitationChannel": {
+    "description": "Android notification channel name of the daily invitation (docs/09 §6)."
+  },
+  "notifyInvitationChannelDescription": "Seçtiğin saatte günde en çok bir kez. O gün çalıştıysan gelmez.",
+  "@notifyInvitationChannelDescription": {
+    "description": "Android notification channel description of the daily invitation."
+  },
+  "notifyInvitationMorningCoffee": "Kahve hazırsa 5 dakikalık tekrar seni bekliyor.",
+  "@notifyInvitationMorningCoffee": {
+    "description": "Daily invitation at the morning coffee anchor (docs/09 §6 example)."
+  },
+  "notifyInvitationLunchBreak": "Öğle arasında 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationLunchBreak": {
+    "description": "Daily invitation at the lunch break anchor."
+  },
+  "notifyInvitationAfterDinner": "Yemekten sonra 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationAfterDinner": {
+    "description": "Daily invitation at the after dinner anchor."
+  },
+  "notifyInvitationBeforeBed": "Yatmadan önce 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationBeforeBed": {
+    "description": "Daily invitation at the before bed anchor."
+  },
+  "notifyInvitationAnyTime": "5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationAnyTime": {
+    "description": "Daily invitation without a known anchor."
+  },
+  "notifyInvitationSpeaking": "Bugün kısa bir konuşma görevine ne dersin?",
+  "@notifyInvitationSpeaking": {
+    "description": "Daily invitation on alternate days: a speaking task (docs/09 §6 example)."
   }
 }

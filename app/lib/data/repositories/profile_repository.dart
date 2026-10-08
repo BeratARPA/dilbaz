@@ -1,5 +1,6 @@
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/repositories/onboarding_answers.dart';
+import 'package:dilbaz_engine/dilbaz_engine.dart';
 
 /// Why the profile could not be read from or written to the server.
 enum ProfileFailure { network, unknown }
@@ -26,6 +27,22 @@ typedef StudySettings = ({
   bool audioConsent,
 });
 
+/// The daily invitation as the learner set it (docs/09 §6).
+typedef InvitationSettings = ({
+  /// The learner asked for it, and the system allowed notifications
+  /// then (`daily_invitation`).
+  bool wanted,
+
+  /// The code of the habit anchor it goes with (`morning_coffee`, …).
+  String? anchor,
+
+  /// The anchor's time.
+  DayTime? time,
+
+  /// When nothing goes out (`quiet_hours`).
+  QuietHours? quiet,
+});
+
 /// The learner's profile and course (docs/13-data-model.md §2.1).
 ///
 /// Local first: the welcome flow writes to the local database and the
@@ -39,6 +56,10 @@ abstract interface class ProfileRepository {
   /// Whether [userId] consented to recording audio (docs/14 §4); false
   /// before the welcome flow.
   Stream<bool> watchAudioConsent(String userId);
+
+  /// The daily invitation of [userId], and again whenever the profile
+  /// changes; null before the welcome flow.
+  Stream<InvitationSettings?> watchInvitation(String userId);
 
   /// The study settings of [userId]; null before the welcome flow.
   Future<StudySettings?> studySettings(String userId);

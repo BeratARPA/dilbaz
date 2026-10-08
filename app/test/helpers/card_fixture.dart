@@ -14,6 +14,7 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
+import 'package:dilbaz_app/data/tasks/recording_files.dart';
 import 'package:dilbaz_app/data/tasks/recording_store.dart';
 import 'package:dilbaz_app/data/tasks/task_content_repository.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
@@ -353,6 +354,7 @@ List<Override> cardDataOverrides({
   required AppDatabase db,
   required FakeTutorRepository tutor,
   DateTime Function()? clock,
+  FakeAudioRemote? audio,
 }) => [
   cardContentRepositoryProvider.overrideWith(
     (ref) => DriftCardContentRepository(db, l2: 'zz'),
@@ -361,10 +363,38 @@ List<Override> cardDataOverrides({
     (ref) => DriftTaskContentRepository(db, l2: 'zz'),
   ),
   recordingStoreProvider.overrideWithValue(FakeRecordingStore()),
+  audioRemoteProvider.overrideWithValue(audio ?? FakeAudioRemote()),
   tutorRepositoryProvider.overrideWithValue(tutor),
   clockProvider.overrideWithValue(clock ?? () => cardNow),
   cardSeedProvider.overrideWithValue(1),
 ];
+
+/// The private audio bucket in memory.
+class FakeAudioRemote implements AudioRemote {
+  final files = <String, Uint8List>{};
+
+  /// Why the next calls fail; null means they work.
+  AudioFailure? failure;
+
+  @override
+  Future<Result<void, AudioFailure>> upload(
+    String path,
+    Uint8List bytes,
+  ) async {
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    files[path] = bytes;
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<Uint8List, AudioFailure>> download(String path) async {
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    final bytes = files[path];
+    return bytes == null ? const Err(AudioFailure.refused) : Ok(bytes);
+  }
+}
 
 /// Recordings kept in memory.
 class FakeRecordingStore implements RecordingStore {
@@ -382,4 +412,20 @@ class FakeRecordingStore implements RecordingStore {
 
   @override
   Future<void> delete(String path) async => files.remove(path);
+
+  @override
+  Future<String?> find(String audioPath) async {
+    final here = '/recordings/${audioPath.split('/').last}';
+    for (final path in [audioPath, here]) {
+      if (files.containsKey(path)) return path;
+    }
+    return null;
+  }
+
+  @override
+  Future<String?> keepFetched(String audioPath, Uint8List bytes) async {
+    final here = '/recordings/${audioPath.split('/').last}';
+    files[here] = bytes;
+    return here;
+  }
 }

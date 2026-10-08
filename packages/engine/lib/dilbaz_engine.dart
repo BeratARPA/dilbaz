@@ -55,6 +55,7 @@ export 'src/placement/placement_outcome.dart';
 export 'src/placement/staircase.dart';
 export 'src/placement/staircase_config.dart';
 export 'src/placement/vocab_levels.dart';
+export 'src/planner/invitations.dart';
 export 'src/planner/plan_card.dart';
 export 'src/planner/plan_option.dart';
 export 'src/planner/planner.dart';

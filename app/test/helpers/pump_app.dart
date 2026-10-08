@@ -1,6 +1,8 @@
 import 'package:dilbaz_app/app/app.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
+import 'package:dilbaz_app/data/notifications/notification_gateway.dart';
+import 'package:dilbaz_app/data/notifications/notification_providers.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
@@ -68,6 +70,8 @@ List<Override> appOverrides({
     permissions ?? FakePermissionGateway(),
   ),
   contentControllerProvider.overrideWithBuild((ref, notifier) => readyContent),
+  // The device's notifications have their own tests.
+  notificationGatewayProvider.overrideWithValue(const NoNotificationGateway()),
   // The sync has its own tests; here the app stays on the device.
   syncControllerProvider.overrideWithBuild(
     (ref, notifier) => (lastSyncAt: null, changedAt: null, failure: null),

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
@@ -41,7 +43,7 @@ void main() {
           userId: FakeAuthRepository.id,
           courseId: FakeAssessmentRepository.zzCourse.id,
           taskRef: anchorTask,
-          audioPath: '/recordings/$id.m4a',
+          audioPath: '${FakeAuthRepository.id}/2026/09/$id.m4a',
           duration: const Duration(seconds: 40),
           isAssessment: true,
         );
@@ -56,7 +58,16 @@ void main() {
     await tester.pumpDilbazApp(
       player: player,
       db: db,
-      extra: cardDataOverrides(db: db, tutor: FakeTutorRepository()),
+      extra: cardDataOverrides(
+        db: db,
+        tutor: FakeTutorRepository(),
+        // Made on another device: the audio comes from the server.
+        audio: FakeAudioRemote()
+          ..files.addAll({
+            for (final id in ['sep', 'oct'])
+              '${FakeAuthRepository.id}/2026/09/$id.m4a': Uint8List(3),
+          }),
+      ),
     );
     await tapText(tester, trStrings.tabProgress);
   }

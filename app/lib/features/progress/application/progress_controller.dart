@@ -53,6 +53,23 @@ TaskOutcome? _outcome(String? code) => switch (code) {
 
 /// The Progress tab's view (docs/09 §5.11, v1); null before the welcome
 /// flow or the packs.
+/// Plays a recording of the Progress tab: this device's audio, else the
+/// server's, for a recording made on another device (docs/08 §5.2).
+@riverpod
+class RecordingPlayback extends _$RecordingPlayback {
+  /// The audio being fetched, if any.
+  @override
+  String? build() => null;
+
+  Future<void> play(String audioPath) async {
+    state = audioPath;
+    final path = await ref.read(recordingFilesProvider).playable(audioPath);
+    if (!ref.mounted) return;
+    state = null;
+    if (path != null) await ref.read(clipPlayerProvider).play(path);
+  }
+}
+
 @riverpod
 Future<ProgressView?> progress(Ref ref) async {
   final userId = ref.watch(authRepositoryProvider).userId;

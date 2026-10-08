@@ -256,6 +256,28 @@ void main() {
     expect((outbox.targetTable, outbox.op), ('personal_items', 'upsert'));
   });
 
+  test(
+    "a test recording's audio waits to go up; a task's stays here",
+    () async {
+      final recordings = repository();
+      await create(recordings);
+      await recordings.create(
+        id: 'rec-test',
+        userId: userId,
+        courseId: courseId,
+        taskRef: taskRef,
+        audioPath: '$userId/2026/10/rec-test.m4a',
+        duration: const Duration(seconds: 60),
+        isAssessment: true,
+      );
+      final uploads = [
+        for (final entry in await db.select(db.outbox).get())
+          if (entry.op == 'upload') entry.rowId,
+      ];
+      expect(uploads, ['rec-test']);
+    },
+  );
+
   test('the tasks recorded lately, per course', () async {
     final recordings = repository();
     await create(recordings);

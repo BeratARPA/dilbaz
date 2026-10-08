@@ -17,4 +17,10 @@ class PlatformRecordingStore implements RecordingStore {
 
   @override
   Future<void> delete(String path) async {}
+
+  @override
+  Future<String?> find(String audioPath) async => null;
+
+  @override
+  Future<String?> keepFetched(String audioPath, Uint8List bytes) async => null;
 }

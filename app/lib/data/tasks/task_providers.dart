@@ -1,11 +1,13 @@
 import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
 import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
+import 'package:dilbaz_app/data/tasks/recording_files.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tasks/recording_store.dart';
 import 'package:dilbaz_app/data/tasks/task_content_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'task_providers.g.dart';
 
@@ -32,4 +34,17 @@ MonthlyTestRepository monthlyTestRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 RecordingStore recordingStore(Ref ref) => RecordingStore(
   directory: () async => (await getApplicationSupportDirectory()).path,
+);
+
+/// Requires `Supabase.initialize` (main.dart); tests override it with a fake.
+@Riverpod(keepAlive: true)
+AudioRemote audioRemote(Ref ref) =>
+    SupabaseAudioRemote(Supabase.instance.client);
+
+@Riverpod(keepAlive: true)
+RecordingFiles recordingFiles(Ref ref) => DriftRecordingFiles(
+  ref.watch(appDatabaseProvider),
+  ref.watch(recordingStoreProvider),
+  ref.watch(audioRemoteProvider),
+  now: ref.watch(clockProvider),
 );

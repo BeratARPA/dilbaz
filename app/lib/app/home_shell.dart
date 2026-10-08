@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/share/share_providers.dart';
+import 'package:dilbaz_app/features/notifications/application/invitation_scheduler.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,8 @@ import 'package:go_router/go_router.dart';
 
 /// Bottom bar with four tabs and the "Söyleyemedim" button that is visible on
 /// every tab (docs/09-ux-motivation.md §4). Text shared from another app
-/// opens a capture here (A19). While it is up, the device syncs.
+/// opens a capture here (A19). While it is up, the device syncs and the
+/// daily invitation is kept set ahead.
 class HomeShell extends ConsumerWidget {
   const new({required this.navigationShell, super.key});
 
@@ -19,8 +21,10 @@ class HomeShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    // Kept running without rebuilding the shell on every sync.
-    ref.listen(syncControllerProvider, (_, _) {});
+    // Kept running without rebuilding the shell.
+    ref
+      ..listen(syncControllerProvider, (_, _) {})
+      ..listen(invitationSchedulerProvider, (_, _) {});
     if (ref.watch(pendingShareProvider) != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!context.mounted) return;

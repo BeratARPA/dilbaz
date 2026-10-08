@@ -45,6 +45,21 @@ class FakeProfileRepository implements ProfileRepository {
   int weeklyDaysGoal = 5;
   String? anchor = 'morning_coffee';
 
+  /// The daily invitation as set; it goes out again on [setInvitation].
+  InvitationSettings? invitation;
+  final _invitations = StreamController<InvitationSettings?>.broadcast();
+
+  void setInvitation(InvitationSettings? settings) {
+    invitation = settings;
+    _invitations.add(settings);
+  }
+
+  @override
+  Stream<InvitationSettings?> watchInvitation(String userId) async* {
+    yield invitation;
+    yield* _invitations.stream;
+  }
+
   @override
   Future<StudySettings?> studySettings(String userId) async => _onboarded
       ? (

@@ -24,6 +24,10 @@ abstract interface class SessionRepository {
 
   /// The days (local midnights) with a session since [since].
   Future<Set<DateTime>> daysSince(String courseId, DateTime since);
+
+  /// When the latest session of [userId] began (UTC), and again after
+  /// each new one; null before the first.
+  Stream<DateTime?> watchLatestStart(String userId);
 }
 
 String _uuidV7() => const Uuid().v7();
@@ -116,4 +120,18 @@ class DriftSessionRepository implements SessionRepository {
     final local = instant.toLocal();
     return DateTime(local.year, local.month, local.day);
   }
+
+  @override
+  Stream<DateTime?> watchLatestStart(String userId) =>
+      (_db.select(_db.sessions)
+            ..where((t) => t.profileId.equals(userId))
+            ..orderBy([
+              (t) => OrderingTerm(
+                expression: t.startedAt,
+                mode: OrderingMode.desc,
+              ),
+            ])
+            ..limit(1))
+          .watchSingleOrNull()
+          .map((row) => row?.startedAt);
 }

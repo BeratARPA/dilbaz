@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dilbaz_app/app/routes.dart';
-import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/features/progress/application/progress_controller.dart';
 import 'package:dilbaz_app/features/progress/application/progress_view.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -170,6 +169,8 @@ class _Monthly extends ConsumerWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final material = MaterialLocalizations.of(context);
+    // Watched: it stays while a recording made elsewhere comes down.
+    final fetching = ref.watch(recordingPlaybackProvider);
     final anchors = [
       for (final anchor in view.anchors)
         if (anchor.recordings.isNotEmpty || anchor.months.isNotEmpty) anchor,
@@ -196,10 +197,21 @@ class _Monthly extends ConsumerWidget {
                     children: [
                       for (final recording in anchor.recordings)
                         OutlinedButton.icon(
-                          onPressed: () => unawaited(
-                            ref.read(clipPlayerProvider).play(recording.path),
-                          ),
-                          icon: const Icon(Icons.play_arrow),
+                          onPressed: fetching != null
+                              ? null
+                              : () => unawaited(
+                                  ref
+                                      .read(recordingPlaybackProvider.notifier)
+                                      .play(recording.path),
+                                ),
+                          icon: fetching == recording.path
+                              ? const SizedBox.square(
+                                  dimension: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.play_arrow),
                           label: Text(
                             '${_momentText(context, recording.moment)} · '
                             '${material.formatShortDate(recording.day)}',

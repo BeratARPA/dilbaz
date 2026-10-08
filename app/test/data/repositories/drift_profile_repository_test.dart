@@ -164,6 +164,35 @@ void main() {
     expect((await course()).updatedAt, clock);
   });
 
+  test('the daily invitation comes from the profile, as it changes', () async {
+    final seen = <InvitationSettings?>[];
+    final sub = repository.watchInvitation(userId).listen(seen.add);
+    addTearDown(sub.cancel);
+    await pumpEventQueue();
+    expect(seen, [null]);
+
+    await repository.create(userId, answers, finished: true);
+    await pumpEventQueue();
+    expect(seen.last, (
+      wanted: true,
+      anchor: 'after_dinner',
+      time: (hour: 20, minute: 0),
+      quiet: null,
+    ));
+
+    await (db.update(db.profiles)..where((t) => t.id.equals(userId))).write(
+      const ProfilesCompanion(
+        quietHours: Value({'from': '22:30', 'to': '08:00'}),
+      ),
+    );
+    await pumpEventQueue();
+    final quiet = seen.last!.quiet!;
+    expect(
+      (quiet.from, quiet.to),
+      ((hour: 22, minute: 30), (hour: 8, minute: 0)),
+    );
+  });
+
   test('the welcome flow is over only once it is finished', () async {
     final seen = expectLater(
       repository.watchOnboarded(userId),

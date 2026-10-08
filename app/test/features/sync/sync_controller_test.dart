@@ -5,6 +5,8 @@ import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/sync/sync_providers.dart';
 import 'package:dilbaz_app/data/sync/sync_remote.dart';
 import 'package:dilbaz_app/data/sync/sync_repository.dart';
+import 'package:dilbaz_app/data/tasks/recording_files.dart';
+import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
@@ -46,8 +48,20 @@ final class FakeLateChecks implements LateChecks {
   }
 }
 
+/// Recordings' audio that counts its uploads.
+final class FakeRecordingFiles implements RecordingFiles {
+  int uploads = 0;
+
+  @override
+  Future<int> uploadWaiting() async => uploads++;
+
+  @override
+  Future<String?> playable(String audioPath) async => null;
+}
+
 void main() {
   late FakeSyncRepository repository;
+  late FakeRecordingFiles files;
   late FakeLateChecks checks;
   late ProviderContainer container;
 
@@ -55,11 +69,13 @@ void main() {
   Future<void> start(WidgetTester tester, {String? signedIn = userId}) async {
     repository = FakeSyncRepository();
     checks = FakeLateChecks();
+    files = FakeRecordingFiles();
     container = ProviderContainer(
       overrides: [
         currentUserIdProvider.overrideWith((ref) => Stream.value(signedIn)),
         syncRepositoryProvider.overrideWithValue(repository),
         lateChecksProvider.overrideWithValue(checks),
+        recordingFilesProvider.overrideWithValue(files),
         clockProvider.overrideWithValue(() => t0),
       ],
     )..listen(syncControllerProvider, (_, _) {});
@@ -154,8 +170,9 @@ void main() {
       changedAt: t0,
       failure: SyncFailure.network,
     ));
-    // Without a sync, nothing goes to the tutor.
+    // Without a sync, nothing goes to the tutor or the server's audio.
     expect(checks.runs, hasLength(2));
+    expect(files.uploads, 2);
     container.dispose();
   });
 

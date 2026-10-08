@@ -30,14 +30,17 @@ class RecordingPipeline {
     required this._recordings,
     required this._speech,
     required this._tutor,
+    required this._now,
   });
 
+  final DateTime Function() _now;
   final RecordingStore _store;
   final RecordingRepository _recordings;
   final SpeechRepository _speech;
   final TutorRepository _tutor;
 
-  /// Keeps [audio] as the recording [id] of [taskRef].
+  /// Keeps [audio] as the recording [id] of [taskRef], on this device; it
+  /// goes up to the server after a sync (RecordingFiles).
   Future<void> keep({
     required String id,
     required String userId,
@@ -47,13 +50,21 @@ class RecordingPipeline {
     bool isAssessment = false,
     String? assessmentId,
   }) async {
-    final path = await _store.save(id, audio);
+    final kept = await _store.save(id, audio);
     await _recordings.create(
       id: id,
       userId: userId,
       courseId: courseId,
       taskRef: taskRef,
-      audioPath: path,
+      // Kept here under the same file name (RecordingStore.find).
+      audioPath: kept == null
+          ? null
+          : recordingStoragePath(
+              userId: userId,
+              id: id,
+              at: _now(),
+              contentType: audio.contentType,
+            ),
       duration: audio.duration,
       isAssessment: isAssessment,
       assessmentId: assessmentId,

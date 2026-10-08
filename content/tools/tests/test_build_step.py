@@ -460,7 +460,11 @@ def test_the_pack_tables_are_the_app_content_tables() -> None:
             (column["name"], column["nullable"]) for column in entity["data"]["columns"]
         ]
         for entity in schema["entities"]
-        if entity["type"] == "table" and entity["data"]["name"].startswith("content_")
+        if entity["type"] == "table"
+        and entity["data"]["name"].startswith("content_")
+        # Synced user tables (content_reports) carry pending_push; pack
+        # mirrors never do.
+        and not any(column["name"] == "pending_push" for column in entity["data"]["columns"])
     }
     del app["content_packs"]
 

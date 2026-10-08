@@ -39,6 +39,41 @@ class DriftProfileRepository implements ProfileRepository {
           .watchSingleOrNull()
           .map((row) => _consented(row?.settings));
 
+  @override
+  Stream<InvitationSettings?> watchInvitation(String userId) =>
+      (_db.select(_db.profiles)..where((t) => t.id.equals(userId)))
+          .watchSingleOrNull()
+          .map((row) => row == null ? null : _invitation(row));
+
+  static InvitationSettings _invitation(ProfileRow row) {
+    final (anchor, time) = switch (row.anchors) {
+      [{'label': final String label, 'time': final String time}, ...] => (
+        label,
+        parseDayTime(time),
+      ),
+      _ => (null, null),
+    };
+    final quiet = switch (row.quietHours) {
+      {'from': final String from, 'to': final String to} => (
+        parseDayTime(from),
+        parseDayTime(to),
+      ),
+      _ => (null, null),
+    };
+    return (
+      wanted: row.settings['daily_invitation'] == true,
+      anchor: anchor,
+      time: time,
+      quiet: switch (quiet) {
+        (final DayTime from, final DayTime to) => QuietHours(
+          from: from,
+          to: to,
+        ),
+        _ => null,
+      },
+    );
+  }
+
   static const _audioConsent = 'audio_consent';
   static const _silentMode = 'silent_mode';
 

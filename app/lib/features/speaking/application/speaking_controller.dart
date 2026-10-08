@@ -38,6 +38,7 @@ RecordingPipeline recordingPipeline(Ref ref) => RecordingPipeline(
   recordings: ref.watch(recordingRepositoryProvider),
   speech: ref.watch(speechRepositoryProvider),
   tutor: ref.watch(tutorRepositoryProvider),
+  now: ref.watch(clockProvider),
 );
 
 /// What a speaking task works with, found once.

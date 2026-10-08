@@ -4,6 +4,7 @@ import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/sync/sync_providers.dart';
 import 'package:dilbaz_app/data/sync/sync_remote.dart';
+import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
 import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:flutter/widgets.dart';
@@ -27,7 +28,7 @@ typedef SyncStatus = ({
 ///
 /// Without a connection nothing is lost: the outbox waits for the next
 /// time. After a sync, answers that wait for the tutor are checked
-/// ([LateChecks]).
+/// ([LateChecks]) and recordings' audio goes up (RecordingFiles).
 @Riverpod(keepAlive: true)
 class SyncController extends _$SyncController {
   static const period = Duration(minutes: 5);
@@ -84,6 +85,9 @@ class SyncController extends _$SyncController {
     switch (result) {
       case Ok(value: (pushed: _, :final pulled)):
         final checked = await ref.read(lateChecksProvider).run(userId);
+        if (!ref.mounted) return;
+        // Recordings' audio goes up once their rows are on the server.
+        await ref.read(recordingFilesProvider).uploadWaiting();
         if (!ref.mounted) return;
         final now = ref.read(clockProvider)();
         state = (

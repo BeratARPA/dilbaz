@@ -33,6 +33,7 @@ dependencies:
   share_handler: ^0.0.25
   speech_to_text: 7.5.0
   supabase_flutter: ^2.17.2
+  timezone: ^0.11.1
   uuid: ^4.6.0
 
 dev_dependencies:

@@ -30,8 +30,9 @@ typedef CorrectedSentence = ({
 /// measures, filled in as processing goes on; and what a task leaves
 /// behind: its attempt (I-03) and the corrected sentences as cards.
 abstract interface class RecordingRepository {
-  /// A new recording of [taskRef]; [audioPath] is null where audio cannot
-  /// be kept.
+  /// A new recording of [taskRef]. [audioPath] names its audio by where it
+  /// goes on the server (`recordingStoragePath`); a test recording's audio
+  /// is queued to go up with the row. Null where audio cannot be kept.
   Future<void> create({
     required String id,
     required String userId,
@@ -146,6 +147,12 @@ class DriftRecordingRepository implements RecordingRepository {
           ),
         );
     await _queue(_recordings, id, 'upsert');
+    // Test recordings are kept until the learner removes them, so their
+    // audio goes up. A task's audio is deleted after 30 days (docs/14 §4);
+    // it waits until the server can delete it too (F3-08).
+    if (audioPath != null && isAssessment) {
+      await _queue(_recordings, id, 'upload');
+    }
   });
 
   /// `recordings.asr`: the recognizer and its words (docs/13 §2.4).
