@@ -6,6 +6,7 @@ import 'package:dilbaz_app/data/sync/sync_providers.dart';
 import 'package:dilbaz_app/data/sync/sync_remote.dart';
 import 'package:dilbaz_app/data/sync/sync_repository.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
+import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,17 +34,32 @@ final class FakeSyncRepository implements SyncRepository {
   Stream<void> watchWaiting() => waiting.stream;
 }
 
+/// Late checks that settle as many answers as told.
+final class FakeLateChecks implements LateChecks {
+  int settles = 0;
+  final runs = <String>[];
+
+  @override
+  Future<int> run(String userId) async {
+    runs.add(userId);
+    return settles;
+  }
+}
+
 void main() {
   late FakeSyncRepository repository;
+  late FakeLateChecks checks;
   late ProviderContainer container;
 
   /// The controller kept alive, with [signedIn] the learner's id.
   Future<void> start(WidgetTester tester, {String? signedIn = userId}) async {
     repository = FakeSyncRepository();
+    checks = FakeLateChecks();
     container = ProviderContainer(
       overrides: [
         currentUserIdProvider.overrideWith((ref) => Stream.value(signedIn)),
         syncRepositoryProvider.overrideWithValue(repository),
+        lateChecksProvider.overrideWithValue(checks),
         clockProvider.overrideWithValue(() => t0),
       ],
     )..listen(syncControllerProvider, (_, _) {});
@@ -121,22 +137,33 @@ void main() {
     container.dispose();
   });
 
-  testWidgets('the status tells when the device was in step and when rows '
-      'came down', (tester) async {
+  testWidgets('the status tells when the device was in step and when the '
+      "learner's data changed", (tester) async {
     await start(tester);
-    expect(status(), (lastSyncAt: t0, pulledAt: null, failure: null));
+    expect(status(), (lastSyncAt: t0, changedAt: null, failure: null));
+    expect(checks.runs, [userId]);
 
     repository.next = const Ok((pushed: 0, pulled: 3));
     await container.read(syncControllerProvider.notifier).sync();
-    expect(status(), (lastSyncAt: t0, pulledAt: t0, failure: null));
+    expect(status(), (lastSyncAt: t0, changedAt: t0, failure: null));
 
     repository.next = const Err(SyncFailure.network);
     await container.read(syncControllerProvider.notifier).sync();
     expect(status(), (
       lastSyncAt: t0,
-      pulledAt: t0,
+      changedAt: t0,
       failure: SyncFailure.network,
     ));
+    // Without a sync, nothing goes to the tutor.
+    expect(checks.runs, hasLength(2));
+    container.dispose();
+  });
+
+  testWidgets('answers checked late change the data too', (tester) async {
+    await start(tester);
+    checks.settles = 2;
+    await container.read(syncControllerProvider.notifier).sync();
+    expect(status().changedAt, t0);
     container.dispose();
   });
 

@@ -66,6 +66,18 @@ Response json(Request request, int status, Object? body) => Response(
 void main() {
   gapSuggestTests();
   speakingAnnotateTests();
+  test('a request kept with its attempt reads back the same', () {
+    expect(AnswerCheckRequest.fromJson(request.toJson()), request);
+    final heard = request.copyWith(
+      typed: false,
+      asrConfidence: 0.75,
+      contextNote: 'Arkadaşına',
+      grammarCodes: const [],
+      previousResponses: const [],
+    );
+    expect(AnswerCheckRequest.fromJson(heard.toJson()), heard);
+  });
+
   group('SupabaseTutorRepository (docs/07-ai-tutor.md §4.1)', () {
     test('sends the route its body and reads the verdict', () async {
       late Request seen;

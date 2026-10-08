@@ -5,16 +5,18 @@ import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/sync/sync_providers.dart';
 import 'package:dilbaz_app/data/sync/sync_remote.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
+import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_controller.g.dart';
 
 /// How the device and the server last met: when they were last in step,
-/// when rows last came down, and what went wrong since, if anything.
+/// when the learner's data last changed by it (rows came down, answers
+/// were checked late), and what went wrong since, if anything.
 typedef SyncStatus = ({
   DateTime? lastSyncAt,
-  DateTime? pulledAt,
+  DateTime? changedAt,
   SyncFailure? failure,
 });
 
@@ -24,7 +26,8 @@ typedef SyncStatus = ({
 /// [settle], and when the app leaves the screen.
 ///
 /// Without a connection nothing is lost: the outbox waits for the next
-/// time.
+/// time. After a sync, answers that wait for the tutor are checked
+/// ([LateChecks]).
 @Riverpod(keepAlive: true)
 class SyncController extends _$SyncController {
   static const period = Duration(minutes: 5);
@@ -32,7 +35,7 @@ class SyncController extends _$SyncController {
 
   static const SyncStatus _idle = (
     lastSyncAt: null,
-    pulledAt: null,
+    changedAt: null,
     failure: null,
   );
 
@@ -78,19 +81,23 @@ class SyncController extends _$SyncController {
   Future<void> _run(String userId) async {
     final result = await ref.read(syncRepositoryProvider).sync(userId);
     if (!ref.mounted) return;
-    final now = ref.read(clockProvider)();
-    state = switch (result) {
-      Ok(value: (pushed: _, :final pulled)) => (
-        lastSyncAt: now,
-        pulledAt: pulled > 0 ? now : state.pulledAt,
-        failure: null,
-      ),
-      Err(:final error) => (
-        lastSyncAt: state.lastSyncAt,
-        pulledAt: state.pulledAt,
-        failure: error,
-      ),
-    };
+    switch (result) {
+      case Ok(value: (pushed: _, :final pulled)):
+        final checked = await ref.read(lateChecksProvider).run(userId);
+        if (!ref.mounted) return;
+        final now = ref.read(clockProvider)();
+        state = (
+          lastSyncAt: now,
+          changedAt: pulled + checked > 0 ? now : state.changedAt,
+          failure: null,
+        );
+      case Err(:final error):
+        state = (
+          lastSyncAt: state.lastSyncAt,
+          changedAt: state.changedAt,
+          failure: error,
+        );
+    }
   }
 
   void _start() {

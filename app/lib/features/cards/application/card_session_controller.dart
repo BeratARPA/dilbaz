@@ -7,6 +7,7 @@ import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/audio/recorder_config.dart';
 import 'package:dilbaz_app/data/repositories/attempt_draft.dart';
 import 'package:dilbaz_app/data/repositories/card_content.dart';
+import 'package:dilbaz_app/data/repositories/card_feedback_repository.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
@@ -59,6 +60,9 @@ typedef _Judged = ({
 
   /// Why the LLM gave no answer.
   TutorFailure? failure,
+
+  /// What the LLM was asked; kept with an answer that waits for it.
+  AnswerCheckRequest? request,
 });
 
 /// What the session keeps from its start.
@@ -112,6 +116,10 @@ final class _Review {
   int? typingLatency;
   bool playing = false;
   bool saved = false;
+
+  /// "Cevabım da doğru olabilir": the question to ask the tutor again,
+  /// written with the review.
+  AnswerCheckRequest? dispute;
 }
 
 /// A card session (A00, A01, A02; docs/03-activities.md, docs/09 §5.3).
@@ -299,6 +307,8 @@ class CardSessionController extends _$CardSessionController {
             _hint(review, hintLevel + 1) != null,
         canReveal: asking && (state.misses > 0 || state.reprompted),
         canRetype: _canRetype(review),
+        canDispute: _canDispute(review),
+        disputed: review.dispute != null,
         last: review.last,
         offline: review.offline,
         speechFailure: review.speechFailure,
@@ -320,6 +330,16 @@ class CardSessionController extends _$CardSessionController {
       _ => false,
     };
   }
+
+  /// A review that ended without a plain recall, with an answer the
+  /// learner gave (docs/03 §0.5 step 5).
+  static bool _canDispute(_Review review) => switch (review.phase) {
+    CardEnded(:final outcome, :final almost) =>
+      review.dispute == null &&
+          review.answers.isNotEmpty &&
+          (outcome is! Recalled || almost),
+    _ => false,
+  };
 
   /// Hint [level] (1–3): the LLM's words, else the template.
   static Hint? _hint(_Review review, int level) {
@@ -552,6 +572,45 @@ class CardSessionController extends _$CardSessionController {
     _apply(review, pending.answer, pending.judged);
   }
 
+  /// "Cevabım da doğru olabilir": the last answer goes to the tutor again
+  /// and to the content reports, with the review. The verdict stands until
+  /// the tutor says otherwise; nothing is accepted on the learner's word
+  /// (docs/03 §0.5 step 5).
+  void dispute() {
+    final review = _review;
+    final before = review?.before;
+    if (review == null || before == null || !_canDispute(review)) return;
+    final answers = review.answers;
+    review.dispute = _request(
+      review,
+      answers.last,
+      state: before.state,
+      key: before.key,
+      earlier: answers.sublist(0, answers.length - 1),
+    );
+    _emit(review);
+  }
+
+  /// "Bu içerikte hata var": reports the content on screen (docs/10 §8).
+  Future<void> report(ReportReason reason, {String? note}) async {
+    final review = _review;
+    if (review == null) return;
+    final content = review.entry.content;
+    await ref
+        .read(cardFeedbackRepositoryProvider)
+        .report(
+          userId: _session.userId,
+          itemRef: content.itemKey,
+          reason: reason,
+          note: note,
+          context: {
+            'carrier': content.carrierKey,
+            'prompt_l1': content.prompt,
+            'reference': content.answerKey.reference,
+          },
+        );
+  }
+
   /// Opens the next hint (H2, H3) after a miss.
   void nextHint() {
     final review = _review;
@@ -658,11 +717,22 @@ class CardSessionController extends _$CardSessionController {
     final checker = _session.checker;
     final matched = checker.match(answer.text, review.key);
     if (matched != null) {
-      return (evaluation: matched, llm: null, template: null, failure: null);
+      return (
+        evaluation: matched,
+        llm: null,
+        template: null,
+        failure: null,
+        request: null,
+      );
     }
-    final result = await ref
-        .read(tutorRepositoryProvider)
-        .answerCheck(_request(review, answer));
+    final request = _request(
+      review,
+      answer,
+      state: review.state,
+      key: review.key,
+      earlier: review.answers,
+    );
+    final result = await ref.read(tutorRepositoryProvider).answerCheck(request);
     final aligned = checker.checkWithoutLlm(answer.text, review.key);
     return switch (result) {
       Ok(value: final check) => (
@@ -670,19 +740,29 @@ class CardSessionController extends _$CardSessionController {
         llm: check,
         template: aligned.ladder,
         failure: null,
+        request: request,
       ),
       Err(:final error) => (
         evaluation: aligned.evaluation,
         llm: null,
         template: aligned.ladder,
         failure: error,
+        request: request,
       ),
     };
   }
 
-  AnswerCheckRequest _request(_Review review, _Answer answer) {
+  /// The check of [answer] as the review stood before it: its [state],
+  /// its answer [key] and the answers [earlier].
+  AnswerCheckRequest _request(
+    _Review review,
+    _Answer answer, {
+    required CardReview state,
+    required AnswerKey key,
+    required List<_Answer> earlier,
+  }) {
     final content = review.entry.content;
-    final listed = _session.checker.listed(review.key);
+    final listed = _session.checker.listed(key);
     return AnswerCheckRequest(
       l1: _session.settings.l1,
       l2: _session.l2,
@@ -690,19 +770,19 @@ class CardSessionController extends _$CardSessionController {
       explainInL1: _session.scaffolds.explainInL1,
       itemKey: content.itemKey,
       prompt: content.prompt,
-      reference: review.key.reference,
+      reference: key.reference,
       variants: listed.withTarget,
       alternatives: listed.withoutTarget,
       targetSpan: content.targetSpan,
       answer: answer.text,
       typed: !_heard(answer),
-      attemptNo: min(review.state.misses + 1, CardReview.defaultMaxAttempts),
+      attemptNo: min(state.misses + 1, CardReview.defaultMaxAttempts),
       grammarCodes: content.grammarCodes.take(10).toList(),
       contextNote: content.contextNote,
       asrConfidence: _heard(answer) ? _confidence(answer.heard!) : null,
       previousResponses: [
-        for (final earlier in review.answers.reversed.take(2).toList().reversed)
-          earlier.text,
+        for (final before in earlier.reversed.take(2).toList().reversed)
+          before.text,
       ],
     );
   }
@@ -819,6 +899,9 @@ class CardSessionController extends _$CardSessionController {
               'route': 'answer_check',
               'pending': judged.evaluation.llmPending,
               'code': failure.name,
+              // Asked again once the tutor can be reached (LateChecks).
+              if (judged.evaluation.llmPending)
+                'request': ?judged.request?.toJson(),
             }
           : null,
     );
@@ -893,7 +976,7 @@ class CardSessionController extends _$CardSessionController {
       hintsUsed: max(attempts.last.hintsUsed, hints),
       hintMaxLevel: max(attempts.last.hintMaxLevel, hints),
     );
-    await cards.recordReview(
+    final ids = await cards.recordReview(
       userId: _session.userId,
       courseId: _session.courseId,
       deviceId: _session.deviceId,
@@ -902,6 +985,23 @@ class CardSessionController extends _$CardSessionController {
       rating: rating,
       after: after,
     );
+    if (review.dispute case final request?) {
+      final content = entry.content;
+      await ref
+          .read(cardFeedbackRepositoryProvider)
+          .dispute(
+            userId: _session.userId,
+            attemptId: ids.last,
+            itemRef: content.itemKey,
+            answer: request.answer,
+            request: request.toJson(),
+            context: {
+              'carrier': content.carrierKey,
+              'prompt_l1': content.prompt,
+              'reference': request.reference,
+            },
+          );
+    }
     if (entry.card == null) {
       _introduced++;
     } else {

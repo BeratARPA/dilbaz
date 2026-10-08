@@ -312,7 +312,7 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 | Kullanıcının veri onayı yok | Groq ya da deterministik yol (§3) |
 | LLM ile deterministik sonuç çelişirse | Deterministik "doğru" ise her zaman doğru kabul edilir |
 
-**İstemci (F1-16):** Kart, cevabı en çok 15 sn bekler (`SupabaseTutorRepository.answerCheckWait`; rotanın model başına sınırı). Sonra isteği keser ve deterministik yola geçer; kullanıcıya nötr bir satır gösterilir. Denemenin `llm` alanı, LLM cevap verdiyse `{route, pending: false, provider, model, catalog, confidence}`, vermediyse `{route, pending, code}` olur. `code` değerleri: `network`, `quota`, `unavailable`, `refused`, `failed`, `invalid`, `unknown`. Bekleyen kontrollerin bağlantı gelince çalışması (`llm_resolved`) F1-21'de.
+**İstemci (F1-16):** Kart, cevabı en çok 15 sn bekler (`SupabaseTutorRepository.answerCheckWait`; rotanın model başına sınırı). Sonra isteği keser ve deterministik yola geçer; kullanıcıya nötr bir satır gösterilir. Denemenin `llm` alanı, LLM cevap verdiyse `{route, pending: false, provider, model, catalog, confidence}`, vermediyse `{route, pending, code}` olur. `code` değerleri: `network`, `quota`, `unavailable`, `refused`, `failed`, `invalid`, `unknown`. Deterministik yolda `uncertain` kalan denemede `llm` alanı sorulan isteği de taşır (`request`). Her başarılı senkrondan sonra bu istekler yeniden sorulur (F1-21, `LateChecks`, en çok 10 cevap); sonuç `llm_resolved` ekidir (`13` §2.3).
 
 ## 8. Değerlendirme (eval) seti
 

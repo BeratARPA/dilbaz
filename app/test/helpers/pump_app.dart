@@ -70,7 +70,7 @@ List<Override> appOverrides({
   contentControllerProvider.overrideWithBuild((ref, notifier) => readyContent),
   // The sync has its own tests; here the app stays on the device.
   syncControllerProvider.overrideWithBuild(
-    (ref, notifier) => (lastSyncAt: null, pulledAt: null, failure: null),
+    (ref, notifier) => (lastSyncAt: null, changedAt: null, failure: null),
   ),
   assessmentRepositoryProvider.overrideWithValue(
     assessments ?? FakeAssessmentRepository(open: false),

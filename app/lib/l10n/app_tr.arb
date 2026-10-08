@@ -1837,5 +1837,53 @@
   "progressNotMeasured": "henüz ölçülmedi",
   "@progressNotMeasured": {
     "description": "Progress: a month whose recording waits."
+  },
+  "cardsDispute": "Cevabım da doğru olabilir",
+  "@cardsDispute": {
+    "description": "Card end: the learner disputes the verdict; the answer goes to the tutor again (docs/03 §0.5 step 5)."
+  },
+  "cardsDisputed": "Not aldık. Cevabına yeniden bakılacak.",
+  "@cardsDisputed": {
+    "description": "Card end: after a dispute; nothing changes now, the tutor looks again later."
+  },
+  "reportTitle": "Bu içerikte hata var",
+  "@reportTitle": {
+    "description": "Report sheet title (long press on a card, docs/09 §5.3)."
+  },
+  "reportQuestion": "Neyi fark ettin?",
+  "@reportQuestion": {
+    "description": "Report sheet: asks what is wrong."
+  },
+  "reportReasonMeaning": "Türkçe anlamı yanlış",
+  "@reportReasonMeaning": {
+    "description": "Report reason: the Turkish meaning is wrong."
+  },
+  "reportReasonSentence": "İngilizce cümle yanlış ya da doğal değil",
+  "@reportReasonSentence": {
+    "description": "Report reason: the English sentence is wrong or unnatural."
+  },
+  "reportReasonAudio": "Ses bozuk ya da yanlış",
+  "@reportReasonAudio": {
+    "description": "Report reason: the audio is broken or wrong."
+  },
+  "reportReasonOther": "Başka bir şey",
+  "@reportReasonOther": {
+    "description": "Report reason: something else."
+  },
+  "reportNoteLabel": "Not (istersen)",
+  "@reportNoteLabel": {
+    "description": "Report sheet: optional note field."
+  },
+  "reportSend": "Gönder",
+  "@reportSend": {
+    "description": "Report sheet: sends the report."
+  },
+  "reportCancel": "Vazgeç",
+  "@reportCancel": {
+    "description": "Report sheet: closes without sending."
+  },
+  "reportThanks": "Teşekkürler. Bakacağız.",
+  "@reportThanks": {
+    "description": "After a report was sent."
   }
 }

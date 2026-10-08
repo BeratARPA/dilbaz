@@ -4,6 +4,7 @@ import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/card_page.dart';
+import 'package:dilbaz_app/features/cards/presentation/views/content_report_sheet.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/introduction_page.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/session_done_page.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -57,11 +58,20 @@ class CardSessionScreen extends ConsumerWidget {
             onPressed: () => unawaited(leave()),
           ),
           actions: [
-            if (progress != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Center(child: Text(progress)),
+            if (progress != null) ...[
+              Center(child: Text(progress)),
+              IconButton(
+                icon: const Icon(Icons.outlined_flag),
+                tooltip: l10n.reportTitle,
+                onPressed: () => unawaited(
+                  askContentReport(
+                    context,
+                    (reason, note) =>
+                        ref.read(session.notifier).report(reason, note: note),
+                  ),
+                ),
               ),
+            ],
           ],
         ),
         body: SafeArea(

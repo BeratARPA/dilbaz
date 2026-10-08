@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:dilbaz_app/data/repositories/card_feedback_repository.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
+import 'package:dilbaz_app/features/cards/presentation/views/content_report_sheet.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +23,8 @@ class IntroductionPage extends ConsumerWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final controller = ref.read(session.notifier);
+    Future<void> report(ReportReason reason, String? note) =>
+        controller.report(reason, note: note);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -33,9 +37,12 @@ class IntroductionPage extends ConsumerWidget {
               color: theme.colorScheme.primary,
             ),
           ),
-          Semantics(
-            header: true,
-            child: Text(view.headword, style: theme.textTheme.headlineMedium),
+          ReportOnLongPress(
+            onReport: report,
+            child: Semantics(
+              header: true,
+              child: Text(view.headword, style: theme.textTheme.headlineMedium),
+            ),
           ),
           Text(view.meaning, style: theme.textTheme.titleMedium),
           Card.outlined(
@@ -50,7 +57,13 @@ class IntroductionPage extends ConsumerWidget {
                     l10n.cardsSaySentence,
                     style: theme.textTheme.labelMedium,
                   ),
-                  Text(view.sentence, style: theme.textTheme.headlineSmall),
+                  ReportOnLongPress(
+                    onReport: report,
+                    child: Text(
+                      view.sentence,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                  ),
                   Text(view.sentenceMeaning, style: theme.textTheme.bodyLarge),
                   if (view.hasClip)
                     FilledButton.tonalIcon(

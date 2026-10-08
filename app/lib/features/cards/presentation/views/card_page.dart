@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:dilbaz_app/app/theme/feedback_colors.dart';
+import 'package:dilbaz_app/data/repositories/card_feedback_repository.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_app/features/cards/presentation/hint_text.dart';
+import 'package:dilbaz_app/features/cards/presentation/views/content_report_sheet.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/hold_to_speak_button.dart';
 import 'package:dilbaz_app/l10n/audio_failure_text.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
@@ -55,6 +57,9 @@ class _CardPageState extends ConsumerState<CardPage> {
 
   CardSessionController get _controller => ref.read(widget.session.notifier);
 
+  Future<void> _report(ReportReason reason, String? note) =>
+      _controller.report(reason, note: note);
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -73,9 +78,12 @@ class _CardPageState extends ConsumerState<CardPage> {
                 : l10n.cardsTypeIt,
             style: theme.textTheme.labelLarge,
           ),
-          Semantics(
-            header: true,
-            child: Text(view.prompt, style: theme.textTheme.headlineSmall),
+          ReportOnLongPress(
+            onReport: _report,
+            child: Semantics(
+              header: true,
+              child: Text(view.prompt, style: theme.textTheme.headlineSmall),
+            ),
           ),
           if (view.contextNote case final note?)
             _Line(icon: Icons.chat_bubble_outline, text: note),
@@ -275,7 +283,10 @@ class _CardPageState extends ConsumerState<CardPage> {
       ),
       if (phase.correction case final correction?)
         Text(l10n.cardsCorrection(correction)),
-      Text(phase.sentence, style: theme.textTheme.headlineSmall),
+      ReportOnLongPress(
+        onReport: _report,
+        child: Text(phase.sentence, style: theme.textTheme.headlineSmall),
+      ),
       if (view.hasClip)
         Align(
           alignment: Alignment.centerLeft,
@@ -289,6 +300,17 @@ class _CardPageState extends ConsumerState<CardPage> {
         ),
       Text(l10n.cardsSayOnce, style: theme.textTheme.bodyLarge),
       ..._retype(context),
+      if (view.canDispute)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: _controller.dispute,
+            icon: const Icon(Icons.rate_review_outlined),
+            label: Text(l10n.cardsDispute),
+          ),
+        ),
+      if (view.disputed)
+        _Line(icon: Icons.check_circle_outline, text: l10n.cardsDisputed),
       Align(
         alignment: Alignment.centerRight,
         child: FilledButton(

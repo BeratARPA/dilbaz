@@ -69,8 +69,8 @@ abstract class TodayView with _$TodayView {
 /// The Today screen's view; null before the welcome flow or the packs.
 @riverpod
 Future<TodayView?> today(Ref ref) async {
-  // Rows from another device change the day.
-  ref.watch(syncControllerProvider.select((status) => status.pulledAt));
+  // Rows from another device, or answers checked late, change the day.
+  ref.watch(syncControllerProvider.select((status) => status.changedAt));
   final planned = await planCards(ref);
   if (planned == null) return null;
   final now = ref.watch(clockProvider)();

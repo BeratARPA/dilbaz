@@ -47,6 +47,34 @@ abstract class AnswerCheckRequest with _$AnswerCheckRequest {
 
   const new _();
 
+  /// A body made by [toJson], kept with an attempt to ask again later.
+  factory fromJson(Map<String, Object?> json) {
+    final ctx = json['ctx']! as Map<String, Object?>;
+    final item = json['item']! as Map<String, Object?>;
+    final response = json['response']! as Map<String, Object?>;
+    List<String> strings(Object? value) =>
+        (value! as List<Object?>).cast<String>();
+    return AnswerCheckRequest(
+      l1: ctx['l1']! as String,
+      l2: ctx['l2']! as String,
+      level: CefrLevel.values.firstWhere((l) => l.code == ctx['level']),
+      explainInL1: ctx['explain_in'] == 'l1',
+      itemKey: item['key']! as String,
+      prompt: item['prompt_l1']! as String,
+      reference: item['reference_l2']! as String,
+      variants: strings(item['variants']),
+      alternatives: strings(item['alternatives']),
+      targetSpan: item['target_span']! as String,
+      grammarCodes: strings(item['grammar_codes']),
+      contextNote: item['context_note'] as String?,
+      answer: response['text']! as String,
+      typed: response['source'] == 'typed',
+      asrConfidence: (response['asr_confidence'] as num?)?.toDouble(),
+      attemptNo: json['attempt_no']! as int,
+      previousResponses: strings(json['previous_responses']),
+    );
+  }
+
   /// The route's body.
   Map<String, Object?> toJson() => {
     'ctx': {

@@ -105,7 +105,7 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 - Birikim varsa "Hoş geldin. Önce kısa bir karışık tekrar yapalım." yazar. Kısa günde "Kısa bir gün: yalnızca tekrar." yazar.
 - **Sonraya kalanlar:**
   - 2–3 seçenek, etkinlikler geldikçe eklenir; ilki F1-19'daki konuşma görevi. O zamana kadar plan kartlardan ibarettir, diğer etkinlikler Pratik sekmesindedir.
-  - Partnerin halkadaki katkısı senkronla gelir (F1-21).
+  - Partnerin halkadaki katkısı `partner_week_summary` ile gelir (F2-09). Oturumlar F1-21'den beri sunucuda.
 - Plan aşağı çekince, bir etkinlikten dönünce ve uygulamaya dönünce yenilenir.
 - Listenin sonunda "Söyleyemedim" butonu kadar boşluk vardır.
 
@@ -127,7 +127,10 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
 - Son ekran: "Doğru." / "Neredeyse." / "Doğru cümle bu:", cümle, "Dinle", "Bir kez de sen söyle.", "Devam". Sessiz modda ses kendiliğinden çalmaz.
 - Kapatma onay istemez: biten her kart kaydedilmiştir, yarım kalan kart kaydedilmez.
 - Oturum sonunda somut sayılar: "Bu tur bitti. 12 kart tekrarladın."
-- "Bu içerikte hata var" bildirimi `content_reports` senkronuyla F1-21'de.
+- **"Bu içerikte hata var" (F1-21):** İstem, cümle ya da tanıtımda başlık uzun basılınca açılır. Uygulama çubuğundaki bayrak düğmesi de aynı şeyi yapar; uzun basma yalnızca kısayoldur, ekran okuyucular düğmeyi kullanır.
+  - Alttan açılan pencere "Neyi fark ettin?" diye sorar: Türkçe anlamı yanlış / İngilizce cümle yanlış ya da doğal değil / Ses bozuk ya da yanlış / Başka bir şey. İsteğe bağlı bir not alanı vardır.
+  - "Gönder" ile `content_reports` satırı yazılır, kartın gösterdiği taşıyıcı, istem ve cümleyle birlikte. Ardından "Teşekkürler. Bakacağız." görünür.
+- **"Cevabım da doğru olabilir" (F1-21):** Gösterim düz bir doğruyla bitmediyse son ekranda çıkar (`03` §0.5 adım 5).
 
 ### 5.4 Tanıtım (A00)
 Taşıyıcı cümle, ses, Türkçe anlam, işaretli kalıp, karşıtlık notu → "Şimdi sen söyle."

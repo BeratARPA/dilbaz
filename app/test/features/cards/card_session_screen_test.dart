@@ -120,6 +120,60 @@ void main() {
     await tapText(tester, trStrings.cardsReveal);
     expect(find.text(trStrings.cardsTheSentence), findsOneWidget);
     expect(find.text('Bada kolu.'), findsOneWidget);
+
+    // "Cevabım da doğru olabilir": noted, nothing more (docs/03 §0.5).
+    await tapText(tester, trStrings.cardsDispute);
+    expect(find.text(trStrings.cardsDisputed), findsOneWidget);
+    expect(find.text(trStrings.cardsDispute), findsNothing);
+    expect(find.text(trStrings.cardsTheSentence), findsOneWidget);
+    await tapText(tester, trStrings.cardsNext);
+    final kinds = await tester.runAsync(
+      () async => [
+        for (final row in await db.select(db.attemptAmendments).get()) row.kind,
+      ],
+    );
+    expect(kinds, ['user_dispute']);
+  });
+
+  testWidgets('a long press reports the content (docs/09 §5.3)', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    final handle = tester.ensureSemantics();
+    await openCards(tester);
+
+    await tester.longPress(find.text('bada'));
+    await tester.pumpAndSettle();
+    expect(find.text(trStrings.reportTitle), findsOneWidget);
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+    // Nothing to send before a reason is chosen.
+    final send = find.widgetWithText(FilledButton, trStrings.reportSend);
+    await tester.ensureVisible(send);
+    await tester.pumpAndSettle();
+    expect(tester.widget<FilledButton>(send).onPressed, isNull);
+
+    await tapText(tester, trStrings.reportReasonAudio);
+    await tester.enterText(find.byType(TextField), 'Hızlı sesi bozuk.');
+    // The field's own scroll into view settles first.
+    await tester.pumpAndSettle();
+    await tapText(tester, trStrings.reportSend);
+    expect(find.text(trStrings.reportTitle), findsNothing);
+    expect(find.text(trStrings.reportThanks), findsOneWidget);
+
+    final reports = await tester.runAsync(
+      () => db.select(db.contentReports).get(),
+    );
+    expect(
+      [for (final r in reports!) (r.itemRef, r.reason, r.note)],
+      [(bada, 'audio', 'Hızlı sesi bozuk.')],
+    );
+    handle.dispose();
   });
 
   testWidgets('"yanlış duyuldu" types over what was heard', (tester) async {
@@ -176,6 +230,20 @@ void main() {
     await tapText(tester, trStrings.cardsClose);
     expect(find.byType(PracticeScreen), findsOneWidget);
     expect(find.byType(CardSessionScreen), findsNothing);
+  });
+
+  testWidgets('the app bar reports the content too, for everyone', (
+    tester,
+  ) async {
+    await openCards(tester);
+    await tester.tap(find.byTooltip(trStrings.reportTitle));
+    await tester.pumpAndSettle();
+    await tapText(tester, trStrings.reportReasonMeaning);
+    await tapText(tester, trStrings.reportSend);
+    final reports = await tester.runAsync(
+      () => db.select(db.contentReports).get(),
+    );
+    expect([for (final r in reports!) (r.reason, r.note)], [('meaning', null)]);
   });
 
   testWidgets('leaving needs no confirmation', (tester) async {

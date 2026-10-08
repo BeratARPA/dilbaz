@@ -119,6 +119,13 @@ abstract class CardView with _$CardView {
     @Default(false) bool canRetype,
     LastAnswer? last,
 
+    /// The review ended without a plain recall, and its answer may be
+    /// disputed: "Cevabım da doğru olabilir" (docs/03 §0.5 step 5).
+    @Default(false) bool canDispute,
+
+    /// The learner disputed it: it is looked at again, nothing more.
+    @Default(false) bool disputed,
+
     /// Why the latest answer was checked without the LLM.
     TutorFailure? offline,
     SpeechFailure? speechFailure,

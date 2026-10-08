@@ -152,8 +152,9 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 **v1 (F1-19, `RecordingPipeline`):**
 - Kayıt cihazda saklanır (`recordings/<id>.m4a`).
 - Ses, kart gibi doğrudan `speech/transcribe`'a gider. 2 dakikalık AAC yaklaşık 0,5 MB'dir, 2 MB sınırının altında kalır.
-- Storage'a yükleme ve yolla tanıma, senkronla gelir (F1-21).
-- Bağlantı yoksa kayıt satırı transkriptsiz kalır ve görevde "Yeniden dene" çıkar. Otomatik kuyruk ve bildirim F1-21 ile F1-22'de gelir.
+- Kayıt satırları ve ölçümler senkronla sunucuya gider (F1-21). `audio-private` bucket'ı açıldı; ses yüklemesi F1-22'de.
+- Yolla tanıma gerekmedi: ses doğrudan gidiyor ve 2 MB sınırının altında kalıyor.
+- Bağlantı yoksa kayıt satırı transkriptsiz kalır ve görevde "Yeniden dene" çıkar. Otomatik kuyruk ve "Geri bildirimin hazır" bildirimi F1-22'de.
 
 ### 5.3 Çevrimdışı davranış
 

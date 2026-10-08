@@ -68,8 +68,8 @@ abstract interface class CardRepository {
 
   /// Stores a finished review in one transaction: its [attempts], chained
   /// and the last one rated, and the card's memory [after] it; both queued
-  /// for the server.
-  Future<void> recordReview({
+  /// for the server. Returns the attempts' ids, in order.
+  Future<List<String>> recordReview({
     required String userId,
     required String courseId,
     required String deviceId,
@@ -96,13 +96,51 @@ class DriftCardRepository implements CardRepository {
   static const _upsert = 'upsert';
 
   /// Verdicts that recall the target when it came through (docs/03 §0.2).
-  static bool _evidence(AttemptRow row) =>
-      row.targetOk == true &&
-      const {
-        'correct',
-        'acceptable_variant',
-        'minor_error',
-      }.contains(row.verdict);
+  static bool _recalls(String? verdict, Object? targetOk) =>
+      targetOk == true &&
+      const {'correct', 'acceptable_variant', 'minor_error'}.contains(verdict);
+
+  /// An attempt's evidence: the tutor's late verdict when there is one
+  /// (`llm_resolved`, docs/03 §0.3), else its own.
+  static bool _evidence(AttemptRow row, Map<String, Object?>? late) =>
+      switch (late) {
+        {'verdict': final String verdict} => _recalls(
+          verdict,
+          late['target_ok'],
+        ),
+        _ => _recalls(row.verdict, row.targetOk),
+      };
+
+  static const _resolved = 'llm_resolved';
+
+  /// The tutor's late verdicts on answers of [courseId] (and [itemRef]), by
+  /// attempt, with the attempts.
+  Future<List<({AttemptRow attempt, Map<String, Object?> verdict})>> _late(
+    String courseId, {
+    String? itemRef,
+  }) async {
+    final attempts = _db.attempts;
+    final amendments = _db.attemptAmendments;
+    final query =
+        _db.select(amendments).join([
+            innerJoin(attempts, attempts.id.equalsExp(amendments.attemptId)),
+          ])
+          ..where(
+            attempts.courseId.equals(courseId) &
+                amendments.kind.equals(_resolved) &
+                (itemRef == null
+                    ? const Constant(true)
+                    : attempts.itemRef.equals(itemRef)),
+          )
+          ..orderBy([OrderingTerm(expression: amendments.createdAt)]);
+    return [
+      for (final row in await query.get())
+        (
+          attempt: row.readTable(attempts),
+          verdict: row.readTable(amendments).payload,
+        ),
+    ];
+  }
 
   static StoredCard _stored(CardRow row) => (
     id: row.id,
@@ -140,16 +178,27 @@ class DriftCardRepository implements CardRepository {
               ..where((t) => t.courseId.equals(courseId) & t.rating.isNotNull())
               ..orderBy([(t) => OrderingTerm(expression: t.createdAtClient)]))
             .get();
+    final late = {
+      for (final (:attempt, :verdict) in await _late(courseId))
+        attempt.id: verdict,
+    };
+    final ids = {for (final card in cards) card.id};
+    final ofItem = <String, List<StoredCard>>{};
+    for (final card in cards) {
+      (ofItem[card.itemRef] ??= []).add(card);
+    }
     final reviews = <String, List<ReviewRecord>>{};
     for (final row in rated) {
       final after = row.cardStateAfter;
       final cardId = row.cardId;
       if (after == null || cardId == null) continue;
-      (reviews[cardId] ??= []).add(
+      final card = ids.contains(cardId) ? cardId : _merged(row, ofItem);
+      if (card == null) continue;
+      (reviews[card] ??= []).add(
         ReviewRecord(
           at: row.createdAtClient,
           rating: ReviewRating.values.firstWhere((r) => r.code == row.rating),
-          evidence: _evidence(row),
+          evidence: _evidence(row, late[row.id]),
           stability: CardMemory.fromJson(after).stability ?? 0,
         ),
       );
@@ -168,6 +217,19 @@ class DriftCardRepository implements CardRepository {
       for (final MapEntry(:key, :value) in byItem.entries)
         key: ItemEvidence(value),
     };
+  }
+
+  /// The card an attempt counts for when its own card is gone: a card this
+  /// device made before the server's card of the same item and mode is
+  /// merged into it on sync (docs/12 §6), and its attempts keep its id
+  /// (I-03). The item's only card, else its card in the answer's mode.
+  static String? _merged(AttemptRow row, Map<String, List<StoredCard>> ofItem) {
+    final cards = ofItem[row.itemRef] ?? const <StoredCard>[];
+    if (cards.length == 1) return cards.single.id;
+    for (final card in cards) {
+      if (cardActivity(card.mode) == row.activity) return card.id;
+    }
+    return null;
   }
 
   @override
@@ -299,20 +361,31 @@ class DriftCardRepository implements CardRepository {
             .get();
     final variants = <String>{};
     final alternatives = <String>{};
+    void add(AttemptRow row, Object? targetOk) {
+      if (row.prompt['carrier'] != carrierKey) return;
+      if (row.response['text'] case final String text) {
+        (targetOk == true ? variants : alternatives).add(text);
+      }
+    }
+
     for (final row in rows) {
       // Only the LLM's verdicts: a listed answer matches anyway.
-      if (row.prompt['carrier'] != carrierKey || row.llm?['provider'] == null) {
-        continue;
-      }
-      if (row.response['text'] case final String text) {
-        (row.targetOk == true ? variants : alternatives).add(text);
+      if (row.llm?['provider'] != null) add(row, row.targetOk);
+    }
+    // Answers the tutor accepted later: checked without it, or disputed.
+    for (final (:attempt, :verdict) in await _late(
+      courseId,
+      itemRef: itemRef,
+    )) {
+      if (verdict['verdict'] == _acceptableVariant) {
+        add(attempt, verdict['target_ok']);
       }
     }
     return (variants: [...variants], alternatives: [...alternatives]);
   }
 
   @override
-  Future<void> recordReview({
+  Future<List<String>> recordReview({
     required String userId,
     required String courseId,
     required String deviceId,
@@ -377,6 +450,7 @@ class DriftCardRepository implements CardRepository {
             ),
           ]);
       });
+      return ids;
     });
   }
 }

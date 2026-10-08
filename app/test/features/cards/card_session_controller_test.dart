@@ -1,7 +1,9 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
+import 'package:dilbaz_app/data/repositories/card_feedback_repository.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
 import 'package:dilbaz_app/data/repositories/session_repository.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
+import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_app/features/cards/application/card_session_controller.dart';
@@ -418,6 +420,11 @@ void main() {
       expect(attempt.rating, ReviewRating.hard.code);
       expect(attempt.llm, containsPair('pending', true));
       expect(attempt.llm, containsPair('code', 'quota'));
+      // What the LLM was asked, to ask again once it can be reached.
+      final request = AnswerCheckRequest.fromJson(
+        attempt.llm!['request']! as Map<String, Object?>,
+      );
+      expect(request, tutor.asked.single);
     });
   });
 
@@ -687,6 +694,108 @@ void main() {
     test('without the packs there is no session', () async {
       await db.delete(db.contentPacks).go();
       expect(await start(), const CardSessionState.unavailable());
+    });
+  });
+
+  group('after the answer (docs/03 §0.5 step 5, docs/10 §8)', () {
+    Future<List<AttemptAmendmentRow>> amendments() =>
+        db.select(db.attemptAmendments).get();
+    Future<List<ContentReportRow>> reports() =>
+        db.select(db.contentReports).get();
+
+    test('a missed answer may be disputed: it goes to the tutor again and '
+        'to the content reports, nothing more', () async {
+      tutor.failure = TutorFailure.network;
+      await startCard();
+      controller().switchInput();
+      await controller().submit('Kolu.');
+      expect(card().canDispute, isFalse);
+      controller().reveal();
+      expect(card().canDispute, isTrue);
+
+      controller().dispute();
+      expect((card().canDispute, card().disputed), (false, true));
+      // The verdict stands: no acceptance on the learner's word.
+      expect((card().phase as CardEnded).outcome, isA<NotRecalled>());
+      await finishCard();
+
+      final attempt = (await attempts()).single;
+      expect(attempt.rating, ReviewRating.again.code);
+      final dispute = (await amendments()).single;
+      expect(dispute.attemptId, attempt.id);
+      expect(dispute.kind, 'user_dispute');
+      expect(dispute.payload['answer'], 'Kolu.');
+      final request = AnswerCheckRequest.fromJson(
+        dispute.payload['request']! as Map<String, Object?>,
+      );
+      expect(request, tutor.asked.single);
+      final report = (await reports()).single;
+      expect(report.reason, 'answer');
+      expect(report.itemRef, bada);
+      expect(report.context, {
+        'carrier': badaSentence,
+        'prompt_l1': 'Bada kolu diye sor.',
+        'reference': 'Bada kolu.',
+        'attempt_id': attempt.id,
+        'answer': 'Kolu.',
+      });
+      final outbox = await db.select(db.outbox).get();
+      expect(
+        outbox.where((e) => e.op == 'insert').map((e) => e.targetTable),
+        containsAll(['attempt_amendments', 'content_reports']),
+      );
+    });
+
+    test('a later answer is disputed with the answers before it', () async {
+      tutor.answers.addAll([
+        for (var i = 0; i < 3; i++) llmCheck(Verdict.wrong),
+      ]);
+      await startCard();
+      controller().switchInput();
+      await controller().submit('Kolu.');
+      await controller().submit('Bada kolo!');
+      await controller().submit('Bada kol.');
+      expect((card().phase as CardEnded).outcome, isA<NotRecalled>());
+      controller().dispute();
+      await finishCard();
+      final request = AnswerCheckRequest.fromJson(
+        (await amendments()).single.payload['request']! as Map<String, Object?>,
+      );
+      expect(request.answer, 'Bada kol.');
+      expect(request.attemptNo, 3);
+      expect(request.previousResponses, ['Kolu.', 'Bada kolo!']);
+      expect(request, tutor.asked.last);
+    });
+
+    test('a plain recall is not disputed', () async {
+      await startCard();
+      controller().switchInput();
+      await controller().submit('Bada kolu.');
+      expect(card().canDispute, isFalse);
+      controller().dispute();
+      await finishCard();
+      expect(await amendments(), isEmpty);
+    });
+
+    test('"Bu içerikte hata var" keeps what the card showed', () async {
+      await start();
+      await controller().report(ReportReason.sentence, note: '  Doğal değil. ');
+      final report = (await reports()).single;
+      expect(report.reason, 'sentence');
+      expect(report.note, 'Doğal değil.');
+      expect(report.status, 'open');
+      expect(report.itemRef, bada);
+      expect(report.context, {
+        'carrier': badaSentence,
+        'prompt_l1': 'Bada kolu diye sor.',
+        'reference': 'Bada kolu.',
+      });
+      expect(report.pendingPush, isTrue);
+      final entry = (await db.select(db.outbox).get()).single;
+      expect(
+        (entry.targetTable, entry.rowId, entry.op),
+        ('content_reports', report.id, 'insert'),
+      );
     });
   });
 }

@@ -1,9 +1,10 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/attempt_draft.dart';
+import 'package:dilbaz_app/data/repositories/card_feedback_repository.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
 import 'package:dilbaz_app/data/repositories/device_repository.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
-import 'package:drift/drift.dart' show OrderingTerm;
+import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/pack_fixture.dart';
@@ -103,7 +104,7 @@ void main() {
         at: now,
       );
 
-      await cards.recordReview(
+      final ids = await cards.recordReview(
         userId: userId,
         courseId: courseId,
         deviceId: 'device-1',
@@ -120,6 +121,7 @@ void main() {
         db.attempts,
       )..orderBy([(t) => OrderingTerm(expression: t.id)])).get();
       expect(rows, hasLength(2));
+      expect(ids, [for (final row in rows) row.id]);
       final [first, last] = rows;
       expect(first.parentAttemptId, isNull);
       expect(last.parentAttemptId, first.id);
@@ -347,5 +349,116 @@ void main() {
         expect([...none.variants, ...none.alternatives], isEmpty);
       },
     );
+
+    group('after the review', () {
+      late DriftCardRepository cards;
+      late DriftCardFeedbackRepository feedback;
+      late StoredCard card;
+
+      setUp(() async {
+        cards = repository();
+        feedback = DriftCardFeedbackRepository(db, now: () => now);
+        card = await cards.introduce(
+          userId: userId,
+          courseId: courseId,
+          itemRef: 'en.ws.chicken.n.1',
+          mode: CardMode.speak,
+        );
+      });
+
+      /// An answer checked without the LLM: Hard, no evidence.
+      Future<String> undecided({String text = 'i eat chiken'}) async {
+        final after = SrsScheduler().review(
+          card.memory,
+          ReviewRating.hard,
+          at: now,
+        );
+        final ids = await cards.recordReview(
+          userId: userId,
+          courseId: courseId,
+          deviceId: 'device-1',
+          card: card,
+          attempts: [draft(verdict: 'uncertain', targetOk: false, text: text)],
+          rating: ReviewRating.hard,
+          after: after,
+        );
+        return ids.single;
+      }
+
+      Future<bool> evidence() async => (await cards.evidence(
+        courseId,
+      ))['en.ws.chicken.n.1']!.cards.single.reviews.single.evidence;
+
+      test("the tutor's late verdict corrects the evidence, not the "
+          'rating', () async {
+        final id = await undecided();
+        expect(await evidence(), isFalse);
+
+        await feedback.resolve(
+          userId: userId,
+          attemptId: id,
+          verdict: const {'verdict': 'minor_error', 'target_ok': true},
+        );
+
+        expect(await evidence(), isTrue);
+        final attempt = await db.select(db.attempts).getSingle();
+        expect(attempt.rating, ReviewRating.hard.code);
+        expect(attempt.verdict, 'uncertain');
+      });
+
+      test('a late verdict that cannot say changes nothing', () async {
+        final id = await undecided();
+        await feedback.resolve(
+          userId: userId,
+          attemptId: id,
+          verdict: const {'code': 'refused'},
+        );
+        expect(await evidence(), isFalse);
+      });
+
+      test("an answer the tutor accepts late is the learner's own", () async {
+        final id = await undecided(text: 'I have chicken every day');
+        await feedback.resolve(
+          userId: userId,
+          attemptId: id,
+          verdict: const {'verdict': 'acceptable_variant', 'target_ok': false},
+        );
+        final own = await cards.personalAnswers(
+          courseId: courseId,
+          itemRef: 'en.ws.chicken.n.1',
+          carrierKey: 'en.sent.i_eat_chicken',
+        );
+        expect(own.alternatives, ['I have chicken every day']);
+        expect(own.variants, isEmpty);
+      });
+
+      test('attempts of a card merged on sync count for the card it became '
+          '(docs/12 §6)', () async {
+        final after = SrsScheduler().review(
+          card.memory,
+          ReviewRating.good,
+          at: now,
+        );
+        await cards.recordReview(
+          userId: userId,
+          courseId: courseId,
+          deviceId: 'device-1',
+          card: card,
+          attempts: [draft()],
+          rating: ReviewRating.good,
+          after: after,
+        );
+        // The sync replaced the card with the server's card of the item.
+        await (db.update(db.cards)..where((t) => t.id.equals(card.id))).write(
+          const CardsCompanion(id: Value('server-card')),
+        );
+
+        final reviews = (await cards.evidence(
+          courseId,
+        ))['en.ws.chicken.n.1']!.cards.single.reviews;
+        expect(reviews, hasLength(1));
+        expect(reviews.single.evidence, isTrue);
+      });
+    });
   });
 }

@@ -127,7 +127,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
 
    - **`uncertain` (LLM'siz):**
      - Üretim kanıtı sayılmaz; FSRS'e Hard yazılır (§0.3).
-     - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir. Bu sonradan kontrol F1-21'de senkronla gelir; o zamana kadar deneme bekler.
+     - Deneme `llm.pending` olur. LLM erişilebilir olunca kontrol edilir; sonuç `attempt_amendments` (`llm_resolved`) olarak eklenir. Bu sonradan kontrol her başarılı senkrondan sonra çalışır (F1-21, `LateChecks`): bu cihazda verilen en çok 10 cevap, denemede saklanan istekle sorulur. LLM'e ulaşılamazsa sıradaki senkronu bekler. LLM karar veremezse (`refused`, `invalid`) sonuç `{code}` olarak yazılır ve yeniden sorulmaz.
    - **Hata etiketi eklenmez.** Paketlerde etiketleri kelime farkından kesin çıkaracak kural verisi yok; etiketler LLM'den gelir.
    - **İpucu merdiveni şablonludur** ve yalnızca yanlış sayılan cevapta üretilir. H1–H3 doğru cevaptan hiçbir kelime taşımaz (I-02):
      - H1: fark türü (kelime eksik, kelime fazla, biçim yanlış, sıra yanlış; `off_target`'ta "istenen anlam bu değil"). Metni ARB'den gelir.
@@ -139,7 +139,9 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - İtiraz `attempt_amendments` (`user_dispute`) olarak yazılır.
    - LLM varsa yeniden kontrol edilir; ayrıca içerik bildirimi olarak kaydedilir (`10` §8).
    - Kendi kendine kabul yoktur (§0.3: öz değerlendirme yok).
-   - F1-21'e kaldı: itiraz satırı senkronla birlikte gelir.
+   - **Uygulama (F1-21):** Gösterim düz bir doğruyla bitmediyse son ekranda "Cevabım da doğru olabilir" çıkar. Basınca "Not aldık. Cevabına yeniden bakılacak." yazar; sonuç ve puan değişmez.
+     - İtiraz gösterimle birlikte kaydedilir: son cevabın denemesine `user_dispute` eki (o cevabın `answer_check` isteğiyle) ve `content_reports` satırı.
+     - Yeniden kontrol, LLM'siz cevaplarınkiyle aynı yoldan gelir (adım 4). LLM kabul ederse kanıt düzelir ve cevap kişisel listeye girer.
 
 ## A02 — Yaz kartı (`card.produce_type`)
 - A01 ile aynıdır; cevap klavyeyle verilir. **Sessiz mod** açıkken varsayılan budur.
@@ -251,7 +253,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   - **Sonraya kalanlar:**
     - Aktarım ve can-do kanıtı (F1-20).
     - Kaydı dinleme (önce/sonra, F1-20).
-    - Bekleyen işaretlemenin bağlantı gelince istenmesi (F1-21).
+    - Bekleyen işaretlemenin bağlantı gelince istenmesi: F1-22'de, "Geri bildirimin hazır" bildirimiyle birlikte.
 
 ## A12 — 4/3/2 akıcılık (`fluency_432`)
 - **Amaç:** Tanıdık konuyu artan zaman baskısıyla tekrar anlatmak (P16).

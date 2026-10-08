@@ -156,6 +156,17 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - **Push:** `sync_push(device_id, batch jsonb)` RPC'si. RLS ile çalışır; tek işlem, en fazla 500 kayıt.
 - **Pull:** `sync_pull(since_seq bigint)` RPC'si. Kullanıcının tablolarında `server_seq > since` olan satırları döner (sayfalı), yeni imleci verir. `server_seq` global bir dizidir; ekleme ve güncellemede tetikleyiciyle atanır.
 - **Tetikleyiciler:** uygulama açılışı, oturum sonu, 5 dakikada bir (ön planda), bağlantı geri gelince.
+- **Uygulama (F1-21, `data/sync/`):**
+  - **Push:** Outbox'ta zamanı gelen kayıtlar id sırasıyla okunur, en çok 500. Aynı satırın kayıtları tek satıra iner ve satır o anki hâliyle gider.
+    - Sunucu bir partiyi veri hatasıyla (SQLSTATE 22/23) reddederse parti ikiye bölünür. Reddedilen satır yalnız kalınca üstel geri çekilmeyle bekler (1, 2, 4 … en çok 60 dk); diğerleri gider.
+    - Ağ hatasında hiçbir kayıt değişmez; bir sonraki tetik yeniden dener.
+  - **Çakışmalar:** Bilinmeyen kursun satırı (`unknown_course`) ve denemesi sunucuda olmayan ek (`unknown_attempt`) beklemeye alınır. Eskimiş kart (`stale`) ve aynı öğenin ikinci kartı (`duplicate`) sunucunun sürümüne bırakılır; çekme onu getirir.
+  - **Pull:** Sayfa başına 500 satır; imleç `sync_state`'te. Gönderilmeyi bekleyen yerel değişiklik daha yeniyse korunur (kartta `last_review`, diğerlerinde `updated_at`). Değilse sunucunun satırı yazılır ve satırın bekleyen gönderimi düşer.
+  - **İki cihazda aynı öğenin kartı:** Sunucu ilk geleni tutar. Diğer cihaz çekince iki kart birleşir: kimlik sunucununki, hafıza daha yeni incelemeninki. Eski kartın denemeleri kendi kimliğini korur (I-03); kanıt hesabı onları öğenin kartına sayar.
+  - **Sıra güvencesi:** `server_seq` satır yazılırken alınır, işlemler ise farklı sırada bitebilir. Bu yüzden `sync_push` öğrenci başına bir danışma kilidi (advisory lock) tutar, `sync_pull` aynı kilidin paylaşımlı hâlini bekler. Çekme, sürmekte olan bir gönderimin satırlarını atlayıp imleci ilerletemez.
+  - **Tetikleyiciler:** Ana kabuk açıkken uygulama açılışı, uygulamaya dönüş, ön planda 5 dakikada bir, yerel yazmalar 20 sn durulunca (oturum sonu da böyle yakalanır) ve uygulama ekrandan çıkarken. "Bağlantı geri gelince" ayrıca izlenmiyor; dönüş ve 5 dakikalık tur bunu karşılıyor.
+  - Başarılı her senkrondan sonra LLM'i bekleyen cevaplar sorulur (`03` §0.5, `LateChecks`). Satır inmişse ya da cevap sonradan kontrol edilmişse Bugün ekranı yenilenir.
+  - Profil ve kurs karşılama akışında ve seviye testinden sonra ayrıca hemen, doğrudan tabloya yazılır (`ProfileRepository.push`; ekip adımı profili sunucuda bekler). Bu yol LWW karşılaştırması yapmaz ve kilidi tutmaz. F3-07'de tek yola indirilecek.
 - **Paketler** senkron dışındadır: manifest kontrolü + indirme (`11` §5).
 - **Kart gösterimi (F1-16):** Denemeler gösterim bitince tek işlemde yazılır: zincirli denemeler (puan ve `card_state_after` sonuncusunda), kartın yeni FSRS durumu ve outbox kayıtları.
 - **Plan B:** Özel senkron bakım yükü yaratırsa PowerSync (Flutter SDK 2.x, Supabase entegrasyonu, drift uyumlu) değerlendirilir.
