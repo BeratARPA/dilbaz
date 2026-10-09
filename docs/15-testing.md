@@ -18,6 +18,7 @@ Kalite burada iki anlama gelir:
 | LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Sağlayıcı, model ya da prompt değişikliğinde **zorunlu** (ücretsiz kotaları tüketir; elle tetiklenir) |
 | Deterministik değerlendirme | `dart test` (motor, `answer_check_golden_test.dart`) | `answer_check` altın seti; `07` §8 deterministik eşikleri | Her commit |
 | ASR karşılaştırma testi | `evals/asr/` | `08` §3.2 | Faz 2, sağlayıcı değişikliğinde |
+| Canlı kontrol | `app/test_live` (`flutter test`, elle) | Uygulamanın istemcileri + yerel yığın + gerçek sağlayıcılar: ses ve tutor rotaları (§4a) | Sağlayıcı ya da rota değişikliğinden ve sürümden önce (birkaç ücretsiz çağrı) |
 
 ## 2. Değişmez kural → test eşlemesi
 
@@ -71,6 +72,30 @@ Kalite burada iki anlama gelir:
     - Not: Hiçbir bütçede tek bir ilk kart oturumu bütçeyi tek başına doldurmaz (yeni öğe sınırı × 3 dk < bütçe). İlk gün kalan süre seçeneklerle (konuşma görevi vb.) dolar ya da "Şu an sırada kart yok" görünür.
   - **Senaryo 3:** Ertesi gün ilk iki kart, kişisel cümle ve kalıbıdır. İkisinin sırası belirsizdir: öncelikleri aynıdır ve kimlikleri aynı milisaniyede üretilmiş UUIDv7'dir. Test hangisi önce gelirse onu cevaplar.
   - **Senaryo 4, 6 ve 7** uçtan uca test olarak henüz yok. Parçaları widget testlerinde: konuşma görevi, aylık test ve önce/sonra oynatma. İkili görev Faz 2'de gelir.
+
+## 4a. Canlı kontrol (elle)
+
+Uygulamanın kendi istemcileri (`SupabaseSpeechRepository`, `SupabaseTutorRepository`) yerel Supabase yığınına bağlanır; yığının fonksiyonları gerçek sağlayıcıları çağırır (Deepgram, Groq, Gemini).
+- Kullanıcının hesabına dokunulmaz: yerel bir test öğrencisi kullanılır.
+- Telefon ve insan sesi gerekmez: kayıtları Windows'un konuşma sentezi üretir.
+
+- **Neyi sınar:**
+  - İngilizce döküm kelimesi kelimesine yapılıyor mu (öğrencinin hatası kalmalı)?
+  - `speaking_annotate` cümlecik, hata ve düzeltme çıkarıyor mu?
+  - Türkçe döküm sunucu yolundan geliyor mu?
+  - `gap_suggest` öneri veriyor mu?
+  - Kullanım satırları (`llm_usage`, `speech_usage`) yazılıyor mu?
+- **Maliyet:** Her çalıştırma 4–5 ücretsiz kota çağrısı harcar.
+- **Nasıl:** Klasör depo dışında olmalı, çünkü `live.env` yerel anahtar ve parola taşır.
+  1. `npx supabase start` ve arka planda `npx supabase functions serve --env-file supabase/functions/.env --no-verify-jwt`.
+  2. `python -I app/test_live/make_live_user.py <depo> <klasör>/live.env`: yerel izinli listeye bir test öğrencisi, yapay zekâ onayıyla.
+  3. `powershell -File app/test_live/make_live_audio.ps1 -OutDir <klasör>`: `live_en.wav` (Zira, hatalı bir İngilizce tanıtma) ve `live_tr.wav` (Tolga, Türkçe bir cümle). Betik BOM'lu UTF-8'dir; BOM'suz hâlde Windows PowerShell 5.1 Türkçe harfleri bozar.
+  4. `cd app && flutter test test_live --dart-define=DILBAZ_LIVE=<klasör>`. Tanım yoksa testler atlanır.
+- **2026-10-09 sonucu: 4/4.**
+  - Deepgram Nova-3: 59 kelime; "i am work in a bank" olduğu gibi kaldı.
+  - `speaking_annotate` (gemini-3.5-flash): 21 sn, 10 cümlecik, 5'i hatasız, 4 düzeltme. Ekranda en çok 3'ü gösterilir (I-02, `correction_choice`).
+  - Türkçe (Groq whisper-large-v3): "Canım sıkıldı. Hadi dışarı çıkalım."
+  - `gap_suggest`: birincil model (3.5 Flash) günlük kotada "quota" döndü, Flash-Lite 2 sn'de önerdi: "I'm bored. Let's go out."
 
 ## 5. CI (GitHub Actions)
 

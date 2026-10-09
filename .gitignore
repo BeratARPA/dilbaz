@@ -10,6 +10,8 @@ env/
 .env.*
 !.env.example
 supabase/functions/.env
+# The live check's local credentials (docs/15 §4a).
+live.env
 supabase/.env
 *.jks
 *.keystore
