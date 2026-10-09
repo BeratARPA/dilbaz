@@ -64,7 +64,7 @@ void main() {
     });
   });
 
-  group('SrsScheduler.review', () {
+  group('SrsScheduler.review (I-08)', () {
     test('matches package:fsrs exactly, so due dates come from FSRS', () {
       final reference = fsrs.Scheduler(enableFuzzing: false);
       var expected = fsrs.Card(cardId: cardId, due: t0);

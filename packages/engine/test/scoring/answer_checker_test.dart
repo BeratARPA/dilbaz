@@ -76,7 +76,7 @@ void main() {
         expect(chunks, isNotEmpty);
       });
 
-      group('match (step 2)', () {
+      group('match (step 2, I-17)', () {
         test('the reference, whatever the case and punctuation', () {
           for (final card in senses) {
             final loud = card.words.map((w) => w.toUpperCase()).toList();
