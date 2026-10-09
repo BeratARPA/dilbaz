@@ -58,7 +58,7 @@ void main() {
           FakeBankRepository(bank),
         ),
         packAudioProvider.overrideWithValue(audio),
-        clipPlayerProvider.overrideWithValue(player),
+        clipPlayerOverride(player),
         profileRepositoryProvider.overrideWithValue(profiles),
         placementSeedProvider.overrideWithValue(7),
       ],
@@ -404,6 +404,7 @@ void main() {
           ),
           placementBankRepositoryProvider.overrideWithValue(repository),
           profileRepositoryProvider.overrideWithValue(profiles),
+          clipPlayerOverride(FakeClipPlayer()),
         ],
       )..listen(placementControllerProvider, (_, _) {});
       await container.read(placementControllerProvider.future);

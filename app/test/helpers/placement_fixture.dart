@@ -7,7 +7,9 @@ import 'package:dilbaz_app/data/repositories/assessment_repository.dart';
 import 'package:dilbaz_app/data/repositories/pack_audio.dart';
 import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_bank.dart';
+import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 
 import 'pack_fixture.dart';
 
@@ -239,6 +241,40 @@ class FakeClipPlayer implements ClipPlayer {
 
   @override
   Future<void> dispose() async => disposed = true;
+}
+
+/// [clipPlayerProvider] as the app makes it: each player is disposed once
+/// nothing listens to it, and a disposed one plays nothing. A real player
+/// loads the clip first, so a player disposed meanwhile fails too.
+Override clipPlayerOverride(FakeClipPlayer player) =>
+    clipPlayerProvider.overrideWith((ref) {
+      final made = _MadeClipPlayer(player);
+      ref.onDispose(made.dispose);
+      return made;
+    });
+
+/// One player of [clipPlayerProvider], over the test's fake.
+class _MadeClipPlayer implements ClipPlayer {
+  new(this._fake);
+
+  final FakeClipPlayer _fake;
+  bool _disposed = false;
+
+  @override
+  Future<bool> play(String path) async {
+    await Future<void>.delayed(Duration.zero);
+    if (_disposed) return false;
+    return await _fake.play(path);
+  }
+
+  @override
+  Future<void> stop() => _fake.stop();
+
+  @override
+  Future<void> dispose() async {
+    _disposed = true;
+    await _fake.dispose();
+  }
 }
 
 /// Hands out a bank made in memory; null means no test on the device.

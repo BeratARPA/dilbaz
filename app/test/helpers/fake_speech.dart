@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/speech/dictation.dart';
+import 'package:dilbaz_app/data/speech/speech_providers.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/data/speech/transcript.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 
 /// A recorder that records a few bytes, or fails as told.
 class FakeAnswerRecorder implements AnswerRecorder {
@@ -21,6 +23,7 @@ class FakeAnswerRecorder implements AnswerRecorder {
   int starts = 0;
   int cancels = 0;
   bool recording = false;
+  bool disposed = false;
   final levels = StreamController<double>.broadcast();
 
   @override
@@ -54,7 +57,57 @@ class FakeAnswerRecorder implements AnswerRecorder {
   Stream<double> level() => levels.stream;
 
   @override
-  Future<void> dispose() async {}
+  Future<void> dispose() async => disposed = true;
+}
+
+/// [answerRecorderProvider] as the app makes it: each recorder is disposed
+/// once nothing listens to it, and a disposed one cannot start. A real
+/// recorder is made on the platform first, so one disposed meanwhile fails
+/// too.
+Override answerRecorderOverride(FakeAnswerRecorder recorder) =>
+    answerRecorderProvider.overrideWith((ref) {
+      final made = _MadeAnswerRecorder(recorder);
+      ref.onDispose(made.dispose);
+      return made;
+    });
+
+/// One recorder of [answerRecorderProvider], over the test's fake. Its
+/// calls run one after another, as the plugin runs them.
+class _MadeAnswerRecorder implements AnswerRecorder {
+  new(this._fake);
+
+  final FakeAnswerRecorder _fake;
+  bool _disposed = false;
+  Future<void> _queue = Future.value();
+
+  Future<T> _next<T>(Future<T> Function() call) {
+    final result = _queue.then((_) => call());
+    _queue = result.then((_) {}, onError: (_) {});
+    return result;
+  }
+
+  @override
+  Future<Result<void, RecordFailure>> start() => _next(() async {
+    await Future<void>.delayed(Duration.zero);
+    if (_disposed) return const Err(RecordFailure.device);
+    return await _fake.start();
+  });
+
+  @override
+  Future<RecordedAudio?> stop() =>
+      _next(() async => _disposed ? null : await _fake.stop());
+
+  @override
+  Future<void> cancel() => _next(_fake.cancel);
+
+  @override
+  Stream<double> level() => _fake.level();
+
+  @override
+  Future<void> dispose() async {
+    _disposed = true;
+    await _fake.dispose();
+  }
 }
 
 /// A recognizer that hears one sentence, or fails as told.

@@ -46,6 +46,9 @@ class PlacementController extends _$PlacementController {
 
   @override
   Future<PlacementState> build() async {
+    // The player lives as long as the test: one only read is disposed at
+    // once, before its clip plays.
+    ref.watch(clipPlayerProvider);
     final userId = ref.watch(authRepositoryProvider).userId;
     final assessments = ref.watch(assessmentRepositoryProvider);
     final bankRepository = ref.watch(placementBankRepositoryProvider);

@@ -83,8 +83,8 @@ List<Override> appOverrides({
     placements ?? FakeBankRepository(null),
   ),
   packAudioProvider.overrideWithValue(audio ?? FakePackAudio()),
-  clipPlayerProvider.overrideWithValue(player ?? FakeClipPlayer()),
-  answerRecorderProvider.overrideWithValue(recorder ?? FakeAnswerRecorder()),
+  clipPlayerOverride(player ?? FakeClipPlayer()),
+  answerRecorderOverride(recorder ?? FakeAnswerRecorder()),
   speechRepositoryProvider.overrideWithValue(speech ?? FakeSpeechRepository()),
   dictationProvider.overrideWithValue(dictation ?? FakeDictation()),
   sharedTextSourceProvider.overrideWithValue(

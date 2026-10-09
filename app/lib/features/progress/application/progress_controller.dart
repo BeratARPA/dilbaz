@@ -57,9 +57,13 @@ TaskOutcome? _outcome(String? code) => switch (code) {
 /// server's, for a recording made on another device (docs/08 §5.2).
 @riverpod
 class RecordingPlayback extends _$RecordingPlayback {
-  /// The audio being fetched, if any.
+  /// The audio being fetched, if any. The player lives as long as this:
+  /// one only read is disposed at once, before its clip plays.
   @override
-  String? build() => null;
+  String? build() {
+    ref.watch(clipPlayerProvider);
+    return null;
+  }
 
   Future<void> play(String audioPath) async {
     state = audioPath;

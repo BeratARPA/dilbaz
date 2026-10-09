@@ -35,7 +35,7 @@ void main() {
           FakeAuthRepository(signedIn: true),
         ),
         profileRepositoryProvider.overrideWithValue(profiles),
-        answerRecorderProvider.overrideWithValue(recorder),
+        answerRecorderOverride(recorder),
         speechRepositoryProvider.overrideWithValue(speech),
       ],
     )..listen(microphoneCheckControllerProvider, (_, _) {});

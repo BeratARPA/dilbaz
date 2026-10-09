@@ -340,9 +340,9 @@ List<Override> cardSessionOverrides({
     assessments ?? FakeAssessmentRepository(open: false),
   ),
   speechRepositoryProvider.overrideWithValue(speech),
-  answerRecorderProvider.overrideWithValue(recorder),
+  answerRecorderOverride(recorder),
   packAudioProvider.overrideWithValue(audio),
-  clipPlayerProvider.overrideWithValue(player),
+  clipPlayerOverride(player),
   appDatabaseProvider.overrideWithValue(db),
   ...cardDataOverrides(db: db, tutor: tutor, clock: clock),
 ];

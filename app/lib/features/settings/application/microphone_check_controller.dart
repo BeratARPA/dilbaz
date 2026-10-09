@@ -19,7 +19,11 @@ class MicrophoneCheckController extends _$MicrophoneCheckController {
 
   @override
   Future<MicrophoneCheckState> build() async {
-    ref.onDispose(() => _limit?.cancel());
+    // The recorder lives as long as the check: one only read is disposed at
+    // once, before it starts.
+    ref
+      ..onDispose(() => _limit?.cancel())
+      ..watch(answerRecorderProvider);
     final userId = ref.watch(authRepositoryProvider).userId;
     final consent =
         userId != null &&

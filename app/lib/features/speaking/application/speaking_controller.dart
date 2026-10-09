@@ -348,10 +348,24 @@ class SpeakingController extends _$SpeakingController {
   Future<void> startSaying() async {
     final practice = _asking;
     if (practice == null) return;
-    final started = await ref.read(answerRecorderProvider).start();
-    if (!ref.mounted || started is Err) return;
+    // Listening from the press, so that letting go before the microphone
+    // opened stops it too, as on a card.
     practice.phase = CorrectionPhase.listening;
     _emit();
+    final recorder = ref.read(answerRecorderProvider);
+    final started = await recorder.start();
+    if (!ref.mounted) return;
+    if (started is Err) {
+      practice.phase = CorrectionPhase.asking;
+      _emit();
+      return;
+    }
+    // Let go before the microphone opened, and already checked: nothing to
+    // keep.
+    if (practice.phase != CorrectionPhase.listening) {
+      await recorder.cancel();
+      return;
+    }
     _limit = Timer(RecorderConfig.cardLimit, () => unawaited(stopSaying()));
   }
 
