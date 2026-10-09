@@ -736,7 +736,11 @@ class CardSessionController extends _$CardSessionController {
     final aligned = checker.checkWithoutLlm(answer.text, review.key);
     return switch (result) {
       Ok(value: final check) => (
-        evaluation: check.evaluation,
+        // Whether a minor error counts for the card is the engine's word
+        // (ADR-0010).
+        evaluation: check.evaluation.settled(
+          targetIntact: checker.targetIntact(answer.text, review.key),
+        ),
         llm: check,
         template: aligned.ladder,
         failure: null,
@@ -899,9 +903,15 @@ class CardSessionController extends _$CardSessionController {
               'route': 'answer_check',
               'pending': judged.evaluation.llmPending,
               'code': failure.name,
-              // Asked again once the tutor can be reached (LateChecks).
-              if (judged.evaluation.llmPending)
+              // Asked again once the tutor can be reached (LateChecks),
+              // with the engine's word on the target for its verdict.
+              if (judged.evaluation.llmPending) ...{
                 'request': ?judged.request?.toJson(),
+                'target_intact': _session.checker.targetIntact(
+                  answer.text,
+                  review.key,
+                ),
+              },
             }
           : null,
     );
@@ -995,6 +1005,10 @@ class CardSessionController extends _$CardSessionController {
             itemRef: content.itemKey,
             answer: request.answer,
             request: request.toJson(),
+            targetIntact: _session.checker.targetIntact(
+              request.answer,
+              review.before?.key ?? review.key,
+            ),
             context: {
               'carrier': content.carrierKey,
               'prompt_l1': content.prompt,

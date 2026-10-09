@@ -420,6 +420,8 @@ void main() {
       expect(attempt.rating, ReviewRating.hard.code);
       expect(attempt.llm, containsPair('pending', true));
       expect(attempt.llm, containsPair('code', 'quota'));
+      // The engine's word on the target, for the tutor's later verdict.
+      expect(attempt.llm, containsPair('target_intact', true));
       // What the LLM was asked, to ask again once it can be reached.
       final request = AnswerCheckRequest.fromJson(
         attempt.llm!['request']! as Map<String, Object?>,
@@ -429,6 +431,29 @@ void main() {
   });
 
   group('the LLM', () {
+    test(
+      'a minor error counts as the engine finds the target (ADR-0010)',
+      () async {
+        tutor.answers.addAll([
+          // The target in another form, though the tutor calls it intact.
+          llmCheck(Verdict.minorError, targetOk: true),
+          // A slip outside the target, though the tutor puts it in it.
+          llmCheck(Verdict.minorError, targetOk: false),
+        ]);
+        await startCard();
+        controller().switchInput();
+        await controller().submit('Badan kolu.');
+        expect(card().last!.feedback, AnswerFeedback.tryAgain);
+        await controller().submit('Bada kolum.');
+        expect((card().phase as CardEnded).outcome, isA<Recalled>());
+        await finishCard();
+        expect(
+          [for (final a in await attempts()) (a.verdict, a.targetOk)],
+          [('minor_error', false), ('minor_error', true)],
+        );
+      },
+    );
+
     test('not sure: "did you mean"; a yes counts as correct', () async {
       await startCard();
       controller().switchInput();
@@ -725,6 +750,7 @@ void main() {
       expect(dispute.attemptId, attempt.id);
       expect(dispute.kind, 'user_dispute');
       expect(dispute.payload['answer'], 'Kolu.');
+      expect(dispute.payload['target_intact'], isFalse);
       final request = AnswerCheckRequest.fromJson(
         dispute.payload['request']! as Map<String, Object?>,
       );

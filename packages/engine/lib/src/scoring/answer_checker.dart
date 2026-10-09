@@ -58,7 +58,20 @@ final class AnswerChecker {
   AnswerCheck checkWithoutLlm(String answer, AnswerKey key) {
     final matched = match(answer, key);
     if (matched != null) return AnswerCheck(evaluation: matched);
+    return _judgement(answer, key).check();
+  }
 
+  /// Whether [answer] keeps the card's target intact: every target word is
+  /// there, in the right form and place, next to the nearest correct answer
+  /// that says the target. On a grammar card the whole answer is the
+  /// target. It settles the LLM's minor error (`Evaluation.settled`,
+  /// ADR-0010).
+  bool targetIntact(String answer, AnswerKey key) =>
+      match(answer, key)?.targetOk ?? _judgement(answer, key).targetIntact;
+
+  /// Step 4's alignment of [answer] with the nearest correct answer that
+  /// says the target.
+  _Judgement _judgement(String answer, AnswerKey key) {
     final said = language.tokenize(answer);
     late WordAlignment nearest;
     late String nearestText;
@@ -75,7 +88,7 @@ final class AnswerChecker {
         nearestText = text;
       }
     }
-    return _Judgement(nearest, nearestText, key, language).check();
+    return _Judgement(nearest, nearestText, key, language);
   }
 
   /// The words of the reference that carry the card's target, normalized:
@@ -188,6 +201,10 @@ final class _Judgement {
     // Without a known target word, the whole answer is the target.
     return found.isEmpty ? {for (var i = 0; i < words.length; i++) i} : found;
   }
+
+  /// Every target word is there, in the right form and place.
+  bool get targetIntact =>
+      _state(alignment.diffs.where(_touchesTarget).toList()) == _Target.intact;
 
   AnswerCheck check() {
     final diffs = alignment.diffs;

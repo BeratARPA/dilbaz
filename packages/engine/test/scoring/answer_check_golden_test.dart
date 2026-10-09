@@ -60,6 +60,25 @@ void main() {
     expect(rate, lessThanOrEqualTo(0.03));
   });
 
+  test('the target of a minor error is judged as the gold set has it '
+      '(ADR-0010)', () {
+    final minor = results.where((r) => r.goldMinorTarget != null).toList();
+    final differ = [
+      for (final r in minor)
+        if (r.targetIntact != r.goldMinorTarget) r,
+    ];
+    printOnFailure(
+      [
+        for (final r in differ)
+          '${r.id}: ${r.said} -> ${r.targetIntact} (${r.goldMinorTarget})',
+      ].join('\n'),
+    );
+    expect(minor.length, greaterThanOrEqualTo(40));
+    // 1 of 49 at first: "what time it closes" for "What time does it
+    // close?" keeps the target in the gold set.
+    expect(differ.length / minor.length, lessThanOrEqualTo(0.05));
+  });
+
   test('templated hints never give the answer away (I-02)', () {
     for (final r in results) {
       final ladder = r.check.ladder;
@@ -97,6 +116,8 @@ final class _Result {
     required this.id,
     required this.said,
     required this.check,
+    required this.targetIntact,
+    required this.goldMinorTarget,
     required this.goldCorrect,
     required this.language,
     required this.ruleCode,
@@ -135,10 +156,15 @@ final class _Result {
     final verdicts = {
       for (final v in expected['verdicts']! as List<Object?>) v! as String,
     };
+    final checker = AnswerChecker(language);
     return _Result._(
       id: json['id']! as String,
       said: said,
-      check: AnswerChecker(language).checkWithoutLlm(said, key),
+      check: checker.checkWithoutLlm(said, key),
+      targetIntact: checker.targetIntact(said, key),
+      goldMinorTarget: verdicts.length == 1 && verdicts.single == 'minor_error'
+          ? expected['target_ok'] as bool?
+          : null,
       goldCorrect: verdicts.every(_correctCodes.contains),
       language: language,
       ruleCode: ruleCode,
@@ -151,6 +177,13 @@ final class _Result {
   final String id;
   final String said;
   final AnswerCheck check;
+
+  /// The engine's word on the target (ADR-0010).
+  final bool targetIntact;
+
+  /// The gold `target_ok` of an answer the gold set calls a minor error
+  /// and nothing else; null otherwise, or when the gold leaves it open.
+  final bool? goldMinorTarget;
 
   /// Every verdict the gold set accepts is a correct one.
   final bool goldCorrect;

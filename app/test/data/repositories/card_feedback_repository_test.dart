@@ -59,13 +59,18 @@ void main() {
       itemRef: 'zz.ws.bada.n.1',
       answer: 'Kolu.',
       request: asked,
+      targetIntact: false,
       context: const {'carrier': 'zz.sent.0001'},
     );
 
     final amendment = await db.select(db.attemptAmendments).getSingle();
     expect(amendment.id, 'id-0');
     expect(amendment.kind, 'user_dispute');
-    expect(amendment.payload, {'answer': 'Kolu.', 'request': asked});
+    expect(amendment.payload, {
+      'answer': 'Kolu.',
+      'request': asked,
+      'target_intact': false,
+    });
     expect(amendment.createdAt, t0);
     expect(amendment.pendingPush, isTrue);
     final report = await db.select(db.contentReports).getSingle();
@@ -102,9 +107,21 @@ void main() {
   });
 
   test('answers wait for the tutor until it has a verdict', () async {
-    // Checked without the tutor, with the request to ask again.
+    // Checked without the tutor, with the request to ask again and the
+    // engine's word on the target (ADR-0010).
     await attempt(
       'pending',
+      llm: {
+        'route': 'answer_check',
+        'pending': true,
+        'request': asked,
+        'target_intact': true,
+      },
+    );
+    // Kept before the engine's word was: none.
+    await attempt(
+      'older',
+      minute: 2,
       llm: {'route': 'answer_check', 'pending': true, 'request': asked},
     );
     // Disputed: the dispute's request.
@@ -115,6 +132,7 @@ void main() {
       itemRef: 'zz.ws.bada.n.1',
       answer: 'Kolu.',
       request: {...asked, 'attempt_no': 2},
+      targetIntact: false,
       context: const {},
     );
     // Not waiting: judged, a failure that does not wait, another device.
@@ -132,14 +150,17 @@ void main() {
     final waiting = await feedback.waiting('device-1', limit: 10);
     expect(
       [
-        for (final (:attemptId, :request) in waiting) [attemptId, request],
+        for (final (:attemptId, :request, :targetIntact) in waiting)
+          [attemptId, request, targetIntact],
       ],
       [
-        ['pending', asked],
+        ['pending', asked, true],
         [
           'disputed',
           {...asked, 'attempt_no': 2},
+          false,
         ],
+        ['older', asked, null],
       ],
     );
     expect(await feedback.waiting('device-1', limit: 1), hasLength(1));
@@ -154,7 +175,7 @@ void main() {
         for (final check in await feedback.waiting('device-1', limit: 10))
           check.attemptId,
       ],
-      ['disputed'],
+      ['disputed', 'older'],
     );
     final resolved = await (db.select(
       db.attemptAmendments,

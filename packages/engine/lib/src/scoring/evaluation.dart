@@ -20,4 +20,13 @@ abstract class Evaluation with _$Evaluation {
     /// reach; the LLM result comes later (`llm.pending`).
     @Default(false) bool llmPending,
   }) = _Evaluation;
+
+  const new _();
+
+  /// The LLM's evaluation with the target of a minor error taken from
+  /// [targetIntact], the engine's word on it (`AnswerChecker.targetIntact`):
+  /// whether the answer counts for the card turns on it, and the LLM's own
+  /// `target_ok` sways with its prompt (ADR-0010). Other verdicts stay.
+  Evaluation settled({required bool targetIntact}) =>
+      verdict == Verdict.minorError ? copyWith(targetOk: targetIntact) : this;
 }

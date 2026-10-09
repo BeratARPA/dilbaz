@@ -575,6 +575,102 @@ void main() {
         });
       });
 
+      group("the LLM's minor error (ADR-0010)", () {
+        Evaluation minor({required bool targetOk}) =>
+            Evaluation(verdict: Verdict.minorError, targetOk: targetOk);
+
+        test('an error outside the target keeps it', () {
+          for (final card in senses) {
+            final extra = card.target.single == 0 ? 1 : 0;
+            final dropped = [...card.words]..removeAt(extra);
+            expect(
+              minor(targetOk: false).settled(
+                targetIntact: checker.targetIntact(say(dropped), card.key),
+              ),
+              minor(targetOk: true),
+              reason: card.sentence.key,
+            );
+          }
+        });
+
+        test('the target in another form loses it', () {
+          var checked = 0;
+          for (final card in senses) {
+            final t = card.target.single;
+            final lemma = card.key.targetLemmas.single;
+            final other = zz.forms.entries
+                .where(
+                  (e) =>
+                      e.key != card.words[t] &&
+                      e.value.length == 1 &&
+                      e.value.single == lemma,
+                )
+                .firstOrNull;
+            if (other == null) continue;
+            checked++;
+            final answer = [...card.words]..[t] = other.key;
+            expect(
+              minor(targetOk: true).settled(
+                targetIntact: checker.targetIntact(say(answer), card.key),
+              ),
+              minor(targetOk: false),
+              reason: card.sentence.key,
+            );
+          }
+          expect(checked, greaterThan(5));
+        });
+
+        test('another word in place of the target loses it', () {
+          for (final card in senses) {
+            final answer = [...card.words]
+              ..[card.target.single] = unrelated(card, 1).single;
+            expect(
+              minor(targetOk: true).settled(
+                targetIntact: checker.targetIntact(say(answer), card.key),
+              ),
+              minor(targetOk: false),
+              reason: card.sentence.key,
+            );
+          }
+        });
+
+        test('on a grammar card the whole answer is the target', () {
+          final card = senses.first;
+          final key = card.key.copyWith(targetLemmas: {});
+          final extra = card.target.single == 0 ? 1 : 0;
+          final dropped = [...card.words]..removeAt(extra);
+          expect(
+            minor(targetOk: true)
+                .settled(targetIntact: checker.targetIntact(say(dropped), key)),
+            minor(targetOk: false),
+          );
+        });
+
+        test('a listed answer has its own target', () {
+          final card = senses.first;
+          final synonym = [...card.words]
+            ..[card.target.single] = unrelated(card, 1).single;
+          final key = card.key.copyWith(alternatives: [say(synonym)]);
+          expect(checker.targetIntact(say(card.words), key), isTrue);
+          expect(checker.targetIntact(say(synonym), key), isFalse);
+        });
+
+        test('other verdicts stay as the LLM gave them', () {
+          for (final evaluation in const [
+            Evaluation(verdict: Verdict.correct, targetOk: true),
+            Evaluation(verdict: Verdict.acceptableVariant, targetOk: false),
+            Evaluation(verdict: Verdict.wrong, targetOk: false),
+            Evaluation(verdict: Verdict.offTarget, targetOk: false),
+            Evaluation(verdict: Verdict.uncertain, targetOk: true),
+          ]) {
+            expect(
+              evaluation.settled(targetIntact: !evaluation.targetOk),
+              evaluation,
+            );
+          }
+        });
+      });
+
       test('checks drive a card review without the LLM', () {
         final card = senses.first;
         final t = card.target.single;

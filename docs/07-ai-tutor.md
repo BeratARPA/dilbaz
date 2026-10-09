@@ -152,6 +152,7 @@ Output = {
 - **Sunucu korumaları:**
   - `correct`, `acceptable_variant`, `unintelligible` ve `uncertain` cevaplarda merdiven boştur.
   - `wrong`, `off_target` ve `unintelligible`'da `target_ok` false'tur.
+  - `minor_error`'daki `target_ok` istemciye gider ama belirleyici değildir: kart için sayılıp sayılmadığını motor belirler (ADR-0010).
   - Etiketler yalnızca `minor_error` ve `wrong`'da bulunur, en çok 3 tanedir.
   - Yazılı cevap `unintelligible` olamaz; model öyle derse sonuç `off_target` olur.
   - Cevabı ele veren ipucu boşaltılır (yukarıda).
@@ -299,6 +300,7 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
   - Olası neden: olumsuzluk örneğinde hedef kelime doğru ama karar `wrong` olduğu için `target_ok=false`. Model bunu her hataya genelledi.
   - @3'te `minor_error` için `target_ok` yalnızca hedef kelimelere bakar. Karşıt örnek eklendi: kelime kartında hedef dışında be eksik → `minor_error`, `target_ok=true`.
   - Hedefin yerine başka bir kelime gelmesi hiçbir zaman `minor_error` değildir. Yanlış duyulmuş olabilecek "leave"/"live" artık geçmez.
+  - @3'ün eval'i (2026-10-09): katı karar doğruluğu %93,7 ✓; doğruyu yanlış sayma %2,3 ✓; sızıntı %0 ✓; şema %100 ✓; başarısız çağrı yok. Ama bu kez hatası hedefin içinde olan küçük hatalarda `target_ok=true` dedi; öğrenciye yansıyan uyum %84,2'de kaldı. Sonuç: hedefi motor belirler (ADR-0010). Böylece aynı kararlarla uyum %96,5.
 
 ## 6. Pedagojik korkuluklar (özet)
 
@@ -373,6 +375,7 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   - `answer_check@1`, Flash-Lite, 285 vaka: doğruluk %77,5 ✗; doğruyu yanlış sayma %2,3 ✓; sunulan sızıntı %0 ✓; şema %100 ✓. 26 çağrı 15 sn'de zaman aşımına uğradı (p50 2,9 sn, p95 13,5 sn). Öğrenciye yansıyan geçti/kaldı sonucu yanıtlı vakalarda %92,3 doğru. Groq 76 vakada durduruldu; p50 1,0 sn. Sonuç: `answer_check@2` (§5).
   - `gap_suggest@1`: Flash-Lite 44 vaka, seviye %100 ✓, şema %95,5, p50 10,4 sn. 3.5 Flash ilk 20 vakada seviye %100, p50 1,4 sn.
   - `speaking_annotate@1`: Flash-Lite 30 vaka, F1 0,96 ✓, EFC farkı 0 ✓, görev sonucu %96,7 ✓. Sızıntı denetimi 9 ipucunu boşalttı; öğrenciye sızan yok.
+- **Öğrenciye yansıyan uyum:** Katı karar doğruluğu kart için sonucu tek başına göstermez. Örneğin `minor_error` ve `target_ok=true` öğrenciyi geçirir, `wrong` kaldırır. Bu yüzden kararlar geçti/kaldı olarak da karşılaştırılır; `minor_error`'da hedefi motorun hükmü verir (ADR-0010). Henüz eşik değil, raporlanır.
 - **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır (`packages/engine/test/scoring/answer_check_golden_test.dart`). Eşikler:
   - doğru ya da varyant cevabı "yanlış" sayma ≤ %3
   - H1–H3'te cevap sızıntısı %0

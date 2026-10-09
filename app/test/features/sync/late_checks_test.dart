@@ -48,8 +48,13 @@ void main() {
   });
   tearDown(() => db.close());
 
-  /// An answer checked without the tutor on this device.
-  Future<void> waiting(String id, {String answer = 'Bada dero.'}) => db
+  /// An answer checked without the tutor on this device, with the
+  /// engine's word on its target when [targetIntact] is given.
+  Future<void> waiting(
+    String id, {
+    String answer = 'Bada dero.',
+    bool? targetIntact,
+  }) => db
       .into(db.attempts)
       .insert(
         AttemptsCompanion.insert(
@@ -66,6 +71,7 @@ void main() {
             'pending': true,
             'code': 'network',
             'request': request.copyWith(answer: answer).toJson(),
+            'target_intact': ?targetIntact,
           }),
           createdAtClient: t0,
         ),
@@ -98,6 +104,31 @@ void main() {
     // Settled: it is not asked again.
     expect(await checks.run(userId), 0);
     expect(tutor.asked, hasLength(1));
+  });
+
+  test("a minor error's target is the engine's word (ADR-0010)", () async {
+    await waiting('kept', targetIntact: true);
+    await waiting('lost', answer: 'Badan dero.', targetIntact: false);
+    await waiting('older', answer: 'Dero bada.');
+    tutor.answers.addAll([
+      llmCheck(Verdict.minorError, targetOk: false),
+      llmCheck(Verdict.minorError, targetOk: true),
+      llmCheck(Verdict.minorError, targetOk: true),
+    ]);
+
+    expect(await checks.run(userId), 3);
+    expect(
+      [
+        for (final v in await verdicts())
+          (v.attemptId, v.payload['verdict'], v.payload['target_ok']),
+      ],
+      [
+        ('kept', 'minor_error', true),
+        ('lost', 'minor_error', false),
+        // Kept before the engine's word was: the tutor's stays.
+        ('older', 'minor_error', true),
+      ],
+    );
   });
 
   test('a refusal settles it too; an unreachable tutor is tried again '

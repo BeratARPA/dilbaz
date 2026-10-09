@@ -36,12 +36,12 @@ class LateChecks {
     final deviceId = await _devices.deviceId(userId);
     final waiting = await _feedback.waiting(deviceId, limit: perRun);
     var settled = 0;
-    for (final (:attemptId, :request) in waiting) {
+    for (final (:attemptId, :request, :targetIntact) in waiting) {
       final checked = await _tutor.answerCheck(
         AnswerCheckRequest.fromJson(request),
       );
       final verdict = switch (checked) {
-        Ok(:final value) => lateVerdict(value),
+        Ok(:final value) => lateVerdict(value, targetIntact: targetIntact),
         // The tutor cannot say, and asking again would not change that.
         Err(:final error)
             when error == TutorFailure.refused ||
@@ -61,16 +61,23 @@ class LateChecks {
   }
 }
 
-/// The `llm_resolved` payload of a check (docs/13-data-model.md §2.3).
-Map<String, Object?> lateVerdict(LlmAnswerCheck check) => {
-  'verdict': check.verdict.code,
-  'target_ok': check.targetOk,
-  'error_tags': check.errorTags,
-  'provider': check.provider,
-  'model': check.model,
-  'catalog': check.catalog,
-  'confidence': check.confidence,
-};
+/// The `llm_resolved` payload of a check (docs/13-data-model.md §2.3). A
+/// minor error's target is [targetIntact], the engine's word kept with the
+/// answer, when there is one (ADR-0010).
+Map<String, Object?> lateVerdict(LlmAnswerCheck check, {bool? targetIntact}) {
+  final evaluation = targetIntact == null
+      ? check.evaluation
+      : check.evaluation.settled(targetIntact: targetIntact);
+  return {
+    'verdict': evaluation.verdict.code,
+    'target_ok': evaluation.targetOk,
+    'error_tags': check.errorTags,
+    'provider': check.provider,
+    'model': check.model,
+    'catalog': check.catalog,
+    'confidence': check.confidence,
+  };
+}
 
 @Riverpod(keepAlive: true)
 LateChecks lateChecks(Ref ref) => LateChecks(

@@ -26,7 +26,14 @@ enum ReportReason {
 
 /// An answer that waits for the tutor: checked without it, or disputed.
 /// `request` is the `tutor/answer_check` body kept for it.
-typedef WaitingCheck = ({String attemptId, Map<String, Object?> request});
+/// An answer waiting for the tutor: its request and the engine's word on
+/// its target, which settles a minor error (ADR-0010); null on answers
+/// stored before it was kept.
+typedef WaitingCheck = ({
+  String attemptId,
+  Map<String, Object?> request,
+  bool? targetIntact,
+});
 
 /// What can follow a card's answers once they are stored (docs/03 §0.5
 /// steps 4–5, docs/10 §8): the learner's dispute, a report about the
@@ -37,12 +44,14 @@ abstract interface class CardFeedbackRepository {
   /// disputed. It is asked again with [request] when the tutor can be
   /// reached, and reported as content to look at ([context]: what the card
   /// showed). Nothing is accepted by the learner's word alone.
+  /// [targetIntact] is the engine's word on the answer's target.
   Future<void> dispute({
     required String userId,
     required String attemptId,
     required String itemRef,
     required String answer,
     required Map<String, Object?> request,
+    required bool targetIntact,
     required Map<String, Object?> context,
   });
 
@@ -116,11 +125,13 @@ class DriftCardFeedbackRepository implements CardFeedbackRepository {
     required String itemRef,
     required String answer,
     required Map<String, Object?> request,
+    required bool targetIntact,
     required Map<String, Object?> context,
   }) => _db.transaction(() async {
     await _amend(userId, attemptId, disputeKind, {
       'answer': answer,
       'request': request,
+      'target_intact': targetIntact,
     });
     await _report(
       userId: userId,
@@ -191,7 +202,14 @@ SELECT a.id AS id,
            ORDER BY d.created_at DESC LIMIT 1),
          CASE WHEN json_extract(a.llm, '$.pending') = 1
               THEN json_extract(a.llm, '$.request') END
-       ) AS request
+       ) AS request,
+       COALESCE(
+         (SELECT json_extract(d.payload, '$.target_intact')
+            FROM attempt_amendments d
+           WHERE d.attempt_id = a.id AND d.kind = ?
+           ORDER BY d.created_at DESC LIMIT 1),
+         json_extract(a.llm, '$.target_intact')
+       ) AS target_intact
   FROM attempts a
  WHERE a.device_id = ?
    AND NOT EXISTS (SELECT 1 FROM attempt_amendments r
@@ -201,6 +219,7 @@ SELECT a.id AS id,
  LIMIT ?
 ''',
           variables: [
+            Variable.withString(disputeKind),
             Variable.withString(disputeKind),
             Variable.withString(deviceId),
             Variable.withString(resolvedKind),
@@ -216,6 +235,11 @@ SELECT a.id AS id,
           request: const JsonObjectConverter().fromSql(
             row.read<String>('request'),
           ),
+          // SQLite's JSON gives a boolean as 1 or 0.
+          targetIntact: switch (row.read<int?>('target_intact')) {
+            null => null,
+            final int flag => flag == 1,
+          },
         ),
     ];
   }

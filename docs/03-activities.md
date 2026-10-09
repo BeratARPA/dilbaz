@@ -18,7 +18,7 @@ Her etkinlik: amaç, kol (P5), seviye, akış, değerlendirme, FSRS etkisi, log 
 |---|---|---|
 | `correct` | Referansla eşleşti | doğru |
 | `acceptable_variant` | Başka ama doğal ve doğru bir ifade (I-17) | doğru. Hedef kelime cevapta yoksa (`target_ok=false`; ör. present kartında "gift") **hedefsiz doğru cevaptır**: hata sayılmaz, hedefin kanıtı da sayılmaz. "Doğru! Bu kart başka bir kelimeyi çalışıyor, başka nasıl söylersin?" denir ve istem yeniden sorulur. |
-| `minor_error` | Anlam korunmuş, küçük biçim hatası | Hata hedef öğedeyse (`target_ok=false`) yanlış; değilse doğru. Hata etiketi her durumda profile yazılır. |
+| `minor_error` | Anlam korunmuş, küçük biçim hatası | Hata hedef öğedeyse (`target_ok=false`) yanlış; değilse doğru. LLM'in kararında hedefi motor belirler (ADR-0010). Hata etiketi her durumda profile yazılır. |
 | `wrong` | Hedef yapı/anlam yanlış | yanlış |
 | `off_target` | Başka bir şey söylenmiş | yanlış (ipucu: "istenen anlam bu değil") |
 | `unintelligible` | Ses tanıma anlamsız sonuç verdi | Deneme sayılmaz; tekrar kayıt ya da yazarak cevap istenir |
@@ -108,7 +108,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
    - Referans her zaman `correct`'tir.
    - Karar listeye göre değil hedefe göre verilir, çünkü bir cümle birden çok öğe taşır ve paket listeleri cümlenin seçilmiş hedeflerine göre yazılmıştır. Örnek: "I've got homework to do." cümlesinin varyantı "I have homework to do", `homework` kartında doğrudur, `get` kartında hedefsizdir.
    - Hedef kelime referansın kendisinde bile bulunamıyorsa (kalıp kartları, biçim tablosunda olmayan yazımlar) liste belirleyicidir: `variants` hedefli, `alternatives` hedefsiz sayılır.
-3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir. Kişisel listeler ayrı bir tabloda tutulmaz: aynı taşıyıcıya verilip LLM'in `acceptable_variant` dediği cevaplar denemelerden okunur (`CardRepository.personalAnswers`, F1-16). Deneme günlüğü bunları zaten değiştirilemez olarak saklar (I-03).
+3. Aksi hâlde LLM'e gider (`07` §2'deki sağlayıcı sırası). LLM `acceptable_variant` derse bu cevap kişisel varyant listesine eklenir, `target_ok=false` ise kişisel alternatif listesine. Bir sonraki sefer deterministik eşleşir. LLM `minor_error` derse `target_ok`'u motor belirler: cevap, hedefi söyleyen en yakın doğru cevapla hizalanır ve hedef kelimelerin doğru biçimde ve yerinde olup olmadığına bakılır. Dilbilgisi kartında cümlenin tamamı hedeftir (ADR-0010). Kişisel listeler ayrı bir tabloda tutulmaz: aynı taşıyıcıya verilip LLM'in `acceptable_variant` dediği cevaplar denemelerden okunur (`CardRepository.personalAnswers`, F1-16). Deneme günlüğü bunları zaten değiştirilemez olarak saklar (I-03).
 4. LLM erişilemezse (çevrimdışı, kota dolu ya da veri onayı yok) cevap, hedefi içeren doğru cevapların en yakınıyla **kelime düzeyinde hizalanır**. Lemma ve biçim tablosu paketten gelir.
    - **Fark türleri:** eksik kelime, fazla kelime, aynı lemmanın başka biçimi, sıra (yan yana iki kelimenin yer değiştirmesi ya da bir kelimenin başka yere taşınması), başka kelime. İlk dördü sınıflanabilir farktır. "Başka kelime" sınıflanamaz, çünkü eş anlamlı mı yanlış mı olduğunu yalnızca LLM söyleyebilir.
    - **Küçük fark:** en fazla 1 fark. Doğru cevap 6 kelime ya da daha uzunsa en fazla 2 fark.

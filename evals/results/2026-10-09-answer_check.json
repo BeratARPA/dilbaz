@@ -1,0 +1,36 @@
+{
+  "route": "answer_check",
+  "prompt": "answer_check@3",
+  "date": "2026-10-09",
+  "cases": 285,
+  "scores": [
+    {
+      "model": "gemini-3.1-flash-lite",
+      "cases": 285,
+      "failures": 0,
+      "accuracy": 0.9368421052631579,
+      "falseWrong": 0.022988505747126436,
+      "goldCorrect": 87,
+      "targetOk": 0.8487084870848709,
+      "tagHit": 0.9444444444444444,
+      "schemaValid": 1,
+      "leakServed": 0,
+      "leakRaw": 0.1105072463768116,
+      "longHints": 0,
+      "latencyP50": 1472,
+      "latencyP95": 5165,
+      "tokens": {
+        "input": 1722173,
+        "cached": 955742,
+        "output": 73371
+      },
+      "passes": {
+        "accuracy": true,
+        "falseWrong": true,
+        "leakServed": true,
+        "schemaValid": true
+      },
+      "complete": true
+    }
+  ]
+}

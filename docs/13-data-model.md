@@ -163,7 +163,9 @@ create table attempt_amendments (        -- değişmez denemelere sonradan gelen
   - `hints_used`, `hint_max_level`: cevaptan önce açılan ipuçları. Puanlı son denemede gösterimin en yüksek ipucudur; istekle açılan cevap (H4) dahil.
 - **Sonradan gelen bilgi (F1-21, `attempt_amendments`):**
   - LLM'siz `uncertain` kalan denemenin `llm` alanı sorulan isteği de taşır: `request` (`answer_check` gövdesi). Bağlantı gelince aynı istek yeniden gönderilir.
-  - `user_dispute` = `{answer, request}`. İtirazla aynı işlemde `content_reports` satırı da yazılır (`reason = answer`).
+    - Yanında `target_intact` durur: motorun cevap anındaki hedef hükmü. Geç gelen `minor_error` kararını yerleştirir (ADR-0010).
+  - `user_dispute` = `{answer, request, target_intact}`. İtirazla aynı işlemde `content_reports` satırı da yazılır (`reason = answer`).
+  - `target_intact` alanından önce saklanmış cevaplarda geç gelen kararın `target_ok`'u LLM'den gelir.
   - `llm_resolved` = `{verdict, target_ok, error_tags, provider, model, catalog, confidence}`. LLM karar veremezse (`refused`, `invalid`) `{code}` olur.
   - Kanıt hesabı ve kişisel cevaplar `llm_resolved` kararını denemenin kendi kararından önce okur. FSRS puanı değişmez (I-03, I-08).
 

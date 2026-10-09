@@ -113,6 +113,7 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 | 0007 | Motor ayrı saf Dart paketi (`dilbaz_engine`), dile özgü kod yok |
 | 0008 | İçerik hattı: Python araçları + versiyonlu dil paketleri |
 | 0009 | Sıfır bütçe: her bileşende ücretsiz olan en iyi seçenek. LLM rotaları Gemini + Groq ücretsiz katmanlarıyla; her zaman deterministik yedek. Deepgram kredisi, cihaz üstü ses, Kokoro paket sesleri, içerik Claude Code oturumlarında. |
+| 0010 | Küçük hatada hedefi (`target_ok`) LLM değil motor belirler |
 
 ## 9. Durum
 
