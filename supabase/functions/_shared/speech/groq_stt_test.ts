@@ -71,6 +71,25 @@ Deno.test("refusals map to failures, a spent day to the quota", () => {
     status(429, { "x-ratelimit-remaining-requests": "0" }),
     "provider_quota",
   );
+  // The day's audio seconds are gone while requests are left.
+  const requestsLeft = new Response(null, {
+    status: 429,
+    headers: { "x-ratelimit-remaining-requests": "1900" },
+  });
+  assertEquals(
+    groqFailureOf(
+      requestsLeft,
+      '{"error":{"message":"Rate limit reached for model ' +
+        "`whisper-large-v3` on audio seconds per day (ASD): Limit 28800, " +
+        'Used 28790, Requested 30."}}',
+    ),
+    "provider_quota",
+  );
+  // An hour's limit passes.
+  assertEquals(
+    groqFailureOf(requestsLeft, "... on audio seconds per hour (ASH) ..."),
+    "provider_busy",
+  );
   assertEquals(status(498), "provider_busy");
   assertEquals(status(500), "provider_error");
 });

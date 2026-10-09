@@ -30,16 +30,21 @@ const extensions: Record<string, string> = {
   "audio/ogg": "ogg",
 };
 
-/** Maps a refused request to a failure (Groq's documented statuses). */
-export function groqFailureOf(response: Response): SttFailure {
+/**
+ * Maps a refused request to a failure (Groq's documented statuses); [body]
+ * is its error message.
+ */
+export function groqFailureOf(response: Response, body = ""): SttFailure {
   const status = response.status;
   if (status === 400 || status === 413 || status === 415 || status === 422) {
     return "bad_audio";
   }
   if (status === 401 || status === 403) return "provider_auth";
   if (status === 429) {
-    // No requests left today: the daily quota, not a passing limit.
-    return response.headers.get("x-ratelimit-remaining-requests") === "0"
+    // A daily limit, not a passing one: no requests left today, or the
+    // day's audio seconds (ASD), which only the message names.
+    return response.headers.get("x-ratelimit-remaining-requests") === "0" ||
+        body.includes("per day")
       ? "provider_quota"
       : "provider_busy";
   }
@@ -74,8 +79,8 @@ export function groqStt(apiKey: string, fetcher: Fetch = fetch): SpeechToText {
         return { ok: false, failure: "network" };
       }
       if (!response.ok) {
-        await response.body?.cancel();
-        return { ok: false, failure: groqFailureOf(response) };
+        const text = await response.text();
+        return { ok: false, failure: groqFailureOf(response, text) };
       }
       const body = await response.json() as GroqTranscription;
       const seconds = body.duration ?? body.segments?.at(-1)?.end ?? 0;
