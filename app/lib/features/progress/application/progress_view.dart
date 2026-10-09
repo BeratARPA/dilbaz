@@ -55,5 +55,9 @@ abstract class ProgressView with _$ProgressView {
     int? vocabulary,
     @Default(<CanDoView>[]) List<CanDoView> canDos,
     @Default(<AnchorView>[]) List<AnchorView> anchors,
+
+    /// No test recording with speech in it yet: the baseline is offered
+    /// (docs/06 §2 part 4).
+    @Default(false) bool offerBaseline,
   }) = _ProgressView;
 }

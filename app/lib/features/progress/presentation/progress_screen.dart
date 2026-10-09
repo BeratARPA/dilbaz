@@ -181,6 +181,18 @@ class _Monthly extends ConsumerWidget {
       children: [
         Text(l10n.progressMonthlyTitle, style: theme.textTheme.titleLarge),
         if (anchors.isEmpty) Text(l10n.progressMonthlyEmpty),
+        // The optional first recording (docs/06 §2 part 4).
+        if (view.offerBaseline)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: () async {
+                await context.push(AppRoutes.baseline);
+                if (context.mounted) ref.invalidate(progressProvider);
+              },
+              child: Text(l10n.progressBaselineOffer),
+            ),
+          ),
         for (final anchor in anchors)
           Card.outlined(
             margin: EdgeInsets.zero,

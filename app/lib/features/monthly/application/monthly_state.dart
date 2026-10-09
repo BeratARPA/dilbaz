@@ -59,8 +59,12 @@ sealed class MonthlyState with _$MonthlyState {
 
   const factory task(TestStep step) = MonthlyTask;
 
-  /// The microphone could not be used for this task.
+  /// The microphone could not be used for this task, or nothing was heard
+  /// in its recording.
   const factory failed(TestStep step, SpeakingFailure failure) = MonthlyFailed;
+
+  /// A recording is written down, to see that something was heard in it.
+  const factory hearing() = MonthlyHearing;
 
   /// Every task is recorded; the last ones are being processed.
   const factory finishing() = MonthlyFinishing;

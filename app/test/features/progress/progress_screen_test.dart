@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
+import 'package:dilbaz_app/features/monthly/presentation/monthly_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,34 @@ void main() {
       find.textContaining(trStrings.progressClauses(2, 1)),
       findsNWidgets(2),
     );
+  });
+
+  testWidgets(
+    'without a recording to listen back to, the baseline is offered',
+    (tester) async {
+      await tester.runAsync(() async {
+        db = memoryDatabase();
+        await installCardPacks(db);
+      });
+      addTearDown(db.close);
+      await tester.pumpDilbazApp(
+        db: db,
+        extra: cardDataOverrides(db: db, tutor: FakeTutorRepository()),
+      );
+      await tapText(tester, trStrings.tabProgress);
+      expect(find.text(trStrings.progressMonthlyEmpty), findsOneWidget);
+
+      await tapText(tester, trStrings.progressBaselineOffer);
+      expect(find.byType(MonthlyScreen), findsOneWidget);
+      expect(find.text(trStrings.monthlyBaselineTitle), findsOneWidget);
+    },
+  );
+
+  testWidgets('with recordings to listen to, no baseline is offered', (
+    tester,
+  ) async {
+    await openProgress(tester);
+    expect(find.text(trStrings.progressBaselineOffer), findsNothing);
   });
 
   testWidgets('every part fits a small phone at double text size', (

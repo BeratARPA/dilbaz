@@ -48,7 +48,8 @@
 - **Durum (F1-19):** Seviye testi sonucunda isteğe bağlı "Başlangıç kaydı (1 dk)" düğmesi var. Kayıt ANC-1'dir: 30 sn hazırlık, en çok 1 dakika, aylık testin işleme hattı.
   - Ayrı bir `monthly_speaking` değerlendirmesi olarak saklanır (`results.baseline = true`); ayın testi sayılmaz.
   - Yapılmadıysa ilk aylık testin ANC-1 kaydı başlangıç olur.
-  - Düğme yalnızca kursta henüz konuşma kaydı (başlangıç ya da aylık test) yoksa görünür. İlk kayıt bir kez olur; yeniden testte de böyledir.
+  - Düğme, kursta içinde konuşma duyulan bir test kaydı (başlangıç ya da aylık test) yokken görünür: seviye testi sonucunda ve İlerleme'nin aylık kayıtlar bölümünde. İlk kayıt bir kez olur; yeniden testte de böyledir.
+  - Hiçbir şey duyulmayan kayıt (sessizlik ya da başka dil: döküm var, ölçüm ve işaretleme yok) "ilk kayıt" sayılmaz, dinleme listesine girmez.
 
 ### Çıktılar
 - **Bölümler ve bırakma:** Bölümler sırayla gelir (kelime, gramer, dikte). Test her an bırakılabilir: bitmiş bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Kelime bölümü bitmeden bırakılan testten hiçbir şey kaydedilmez. Test sırasında hiçbir cevap doğru ya da yanlış diye gösterilmez.
@@ -153,7 +154,11 @@ Konuşma performansı, SLA araştırmasının standart üç boyutunda ölçülü
   - Seviye görevleri anahtar sırasıyla aydan aya döner. Seviyede görev yoksa en yakın alt seviye alınır.
 - **Akış:**
   - Tanıtım ve mikrofon denemesi (ses düzeyi çubuğu; hiçbir şey saklanmaz).
-  - Görevler sırayla. Her kayıt arka planda işlenir, öğrenci sıradaki göreve geçer: transkript, `speaking_annotate` (`assessment: true`, effort high, tek işaretleme), ölçümler.
+  - Görevler sırayla. Her kayıt önce yazıya dökülür ve ölçülür (birkaç saniye, "Kaydına bakıyorum…"), sonra öğrenci sıradaki göreve geçer.
+    - İçinde İngilizce kelime duyulmadıysa (sessizlik ya da başka dil) "İngilizce bir şey duyamadım. Bir kez daha, İngilizce dener misin?" yazar ve görev yeniden kaydedilir. O kayıt saklanır ama testin parçası olmaz; işaretlemeye de gönderilmez.
+    - Döküm alınamazsa (bağlantı ya da kota) kayıt işlenmeden saklanır ve test sürer.
+    - `speaking_annotate` (`assessment: true`, effort high, tek işaretleme) arka planda gelir; ölçümler işaretlemeyle yeniden hesaplanır. İşaretleme gelmezse ilk ölçümler kalır.
+    - Neden (2026-10-09, telefonda bulundu): Tanıtım "Bir dakika kendini tanıt." diyor, görevin yönergesi de Türkçeydi ve İngilizce konuşulacağını söylemiyordu. Kullanıcı kendini Türkçe tanıttı. Deepgram (`language=en`) hiç kelime döndürmedi, kayıt sessizce "henüz işlenmedi" diye saklandı. Konuşma görevi bu durumu zaten yakalıyordu. Şimdi tanıtım ve görev kartı "İngilizce" diyor.
   - Hepsi bitince rapor.
 - **Kayıt:**
   - Kayıtlar `is_assessment = true` ve testin kimliğiyle saklanır.

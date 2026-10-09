@@ -221,6 +221,41 @@ void main() {
     expect(october.clauses, 2);
     expect(october.errorFree, 1);
     expect(october.speechRate, isNotNull);
+    expect(view.offerBaseline, isFalse);
+  });
+
+  test('a recording with nothing heard in it is no first recording', () async {
+    // Written down without a word: silence, or not the course's language.
+    final recordings = DriftRecordingRepository(db, now: () => cardNow);
+    await recordings.create(
+      id: 'baseline',
+      userId: FakeAuthRepository.id,
+      courseId: courseId,
+      taskRef: anchorTask,
+      audioPath: '/recordings/baseline.m4a',
+      duration: const Duration(seconds: 35),
+      isAssessment: true,
+    );
+    await recordings.update(
+      'baseline',
+      transcript: const Transcript(
+        text: '',
+        provider: 'fake',
+        model: 'fake',
+        durationMs: 35000,
+      ),
+    );
+    var view = await read();
+    expect(view.anchors.single.recordings, isEmpty);
+    expect(view.anchors.single.months, isEmpty);
+    // The baseline can still be made.
+    expect(view.offerBaseline, isTrue);
+
+    container.dispose();
+    await recorded('oct', anchorTask, daysAgo: 0, assessment: true);
+    view = await read();
+    expect(view.anchors.single.recordings.single.path, '/recordings/oct.m4a');
+    expect(view.offerBaseline, isFalse);
   });
 
   test('before any data: zeros and no recordings', () async {
@@ -228,5 +263,6 @@ void main() {
     expect(view.counts, (known: 0, recallable: 0, durable: 0, used: 0));
     expect(view.vocabulary, isNull);
     expect(view.anchors.single.recordings, isEmpty);
+    expect(view.offerBaseline, isTrue);
   });
 }

@@ -10,7 +10,6 @@ import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/session_providers.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
-import 'package:dilbaz_app/data/speech/transcript.dart';
 import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
 import 'package:dilbaz_app/data/tasks/speaking_task.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
@@ -40,9 +39,10 @@ typedef _Context = ({
 /// The monthly speaking test (A23, docs/06 §3): a microphone check, the
 /// three anchors with the same settings every month (30 s to prepare, no
 /// phrases, at most two minutes, one at A0–A1), then two tasks of the
-/// level with its scaffolds. Each recording is processed while the next
-/// task goes on: the tutor marks it once (v1), the engine measures it.
-/// The report compares the anchors with last month; no grade (§3.4).
+/// level with its scaffolds. Each recording is written down and measured
+/// before the next task, so that one with nothing heard in it is recorded
+/// again; the tutor marks it once (v1) while the test goes on. The report
+/// compares the anchors with last month; no grade (§3.4).
 ///
 /// [baseline]: the placement test's optional first recording, ANC-1 for a
 /// minute (§2 part 4), kept for before/after listening.
@@ -208,7 +208,9 @@ class MonthlyTestController extends _$MonthlyTestController {
     _limit = Timer(_step.task.limit, () => unawaited(stopRecording()));
   }
 
-  /// Keeps the recording, starts its processing and goes on.
+  /// Keeps the recording and writes it down. With nothing heard in it
+  /// (silence, or not the course's language) the task is recorded again;
+  /// otherwise the test goes on while the tutor marks it.
   Future<void> stopRecording() async {
     final current = state.value;
     if (current is! MonthlyTask || !current.step.recording) return;
@@ -222,27 +224,44 @@ class MonthlyTestController extends _$MonthlyTestController {
     _speaking += audio.duration;
     final task = _tasks[_index];
     final id = const Uuid().v7();
-    await ref
-        .read(recordingPipelineProvider)
-        .keep(
-          id: id,
-          userId: _context.userId,
-          courseId: _context.courseId,
-          taskRef: task.key,
-          audio: audio,
-          isAssessment: true,
-          assessmentId: _assessmentId,
-        );
+    final pipeline = ref.read(recordingPipelineProvider);
+    await pipeline.keep(
+      id: id,
+      userId: _context.userId,
+      courseId: _context.courseId,
+      taskRef: task.key,
+      audio: audio,
+      isAssessment: true,
+      assessmentId: _assessmentId,
+    );
     if (!ref.mounted) return;
-    _recorded.add((
+    final kept = (
       taskRef: task.key,
       recordingId: id,
       anchor: task.anchor != null,
       metrics: null,
       clauses: null,
       errorFree: null,
-    ));
-    _pending.add(_process(task, id, audio));
+    );
+    // Saved even when the learner leaves while it is written down.
+    _recorded.add(kept);
+    state = const AsyncData(MonthlyState.hearing());
+    switch (await pipeline.transcribe(id, audio)) {
+      case Err():
+        // Not written down: kept as it is, and the test goes on.
+        if (!ref.mounted) return;
+        _pending.add(Future.value(kept));
+      case Ok(value: final transcript):
+        final words = timedWords(transcript);
+        final measured = await pipeline.measure(id, words, _context.kit);
+        if (!ref.mounted) return;
+        if (measured == null) {
+          _recorded.remove(kept);
+          state = AsyncData(MonthlyState.failed(_step, SpeakingFailure.silent));
+          return;
+        }
+        _pending.add(_mark(pipeline, task, kept, words, measured));
+    }
     if (_index + 1 < _steps.length) {
       _index++;
       state = AsyncData(MonthlyState.task(_step));
@@ -251,31 +270,17 @@ class MonthlyTestController extends _$MonthlyTestController {
     await _finish();
   }
 
-  Future<MonthlyTaskResult> _process(
+  /// The tutor's marks, then the measures with them; without marks the
+  /// first measures stay.
+  Future<MonthlyTaskResult> _mark(
+    RecordingPipeline pipeline,
     SpeakingTask task,
-    String id,
-    RecordedAudio audio,
+    MonthlyTaskResult kept,
+    List<TimedWord> words,
+    SpeechMetrics measured,
   ) async {
-    final pipeline = ref.read(recordingPipelineProvider);
-    final kit = _context.kit;
-    final unprocessed = (
-      taskRef: task.key,
-      recordingId: id,
-      anchor: task.anchor != null,
-      metrics: null,
-      clauses: null,
-      errorFree: null,
-    );
-    final Transcript transcript;
-    switch (await pipeline.transcribe(id, audio)) {
-      case Ok(:final value):
-        transcript = value;
-      case Err():
-        return unprocessed;
-    }
-    final words = timedWords(transcript);
     final marks = await pipeline.mark(
-      id,
+      kept.recordingId,
       SpeakingAnnotateRequest(
         l1: _context.l1,
         l2: _context.l2,
@@ -289,17 +294,20 @@ class MonthlyTestController extends _$MonthlyTestController {
       ),
     );
     final annotation = marks.annotated?.annotation;
-    final metrics = await pipeline.measure(
-      id,
-      words,
-      kit,
-      annotation: annotation,
-    );
+    final metrics = annotation == null
+        ? measured
+        : await pipeline.measure(
+                kept.recordingId,
+                words,
+                _context.kit,
+                annotation: annotation,
+              ) ??
+              measured;
     return (
-      taskRef: task.key,
-      recordingId: id,
-      anchor: task.anchor != null,
-      metrics: metrics?.toJson(),
+      taskRef: kept.taskRef,
+      recordingId: kept.recordingId,
+      anchor: kept.anchor,
+      metrics: metrics.toJson(),
       clauses: annotation?.clauses.length,
       errorFree: annotation?.clauses.where((c) => c.errorFree).length,
     );

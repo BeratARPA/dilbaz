@@ -1420,6 +1420,10 @@
   "@speakingListening": {
     "description": "Speaking task: while recording."
   },
+  "speakingInEnglish": "İngilizce anlat; birkaç kısa cümle de yeter.",
+  "@speakingInEnglish": {
+    "description": "Task card: the answer is spoken in English, whatever the prompt's language."
+  },
   "speakingElapsed": "{elapsed} / {limit}",
   "@speakingElapsed": {
     "description": "Speaking task: time recorded and the limit, as m:ss.",
@@ -1452,9 +1456,9 @@
   "@speakingFailedMicrophone": {
     "description": "Speaking task: the microphone could not be opened."
   },
-  "speakingFailedSilent": "Bir şey duyamadım. Bir kez daha dener misin?",
+  "speakingFailedSilent": "İngilizce bir şey duyamadım. Bir kez daha, İngilizce dener misin?",
   "@speakingFailedSilent": {
-    "description": "Speaking task: nothing was heard."
+    "description": "Speaking task or test: nothing was heard in English (silence, or another language)."
   },
   "speakingFailedNetwork": "Bağlantı yok gibi. Kaydın saklandı; bağlantı gelince yeniden deneyebilirsin.",
   "@speakingFailedNetwork": {
@@ -1584,7 +1588,7 @@
   "@monthlyUnavailable": {
     "description": "Monthly test: no tasks or course yet."
   },
-  "monthlyIntro": "{tasks} kısa görev var: üçü her ay aynı, gerisi seviyene göre. Her görevde hazırlanır, en çok {minutes} dakika konuşursun. Not yok; kayıtların aydan aya karşılaştırmak için saklanır.",
+  "monthlyIntro": "{tasks} kısa görev var: üçü her ay aynı, gerisi seviyene göre. Her görevde hazırlanır, en çok {minutes} dakika İngilizce konuşursun. Not yok; kayıtların aydan aya karşılaştırmak için saklanır.",
   "@monthlyIntro": {
     "description": "Monthly test: what the test is (docs/06 §3.1).",
     "placeholders": {
@@ -1600,7 +1604,7 @@
   "@monthlyIntroPlace": {
     "description": "Monthly test: the same place and phone help comparison (docs/06 §5)."
   },
-  "monthlyBaselineIntro": "Bir dakika kendini tanıt. Bu kayıt seviyeni etkilemez; aylar sonra bugünkü sesini dinleyip karşılaştırmak için saklanır.",
+  "monthlyBaselineIntro": "Bir dakika İngilizce kendini tanıt; birkaç kısa cümle yeter. Bu kayıt seviyeni etkilemez; aylar sonra bugünkü sesini dinleyip karşılaştırmak için saklanır.",
   "@monthlyBaselineIntro": {
     "description": "Baseline: what the recording is for (docs/06 §2 part 4)."
   },
@@ -1639,6 +1643,10 @@
   "monthlyFinishing": "Kayıtların işleniyor…",
   "@monthlyFinishing": {
     "description": "Monthly test: the last recordings are processed."
+  },
+  "monthlyHearing": "Kaydına bakıyorum…",
+  "@monthlyHearing": {
+    "description": "Monthly test: a recording is written down to see that something was heard (docs/06 §3.3a)."
   },
   "monthlyReportTitle": "Bu ayın kaydı",
   "@monthlyReportTitle": {
@@ -1799,6 +1807,10 @@
   "progressMonthlyEmpty": "Aylık kayıt yapınca kayıtlarını burada yan yana dinleyebilirsin.",
   "@progressMonthlyEmpty": {
     "description": "Progress: no monthly recording yet."
+  },
+  "progressBaselineOffer": "Başlangıç kaydı yap (isteğe bağlı, 1 dk)",
+  "@progressBaselineOffer": {
+    "description": "Progress: offers the baseline recording while no test recording has speech in it (docs/06 §2 part 4)."
   },
   "progressListenFirst": "İlk kayıt",
   "@progressListenFirst": {

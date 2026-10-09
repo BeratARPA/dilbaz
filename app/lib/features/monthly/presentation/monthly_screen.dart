@@ -123,6 +123,12 @@ class MonthlyScreen extends ConsumerWidget {
                   _Close(onClose: close),
                 ],
               ),
+              MonthlyHearing() => _Page(
+                content: [
+                  const Center(child: CircularProgressIndicator()),
+                  Text(l10n.monthlyHearing, textAlign: TextAlign.center),
+                ],
+              ),
               MonthlyFinishing() => _Page(
                 content: [
                   const Center(child: CircularProgressIndicator()),

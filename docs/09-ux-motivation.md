@@ -159,11 +159,12 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Giriş ve seçim:** Pratik → "Konuşma görevi". "Ne anlatmak istersin?" altında motorun önerdiği 3 görev, kalanlar "Başka görevler"de (I-14). Sabit görevler (ANC) yalnızca aylık testte çıkar.
 - **Görev kartı:**
   - Başlık, yönerge, üç başlangıç ve anlamları. B1 ve üstünde başlangıçlar "Kalıpları göster" ile açılır.
+  - Yönergenin altında "İngilizce anlat; birkaç kısa cümle de yeter." Yönerge Türkçe olabilir, cevap İngilizcedir (aylık testte de).
   - Hazırlık sayacı. Süre bitince kayıt kendiliğinden başlamaz.
   - "Konuşmaya başla" ve "Başka görev seç".
 - **Kayıt:** süre / 2:00 ve ses düzeyi çubuğu (dalga formu yerine). "Bitti" ile ya da 2 dakikada kendiliğinden durur.
 - **İşleniyor:** iki adımdır, "Söylediklerin yazıya geçiriliyor…" ve "Geri bildirim hazırlanıyor…".
-- **Sorunlar:** Bağlantı yoksa ya da ses yazıya geçirilemezse kayıt saklanır, "Yeniden dene" çıkar. Bir şey duyulmadıysa ya da mikrofon açılamadıysa "Yeniden kaydet" çıkar. Ses kaydı izni yoksa görev açılmaz (I-18).
+- **Sorunlar:** Bağlantı yoksa ya da ses yazıya geçirilemezse kayıt saklanır, "Yeniden dene" çıkar. İngilizce bir şey duyulmadıysa ("İngilizce bir şey duyamadım. Bir kez daha, İngilizce dener misin?") ya da mikrofon açılamadıysa "Yeniden kaydet" çıkar. Ses kaydı izni yoksa görev açılmaz (I-18).
 - **Geri bildirim:**
   - "1 dk 12 sn konuştun · 86 kelime". Not ve puan yok (I-04).
   - Açılır "Duyduğum" metni, "İyi gidenler".
@@ -184,7 +185,8 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
   - "Bu ayın kaydı" ve görev başına ölçümler; sabit görevde "Geçen ay: …".
   - İşlenmemiş kayıt için "Bu kayıt henüz işlenmedi; saklandı."
   - "Bu ölçümler nedir?"
-- **Başlangıç kaydı:** seviye testi sonucunda düşük vurgulu bir bağlantıdır; kursta henüz kayıt yoksa görünür. Aynı ekran tek görevle açılır; sonunda "Kaydın saklandı." yazar.
+- **Başlangıç kaydı:** seviye testi sonucunda ve İlerleme'nin aylık kayıtlar bölümünde düşük vurgulu bir bağlantıdır; kursta içinde konuşma duyulan bir kayıt yokken görünür. Aynı ekran tek görevle açılır ("Bir dakika İngilizce kendini tanıt; birkaç kısa cümle yeter."); sonunda "Kaydın saklandı." yazar.
+- **Kayıttan sonra:** "Kaydına bakıyorum…" (birkaç saniye). İngilizce bir şey duyulmadıysa görev yeniden kaydedilir (`06` §3.3a).
 - Testten onaysız çıkılır, yapılan saklanır (I-14).
 - **Bugün ekranı:** Davet kartları eklenince ekran, Pratik gibi tümüyle kurulan bir kaydırma görünümüne geçti. Böylece küçük ekranda da her şeye ulaşılır.
 
@@ -227,6 +229,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Yapabildiklerin:** paketin can-do özetleri ve durumları (Kanıtlandı / Gösterildi / Denendi / Henüz denenmedi), gerekirse "tazelemeye değer".
 - **Aylık kayıtlar:**
   - Her sabit görev için üç dinleme düğmesi: ilk kayıt, önceki ay, son kayıt (tarihleriyle).
+  - İçinde konuşma duyulmayan kayıt listelenmez. Dinlenecek kayıt yokken "Başlangıç kaydı yap (isteğe bağlı, 1 dk)" bağlantısı görünür; kayıttan dönünce bölüm yenilenir.
   - Ay ay satırlar: dakikada kelime, dakikada uzun duraklama, hatasız cümlecik sayısı.
 - Sayfa aşağı çekince yenilenir.
 - **Sonraya kalanlar:**

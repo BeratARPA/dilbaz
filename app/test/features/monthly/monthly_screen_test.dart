@@ -93,6 +93,8 @@ void main() {
     expect(find.text(trStrings.monthlyTaskNumber(1, 2)), findsOneWidget);
     expect(find.text(trStrings.monthlyAnchorNote), findsOneWidget);
     expect(find.text('Kendini tanıt: anlat.'), findsOneWidget);
+    // The prompt is in Turkish; the answer is said in English.
+    expect(find.text(trStrings.speakingInEnglish), findsOneWidget);
     expect(find.text(trStrings.speakingPreparation(30)), findsOneWidget);
     // No phrases, no way out to another task in a test.
     expect(find.text(trStrings.speakingPhrases), findsNothing);

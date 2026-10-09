@@ -7,7 +7,7 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_bank.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
-import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
+import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/placement/application/placement_controller.dart';
 import 'package:dilbaz_app/features/placement/application/placement_state.dart';
@@ -56,8 +56,8 @@ void main() {
         assessmentRepositoryProvider.overrideWithValue(
           DriftAssessmentRepository(db),
         ),
-        monthlyTestRepositoryProvider.overrideWithValue(
-          DriftMonthlyTestRepository(db),
+        recordingRepositoryProvider.overrideWithValue(
+          DriftRecordingRepository(db),
         ),
         placementBankRepositoryProvider.overrideWithValue(
           FakeBankRepository(bank),
@@ -411,8 +411,8 @@ void main() {
           assessmentRepositoryProvider.overrideWithValue(
             DriftAssessmentRepository(db),
           ),
-          monthlyTestRepositoryProvider.overrideWithValue(
-            DriftMonthlyTestRepository(db),
+          recordingRepositoryProvider.overrideWithValue(
+            DriftRecordingRepository(db),
           ),
           placementBankRepositoryProvider.overrideWithValue(repository),
           profileRepositoryProvider.overrideWithValue(profiles),
@@ -465,36 +465,47 @@ void main() {
       expect(await db.select(db.assessments).get(), hasLength(2));
     });
 
-    test('the baseline is offered while the course has no recording', () async {
-      final bank = zzBank();
-      await start(bank: bank);
-      answerWords(bank);
-      await controller().leave();
-      expect((state()! as PlacementDone).report!.offerBaseline, isTrue);
-      container.dispose();
+    test(
+      'the baseline is offered until a test recording has speech in it',
+      () async {
+        final bank = zzBank();
+        Future<bool> offered() async {
+          await start(bank: bank, withCourse: false);
+          answerWords(bank);
+          await controller().leave();
+          final offer = (state()! as PlacementDone).report!.offerBaseline;
+          container.dispose();
+          return offer;
+        }
 
-      // A recording made since: the baseline, or a monthly test.
-      await DriftMonthlyTestRepository(db, now: () => DateTime.utc(2026)).save(
-        id: 'monthly-1',
-        userId: FakeAuthRepository.id,
-        courseId: 'course-1',
-        baseline: true,
-        tasks: const [
-          (
-            taskRef: 'anc-1',
-            recordingId: 'recording-1',
-            anchor: true,
-            metrics: null,
-            clauses: null,
-            errorFree: null,
-          ),
-        ],
-      );
-      await start(bank: bank, withCourse: false);
-      answerWords(bank);
-      await controller().leave();
-      expect((state()! as PlacementDone).report!.offerBaseline, isFalse);
-    });
+        /// A baseline or monthly recording, written down; measured when
+        /// speech was heard in it.
+        Future<void> recording(String id, {required bool speech}) => db
+            .into(db.recordings)
+            .insert(
+              RecordingsCompanion.insert(
+                id: id,
+                profileId: FakeAuthRepository.id,
+                courseId: 'course-1',
+                taskRef: const Value('zz.task.anc_1'),
+                audioPath: Value('$id.m4a'),
+                durationMs: 35000,
+                asr: const Value({'words': <Object?>[]}),
+                metrics: Value(speech ? const {'words': 5} : null),
+                isAssessment: const Value(true),
+              ),
+            );
+
+        await course();
+        expect(await offered(), isTrue);
+        // Nothing heard in it: silence, or not the course's language.
+        await recording('recording-1', speech: false);
+        expect(await offered(), isTrue);
+        await recording('recording-2', speech: true);
+        expect(await offered(), isFalse);
+        await start(bank: bank, withCourse: false);
+      },
+    );
 
     test('actions out of turn change nothing', () async {
       await start(bank: zzBank());

@@ -1,6 +1,8 @@
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
+import 'package:dilbaz_app/data/speech/speech_repository.dart';
 import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
+import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/features/monthly/application/monthly_controller.dart';
 import 'package:dilbaz_app/features/monthly/application/monthly_invitation.dart';
 import 'package:dilbaz_app/features/monthly/application/monthly_state.dart';
@@ -238,6 +240,63 @@ void main() {
     recorder.silent = true;
     await record();
     expect((current()! as MonthlyFailed).failure, SpeakingFailure.silent);
+  });
+
+  test(
+    'nothing heard in a recording is said, and the task recorded again',
+    () async {
+      await begin(baseline: true);
+      // Silence, or not the course's language: no word comes back.
+      speech.heard = '';
+      await record();
+      expect((current()! as MonthlyFailed).failure, SpeakingFailure.silent);
+      // The tutor is not asked to mark nothing.
+      expect(tutor.annotateAsked, isEmpty);
+
+      controller().tryAgain();
+      expect(current(), isA<MonthlyTask>());
+      speech.heard = said;
+      await record();
+      expect((current()! as MonthlyReport).tasks.single.words, 5);
+      final tasks =
+          (await db.select(db.assessments).get()).single.results['tasks']!
+              as List;
+      final recordings = await db.select(db.recordings).get();
+      expect(recordings, hasLength(2));
+      // Both are kept; only the one with speech in it is the test's.
+      final heard = recordings.where((r) => r.hasSpeech).single;
+      expect(recordings.where((r) => !r.hasSpeech), hasLength(1));
+      expect((tasks.single! as Map)['recording_id'], heard.id);
+    },
+  );
+
+  test('leaving after nothing was heard keeps no test', () async {
+    await begin(baseline: true);
+    speech.heard = '';
+    await record();
+    await controller().leave();
+    expect(await db.select(db.assessments).get(), isEmpty);
+  });
+
+  test('a recording not written down is kept, and the test goes on', () async {
+    await begin();
+    speech.failure = SpeechFailure.network;
+    await record();
+    expect((current()! as MonthlyTask).step.number, 2);
+    speech.failure = null;
+    await record();
+    final report = current()! as MonthlyReport;
+    expect(report.tasks.first.words, isNull);
+    expect(report.tasks.last.words, 5);
+  });
+
+  test('without marks, the first measures stay', () async {
+    tutor.annotated = null;
+    final report = await takeTest();
+    // The engine's own measures; only the tutor marks "eh" as a filler.
+    expect(report.tasks.first.words, 6);
+    expect(report.tasks.first.speechRate, isNotNull);
+    expect(report.tasks.first.clauses, isNull);
   });
 
   test('without audio consent there is no test (I-18)', () async {

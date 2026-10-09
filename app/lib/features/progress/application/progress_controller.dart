@@ -3,6 +3,7 @@ import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
+import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/progress/application/progress_view.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
@@ -163,13 +164,16 @@ Future<ProgressView?> progress(Ref ref) async {
           refresh: shown[canDo.code]?.refresh ?? false,
         ),
     ],
+    // A recording with nothing heard in it is no "before" (docs/06 §2).
     anchors: [
       for (final task in anchors)
         _anchor(task.title, [
           for (final row in recordings)
-            if (row.taskRef == task.key && row.isAssessment) row,
+            if (row.taskRef == task.key && row.isAssessment && row.hasSpeech)
+              row,
         ]),
     ],
+    offerBaseline: !hasFirstRecording(recordings),
   );
 }
 

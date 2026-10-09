@@ -25,6 +25,20 @@ typedef CorrectedSentence = ({
   List<String> lemmas,
 });
 
+/// Speech in a recording, for before/after listening (docs/06 §2 part 4).
+extension RecordingSpeech on RecordingRow {
+  /// Whether speech was heard in it. Written down with nothing measured or
+  /// marked in it (silence, or not the course's language), it has none;
+  /// not written down yet, it may.
+  bool get hasSpeech => asr == null || metrics != null || annotation != null;
+}
+
+/// Whether the course has a test recording to listen back to: kept, with
+/// speech in it. Until then the baseline is offered (docs/06 §2 part 4).
+bool hasFirstRecording(Iterable<RecordingRow> recordings) => recordings.any(
+  (row) => row.isAssessment && row.audioPath != null && row.hasSpeech,
+);
+
 /// Speaking task and test recordings (docs/13-data-model.md §2.4
 /// `recordings`): the audio's place, the transcript, the marks and the
 /// measures, filled in as processing goes on; and what a task leaves

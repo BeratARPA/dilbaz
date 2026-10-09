@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/repositories/assessment_repository.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
@@ -8,6 +7,7 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_bank.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/placement/application/placement_state.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
@@ -57,10 +57,9 @@ class PlacementController extends _$PlacementController {
     ref.watch(clipPlayerProvider);
     final userId = ref.watch(authRepositoryProvider).userId;
     final assessments = ref.watch(assessmentRepositoryProvider);
-    final monthly = ref.watch(monthlyTestRepositoryProvider);
+    final recordings = ref.watch(recordingRepositoryProvider);
     final bankRepository = ref.watch(placementBankRepositoryProvider);
     final seed = ref.watch(placementSeedProvider);
-    final now = ref.watch(clockProvider);
     final course = userId == null ? null : await assessments.course(userId);
     if (userId == null || course == null) {
       return const PlacementState.unavailable();
@@ -77,8 +76,8 @@ class PlacementController extends _$PlacementController {
     _random = SeededRandom(seed);
     _retake = taken > 0;
     _earlier = await assessments.skillEstimates(course.id);
-    // The baseline is the first recording of all.
-    _offerBaseline = (await monthly.latestBefore(course.id, now())).isEmpty;
+    // The baseline is the first recording with speech in it.
+    _offerBaseline = !hasFirstRecording(await recordings.recordings(course.id));
     _words = _random.shuffled(bank.words);
     _parts = [
       PlacementPart.words,

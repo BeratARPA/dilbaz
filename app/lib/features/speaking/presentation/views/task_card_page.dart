@@ -44,6 +44,8 @@ class TaskCardPage extends StatelessWidget {
           ...header,
           Text(task.title, style: theme.textTheme.titleLarge),
           Text(task.prompt, style: theme.textTheme.bodyLarge),
+          // The prompt may be in the learner's language; the answer is not.
+          Text(l10n.speakingInEnglish, style: theme.textTheme.bodyMedium),
           if (task.phrases.isNotEmpty) _Phrases(task: task),
           if (recording) ...[
             Text(l10n.speakingListening, textAlign: TextAlign.center),
