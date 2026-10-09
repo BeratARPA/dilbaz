@@ -26,6 +26,10 @@ abstract interface class AssessmentRepository {
   /// one (docs/06-assessment.md §2).
   Future<XlexResult?> latestXlex(String courseId);
 
+  /// The course's estimate of each skill a test measured, the latest one
+  /// of each; empty before the first test (docs/06-assessment.md §2).
+  Future<Map<Skill, LevelEstimate>> skillEstimates(String courseId);
+
   /// Whether the course of [userId] has no placement test yet.
   Stream<bool> watchPlacementOpen(String userId);
 
@@ -109,6 +113,19 @@ class DriftAssessmentRepository implements AssessmentRepository {
           when xlex['band_rates'] is Map && xlex['false_alarm_rate'] is num =>
         XlexResult.fromJson(xlex),
       _ => null,
+    };
+  }
+
+  @override
+  Future<Map<Skill, LevelEstimate>> skillEstimates(String courseId) async {
+    final row = await (_db.select(
+      _db.courses,
+    )..where((t) => t.id.equals(courseId))).getSingleOrNull();
+    final estimates = row?.levelEstimates ?? const <String, Object?>{};
+    return {
+      for (final skill in Skill.values)
+        if (estimates[skill.code] case final Map<String, Object?> estimate)
+          skill: LevelEstimate.fromJson(estimate),
     };
   }
 

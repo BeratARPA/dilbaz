@@ -7,19 +7,21 @@ final class PlacementOutcome {
   /// The outcome of the parts that were taken; a part left out is null.
   ///
   /// The curriculum starts at the lower of the vocabulary and grammar
-  /// levels reached: new items build on both, so the weaker one leads.
-  /// Listening has its own estimate and does not move the start. With
-  /// neither part taken the start stays at [fallback], the level the
-  /// learner chose.
+  /// levels reached: new items build on both, so the weaker one leads. A
+  /// test taken again may leave a part out; that part's estimate from an
+  /// [earlier] test still counts. Listening has its own estimate and does
+  /// not move the start. With neither part known the start stays at
+  /// [fallback], the level the learner chose.
   factory of({
     required CefrLevel fallback,
     LevelEstimate? vocabulary,
     LevelEstimate? grammar,
     LevelEstimate? listening,
+    Map<Skill, LevelEstimate> earlier = const {},
   }) {
     final reached = [
-      if (vocabulary != null) vocabulary.reached,
-      if (grammar != null) grammar.reached,
+      ?(vocabulary ?? earlier[Skill.vocabulary])?.reached,
+      ?(grammar ?? earlier[Skill.grammar])?.reached,
     ];
     return PlacementOutcome._(
       skills: {
@@ -30,7 +32,7 @@ final class PlacementOutcome {
       start: reached.isEmpty
           ? fallback
           : reached.reduce((a, b) => a.isAtMost(b) ? a : b),
-      measured: reached.isNotEmpty,
+      measured: vocabulary != null || grammar != null,
     );
   }
 
@@ -52,7 +54,8 @@ final class PlacementOutcome {
   /// The level the curriculum starts at.
   final CefrLevel start;
 
-  /// Whether [start] comes from the test rather than from the fallback.
+  /// Whether the test measured vocabulary or grammar, so that [start] is
+  /// new; otherwise the course keeps its level.
   final bool measured;
 
   /// The entries to write into `courses.level_estimates`: the tested

@@ -48,6 +48,7 @@
 - **Durum (F1-19):** Seviye testi sonucunda isteğe bağlı "Başlangıç kaydı (1 dk)" düğmesi var. Kayıt ANC-1'dir: 30 sn hazırlık, en çok 1 dakika, aylık testin işleme hattı.
   - Ayrı bir `monthly_speaking` değerlendirmesi olarak saklanır (`results.baseline = true`); ayın testi sayılmaz.
   - Yapılmadıysa ilk aylık testin ANC-1 kaydı başlangıç olur.
+  - Düğme yalnızca kursta henüz konuşma kaydı (başlangıç ya da aylık test) yoksa görünür. İlk kayıt bir kez olur; yeniden testte de böyledir.
 
 ### Çıktılar
 - **Bölümler ve bırakma:** Bölümler sırayla gelir (kelime, gramer, dikte). Test her an bırakılabilir: bitmiş bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Kelime bölümü bitmeden bırakılan testten hiçbir şey kaydedilmez. Test sırasında hiçbir cevap doğru ya da yanlış diye gösterilmez.
@@ -67,6 +68,17 @@
   - Kapsama = bu değerlerin ortalaması
   
   Kart verisi arttıkça olasılıklar gerçek kanıtla değişir.
+
+### Yeniden test (F1-25)
+- **Nereden:** Ayarlar → Çalışma → "Seviye testi". Satır, cihazda test varsa görünür. İlk test yapılmadıysa da buradan açılır; Bugün daveti yalnızca ilk test içindir.
+- **Ne zaman:** İstenildiği zaman, bekleme süresi yok. Kullanıcı istedi (2026-10-09): ilk testinde ses çalmadığı için dikte bölümü atlanmıştı.
+- **Sürüm:** Kelime listesi ve dikte cümleleri sırayla değişir (A → B → C → A; sıra kurstaki test sayısından çıkar). Gramer bankası tektir. Maddeler her testte yeni tohumla çekilir, bu yüzden bazıları yeniden gelebilir.
+- **Sonuç:**
+  - Yeni bir `assessments` satırı yazılır, öncekiler değişmez (I-03).
+  - Bitirilen bölümlerin tahminleri kurstakilerin yerine geçer. `courses.vocab_estimate` yeni X_Lex puanıdır. Kişisel kapsama en son testin X_Lex sonucunu kullanır.
+  - Bitirilmeyen bölümün önceki tahmini kursta kalır ve müfredatın başlangıcında sayılmaya devam eder: zayıf olan yol gösterir. Örnek: ilk testte gramer A1, ikincide gramer yapılmadan kelime B1 → başlangıç A1. Motorda: `PlacementOutcome.of(earlier: …)`.
+  - Kartlar, denemeler ve geçmiş değişmez. Müfredat seviyesi yalnızca yeni öğelerin seçimini etkiler (`02` §4.3).
+- **Gösterim:** Genel bakışta "Bu testi daha önce yaptın…" notu çıkar. Sonuçtaki not "Bu ilk ölçüm…" yerine "Bu da kaba bir tahmin. Buradaki sonuçlar öncekilerin yerine geçti…" olur.
 
 ## 3. Aylık konuşma testi (A23) — ayın 1–7'si davet, ~15 dk
 

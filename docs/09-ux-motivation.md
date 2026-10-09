@@ -184,7 +184,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
   - "Bu ayın kaydı" ve görev başına ölçümler; sabit görevde "Geçen ay: …".
   - İşlenmemiş kayıt için "Bu kayıt henüz işlenmedi; saklandı."
   - "Bu ölçümler nedir?"
-- **Başlangıç kaydı:** seviye testi sonucunda düşük vurgulu bir bağlantıdır. Aynı ekran tek görevle açılır; sonunda "Kaydın saklandı." yazar.
+- **Başlangıç kaydı:** seviye testi sonucunda düşük vurgulu bir bağlantıdır; kursta henüz kayıt yoksa görünür. Aynı ekran tek görevle açılır; sonunda "Kaydın saklandı." yazar.
 - Testten onaysız çıkılır, yapılan saklanır (I-14).
 - **Bugün ekranı:** Davet kartları eklenince ekran, Pratik gibi tümüyle kurulan bir kaydırma görünümüne geçti. Böylece küçük ekranda da her şeye ulaşılır.
 
@@ -251,7 +251,8 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 
 **Uygulama notları (F1-23, v1):**
 - **Bölümler:**
-  - Çalışma: günlük süre (5, 10, 15, 20, 30, 45, 60 dk), haftada 3–7 gün, çıpa ve saati.
+  - Çalışma: günlük süre (5, 10, 15, 20, 30, 45, 60 dk), haftada 3–7 gün, çıpa ve saati, seviye testi.
+    - Seviye testi satırı cihazda test varsa görünür. İlk testten önce "Üç kısa bölüm, 12–15 dakika…", sonra "Yeniden yapabilirsin…" yazar (`06` §2, "Yeniden test").
   - Davet: günde tek davet, sessiz saatler (açılınca 22:30–08:00; iki ucu ayrı seçilir).
   - Cevaplar: sessiz mod, mikrofon denemesi.
   - Onaylar: ses kaydı ve Gemini'ye gönderim, karşılamadaki metinlerle.

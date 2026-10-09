@@ -7,6 +7,8 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_bank.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
+import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/placement/application/placement_controller.dart';
 import 'package:dilbaz_app/features/placement/application/placement_state.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
@@ -54,6 +56,9 @@ void main() {
         assessmentRepositoryProvider.overrideWithValue(
           DriftAssessmentRepository(db),
         ),
+        monthlyTestRepositoryProvider.overrideWithValue(
+          DriftMonthlyTestRepository(db),
+        ),
         placementBankRepositoryProvider.overrideWithValue(
           FakeBankRepository(bank),
         ),
@@ -93,12 +98,14 @@ void main() {
     }
   }
 
-  /// Answers every question with the right choice.
-  void answerGrammar() {
+  /// Answers every question with the right choice, or with "not sure".
+  void answerGrammar({bool sure = true}) {
     controller().startPart();
     for (var now = state(); now is PlacementQuestion; now = state()) {
       controller().choose(
-        now.options.firstWhere((option) => option.startsWith('right')),
+        sure
+            ? now.options.firstWhere((option) => option.startsWith('right'))
+            : null,
       );
     }
   }
@@ -316,6 +323,8 @@ void main() {
               CefrLevel.c2,
               source: PlacementOutcome.source,
             ),
+            // No recording yet: the baseline is offered.
+            offerBaseline: true,
           ),
         ),
       );
@@ -402,6 +411,9 @@ void main() {
           assessmentRepositoryProvider.overrideWithValue(
             DriftAssessmentRepository(db),
           ),
+          monthlyTestRepositoryProvider.overrideWithValue(
+            DriftMonthlyTestRepository(db),
+          ),
           placementBankRepositoryProvider.overrideWithValue(repository),
           profileRepositoryProvider.overrideWithValue(profiles),
           clipPlayerOverride(FakeClipPlayer()),
@@ -410,6 +422,78 @@ void main() {
       await container.read(placementControllerProvider.future);
 
       expect(repository.taken, [1]);
+    });
+
+    test('taken again, a part left out keeps its estimate', () async {
+      final bank = zzBank();
+      await start(bank: bank);
+      answerWords(bank);
+      answerGrammar(sure: false);
+      await controller().leave();
+      final first = await db.select(db.courses).getSingle();
+      expect((state()! as PlacementDone).report!.retake, isFalse);
+      container.dispose();
+
+      await start(bank: bank, withCourse: false);
+      expect(
+        state(),
+        const PlacementState.overview(
+          parts: PlacementPart.values,
+          retake: true,
+        ),
+      );
+      answerWords(bank);
+      await controller().leave();
+
+      final report = (state()! as PlacementDone).report!;
+      expect(report.retake, isTrue);
+      expect(report.grammarLevel, isNull);
+      expect(
+        report.vocabularyLevel,
+        LevelEstimate.at(CefrLevel.b2, source: PlacementOutcome.source),
+      );
+      // The grammar of the first test still holds the start down.
+      expect(report.start, CefrLevel.a0);
+      final course = await db.select(db.courses).getSingle();
+      expect(course.levelEstimates['grammar'], first.levelEstimates['grammar']);
+      expect(
+        LevelEstimate.fromJson(
+          course.levelEstimates['overall']! as Map<String, Object?>,
+        ).reached,
+        CefrLevel.a0,
+      );
+      expect(await db.select(db.assessments).get(), hasLength(2));
+    });
+
+    test('the baseline is offered while the course has no recording', () async {
+      final bank = zzBank();
+      await start(bank: bank);
+      answerWords(bank);
+      await controller().leave();
+      expect((state()! as PlacementDone).report!.offerBaseline, isTrue);
+      container.dispose();
+
+      // A recording made since: the baseline, or a monthly test.
+      await DriftMonthlyTestRepository(db, now: () => DateTime.utc(2026)).save(
+        id: 'monthly-1',
+        userId: FakeAuthRepository.id,
+        courseId: 'course-1',
+        baseline: true,
+        tasks: const [
+          (
+            taskRef: 'anc-1',
+            recordingId: 'recording-1',
+            anchor: true,
+            metrics: null,
+            clauses: null,
+            errorFree: null,
+          ),
+        ],
+      );
+      await start(bank: bank, withCourse: false);
+      answerWords(bank);
+      await controller().leave();
+      expect((state()! as PlacementDone).report!.offerBaseline, isFalse);
     });
 
     test('actions out of turn change nothing', () async {

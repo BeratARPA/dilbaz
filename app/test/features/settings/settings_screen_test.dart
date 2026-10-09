@@ -1,12 +1,14 @@
 import 'package:dilbaz_app/data/my_data/my_data_providers.dart';
 import 'package:dilbaz_app/data/my_data/my_data_remote.dart';
 import 'package:dilbaz_app/data/repositories/settings_change.dart';
+import 'package:dilbaz_app/features/placement/presentation/placement_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_auth_repository.dart';
 import '../../helpers/fake_profile_repository.dart';
+import '../../helpers/placement_fixture.dart';
 import '../../helpers/pump_app.dart';
 import 'settings_controller_test.dart'
     show FakeFileSharer, FakeMyDataRepository;
@@ -31,10 +33,16 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> openSettings(WidgetTester tester) async {
+  Future<void> openSettings(
+    WidgetTester tester, {
+    FakeAssessmentRepository? assessments,
+    FakeBankRepository? placements,
+  }) async {
     await tester.pumpDilbazApp(
       profiles: profiles,
       permissions: permissions,
+      assessments: assessments,
+      placements: placements,
       extra: [
         myDataRepositoryProvider.overrideWithValue(data),
         fileSharerProvider.overrideWithValue(sharer),
@@ -81,6 +89,54 @@ void main() {
     await tapText(tester, trStrings.settingsInvitation);
     expect(profiles.changes, isEmpty);
     expect(find.text(trStrings.settingsNotificationsDenied), findsOneWidget);
+  });
+
+  testWidgets('the placement test opens here, the first time and again', (
+    tester,
+  ) async {
+    final assessments = FakeAssessmentRepository();
+    await openSettings(
+      tester,
+      assessments: assessments,
+      placements: FakeBankRepository(zzBank()),
+    );
+    expect(find.text(trStrings.settingsPlacementFirst), findsOneWidget);
+
+    /// Answers the words and leaves at the grammar part.
+    Future<void> takeWords() async {
+      await tapText(tester, trStrings.settingsPlacement);
+      expect(find.byType(PlacementScreen), findsOneWidget);
+      await tapText(tester, trStrings.placementBegin);
+      await tapText(tester, trStrings.placementStartPart);
+      for (var i = 0; i < 12; i++) {
+        await tapText(tester, trStrings.placementWordUnknown);
+      }
+      await tester.tap(find.byType(CloseButton));
+      await tester.pumpAndSettle();
+      await tapText(tester, trStrings.placementLeaveConfirm);
+    }
+
+    await takeWords();
+    expect(find.text(trStrings.placementResultNote), findsOneWidget);
+    await tapText(tester, trStrings.placementDone);
+    expect(find.byType(SettingsScreen), findsOneWidget);
+    expect(find.text(trStrings.settingsPlacementAgain), findsOneWidget);
+
+    // Again: the test says what happens to the earlier result.
+    await tapText(tester, trStrings.settingsPlacement);
+    expect(find.text(trStrings.placementRetakeNote), findsOneWidget);
+    await tester.tap(find.byType(CloseButton));
+    await tester.pumpAndSettle();
+    await takeWords();
+    expect(find.text(trStrings.placementResultNoteRetake), findsOneWidget);
+    expect(assessments.saved, hasLength(2));
+  });
+
+  testWidgets('without a placement test on the device there is no row', (
+    tester,
+  ) async {
+    await openSettings(tester);
+    expect(find.text(trStrings.settingsPlacement), findsNothing);
   });
 
   testWidgets('the export goes to the share sheet', (tester) async {
@@ -130,9 +186,14 @@ void main() {
       audioConsent: true,
       aiDataConsent: false,
     );
-    await openSettings(tester);
+    await openSettings(
+      tester,
+      assessments: FakeAssessmentRepository(),
+      placements: FakeBankRepository(zzBank()),
+    );
     for (final text in [
       trStrings.onboardingAnchorTitle,
+      trStrings.settingsPlacementFirst,
       trStrings.settingsQuietTo('08:00'),
       trStrings.onboardingAiConsent,
       trStrings.settingsDeleteAll,

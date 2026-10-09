@@ -5,11 +5,13 @@ import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Before the test: what it is, and what it is not (docs/06 §6).
+/// Before the test: what it is, and what it is not (docs/06 §6). Taken
+/// again, also what happens to the earlier result.
 class OverviewView extends ConsumerWidget {
-  const new({required this.parts, super.key});
+  const new({required this.parts, this.retake = false, super.key});
 
   final List<PlacementPart> parts;
+  final bool retake;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,6 +24,8 @@ class OverviewView extends ConsumerWidget {
         spacing: 16,
         children: [
           Text(l10n.placementOverviewBody, style: theme.textTheme.bodyLarge),
+          if (retake)
+            Text(l10n.placementRetakeNote, style: theme.textTheme.bodyLarge),
           for (final (index, part) in parts.indexed)
             ListTile(
               contentPadding: EdgeInsets.zero,

@@ -69,7 +69,10 @@ class PlacementScreen extends ConsumerWidget {
           child: switch (state) {
             AsyncData(:final value) => switch (value) {
               PlacementUnavailable() => _Note(text: l10n.placementUnavailable),
-              PlacementOverview(:final parts) => OverviewView(parts: parts),
+              PlacementOverview(:final parts, :final retake) => OverviewView(
+                parts: parts,
+                retake: retake,
+              ),
               PlacementPartIntro(:final part) => PartIntroView(part: part),
               final PlacementWord word => WordView(state: word),
               final PlacementQuestion question => QuestionView(state: question),

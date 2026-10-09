@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/repositories/assessment_repository.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
@@ -7,6 +8,7 @@ import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/placement_bank.dart';
 import 'package:dilbaz_app/data/repositories/placement_providers.dart';
 import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
+import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/placement/application/placement_state.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,7 +24,8 @@ int placementSeed(Ref ref) =>
 /// The placement test (A24, docs/06-assessment.md §2): vocabulary, grammar
 /// and dictation, each optional after the first. Nothing is shown as right
 /// or wrong along the way; the parts that were finished are saved as one
-/// assessment, with the level estimates they lead to.
+/// assessment, with the level estimates they lead to. Taken again, the
+/// parts finished replace the earlier results and the others keep theirs.
 @riverpod
 class PlacementController extends _$PlacementController {
   /// Times a dictation sentence may be played.
@@ -33,6 +36,9 @@ class PlacementController extends _$PlacementController {
   late PlacementBank _bank;
   late int _seed;
   late SeededRandom _random;
+  late bool _retake;
+  late Map<Skill, LevelEstimate> _earlier;
+  late bool _offerBaseline;
   late List<PlacementPart> _parts;
   late List<XlexWord> _words;
   var _known = <bool>[];
@@ -51,16 +57,16 @@ class PlacementController extends _$PlacementController {
     ref.watch(clipPlayerProvider);
     final userId = ref.watch(authRepositoryProvider).userId;
     final assessments = ref.watch(assessmentRepositoryProvider);
+    final monthly = ref.watch(monthlyTestRepositoryProvider);
     final bankRepository = ref.watch(placementBankRepositoryProvider);
     final seed = ref.watch(placementSeedProvider);
+    final now = ref.watch(clockProvider);
     final course = userId == null ? null : await assessments.course(userId);
     if (userId == null || course == null) {
       return const PlacementState.unavailable();
     }
-    final bank = await bankRepository.load(
-      l2: course.l2,
-      taken: await assessments.placementsTaken(course.id),
-    );
+    final taken = await assessments.placementsTaken(course.id);
+    final bank = await bankRepository.load(l2: course.l2, taken: taken);
     if (bank == null || bank.words.isEmpty) {
       return const PlacementState.unavailable();
     }
@@ -69,6 +75,10 @@ class PlacementController extends _$PlacementController {
     _bank = bank;
     _seed = seed;
     _random = SeededRandom(seed);
+    _retake = taken > 0;
+    _earlier = await assessments.skillEstimates(course.id);
+    // The baseline is the first recording of all.
+    _offerBaseline = (await monthly.latestBefore(course.id, now())).isEmpty;
     _words = _random.shuffled(bank.words);
     _parts = [
       PlacementPart.words,
@@ -82,7 +92,7 @@ class PlacementController extends _$PlacementController {
     _finished = {};
     _left = {};
     _durations = {};
-    return PlacementState.overview(parts: _parts);
+    return PlacementState.overview(parts: _parts, retake: _retake);
   }
 
   /// From the overview to the first part.
@@ -293,6 +303,7 @@ class PlacementController extends _$PlacementController {
       vocabulary: vocabulary,
       grammar: grammar,
       listening: listening,
+      earlier: _earlier,
     );
     await assessments.savePlacement(
       userId: _userId,
@@ -355,6 +366,8 @@ class PlacementController extends _$PlacementController {
           vocabularyLevel: vocabulary,
           grammarLevel: grammar,
           listeningLevel: listening,
+          retake: _retake,
+          offerBaseline: _offerBaseline,
         ),
       ),
     );

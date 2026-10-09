@@ -52,6 +52,47 @@ void main() {
       );
     });
 
+    test('a part left out of a test taken again keeps its earlier '
+        'estimate for the start', () {
+      final outcome = PlacementOutcome.of(
+        fallback: a1,
+        vocabulary: LevelEstimate.at(b1),
+        earlier: {
+          Skill.vocabulary: LevelEstimate.at(a1),
+          Skill.grammar: LevelEstimate.at(a2),
+          Skill.listening: LevelEstimate.at(CefrLevel.a0),
+        },
+      );
+      expect(outcome.start, a2);
+      expect(outcome.measured, isTrue);
+      // Only what this test measured is written; the course keeps the rest.
+      expect(outcome.skills.keys, [Skill.vocabulary]);
+      expect(outcome.toLevelEstimates().keys, ['vocabulary', 'overall']);
+    });
+
+    test('a part taken again replaces its earlier estimate', () {
+      expect(
+        PlacementOutcome.of(
+          fallback: a1,
+          vocabulary: LevelEstimate.at(b1),
+          grammar: LevelEstimate.at(b1),
+          earlier: {Skill.grammar: LevelEstimate.at(a1)},
+        ).start,
+        b1,
+      );
+    });
+
+    test('earlier estimates alone leave the course as it is', () {
+      final outcome = PlacementOutcome.of(
+        fallback: a1,
+        listening: LevelEstimate.at(a2),
+        earlier: {Skill.grammar: LevelEstimate.at(a2)},
+      );
+      expect(outcome.start, a2);
+      expect(outcome.measured, isFalse);
+      expect(outcome.toLevelEstimates().keys, ['listening']);
+    });
+
     test('without vocabulary and grammar the chosen level stays', () {
       final outcome = PlacementOutcome.of(
         fallback: a2,

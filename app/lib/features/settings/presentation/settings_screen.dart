@@ -5,6 +5,7 @@ import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/repositories/settings_change.dart';
 import 'package:dilbaz_app/features/auth/application/session_controller.dart';
 import 'package:dilbaz_app/features/onboarding/presentation/steps/anchor_step.dart';
+import 'package:dilbaz_app/features/placement/application/placement_invitation.dart';
 import 'package:dilbaz_app/features/settings/application/settings_controller.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// Settings v1 (docs/09-ux-motivation.md §5.12): the day's time, the
-/// anchor, the daily invitation and quiet hours, silent mode, the consents
-/// and the learner's data (docs/14 §4). Each change is saved at once.
+/// anchor, the placement test, the daily invitation and quiet hours, silent
+/// mode, the consents and the learner's data (docs/14 §4). Each change is
+/// saved at once.
 class SettingsScreen extends ConsumerWidget {
   const new({super.key});
 
@@ -127,6 +129,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
+      const _PlacementTile(),
       _Section(l10n.settingsInvitationSection),
       SwitchListTile(
         title: Text(l10n.settingsInvitation),
@@ -248,6 +251,28 @@ class SettingsScreen extends ConsumerWidget {
       _ => l10n.settingsFailed,
     };
     if (text != null) messenger.showSnackBar(SnackBar(content: Text(text)));
+  }
+}
+
+/// The placement test, the first time or again (docs/06 §2), while the
+/// device holds one.
+class _PlacementTile extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final available = ref.watch(placementAvailableProvider).value ?? false;
+    final open = ref.watch(placementOpenProvider).value;
+    if (!available || open == null) return const SizedBox.shrink();
+    return ListTile(
+      leading: const Icon(Icons.flag_outlined),
+      title: Text(l10n.settingsPlacement),
+      subtitle: Text(
+        open ? l10n.settingsPlacementFirst : l10n.settingsPlacementAgain,
+      ),
+      onTap: () => unawaited(context.push(AppRoutes.placement)),
+    );
   }
 }
 

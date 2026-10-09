@@ -322,6 +322,11 @@ class FakeAssessmentRepository implements AssessmentRepository {
   Future<XlexResult?> latestXlex(String courseId) async => xlex;
 
   @override
+  Future<Map<Skill, LevelEstimate>> skillEstimates(String courseId) async => {
+    for (final outcome in saved) ...outcome.skills,
+  };
+
+  @override
   Stream<bool> watchPlacementOpen(String userId) async* {
     yield _open;
     yield* _changes.stream;

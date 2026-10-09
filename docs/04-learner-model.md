@@ -73,7 +73,7 @@ Bir öğenin **üretim** düzeyi, üretim modlarındaki kartlarının en iyisind
 ## 4. Kelime ve gramer tahmini
 
 ### 4.1 Kelime
-- **Tanıma boyutu:** X_Lex puanı (0–5000, bant bant). Seviye testinde ve üç ayda bir ölçülür.
+- **Tanıma boyutu:** X_Lex puanı (0–5000, bant bant). Seviye testinde (yeniden yapılınca da) ve üç ayda bir ölçülür.
 - **Üretim boyutu:** Sıklık bantlarına (1K … 5K+) göre, üretim düzeyi ≥ `recallable` olan kelime anlamı sayısı.
 - Arayüzde iki ayrı sayı gösterilir. Aradaki fark ("tanıyıp söyleyemediğin kelimeler") açıkça görünür ve yeni kart kaynağı olarak kullanılır.
 

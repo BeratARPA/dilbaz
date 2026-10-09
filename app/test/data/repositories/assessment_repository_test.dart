@@ -138,6 +138,50 @@ void main() {
     });
   });
 
+  group('DriftAssessmentRepository.skillEstimates', () {
+    test('none before a placement test', () async {
+      // The self-reported level is no skill's estimate.
+      await course(
+        levels: const {
+          'overall': {
+            'low': 2,
+            'high': 2,
+            'confidence': 'low',
+            'source': 'self',
+          },
+        },
+      );
+      expect(await repository.skillEstimates('course-1'), isEmpty);
+      expect(await repository.skillEstimates('no-course'), isEmpty);
+    });
+
+    test('the latest estimate of each skill a test measured', () async {
+      await course();
+      await save();
+      // Taken again, with the grammar part left out.
+      await repository.savePlacement(
+        userId: userId,
+        courseId: 'course-1',
+        results: const {'version': 'B'},
+        outcome: PlacementOutcome.of(
+          fallback: CefrLevel.a2,
+          vocabulary: LevelEstimate.at(CefrLevel.b1, source: 'placement'),
+        ),
+      );
+
+      final estimates = await repository.skillEstimates('course-1');
+      expect(estimates.keys, [Skill.vocabulary, Skill.grammar, Skill.speaking]);
+      expect(
+        estimates[Skill.vocabulary],
+        LevelEstimate.at(CefrLevel.b1, source: 'placement'),
+      );
+      expect(
+        estimates[Skill.grammar],
+        LevelEstimate.between(CefrLevel.a1, CefrLevel.a2, source: 'placement'),
+      );
+    });
+  });
+
   group('DriftAssessmentRepository placement', () {
     test('is open once there is a course and until a test is saved', () async {
       final seen = <bool>[];

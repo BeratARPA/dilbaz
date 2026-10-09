@@ -43,7 +43,12 @@ class ReportView extends StatelessWidget {
             _Skill(title: l10n.placementSkillGrammar(levelText(l10n, level))),
           if (report.listeningLevel case final level?)
             _Skill(title: l10n.placementSkillListening(levelText(l10n, level))),
-          Text(l10n.placementResultNote, style: theme.textTheme.bodyMedium),
+          Text(
+            report.retake
+                ? l10n.placementResultNoteRetake
+                : l10n.placementResultNote,
+            style: theme.textTheme.bodyMedium,
+          ),
           OverflowBar(
             alignment: MainAxisAlignment.end,
             spacing: 8,
@@ -51,10 +56,11 @@ class ReportView extends StatelessWidget {
             children: [
               // The optional first recording, kept for before/after
               // listening (docs/06 §2 part 4).
-              TextButton(
-                onPressed: () => context.pushReplacement(AppRoutes.baseline),
-                child: Text(l10n.placementBaselineOffer),
-              ),
+              if (report.offerBaseline)
+                TextButton(
+                  onPressed: () => context.pushReplacement(AppRoutes.baseline),
+                  child: Text(l10n.placementBaselineOffer),
+                ),
               FilledButton(
                 onPressed: () => context.pop(),
                 child: Text(l10n.placementDone),

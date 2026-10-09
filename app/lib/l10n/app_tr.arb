@@ -450,6 +450,10 @@
   "@placementOverviewBody": {
     "description": "Placement test: what the test is and is not (docs/06 §6)."
   },
+  "placementRetakeNote": "Bu testi daha önce yaptın. Bitirdiğin bölümler önceki sonucun yerine geçer, bitirmediklerin olduğu gibi kalır. Kartların ve çalışma geçmişin değişmez.",
+  "@placementRetakeNote": {
+    "description": "Placement test taken again: what happens to the earlier result (docs/06 §2)."
+  },
   "placementPartWords": "Kelimeler, yaklaşık 5 dakika",
   "@placementPartWords": {
     "description": "Placement test: part 1."
@@ -653,6 +657,10 @@
   "placementResultNote": "Bu ilk ölçüm, o yüzden kaba bir tahmin. Dilbaz çalıştıkça cevaplarına göre bunu günceller.",
   "@placementResultNote": {
     "description": "Placement test result: the estimate is rough (I-04)."
+  },
+  "placementResultNoteRetake": "Bu da kaba bir tahmin. Buradaki sonuçlar öncekilerin yerine geçti; kartların ve geçmişin olduğu gibi duruyor. Dilbaz çalıştıkça cevaplarına göre bunu günceller.",
+  "@placementResultNoteRetake": {
+    "description": "Result of a placement test taken again: rough, and it replaced the earlier results (I-04, docs/06 §2)."
   },
   "placementDone": "Tamam",
   "@placementDone": {
@@ -1920,7 +1928,19 @@
   },
   "settingsStudySection": "Çalışma",
   "@settingsStudySection": {
-    "description": "Settings section: daily time, days and anchor."
+    "description": "Settings section: daily time, days, anchor and the placement test."
+  },
+  "settingsPlacement": "Seviye testi",
+  "@settingsPlacement": {
+    "description": "Settings: opens the placement test (docs/06 §2)."
+  },
+  "settingsPlacementFirst": "Üç kısa bölüm, 12–15 dakika. Nereden başlayacağını gösterir.",
+  "@settingsPlacementFirst": {
+    "description": "Settings: the placement test, before the first one."
+  },
+  "settingsPlacementAgain": "Yeniden yapabilirsin: üç kısa bölüm, 12–15 dakika. Kartların olduğu gibi kalır.",
+  "@settingsPlacementAgain": {
+    "description": "Settings: the placement test, taken again (docs/06 §2)."
   },
   "settingsInvitationSection": "Davet",
   "@settingsInvitationSection": {

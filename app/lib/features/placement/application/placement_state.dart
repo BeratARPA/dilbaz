@@ -24,6 +24,14 @@ abstract class PlacementReport with _$PlacementReport {
     LevelEstimate? vocabularyLevel,
     LevelEstimate? grammarLevel,
     LevelEstimate? listeningLevel,
+
+    /// The course had a test before; the parts finished now replaced its
+    /// results.
+    @Default(false) bool retake,
+
+    /// The course has no speaking recording yet, so the baseline is
+    /// offered (docs/06 §2 part 4).
+    @Default(false) bool offerBaseline,
   }) = _PlacementReport;
 }
 
@@ -33,9 +41,12 @@ sealed class PlacementState with _$PlacementState {
   /// The device has no placement test for the course yet.
   const factory unavailable() = PlacementUnavailable;
 
-  /// Before the test: what it is, and the [parts] it has.
-  const factory overview({required List<PlacementPart> parts}) =
-      PlacementOverview;
+  /// Before the test: what it is, and the [parts] it has. [retake]: the
+  /// course had a test before.
+  const factory overview({
+    required List<PlacementPart> parts,
+    @Default(false) bool retake,
+  }) = PlacementOverview;
 
   /// Before a part: what it asks for.
   const factory partIntro({required PlacementPart part}) = PlacementPartIntro;
