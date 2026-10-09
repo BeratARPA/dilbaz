@@ -78,6 +78,15 @@ Her satır için: cümle doğal mı, hedef kelime o anlamda mı, Türkçe doğru
 | 19 | A2 | My brother lives in a small village. | **village** (a very small town in the countryside) | Erkek kardeşim küçük bir köyde yaşıyor. |
 | 20 | A2 | What are you going to do next? | **next** (after this, then) | Daha sonra ne yapacaksın? |
 
+### İnceleme sonucu (2026-10-09)
+
+- **Kim inceledi:** Kullanıcı incelemeyi ajana bıraktı ("yap neyse artık", 2026-10-09). Bu yüzden bu bir insan örneklemi değil, üretimden ve doğrulamadan ayrı bir ajan okumasıdır.
+- **Sonuç:** 20/20 kabul. Hiçbir cümlede doğallık sorunu, yanlış hedef anlamı ya da yanlış çeviri yok.
+- **İsteğe bağlı iyileştirme** (bir sonraki çift paket sürümünde): Türkçe istem hedef kelimeye götürmeli.
+  - #20: "Daha sonra ne yapacaksın?" "later" demeye çeker, hedef "next". Öneri: "Bundan sonra ne yapacaksın?"
+  - #4: "Sorun nedir?" "problem" demeye çeker, hedef "matter". Kart hedefsiz doğru cevabı yeniden sorduğu için (`03` §0.2) öğrenciye zararı yok. Öneri: "Ne oldu? Bir sorun mu var?" gibi daha doğal bir istem.
+  - #13: "Onun" yerine "Bunun doğru olduğunu sanmıyorum." daha doğal; anlam aynı.
+
 ## Ek (2026-09-29)
 
 S5 incelemesinde (`2026-09-29-tr-en1-pair-qa.md`) "You can ride with me." cümlesinin Türkçesinin hedef kelimeye götürmediği görüldü ("Benimle binebilirsin." doğal değil). ride anlamının taşıyıcısı kendi cümlemiz "Can you ride a bike?" oldu. Cümle 4. turda bağımsız olarak doğrulandı (doğallık 5, kabul). 7. örnek buna göre güncellendi.
