@@ -343,6 +343,13 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
     - Kontrolü olmayan ya da kontrolle çelişen vaka sete girmez (`eval-cases`).
   - Çalıştırma: `cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check|gap_suggest|speaking_annotate [--models …] [--limit n]`. Her vaka üretimdeki yoldan geçer: aynı prompt, şema, yeniden deneme ve korumalar. Vaka sonuçları `results/answer_check.<model>.jsonl`'da prompt sürümüyle birlikte tutulur; günlük kota dolup kesilen koşu kaldığı yerden sürer.
   - `gap_suggest` seti v1 (F1-17): 44 vaka (`tutor/gap_suggest/cases.jsonl`): A0–B1, beş bağlamın hepsi, konuşma dökümü gibi noktalamasız metin, hatalı İngilizce, tek kelime, bir ifadenin nasıl söylendiğini soran metin, not. Tek bir doğru cevap olmadığı için otomatik ölçütler şunlardır: seviye kuralı (rotanın sadeleştirmesinden sonra), anahtar kalıbın cevaptan alınması, A seviyesinde 20 kelimeyi aşan not, ilk cevapta şema geçerliliği, başarısız çağrı, gecikme ve token. Anlamı bir insan vakadaki `reference` ile karşılaştırarak okur.
+    - **Anlam okuması (2026-10-09, ajan):** Kullanıcı testleri ajana bıraktı; okuma vakanın `reference`'ıyla yapıldı.
+      - **3.5 Flash (41 vaka):** Doğal hâlin anlamı 41/41 doğru.
+        - Sade hâlde iki Türkçe kokan ifade var: g14 "make the food" ve g34 "Can I know where it is?".
+        - Tek kelimelik girdide (g22 "ertelemek") doğal hâl doğru ("postpone"), ama karta dönen kalıp "do it later" oldu.
+        - Bir iki zararsız ekleme var (g08 "I'm sorry", g39 "get a refund").
+      - **3.1 Flash-Lite (44 vaka):** Gelen 42 cevabın 42'si anlamca doğru. g22 ve g27'de cevap yok; uygulamada öneri bekler ve yeniden denenir.
+      - Engelleyici sorun yok. Tek kelimelik girdi zayıf nokta: kalıp kelimenin kendisi olmalı (sonraki prompt sürümü için not).
   - `speaking_annotate` seti v1 (F1-19): 30 transkript (`tutor/speaking_annotate/cases.yaml`). `evals/speaking_cases.ts` görevlerin istemi ve hedefini içerik küratörlüğünden alır ve `cases.jsonl`'ı kurar.
     - İçerik: A1–A2, paketin 17 görevi ve üç sabit görev; 23 tamam, 5 kısmi, 2 yapılmamış (biri konu dışı); 39 altın hata, 24 farklı etiket; 7 hatasız transkript; Türkçe dolgu, onarım ve bağımlı cümlecik.
     - Altın hatalar kelime alıntısıyla yazılır; eksik kelimede boşluğun iki yanı alınır.
