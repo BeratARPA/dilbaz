@@ -217,6 +217,9 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - İzinler: `RECORD_AUDIO`, `POST_NOTIFICATIONS`, `INTERNET`.
   - Paylaş menüsü hedefi, hızlı ayar kutucuğu, ana ekran widget'ı.
   - Dağıtım: iki telefona doğrudan APK (mağaza yok). İleride GitHub Releases ya da Firebase App Distribution.
+    - **Google Play (kullanıcı kararı, 2026-10-09):** Kullanıcının Play geliştirici hesabı var. Uygulama tamamlanınca Play dahili test kanalına geçilecek; o zaman bir ADR yazılır.
+      - Faydası: iki telefona güncelleme kendiliğinden gelir; bilinmeyen kaynak izni ve Play Protect uyarısı olmaz.
+      - Dikkat: Play kendi anahtarıyla yeniden imzalarsa Play'den gelen sürüm, doğrudan kurulanın üstüne kurulmaz. Yükleme anahtarı Play App Signing'e "uygulama imzalama anahtarı" olarak verilirse ikisi uyumlu kalır.
     - Sürüm APK'sı yükleme anahtarıyla imzalanır (`android/key.properties`). Anahtar yoksa derleme hata ayıklama anahtarına düşer; böyle bir APK dağıtılmaz (`19` §5).
     - Geliştirme kopyası telefona `DILBAZ_APP_ID_SUFFIX=.local` ile ayrı kimlikle kurulur. Asıl kimliğe Flutter araçlarıyla kurulum yapılmaz: imza farkında Flutter eski uygulamayı verisiyle kaldırır.
 - **Windows (Faz 3):**

@@ -194,6 +194,7 @@ Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** t
 
 2. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
    - **2026-10-09:** Anahtarı kullanıcının isteğiyle ajan oluşturdu: `C:\Users\berat\dilbaz-upload.jks`, takma ad `upload`, 2054'e kadar geçerli. Sertifikanın SHA-256 parmak izi `D2:5E:8C:9F:…:46:63:6C:A8`. Rastgele şifre yalnızca `app/android/key.properties`'te durur ve ekrana yazılmadı. Yedeklenecek iki dosya: `dilbaz-upload.jks` ve `key.properties`.
+   - **Yedek (2026-10-09):** İki dosya, geri yükleme notuyla birlikte kullanıcının Google Drive'ına ("My Drive") `dilbaz-imza-yedek-2026-10-09.zip` olarak yüklendi. Kullanıcı istedi; ajan Chrome'daki oturumla yükledi. Bilgisayardaki geçici kopya silindi.
    - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
    - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
 
