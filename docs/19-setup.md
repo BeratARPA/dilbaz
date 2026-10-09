@@ -193,6 +193,7 @@ Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** t
    ```
 
 2. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
+   - **2026-10-09:** Anahtarı kullanıcının isteğiyle ajan oluşturdu: `C:\Users\berat\dilbaz-upload.jks`, takma ad `upload`, 2054'e kadar geçerli. Sertifikanın SHA-256 parmak izi `D2:5E:8C:9F:…:46:63:6C:A8`. Rastgele şifre yalnızca `app/android/key.properties`'te durur ve ekrana yazılmadı. Yedeklenecek iki dosya: `dilbaz-upload.jks` ve `key.properties`.
    - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
    - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
 
@@ -226,6 +227,8 @@ cd app && flutter build apk --release --dart-define-from-file=env/prod.json
   - Ya da dosyayı telefona gönderip açarak (5.4'teki gibi).
 - Sonraki güncellemeler eskisinin üstüne kurulur; **kaldırılmaz**.
 - "Dilbaz.local" geliştirme kopyasıdır. Ayrı bir uygulamadır ve istenirse kaldırılır: `adb uninstall com.dilbaz.dilbaz_app.local`.
+
+- **2026-10-09:** İmzalı 0.1.0 (`versionCode` 1) senin telefonuna `adb install` ile kuruldu. İmza `CN=Dilbaz`, parmak izi anahtarla aynı.
 
 ### 5.4 Sevgilinin telefonu
 
