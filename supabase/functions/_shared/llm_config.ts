@@ -1,29 +1,49 @@
 /**
- * The single place for LLM settings (docs/07-ai-tutor.md §2–§3).
+ * The single place for LLM settings (docs/07-ai-tutor.md §2–§3, ADR-0009).
  *
- * Model ids appear nowhere else in the functions (a test enforces this).
- * Changing the model or a prompt requires an eval run and the user's
- * decision (docs/07 §8, ADR-0005).
+ * Only free tiers are used. Each route calls its chain in order: primary
+ * model, then the fallbacks; when none answers, the client continues with
+ * the deterministic path. Model ids appear nowhere else in the functions
+ * (a test enforces this). Changing a model, the order or a prompt requires
+ * an eval run and the user's decision (docs/07 §8).
+ *
+ * Provider APIs checked against their documentation on 2026-09-30.
  */
 
-export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
+/** Semantic thinking depth; each adapter maps it to its provider. */
+export type Effort = "low" | "medium" | "high";
+
+export type ProviderId = "gemini" | "groq";
+
+export interface ProviderConfig {
+  readonly endpoint: string;
+  /** Secret holding the API key (Supabase secrets, docs/12 §7). */
+  readonly keyEnv: string;
+  /** Time zone whose midnight resets the daily quotas. */
+  readonly quotaDay: string;
+  /**
+   * The free tier may use the text to improve the provider's products:
+   * only for learners who agreed (`ai_data_consent`, ADR-0009).
+   */
+  readonly needsConsent: boolean;
+}
+
+export interface ModelConfig {
+  readonly provider: ProviderId;
+  /** Free daily requests for the project (AI Studio / Groq console). */
+  readonly requestsPerDay: number;
+  /** Free daily tokens, where the provider limits them. */
+  readonly tokensPerDay?: number;
+}
 
 export interface RouteConfig {
-  /** Thinking depth, sent as `output_config.effort`. */
+  /** Models in the order they are tried; empty = route not open yet. */
+  readonly chain: readonly string[];
   readonly effort: Effort;
   /** Output ceiling; kept generous because truncation costs a retry. */
   readonly maxTokens: number;
-  /** Interactive routes use the server-side refusal fallback. */
-  readonly interactive: boolean;
-}
-
-/** USD per million tokens. */
-export interface ModelPricing {
-  readonly input: number;
-  readonly output: number;
-  readonly cacheRead: number;
-  readonly cacheWrite5m: number;
-  readonly cacheWrite1h: number;
+  /** Time one provider call may take before the next one is tried. */
+  readonly timeoutMs: number;
 }
 
 export type TutorRoute =
@@ -36,59 +56,75 @@ export type TutorRoute =
   | "mediation_check"
   | "comprehension_check";
 
-/** Cache reads cost 0.1x input; 5-minute writes 1.25x, 1-hour writes 2x. */
-function pricing(input: number, output: number): ModelPricing {
-  return {
-    input,
-    output,
-    cacheRead: input * 0.1,
-    cacheWrite5m: input * 1.25,
-    cacheWrite1h: input * 2,
-  };
-}
+/** Routes of later phases: their models are chosen by that phase's eval. */
+const later = (
+  effort: Effort,
+  maxTokens: number,
+): RouteConfig => ({ chain: [], effort, maxTokens, timeoutMs: 30_000 });
 
 export const llmConfig = {
-  /** Default model for every route (docs/07 §2). */
-  model: "claude-opus-5",
+  providers: {
+    gemini: {
+      endpoint: "https://generativelanguage.googleapis.com/v1beta",
+      keyEnv: "GEMINI_API_KEY",
+      quotaDay: "America/Los_Angeles",
+      needsConsent: true,
+    },
+    groq: {
+      endpoint: "https://api.groq.com/openai/v1",
+      keyEnv: "GROQ_API_KEY",
+      quotaDay: "UTC",
+      needsConsent: false,
+    },
+  } satisfies Record<ProviderId, ProviderConfig>,
 
-  /** Per-user daily ceiling; above it routes answer `budget_exceeded`. */
-  dailyBudgetUsd: 1.5,
+  /** Free-tier limits as of 2026-09-26 (ADR-0009); the consoles decide. */
+  models: {
+    "gemini-3.1-flash-lite": { provider: "gemini", requestsPerDay: 500 },
+    "gemini-3.5-flash": { provider: "gemini", requestsPerDay: 20 },
+    "openai/gpt-oss-120b": {
+      provider: "groq",
+      requestsPerDay: 1000,
+      tokensPerDay: 200_000,
+    },
+  } satisfies Record<string, ModelConfig> as Record<string, ModelConfig>,
 
-  /** Server-side refusal fallback for interactive routes (docs/07 §3). */
-  refusalFallback: {
-    beta: "server-side-fallback-2026-07-01",
-    fallbacks: "default",
-  },
+  /** Each of the two learners may use this share of every quota. */
+  fairShare: 0.5,
 
   routes: {
-    answer_check: { effort: "low", maxTokens: 4000, interactive: true },
-    gap_suggest: { effort: "low", maxTokens: 3000, interactive: true },
-    roleplay_turn: { effort: "low", maxTokens: 3000, interactive: true },
-    comprehension_check: { effort: "low", maxTokens: 3000, interactive: true },
+    // Groq missed the thresholds here (2026-10-10: 68.5 % right, 14.9 %
+    // of right answers called wrong); without Gemini the card is judged by
+    // the engine alone (docs/07 §2).
+    answer_check: {
+      chain: ["gemini-3.1-flash-lite"],
+      effort: "low",
+      maxTokens: 4000,
+      timeoutMs: 15_000,
+    },
+    gap_suggest: {
+      chain: [
+        "gemini-3.5-flash",
+        "gemini-3.1-flash-lite",
+        "openai/gpt-oss-120b",
+      ],
+      effort: "low",
+      maxTokens: 3000,
+      timeoutMs: 20_000,
+    },
     speaking_annotate: {
+      chain: ["gemini-3.5-flash", "gemini-3.1-flash-lite"],
       effort: "medium",
       maxTokens: 12000,
-      interactive: true,
+      timeoutMs: 60_000,
     },
-    roleplay_debrief: { effort: "medium", maxTokens: 12000, interactive: true },
-    writing_feedback: { effort: "medium", maxTokens: 12000, interactive: true },
-    mediation_check: { effort: "medium", maxTokens: 12000, interactive: true },
+    roleplay_turn: later("low", 3000),
+    comprehension_check: later("low", 3000),
+    roleplay_debrief: later("medium", 12000),
+    writing_feedback: later("medium", 12000),
+    mediation_check: later("medium", 12000),
   } satisfies Record<TutorRoute, RouteConfig>,
 
-  /** Monthly speaking test annotations run at a higher effort (docs/07 §2). */
+  /** Monthly speaking test annotations think deeper (docs/07 §2). */
   assessmentEffort: "high" as Effort,
-
-  /**
-   * First-party prices (2026-09). With `fallbacks: "default"` another model
-   * may serve a request; it is billed at its own price, so known fallback
-   * candidates are listed too. Unknown models are costed at the default
-   * model's price.
-   */
-  pricing: {
-    "claude-opus-5": pricing(5, 25),
-    "claude-opus-4-8": pricing(5, 25),
-    "claude-opus-4-7": pricing(5, 25),
-    "claude-sonnet-5": pricing(2, 10),
-    "claude-haiku-4-5": pricing(1, 5),
-  } as Record<string, ModelPricing>,
 } as const;

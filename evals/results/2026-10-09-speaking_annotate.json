@@ -1,0 +1,30 @@
+{
+  "route": "speaking_annotate",
+  "prompt": "speaking_annotate@1",
+  "date": "2026-10-09",
+  "cases": 30,
+  "scores": [
+    {
+      "model": "gemini-3.5-flash",
+      "cases": 0,
+      "failures": 0,
+      "errorPrecision": 1,
+      "errorRecall": 1,
+      "errorF1": 1,
+      "tagAgreement": 1,
+      "efcMedianDiff": 1,
+      "outcomeAgreement": 1,
+      "leakedHints": 0,
+      "schemaValid": 1,
+      "latencyP50": 0,
+      "latencyP90": 0,
+      "tokensPerCase": 0,
+      "passes": {
+        "errorF1": true,
+        "efc": false,
+        "outcome": true
+      },
+      "complete": false
+    }
+  ]
+}

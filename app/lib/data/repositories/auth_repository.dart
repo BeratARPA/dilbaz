@@ -14,6 +14,9 @@ enum AuthFailure {
 abstract interface class AuthRepository {
   bool get isSignedIn;
 
+  /// Id of the signed-in user (`profiles.id`); null when signed out.
+  String? get userId;
+
   /// Emits whenever the signed-in state changes.
   Stream<bool> watchSignedIn();
 

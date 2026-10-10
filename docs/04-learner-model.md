@@ -29,13 +29,15 @@
   | `dictation` | dinleme | A05 |
 
 - Her deneme sonunda FSRS zamanlayıcısı otomatik puanla (bkz. `03-activities.md` §0.3) çalışır. Kartın **yeni durumu denemeyle birlikte** saklanır (`attempts.card_state_after`).
-- **Tekrar oynatma (replay):** Parametre değişikliği ya da bozulma durumunda kart durumları denemelerden baştan hesaplanır. Aralık bulanıklaştırma (fuzz) tekrar oynatmada **kapalıdır**. Canlı kullanımda açıktır ve sonucu `card_state_after` olarak saklandığı için senkron deterministiktir.
+- **Sayaçlar:** `package:fsrs` tekrar saymaz, sayaçları motor tutar. `reps` her tekrarda artar. `lapses` yalnızca review durumundaki kart Again aldığında artar; öğrenme adımlarındaki Again unutma sayılmaz.
+- **Tekrar oynatma (replay):** Parametre değişikliği ya da bozulma durumunda kart durumları denemelerden baştan hesaplanır (`SrsScheduler.replay`). Aralık bulanıklaştırma (fuzz) tekrar oynatmada **kapalıdır**. Canlı kullanımda açıktır ve sonucu `card_state_after` olarak saklandığı için senkron deterministiktir.
+  - Fuzz yalnızca vade tarihini kaydırır. Sonraki tekrar vadeye değil tekrar zamanlarına bakar. Bu yüzden aynı parametrelerle yeniden oynatılan kartın S, D, durum ve sayaçları canlıdakiyle aynıdır, yalnızca `due` farklı olabilir (motor testi).
 - **Varsayılanlar:**
   - Hedef hatırlama: 0,90. Gelişmiş ayarlarda 0,85–0,95 arası seçilebilir; seçilirken tahmini günlük tekrar süresi gösterilir.
   - Parametreler: paketin FSRS varsayılanları.
 - **Kişisel optimizasyon:**
   - Bir mod grubunda (üretim / alıcı / dikte) yeterli veri birikince parametreler optimize edilir. py-fsrs, **farklı günlere yayılmış en az 512 tekrar** olmadan varsayılan parametreleri döndürür; bu yüzden eşik budur.
-  - Nasıl: `tools/fsrs/optimize.py` (py-fsrs Optimizer) dışa aktarılan tekrar günlüğüyle çalışır, sonuç `courses.fsrs_params[mod_grubu]` alanına yazılır. Dart paketinde optimize edici yoktur.
+  - Nasıl: `tools/fsrs/optimize.py` (py-fsrs Optimizer) dışa aktarılan tekrar günlüğüyle çalışır, sonuç `courses.fsrs_params[mod_grubu]` alanına yazılır. Dart paketinde optimize edici yoktur. Motor bu alanı `SrsConfig.forCourse` ile okur; ağırlığı olmayan grup varsayılanları kullanır.
   - Ayda bir ya da tekrar sayısı iki katına çıktığında yeniden optimize edilir. Değişiklik deney olarak izlenir (`16-experiments.md` E5).
 
 ## 3. L2 — Öğe kanıt düzeyleri
@@ -45,20 +47,33 @@ Bir öğenin **üretim** düzeyi, üretim modlarındaki kartlarının en iyisind
 | Düzey | Kod | Koşul | Arayüzde |
 |---|---|---|---|
 | 0 | `new` | Kart yok | — |
-| 1 | `learning` | Kart learning/relearning durumunda | "Öğreniliyor" |
+| 1 | `learning` | Kart var, ama `recallable` koşulu sağlanmıyor (learning/relearning durumu ya da review durumunda S < 7 gün) | "Öğreniliyor" |
 | 2 | `recallable` | Review durumunda ve stabilite S ≥ 7 gün | "Hatırlıyor" |
-| 3 | `durable` | S ≥ 30 gün **ve** son 90 günde, bir önceki başarılı tekrardan en az 21 gün sonra yapılmış ipucusuz başarılı bir tekrar var | "Kalıcı" |
+| 3 | `durable` | S ≥ 30 gün **ve** son 90 günde, hemen önceki tekrardan en az 21 gün sonra yapılmış, ilk denemede ve ipucusuz başarılı bir tekrar var | "Kalıcı" |
 | 4 | `transferred` | Düzey ≥ 2 **ve** serbest üretimde (A11, A13, A15, A20, A21) **en az 2 farklı günde** hatasız kullanım | "Kullanıyor" |
 
 - **Serbest üretimde kullanım tespiti:** Transkriptteki lemma/kalıp eşleşmesi paketteki lemma listeleriyle yapılır. Eşleşen parçanın üzerinde hata etiketi yoksa hatasız sayılır.
-- **Alıcı düzey** ayrıca hesaplanır (A03, A05, okumadaki aramalar): `recognized` = alıcı kartta S ≥ 7 gün. Arayüzde "Tanıyor" olarak gösterilir.
+- **Kanıt esası (I-04):** Eşikler kartın o anki stabilitesiyle değil, **son kanıtlı tekrardaki stabiliteyle** karşılaştırılır. Kanıtsız biten tekrarlar (LLM'siz `uncertain`, hedefsiz doğru cevap; `03` §0.3) zamanlamayı ilerletir ama düzey yükseltmez.
+- **21 gün hemen önceki tekrardan sayılır.** Aradaki her tekrar, kanıtsız olsa bile, doğru cümleyi gösterip hafızayı tazeler; gerçek aralık odur.
+- **Alıcı düzey** ayrıca hesaplanır (A03, A05, okumadaki aramalar): `recognized` = alıcı kartta (dinle-anla ya da dikte) S ≥ 7 gün, aynı kanıt esasıyla. Arayüzde "Tanıyor" olarak gösterilir.
+- **Motorda:** `CardRecord` (kart + puanlı tekrarları) → `ItemEvidence.productionLevel`, `isRecognized`, `isKnown`. Tekrar kayıtları `attempts`'ten okunur: zaman, puan, kanıt olup olmadığı ve `card_state_after.stability`. **F1-20'den beri `transferred` de hesaplanır:**
+  - `usedWithoutError` her konuşma kaydında hatasız kullanılan öğeleri bulur. Kaynak, aylık test kayıtları dahil, transkriptin kelimeleri ve işaretlemedir.
+  - Kelime anlamında lemma yeter. Kalıpta lemmalar sırayla gelmelidir. Dolgular atlanır. İşaretli hatanın değdiği kelimeler sayılmaz.
+  - Lemma anlamı ayırt etmez; aynı lemmanın her anlamı kullanılmış sayılır. Bilinen sınırlılıktır.
+  - Düzey, `withTransfer`'le iki ayrı günde (öğrencinin yerel günü) kullanılan ve en az `recallable` olan öğede `transferred` olur. Kullanım öğeyi kalıcı yapmaz.
+
+  **İlerleme sayıları (`countEvidence`):**
+  - Tanıyor: `isKnown` ya da en az `recallable`.
+  - Hatırlıyor: en az `recallable`.
+  - Kalıcı: en az `durable`, yalnız kartlardan.
+  - Kullanıyor: `transferred`.
 - **Unutma:** Kalıcı bir öğe unutulursa (Again), düzey projeksiyonla otomatik düşer. Geçmişte "kullanıyor" olmuş olması arayüzde not olarak kalır ("daha önce kullanmıştın").
 - **İlerleme ekranı** yüzde değil, sayı gösterir. Örnek: "Tanıyor 1840 · Hatırlıyor 612 · Kalıcı 305 · Kullanıyor 97".
 
 ## 4. Kelime ve gramer tahmini
 
 ### 4.1 Kelime
-- **Tanıma boyutu:** X_Lex puanı (0–5000, bant bant). Seviye testinde ve üç ayda bir ölçülür.
+- **Tanıma boyutu:** X_Lex puanı (0–5000, bant bant). Seviye testinde (yeniden yapılınca da) ve üç ayda bir ölçülür.
 - **Üretim boyutu:** Sıklık bantlarına (1K … 5K+) göre, üretim düzeyi ≥ `recallable` olan kelime anlamı sayısı.
 - Arayüzde iki ayrı sayı gösterilir. Aradaki fark ("tanıyıp söyleyemediğin kelimeler") açıkça görünür ve yeni kart kaynağı olarak kullanılır.
 
@@ -80,6 +95,9 @@ Her görev bir ya da daha fazla can-do kodunu destekler. Görev sonucu `done | p
 | `established` | **Farklı günlerde, farklı istemlerle en az 2 `done`**. Sonuncusu son 60 günde olmalı. B1 ve üstünde en az biri hazırlık süresi/kalıp iskelesi olmadan yapılmış olmalı. |
 
 - `established` bir can-do'nun son `done`'ı 120 günden eskiyse "tazelemeye değer" olarak gösterilir. Başarısızlık gibi değil, davet olarak.
+- **Motorda (F1-20, `canDoEvidence`):** Kanıt, konuşma görevlerinin sonucudur (`recordings.outcome`, görevin can-do kodları).
+  - Ölçütleri sağlayan ama son `done`'ı 60 günden eski can-do `shown` görünür; 120 günden eskiyse "tazelemeye değer" daveti de çıkar. İki kural böyle birlikte okundu: `established` yakın kanıt ister.
+  - Sabit görevler iskelesiz, diğerleri iskeleli sayılır (A0–A2'de başlangıçlar açık).
 - Planlayıcı, henüz kanıtlanmamış can-do'ları destekleyen görevlere küçük bir öncelik verir.
 
 ## 6. L4 — Hata profili
@@ -124,7 +142,9 @@ Sayısal ölçek: A0 = 0, A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6. "+" al
 
 ## 8. Planlayıcıya verilen sinyaller
 
-Motor, planlayıcıya şu özet yapıyı verir (Dart, saf):
+Motor, planlayıcıya şu özet yapıyı verir (Dart, saf). **v1 (F1-09)** yalnızca planlayıcının kullandığı alanları taşır: `level`, `dailyBudget`, `spentToday`, `recentUnaidedAccuracy`, `weekStrandTime`, `silentMode`; F1-16'dan beri `newToday` (bugün tanıtılan yeni öğe sayısı; günlük tavan bunları da sayar). Uygulama bu alanları F1-18'den beri gerçek veriyle doldurur:
+- `spentToday` ve `weekStrandTime`: `sessions`'tan.
+- `recentUnaidedAccuracy`: son 7 günün puanlı tekrarlarından. Vadesi gelen kartları ve öngörülen tekrar yükünü planlayıcı kart listesinden kendisi hesaplar. Diğer alanlar ilgili görevlerle eklenir.
 
 ```dart
 class LearnerSnapshot {

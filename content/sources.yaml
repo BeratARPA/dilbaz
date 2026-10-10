@@ -1,0 +1,143 @@
+# Open data sources of the content pipeline (docs/10-content-pipeline.md §2).
+#
+# `uv run dilbaz-content ingest` (in content/tools) downloads them into
+# content/sources/ (git-ignored). Static files are pinned by sha256; a changed
+# upstream file stops the ingest until it is reviewed. Rolling exports
+# (weekly dumps) are snapshotted by download date, with their checksums in
+# SNAPSHOT.json. Every source carries its license and attribution (I-16).
+
+sources:
+  - id: ngsl
+    name: New General Service List
+    version: "1.2"
+    license: CC BY-SA 4.0
+    attribution: >-
+      Browne, C., Culligan, B., & Phillips, J. (2013). The New General Service List.
+      https://www.newgeneralservicelist.com
+    homepage: https://www.newgeneralservicelist.com/new-general-service-list
+    files:
+      - name: NGSL_1.2_stats.csv
+        url: https://www.newgeneralservicelist.com/s/NGSL_12_stats.csv
+        sha256: 2098bab8955a120a9766c6282a51d7d578c6cb0a7d946600d2ffb73ba25a0b44
+
+  - id: ngsl_spoken
+    name: New General Service List - Spoken
+    version: "1.2"
+    license: CC BY-SA 4.0
+    attribution: >-
+      Browne, C., & Culligan, B. (2013). The New General Service List - Spoken.
+      https://www.newgeneralservicelist.com
+    homepage: https://www.newgeneralservicelist.com/ngsl-spoken
+    files:
+      - name: NGSL-Spoken_1.2_stats.csv
+        url: https://www.newgeneralservicelist.com/s/NGSL-Spoken_12_stats.csv
+        sha256: 07708940c50a07cac4f507fd1e87bdd50081d7b87713a66a99beb3c8c4d11ac8
+
+  - id: cefrj
+    name: CEFR-J Wordlist and Grammar Profile
+    # 1.6 is only sent on request; 1.5 is published by Open Language Profiles
+    # under the same terms.
+    version: "1.5"
+    license: Free for research and commercial use with citation (Tono Laboratory, TUFS)
+    attribution: >-
+      The CEFR-J Wordlist Version 1.5 and Grammar Profile Version 20180315. Compiled by
+      Yukio Tono, Tokyo University of Foreign Studies. Retrieved from
+      http://www.cefr-j.org/download.html via Open Language Profiles.
+    homepage: https://github.com/openlanguageprofiles/olp-en-cefrj
+    files:
+      - name: cefrj-vocabulary-profile-1.5.csv
+        url: https://raw.githubusercontent.com/openlanguageprofiles/olp-en-cefrj/d4e45b75b38f27b30dfc5c44d8c571aec7e7092f/cefrj-vocabulary-profile-1.5.csv
+        sha256: b0dd3c635f1c9a4fdf1490c7e5b7c48e8bbe55b652ad0c9860a95f98e10ae498
+      - name: cefrj-grammar-profile-20180315.csv
+        url: https://raw.githubusercontent.com/openlanguageprofiles/olp-en-cefrj/d4e45b75b38f27b30dfc5c44d8c571aec7e7092f/cefrj-grammar-profile-20180315.csv
+        sha256: 94953af376c1336166257e56c78d2139697b40ad8cf6f1235d8f9e89c2efc428
+
+  - id: octanove
+    name: Octanove Vocabulary Profile C1/C2
+    version: "1.0"
+    license: CC BY-SA 4.0
+    attribution: >-
+      Octanove Vocabulary Profile C1/C2 (ver 1.0), Octanove Labs, via Open Language
+      Profiles.
+    homepage: https://github.com/openlanguageprofiles/olp-en-cefrj
+    files:
+      - name: octanove-vocabulary-profile-c1c2-1.0.csv
+        url: https://raw.githubusercontent.com/openlanguageprofiles/olp-en-cefrj/d4e45b75b38f27b30dfc5c44d8c571aec7e7092f/octanove-vocabulary-profile-c1c2-1.0.csv
+        sha256: 18c33a407f2f89f7b8de9671c6d45fe3ea0bce45e7d2d7dcaab48d73e0f7b380
+
+  - id: cmudict
+    name: The CMU Pronouncing Dictionary
+    version: "74790861"
+    license: BSD-2-Clause
+    attribution: >-
+      The CMU Pronouncing Dictionary, Carnegie Mellon University.
+      https://github.com/cmusphinx/cmudict
+    homepage: https://github.com/cmusphinx/cmudict
+    files:
+      - name: cmudict.dict
+        url: https://raw.githubusercontent.com/cmusphinx/cmudict/74790861f652b15e4ac49015a90074ad62a27690/cmudict.dict
+        sha256: 81917843c7f44ce2b094ac63873c2c7a4cf802040792c455ba3ca406891c3d22
+      - name: LICENSE
+        url: https://raw.githubusercontent.com/cmusphinx/cmudict/74790861f652b15e4ac49015a90074ad62a27690/LICENSE
+        sha256: bd4ce8e44170a5f9f481310ca85c51de3c4f851a65e679b40e603b143bd3542a
+
+  - id: tatoeba
+    name: Tatoeba (English, Turkish and their links)
+    version: weekly export
+    rolling: true
+    license: CC BY 2.0 FR (some sentences CC0 1.0)
+    attribution: >-
+      Sentences from Tatoeba (https://tatoeba.org), CC BY 2.0 FR. The author of each
+      sentence is recorded with the sentence.
+    homepage: https://tatoeba.org/en/downloads
+    files:
+      - name: eng_sentences_detailed.tsv.bz2
+        url: https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_detailed.tsv.bz2
+      - name: tur_sentences_detailed.tsv.bz2
+        url: https://downloads.tatoeba.org/exports/per_language/tur/tur_sentences_detailed.tsv.bz2
+      - name: eng-tur_links.tsv.bz2
+        url: https://downloads.tatoeba.org/exports/per_language/eng/eng-tur_links.tsv.bz2
+      - name: eng_sentences_CC0.tsv.bz2
+        url: https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences_CC0.tsv.bz2
+      - name: eng_user_languages.tsv.bz2
+        url: https://downloads.tatoeba.org/exports/per_language/eng/eng_user_languages.tsv.bz2
+
+  - id: wiktextract
+    name: Wiktextract English dictionary (kaikki.org)
+    version: weekly export
+    rolling: true
+    license: CC BY-SA 4.0 and GFDL (Wiktionary)
+    attribution: >-
+      Wiktionary contributors (https://en.wiktionary.org), extracted with Wiktextract by
+      Tatu Ylonen (https://kaikki.org).
+    homepage: https://kaikki.org/dictionary/English/
+    files:
+      - name: kaikki.org-dictionary-English.jsonl.gz
+        url: https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz
+
+  - id: wordfreq
+    name: wordfreq
+    version: "3.1.1"
+    package: wordfreq
+    license: Apache-2.0 (code), CC BY-SA 4.0 (data)
+    attribution: >-
+      Robyn Speer. (2022). rspeer/wordfreq: v3.0 (v3.0.2). Zenodo.
+      https://doi.org/10.5281/zenodo.7199437. Includes SUBTLEX data (Brysbaert et al.).
+    homepage: https://github.com/rspeer/wordfreq
+
+  - id: kokoro
+    name: Kokoro-82M text-to-speech model (ONNX export)
+    version: "1.0"
+    license: Apache-2.0 (model and voices)
+    attribution: >-
+      Kokoro-82M by hexgrad (https://huggingface.co/hexgrad/Kokoro-82M), Apache-2.0.
+      ONNX model and voice files as released by kokoro-onnx (thewh1teagle,
+      https://github.com/thewh1teagle/kokoro-onnx).
+    homepage: https://github.com/thewh1teagle/kokoro-onnx
+    files:
+      - name: kokoro-v1.0.onnx
+        url: https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+        sha256: 7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5
+      - name: voices-v1.0.bin
+        url: https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+        sha256: bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d

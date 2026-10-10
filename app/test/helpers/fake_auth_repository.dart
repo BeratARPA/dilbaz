@@ -17,8 +17,14 @@ class FakeAuthRepository implements AuthRepository {
   final sentTo = <String>[];
   final verified = <(String, String)>[];
 
+  /// Id of the one user this fake knows.
+  static const id = '11111111-1111-4111-8111-111111111111';
+
   @override
   bool get isSignedIn => _signedIn;
+
+  @override
+  String? get userId => _signedIn ? id : null;
 
   @override
   Stream<bool> watchSignedIn() => _changes.stream;

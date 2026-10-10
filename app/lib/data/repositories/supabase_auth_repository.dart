@@ -11,6 +11,9 @@ class SupabaseAuthRepository implements AuthRepository {
   bool get isSignedIn => _auth.currentSession != null;
 
   @override
+  String? get userId => _auth.currentUser?.id;
+
+  @override
   Stream<bool> watchSignedIn() =>
       _auth.onAuthStateChange.map((state) => state.session != null);
 

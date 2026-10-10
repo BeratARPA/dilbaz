@@ -5,10 +5,13 @@ description = "Dilbaz content pipeline: builds versioned, license-tracked langua
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "en-core-web-md",
     "pydantic>=2.13.5",
     "pyyaml>=6.0.3",
     "rich>=15.0.0",
+    "spacy==3.8.16",
     "typer>=0.27.2",
+    "wordfreq==3.1.1",
 ]
 
 [project.scripts]
@@ -32,9 +35,14 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "UP", "B", "SIM", "RUF", "ANN", "PT"]
+# IPA letters and marks look like Latin ones but are intended here.
+allowed-confusables = ["ɑ", "ɡ", "ɪ", "ˈ", "ˌ", "ː", "’", "ı"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN"]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["sample_sentences", "sample_sources", "test_build_step", "test_pair_step", "test_tatoeba_analysis"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -43,3 +51,6 @@ plugins = ["pydantic.mypy"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv.sources]
+en-core-web-md = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl" }

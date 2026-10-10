@@ -64,7 +64,7 @@ void main() {
     });
   });
 
-  group('SrsScheduler.review', () {
+  group('SrsScheduler.review (I-08)', () {
     test('matches package:fsrs exactly, so due dates come from FSRS', () {
       final reference = fsrs.Scheduler(enableFuzzing: false);
       var expected = fsrs.Card(cardId: cardId, due: t0);
@@ -168,6 +168,77 @@ void main() {
     });
   });
 
+  group('SrsScheduler review counts', () {
+    test('count every review and each lapse from review', () {
+      final cards = replay(SrsScheduler(SrsConfig.replay));
+      expect(cards.map((c) => c.reps), [1, 2, 3, 4, 5, 6, 7]);
+      // Only the Again on day 3 hits a graduated card.
+      expect(cards.map((c) => c.lapses), [0, 0, 1, 1, 1, 1, 1]);
+    });
+
+    test('an Again while learning is not a lapse', () {
+      final scheduler = SrsScheduler(SrsConfig.replay);
+      final card = scheduler.review(
+        scheduler.newCard(fsrsCardId: cardId, now: t0),
+        ReviewRating.again,
+        at: t0,
+      );
+      expect(card.state, MemoryState.learning);
+      expect(card.reps, 1);
+      expect(card.lapses, 0);
+    });
+  });
+
+  group('SrsScheduler.replay', () {
+    final reviews = [
+      for (final (rating, offset) in plan) (rating: rating, at: t0.add(offset)),
+    ];
+
+    test('rebuilds the card from its rated reviews', () {
+      final scheduler = SrsScheduler(SrsConfig.replay);
+      expect(
+        scheduler.replay(fsrsCardId: cardId, createdAt: t0, reviews: reviews),
+        replay(scheduler).last,
+      );
+    });
+
+    test('matches live memory except the fuzzed due date', () {
+      // Fuzz moves due dates only; the next review reads the review times.
+      final live = replay(SrsScheduler()).last;
+      final rebuilt = SrsScheduler(SrsConfig.replay)
+          .replay(fsrsCardId: cardId, createdAt: t0, reviews: reviews);
+      expect(rebuilt.copyWith(due: live.due), live);
+    });
+
+    test('of a card without reviews is the new card', () {
+      final scheduler = SrsScheduler(SrsConfig.replay);
+      expect(
+        scheduler.replay(fsrsCardId: cardId, createdAt: t0, reviews: []),
+        scheduler.newCard(fsrsCardId: cardId, now: t0),
+      );
+    });
+
+    test('needs fuzzing off', () {
+      expect(
+        () => SrsScheduler().replay(
+          fsrsCardId: cardId,
+          createdAt: t0,
+          reviews: reviews,
+        ),
+        throwsStateError,
+      );
+    });
+
+    test('rejects reviews out of order', () {
+      expect(
+        () => SrsScheduler(
+          SrsConfig.replay,
+        ).replay(fsrsCardId: cardId, createdAt: t0, reviews: reviews.reversed),
+        throwsArgumentError,
+      );
+    });
+  });
+
   group('SrsScheduler.retrievability', () {
     test('is 0 before the first review', () {
       final scheduler = SrsScheduler();
@@ -241,6 +312,67 @@ void main() {
       }
 
       expect(dueWith(0.95).isBefore(dueWith(0.85)), isTrue);
+    });
+
+    test('reads a course: the weights of the mode group and retention', () {
+      final production = [...fsrs.defaultParameters]..[2] = 9;
+      final params = {'production': production, 'receptive': null};
+      final config = SrsConfig.forCourse(
+        group: ModeGroup.production,
+        desiredRetention: 0.85,
+        fsrsParams: params,
+      );
+      expect(config.parameters, production);
+      expect(config.desiredRetention, 0.85);
+      expect(config.enableFuzzing, isTrue);
+      for (final other in [ModeGroup.receptive, ModeGroup.dictation]) {
+        expect(
+          SrsConfig.forCourse(
+            group: other,
+            desiredRetention: 0.9,
+            fsrsParams: params,
+          ).parameters,
+          isNull,
+        );
+      }
+      expect(
+        SrsConfig.forCourse(
+          group: ModeGroup.production,
+          desiredRetention: 0.9,
+        ).parameters,
+        isNull,
+      );
+    });
+
+    test('accepts integral weights from jsonb', () {
+      final weights = <Object?>[...fsrs.defaultParameters]..[2] = 9;
+      final config = SrsConfig.forCourse(
+        group: ModeGroup.production,
+        desiredRetention: 0.9,
+        fsrsParams: {'production': weights},
+      );
+      expect(config.parameters![2], 9.0);
+      final scheduler = SrsScheduler(config.copyWith(enableFuzzing: false));
+      final card = scheduler.newCard(fsrsCardId: cardId, now: t0);
+      expect(scheduler.review(card, ReviewRating.good, at: t0).stability, 9.0);
+    });
+
+    test('rejects weights that are not a list of numbers', () {
+      for (final bad in <Object>[
+        'weights',
+        [1.0, 'x'],
+        {'w': 1},
+      ]) {
+        expect(
+          () => SrsConfig.forCourse(
+            group: ModeGroup.production,
+            desiredRetention: 0.9,
+            fsrsParams: {'production': bad},
+          ),
+          throwsArgumentError,
+          reason: '$bad',
+        );
+      }
     });
 
     test('uses personal FSRS parameters when given', () {

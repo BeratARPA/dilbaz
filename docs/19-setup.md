@@ -14,24 +14,48 @@ Ajan bu adımlara geldiğinde durur ve bu dosyanın ilgili bölümünü gösteri
 |---|---|---|---|
 | 1 | **GitHub** | Depo oluştur (özel önerilir). `git remote add origin …` bilgisini ajana ver. | Faz 0 |
 | 2 | **Supabase** | Hesap aç → yeni proje: ad `dilbaz`, bölge **Central EU (Frankfurt)**. Güçlü bir veritabanı parolası belirle ve **yalnızca** parola yöneticine kaydet (sohbete yazma). Formda: GitHub entegrasyonu **boş** (migrasyonlar onayla `db push` ile gider), "Enable Data API" **açık**, "Automatically expose new tables" **kapalı**, "Enable automatic RLS" kapalı kalabilir. Project URL ve **publishable key** ajan tarafından `app/env/prod.json`'a yazılabilir (herkese açık bilgiler). | Faz 0 (F0-10) |
-| 3 | **Anthropic** | ⏸ **Sıfır bütçe nedeniyle askıda** (`18` §0, ADR-0009 kararı bekleniyor). Karar çıkarsa: console.anthropic.com → API anahtarı + aylık harcama limiti. | Faz 1 öncesi karar |
-| 4 | **Deepgram** | Hesap aç ($200 başlangıç kredisi, kart gerekmez) → API anahtarı. ADR-0009 ile birlikte kesinleşir. | Faz 1 öncesi karar |
-| 5 | **Azure** | ⏸ **Askıda:** ücretsiz katman bile kart doğrulaması istiyor (`18` §0). Karar çıkarsa: "Speech" kaynağı, bölge West Europe, katman F0. | Faz 1 öncesi karar |
+| 3 | **Google AI Studio (Gemini)** | aistudio.google.com → Google hesabıyla giriş → **Get API key** → **Create API key**. **Faturalandırma ekleme:** ücretsiz katmanda kalmalı. Kotalar AI Studio'nun kullanım sayfasında görünür (`gemini-3.1-flash-lite`, `gemini-3.5-flash`). | F1-15'ten önce |
+| 4 | **Groq** | console.groq.com → e-postayla kayıt (kart yok) → **API Keys** → yeni anahtar. **Settings → Data Controls → Zero Data Retention: açık.** | F1-15'ten önce |
+| 5 | **Deepgram** | console.deepgram.com → e-postayla kayıt ($200 başlangıç kredisi, kart yok) → **API Keys** → yeni anahtar. | F1-14'ten önce |
+| — | **Anthropic, Azure** | Kullanılmıyor: kart gerekiyor (ADR-0009). Bütçe olursa ADR-0005/0006'ya dönülür. | — |
 | — | **Brevo (SMTP)** | Ücretsiz hesap → gönderen doğrula → SMTP anahtarı → Supabase: Authentication → Emails → SMTP Settings (host `smtp-relay.brevo.com`, port 587, gönderen adı `Dilbaz`). Yerleşik e-posta servisi yalnızca ekip üyelerine ve saatte 2 e-posta gönderir, şablonları kilitlidir; kodla giriş için şart. | Faz 0 (F0-10) |
 | 6 | **Vercel** | Web sürümü için proje. | Faz 6 |
 
 ### Anahtarları ayarlama (kendin çalıştır)
 
+Supabase CLI bir kez bağlanır (F0-10'da yapıldı):
+
 ```bash
-# Proje klasöründe, Supabase CLI ile (bir kez)
 npx supabase login
 npx supabase link --project-ref <PROJE_REF>
-
-# Sunucu tarafı gizli anahtarlar (uygulamaya asla girmez)
-npx supabase secrets set ANTHROPIC_API_KEY=... DEEPGRAM_API_KEY=... AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=westeurope
 ```
 
-Yerel geliştirme için aynı anahtarları `supabase/functions/.env` dosyasına yaz. Bu dosya git dışıdır.
+Sunucu tarafı gizli anahtarlar uygulamaya asla girmez. Aşağıdaki blok PowerShell'de, proje klasöründe çalıştırılır:
+- Her anahtarı gizli olarak sorar: yapıştırınca ekranda `*` görünür. Henüz olmayan anahtar için Enter'a basılır.
+- Anahtarları `supabase/functions/.env` dosyasına yazar (git dışı). Daha önce yazılanlar korunur.
+- Dosyayı Supabase secrets'a yükler.
+- Anahtarlar ekrana, kabuk geçmişine ve sohbete düşmez. Blok, eksik anahtar geldikçe yeniden çalıştırılabilir.
+
+```powershell
+cd C:\Users\berat\source\repos\Dilbaz
+$envFile = "supabase\functions\.env"
+$values = [ordered]@{}
+if (Test-Path $envFile) {
+  Get-Content $envFile | ForEach-Object { if ($_ -cmatch '^([A-Z_]+)=(.*)$') { $values[$Matches[1]] = $Matches[2] } }
+}
+foreach ($name in "GEMINI_API_KEY", "GROQ_API_KEY", "DEEPGRAM_API_KEY") {
+  $value = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "$name (yoksa Enter)")).Password
+  if ($value.Trim()) { $values[$name] = $value.Trim() }
+}
+$values.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" } | Set-Content -Encoding ascii $envFile
+npx.cmd supabase secrets set --env-file supabase/functions/.env
+```
+
+PowerShell'de `npx` yerine `npx.cmd` yazılır. Betik çalıştırma kapalıyken (Windows'un varsayılanı) `npx.ps1` engellenir; bu güvenlik ayarı değiştirilmez.
+
+Karşılaştırmalar büyük-küçük harfe duyarlıdır (`-cmatch`). Türkçe dil ayarında duyarsız eşleşme `I` harfini `ı` sayar ve `GEMINI` eşleşmez.
+
+Aynı `supabase/functions/.env` dosyası yerel geliştirmede (`npx supabase functions serve`) ve LLM eval'inde (`cd evals && deno run -A --env-file=../supabase/functions/.env run.ts --route answer_check`) de kullanılır. Bu dosya git dışıdır.
 
 Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yalnızca herkese açık bilgiler):
 
@@ -46,6 +70,29 @@ Uygulama yapılandırması `app/env/prod.json` dosyasındadır (git dışı; yal
   1. Authentication → Hooks → **Before User Created** → Postgres fonksiyonu `private.hook_before_user_created` → etkinleştir.
   2. SQL Editor'de iki e-postayı ekle (küçük harfle): `insert into private.signup_allowlist (email) values ('...'), ('...');`
   - Yeni kayıtlar açık kalır; listede olmayan e-posta 403 alır.
+
+### Paket yükleme (F1-05, kendin çalıştır)
+
+1. **Üretim migrasyonu:** `npx supabase db push`. Ajan önce onayını ister. `packs` tablosunu ve `packs`, `pack-audio` kovalarını oluşturur.
+2. **Gizli anahtar:** Supabase → Project Settings → API Keys → **Secret keys** → yeni anahtar (ad: `content-upload`). Anahtarı yalnızca parola yöneticine kaydet, sohbete yazma. Bu anahtar servis rolüyle çalışır.
+3. **Yükleme** (PowerShell, `content/tools` klasöründe). Anahtar yalnızca bu pencerenin ortamında kalır, dosyaya ve geçmişe yazılmaz:
+
+   ```powershell
+   $env:SUPABASE_URL = "https://<ref>.supabase.co"
+   $secure = Read-Host -AsSecureString "secret key"
+   $env:SUPABASE_SECRET_KEY = [System.Net.NetworkCredential]::new("", $secure).Password
+   uv run --no-sync dilbaz-content upload --publish
+   Remove-Item Env:SUPABASE_SECRET_KEY
+   ```
+
+   - `--no-sync`: ortam hazır, `uv` yeniden kurmaya çalışmasın.
+   - `--publish` verilmezse paketler taslak kalır ve uygulama yalnızca yayımlananları görür.
+   - 3.629 ses dosyası (~24 MB) ve 2 paket yüklenir. Yerel denemede 26 sn sürdü. Yarıda kalırsa komutu tekrar çalıştır; yüklü sesler atlanır.
+4. **Doğrulama:**
+   - Table Editor → `packs`: `en@1` ve `tr-en@1` satırları `published`.
+   - Storage → `packs` ve `pack-audio` kovaları dolu.
+
+**Ajana bırakma (2026-09-30'da kullanılan yol):** Supabase CLI'da oturum açıksa (`supabase login`, F0-10) 2. ve 3. adımları ajan yapabilir. Onayınla anahtarı `supabase projects api-keys --reveal` ile alır ve yalnızca yükleme komutunun ortamına verir. Değer ekrana, loga, dosyaya ya da sohbete yazılmaz; senin anahtar oluşturman gerekmez. Doğrulamayı salt okunur SQL ile ajan yapar.
 
 ## 2. Windows'a araç kurulumu
 
@@ -69,7 +116,23 @@ Flutter eklentileri sembolik bağ ister. **Ayarlar → Sistem → Geliştiricile
 ### Telefon (Android)
 - Ayarlar → Telefon hakkında → Yapım numarasına 7 kez dokun → Geliştirici seçenekleri → **USB hata ayıklama** açık.
 - USB ile bağla. `flutter devices` telefonu göstermeli.
-- Sevgilinin telefonuna kurulum: imzalı APK dosyası gönderilir, "bilinmeyen kaynaklardan yükleme" izni verilir. Rehber F1-24'te hazırlanır.
+- Sevgilinin telefonuna kurulum: imzalı APK dosyası gönderilir, "bilinmeyen kaynaklardan yükleme" izni verilir. Rehber: §5.
+- **Asıl uygulamanın kimliğiyle (`com.dilbaz.dilbaz_app`) telefona `flutter run`, `flutter install` ya da `flutter test` yapılmaz.** Flutter kurulum başarısız olunca (ör. imza farkı) eski uygulamayı kaldırıp yeniden kurar; cihazdaki veri gider. Geliştirme derlemeleri telefona her zaman `.local` ile kurulur (aşağıda).
+- **Yerel yığına karşı deneme (F1-21):** Telefondaki uygulamaya dokunmadan, yanına ayrı bir kopya kurulur ("Dilbaz.local"; kendi kimliği ve verisi):
+  ```bash
+  cd app && DILBAZ_APP_ID_SUFFIX=.local flutter build apk --debug --dart-define-from-file=env/local.json
+  adb install -r build/app/outputs/flutter-apk/app-debug.apk
+  adb reverse tcp:54321 tcp:54321
+  ```
+  - `adb reverse`, telefonun `127.0.0.1:54321` adresini bilgisayardaki yerel Supabase'e bağlar. Giriş kodu yerel Mailpit'e düşer (`http://127.0.0.1:54324`).
+  - Yerel test e-postası önce yerel veritabanında `private.signup_allowlist`'e eklenir. Paketler yerel yığına `dilbaz-content upload` ile yerel anahtarla yüklenir.
+- **Uçtan uca testler (F1-24, `15` §4):** `app/integration_test/` ekranları, motoru ve cihazın SQLite'ını gerçek haliyle çalıştırır. Sunucu, LLM, ses, izinler ve bildirimler sahtedir; telefonda sistem penceresi açılmaz, bildirim kurulmaz.
+  ```bash
+  cd app && DILBAZ_APP_ID_SUFFIX=.local flutter test integration_test -d <cihaz> --no-uninstall
+  ```
+  - **`--no-uninstall` şart.** `flutter test`, test bitince kaldıracağı paketi derlemeden önce diskteki son APK'dan okur. Son derleme son eksizse asıl uygulamayı verisiyle kaldırabilir.
+  - Telefonun ekranı açık ve kilitsiz olmalı. Test "Dilbaz.local"ı açıp kendi ilerletir (~1 dk); bu sırada telefona dokunulmaz.
+  - Telefonsuz hızlı deneme (aynı senaryolar, ekransız): `flutter test integration_test -d flutter-tester`.
 
 ## 3. Doğrulama
 
@@ -95,3 +158,89 @@ node --version
 | Kod, test, migrasyon, içerik üretimi | Onaylarsın (faz sonları, ücretli işlemler) | ✓ |
 | Üretime migrasyon (`db push`), paket yükleme, web yayını | Onay verirsin | ✓ |
 | İçerik örneklem incelemesi, ASR veri seti kaydı, günlük kullanım | ✓ | Araçları hazırlar |
+
+## 5. Sürüm APK ve iki telefona kurulum (F1-24)
+
+Uygulama Play Store'a konmaz. İki telefona, **yükleme anahtarıyla imzalı** tek bir APK dosyası kurulur. Güncellemeler aynı anahtarla imzalanır ve eskisinin üstüne kurulur.
+
+### 5.1 Yükleme anahtarı (bir kez, kendin yap)
+
+1. Aşağıdaki bloğu PowerShell'de çalıştır. Parolayı sen belirlersin; iki kez sorulur ve ekranda görünmez. Sohbete yazma.
+   - Parola en az 6 karakter olur ve yalnızca İngilizce harf ve rakam içerir. `key.properties` Türkçe harfi bozar, ters bölü de orada özel anlam taşır.
+   - Blok anahtarı `C:\Users\<kullanıcı>\dilbaz-upload.jks` dosyasına koyar ve `app/android/key.properties`'i yazar. Anahtar zaten varsa dokunmaz.
+
+   ```powershell
+   cd C:\Users\berat\source\repos\Dilbaz
+   $keystore = "$env:USERPROFILE\dilbaz-upload.jks"
+   $keytool = (Get-Command keytool -ErrorAction SilentlyContinue).Source
+   if (-not $keytool) { $keytool = Join-Path $env:ProgramFiles "Android\Android Studio\jbr\bin\keytool.exe" }
+   $pass = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "Parola (en az 6; yalnızca İngilizce harf ve rakam)")).Password
+   $again = [System.Net.NetworkCredential]::new("", (Read-Host -AsSecureString "Parola (tekrar)")).Password
+   if (Test-Path $keystore) {
+     Write-Host "Anahtar zaten var: $keystore"
+   } elseif ($pass -cne $again) {
+     Write-Host "Parolalar aynı değil; bloğu yeniden çalıştır."
+   } elseif ($pass -cnotmatch '^[A-Za-z0-9]{6,}$') {
+     Write-Host "Parola en az 6 karakter olmalı ve yalnızca İngilizce harf ve rakam içermeli."
+   } else {
+     & $keytool -genkeypair -keystore $keystore -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload -dname "CN=Dilbaz" -storepass $pass -keypass $pass
+     if ($LASTEXITCODE -eq 0) {
+       "storePassword=$pass`nkeyPassword=$pass`nkeyAlias=upload`nstoreFile=$($keystore.Replace('\', '/'))" | Set-Content -Encoding ascii app\android\key.properties
+       Write-Host "Hazır: $keystore ve app\android\key.properties"
+     }
+   }
+   Remove-Variable pass, again
+   ```
+
+2. **Yedekle:** `dilbaz-upload.jks` dosyasını ve parolayı parola yöneticine ve bir USB belleğe koy.
+   - **2026-10-09:** Anahtarı kullanıcının isteğiyle ajan oluşturdu: `C:\Users\berat\dilbaz-upload.jks`, takma ad `upload`, 2054'e kadar geçerli. Sertifikanın SHA-256 parmak izi `D2:5E:8C:9F:…:46:63:6C:A8`. Rastgele şifre yalnızca `app/android/key.properties`'te durur ve ekrana yazılmadı. Yedeklenecek iki dosya: `dilbaz-upload.jks` ve `key.properties`.
+   - **Yedek (2026-10-09):** İki dosya, geri yükleme notuyla birlikte kullanıcının Google Drive'ına ("My Drive") `dilbaz-imza-yedek-2026-10-09.zip` olarak yüklendi. Kullanıcı istedi; ajan Chrome'daki oturumla yükledi. Bilgisayardaki geçici kopya silindi.
+   - Anahtar kaybolursa uygulama güncellenemez. Tek yol kaldırıp yeniden kurmaktır ve cihazdaki veri gider. Sunucudaki kopya senkron açıksa kalır (F1-21).
+   - Anahtar dosyası da `key.properties` de git dışıdır (`.gitignore`).
+
+`key.properties` yoksa sürüm derlemesi hata ayıklama anahtarıyla imzalanır (`flutter run --release` çalışsın diye) ve derleme çıktısında `WARNING: android/key.properties not found` yazar. Böyle bir APK dağıtılmaz; 5.2'deki imza denetimi de bunu yakalar.
+
+### 5.2 Derleme ve imza denetimi (ajan ya da sen)
+
+```bash
+cd app && flutter build apk --release --dart-define-from-file=env/prod.json
+```
+
+- Çıktı: `app/build/app/outputs/flutter-apk/app-release.apk`.
+- Derleme sürerken aynı projede başka `flutter` komutu (test, analyze, run) çalıştırılmaz. O komutlar eklenti kayıt dosyasını geliştirme eklentileriyle yeniden yazar ve sürüm derlemesi `integration_test` paketini bulamadığı için düşer.
+- İmzayı denetle:
+
+  ```powershell
+  & "$env:LOCALAPPDATA\Android\Sdk\build-tools\36.0.0\apksigner.bat" verify --print-certs app\build\app\outputs\flutter-apk\app-release.apk
+  keytool -list -v -keystore $env:USERPROFILE\dilbaz-upload.jks -alias upload
+  ```
+
+  İki çıktıdaki SHA-256 aynı olmalı. `CN=Android Debug` görünürse `key.properties` okunmamıştır; APK dağıtılmaz.
+- Her yeni sürümde `app/pubspec.yaml` içindeki `version` artırılır (`0.1.0+1` → `0.1.1+2`). Android, sayısı küçük ya da eşit olan sürümü güncelleme olarak kabul etmez.
+
+### 5.3 Senin telefonun
+
+- Bilgisayardan kurulmuş, hata ayıklama anahtarıyla imzalı eski bir Dilbaz varsa yeni APK onun üstüne kurulmaz; önce o kaldırılır (veri silme; ajan önce onay ister).
+  - 2026-10-08: eski sürüm ve "Dilbaz.local" kullanıcı tarafından kaldırıldı. Eski sürümde senkron yoktu; kartlar, denemeler ve seviye testi sonucu yalnızca telefondaydı ve gitti. Profil ve kurs girişte sunucudan geri gelir, seviye testi yeniden önerilir.
+  - Yeni sürüm her şeyi senkronlar (senkron 2026-10-08'den beri üretimde).
+- Kurulum:
+  - USB ile: `adb install -r app/build/app/outputs/flutter-apk/app-release.apk` (`adb install -r`, imza farkında veriyi silmeden durur).
+  - Ya da dosyayı telefona gönderip açarak (5.4'teki gibi).
+- Sonraki güncellemeler eskisinin üstüne kurulur; **kaldırılmaz**.
+- "Dilbaz.local" geliştirme kopyasıdır. Ayrı bir uygulamadır ve istenirse kaldırılır: `adb uninstall com.dilbaz.dilbaz_app.local`.
+
+- **2026-10-09:** İmzalı 0.1.0 (`versionCode` 1) senin telefonuna `adb install` ile kuruldu. İmza `CN=Dilbaz`, parmak izi anahtarla aynı.
+
+### 5.4 Sevgilinin telefonu
+
+1. E-postası Supabase'de kayıt izin listesinde olmalı (§1, "Kayıt izin listesi").
+2. APK dosyasını gönder: Quick Share, Google Drive ya da WhatsApp'ta **belge olarak**.
+3. Telefonda dosyaya dokun. "Bu kaynaktan yüklemeye izin ver" sorulursa izin ver. Bu, telefonun sahibinin verdiği bir sistem iznidir; yalnızca o uygulama (ör. Dosyalarım, Chrome) için açılır.
+4. Play Protect "tanınmayan uygulama" uyarısı gösterebilir: **Ayrıntılar → Yine de yükle.** Uyarı, Play'den gelmeyen her uygulamada çıkar.
+5. Uygulamayı aç: e-posta → kod → karşılama akışı. Birlikte çalışmak için karşılamadaki ekip adımında senin verdiğin davet kodu girilir (ya da sonra Birlikte sekmesinden).
+6. Bildirim ve mikrofon izinlerini uygulama gerektiğinde sorar; vermek telefonun sahibinin kararıdır.
+
+### 5.5 Güncelleme
+
+1. `version` artırılır ve 5.2'deki gibi derlenip imza denetlenir.
+2. Dosya iki telefona da 5.3 / 5.4'teki gibi gönderilip eskisinin üstüne kurulur. Veri yerinde kalır.

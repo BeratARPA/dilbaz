@@ -80,6 +80,9 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      # The engine's generated code is not in git; the app compiles against it.
+      - run: dart pub get && dart run build_runner build
+        working-directory: packages/engine
       - run: flutter pub get
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: dart run build_runner build
@@ -95,6 +98,12 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v7
+      # The APK build ran out of disk; these preinstalled tools are unused here.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost /usr/share/swift
+          df -h /
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -104,6 +113,8 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - run: dart pub get && dart run build_runner build
+        working-directory: packages/engine
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build apk --debug
@@ -138,6 +149,9 @@ jobs:
       - run: deno fmt --check
       - run: deno lint
       - run: deno test -A
+      # The LLM evals: the gold set's shape and the scoring (no provider call).
+      - run: deno fmt --check && deno lint && deno test -A
+        working-directory: evals
 
   content:
     name: content tools (python)

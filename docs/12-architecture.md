@@ -18,7 +18,9 @@
 │ Edge Functions (Deno 2): tutor · speech · pair · ops          RPC: sync_push · sync_pull │
 └────────┬───────────────────────────┬────────────────────────────┬────────────────────────┘
          ▼                           ▼                            ▼
-   Anthropic API (Claude)     Deepgram (İngilizce STT)     Azure AI Speech (TTS, telaffuz, Türkçe STT)
+   Gemini + Groq (ücretsiz LLM)   Deepgram (İngilizce STT)   Türkçe STT yedeği (Groq/Gemini)
+
+Cihaz üstü: Türkçe STT (speech_to_text), dinamik TTS (flutter_tts). Paket sesleri: Kokoro (çevrimdışı). ADR-0009.
 
 Çevrimdışı araçlar: content/tools (Python) ──▶ paketler (SQLite + ses) ──▶ Storage/packs
 CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
@@ -58,7 +60,8 @@ CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
 │  ├─ config.toml · seed.sql
 │  ├─ migrations/                    SQL (13-data-model.md)
 │  ├─ functions/
-│  │  ├─ _shared/  llm_config.ts, speech_config.ts, schemas/, prompts/, speech/ (adaptörler), auth.ts, budget.ts
+│  │  ├─ _shared/  llm_config.ts, speech_config.ts, llm/ (Gemini, Groq, zincir, kota), catalogs/, schemas/,
+│  │  │            prompts/, speech/ (adaptörler), auth.ts, admin.ts, leak.ts
 │  │  ├─ tutor/    rota tabanlı: answer_check, speaking_annotate, gap_suggest, roleplay_turn, roleplay_debrief,
 │  │  │            writing_feedback, mediation_check, comprehension_check
 │  │  ├─ speech/   transcribe, assess, tts
@@ -70,7 +73,7 @@ CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
 │  ├─ tools/                         Python CLI (dilbaz-content), pyproject.toml (uv)
 │  ├─ sources/ · work/ · build/      git dışı
 ├─ evals/
-│  ├─ tutor/<rota>/cases.jsonl · run.ts · results/
+│  ├─ tutor/<rota>/cases.yaml → cases.jsonl · run.ts · score.ts · results/ (deno.json: fonksiyonlarınkiyle aynı)
 │  └─ asr/                           karşılaştırma testi verisi (git dışı ses) + sonuçlar
 ├─ tools/
 │  ├─ fsrs/optimize.py               py-fsrs Optimizer
@@ -89,7 +92,9 @@ CI: GitHub Actions (format, analyze, test, pgTAP, deno test, pytest, APK build)
   5. Tüm zamanlar UTC'dir (`DateTime.now().toUtc()`). Yerel saate yalnızca gösterimde çevrilir.
   6. Kimlikler istemcide üretilen **UUIDv7**'dir (`uuid` paketi, `Uuid().v7()`).
   7. Kullanıcıya görünen metinler yalnızca ARB'den gelir. Yasak kelime testi vardır (`15`).
-- **Yönlendirme:** `go_router`; her özellik kendi rotalarını tanımlar.
+- **Yönlendirme:** `go_router`; her özellik kendi rotalarını tanımlar. Kapılar tek `redirect` içindedir: oturum yoksa `/sign-in`; oturum var ama karşılama durumu bilinmiyorsa `/opening`; karşılama bitmemişse `/welcome`; aksi halde ana kabuk. `main`, açılış ekranını bu durum bilinene kadar (en fazla 1 sn) tutar; böylece profili cihazda olan kullanıcı ara ekran görmez.
+- **Ses çalma:** Paket klipleri `PackAudio` ile uygulamanın destek klasörüne indirilir ve orada kalır (`11` §5), `ClipPlayer` (just_audio) ile çalınır. Kayıt altyapısı F1-14'te gelir.
+- **Paylaş menüsü (F1-17):** `share_handler` Android'de `text/plain` paylaşımını alır (`SharedTextSource`). Gelen metin ana kabuk açılınca yakalama sayfasını açar; giriş ya da karşılama bitmeden gelen metin bekler.
 - **Durum yönetimi:** Riverpod 3 + kod üretimi (`riverpod_generator`). freezed ve json_serializable zaten kod ürettiği için tutarlıdır.
 - **Özellik bayrakları:** `app_config` tablosu + yerel varsayılanlar. Yarım kalan özellikler bayrak arkasında birleştirilir.
 
@@ -126,9 +131,17 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - `fsrs.Card.cardId` bir `int`'tir. Dilbaz kartı UUID ile tanınır, FSRS kimliği ayrı alanda (`fsrs_card_id`) tutulur.
 - İnceleme: `scheduler.reviewCard(card, rating, reviewDateTime: nowUtc)` → `(card, reviewLog)`. Hatırlama olasılığı: `scheduler.getCardRetrievability(card, currentDateTime: nowUtc)`.
 - Aralık bulanıklaştırma (fuzz) canlıda açıktır. Sonuç `attempts.card_state_after` olarak saklanır (senkron deterministik).
+- Motorun dışa açtığı tipler:
+  - `fsrs/`: `SrsScheduler` (`newCard`, `review`, `replay`, `retrievability`), `SrsConfig` (`forCourse`: mod grubunun kişisel ağırlıkları), `CardMemory` (JSON'u `card_state_after`), `CardMode` ve `ModeGroup`.
+  - `scoring/`: otomatik puan (`03` §0.2–0.3). `Evaluation` (verdict + `target_ok`) → `AnswerEffect` → `CardReview` (deneme, ipucu, yeniden sorma) → `ReviewOutcome.rating`. Easy eşiği için `LatencyProfile` kullanılır.
+  - `scoring/`: deterministik değerlendirme (`03` §0.5). `AnswerKey` (referans, varyantlar, alternatifler, hedef lemmalar) → `AnswerChecker` → `Evaluation` ve şablonlu `HintLadder`.
+  - `language/`: `PackLanguage` (`LanguageServices`), `Normalizer` + `NormalizationRules` (`pack_meta.normalization`), `WordAlignment` (kelime hizalama; dikte de bunu kullanacak).
+  - `model/`: öğrenci modeli (`04`). `CardRecord` + `ReviewRecord` → `ItemEvidence` (L2 kanıt düzeyleri), `XlexResult` (X_Lex puanı, bant olasılıkları), `LemmaKnowledge` (kişisel kapsama, I-06), `LearnerSnapshot`.
+  - `curriculum/`: `Curriculum.next` (sıradaki yeni öğeler, `02` §4.3) ve `CarrierPicker.pick` (i+1 taşıyıcı seçimi, `02` §4.4).
+  - `planner/`: `Planner.plan` → `TodayPlan` (`05` §3): bütçe, minimum gün, tekrar bloğu, yeni öğe sınırı, seçenekler. `PlannerConfig` tüm eşikleri tutar. `invitationTimes`: günlük davetin zamanları (`09` §6, F1-22).
 - **Dart paketinde optimizasyon ve yeniden zamanlama yok:**
   - Kişisel parametreler `tools/fsrs/optimize.py` ile hesaplanır (py-fsrs 6.x, `fsrs[optimizer]`). py-fsrs, farklı günlere yayılmış 512'den az tekrarda varsayılan parametreleri döndürür.
-  - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır.
+  - Tam yeniden hesaplama gerekirse (parametre değişimi) motor, denemeleri fuzz kapalı olarak sırayla yeniden oynatır (`SrsScheduler.replay`).
 
 ## 6. Yerel öncelikli veri ve senkron (ADR-0003)
 
@@ -143,15 +156,27 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - **Push:** `sync_push(device_id, batch jsonb)` RPC'si. RLS ile çalışır; tek işlem, en fazla 500 kayıt.
 - **Pull:** `sync_pull(since_seq bigint)` RPC'si. Kullanıcının tablolarında `server_seq > since` olan satırları döner (sayfalı), yeni imleci verir. `server_seq` global bir dizidir; ekleme ve güncellemede tetikleyiciyle atanır.
 - **Tetikleyiciler:** uygulama açılışı, oturum sonu, 5 dakikada bir (ön planda), bağlantı geri gelince.
+- **Uygulama (F1-21, `data/sync/`):**
+  - **Push:** Outbox'ta zamanı gelen kayıtlar id sırasıyla okunur, en çok 500. Aynı satırın kayıtları tek satıra iner ve satır o anki hâliyle gider.
+    - Sunucu bir partiyi veri hatasıyla (SQLSTATE 22/23) reddederse parti ikiye bölünür. Reddedilen satır yalnız kalınca üstel geri çekilmeyle bekler (1, 2, 4 … en çok 60 dk); diğerleri gider.
+    - Ağ hatasında hiçbir kayıt değişmez; bir sonraki tetik yeniden dener.
+  - **Çakışmalar:** Bilinmeyen kursun satırı (`unknown_course`) ve denemesi sunucuda olmayan ek (`unknown_attempt`) beklemeye alınır. Eskimiş kart (`stale`) ve aynı öğenin ikinci kartı (`duplicate`) sunucunun sürümüne bırakılır; çekme onu getirir.
+  - **Pull:** Sayfa başına 500 satır; imleç `sync_state`'te. Gönderilmeyi bekleyen yerel değişiklik daha yeniyse korunur (kartta `last_review`, diğerlerinde `updated_at`). Değilse sunucunun satırı yazılır ve satırın bekleyen gönderimi düşer.
+  - **İki cihazda aynı öğenin kartı:** Sunucu ilk geleni tutar. Diğer cihaz çekince iki kart birleşir: kimlik sunucununki, hafıza daha yeni incelemeninki. Eski kartın denemeleri kendi kimliğini korur (I-03); kanıt hesabı onları öğenin kartına sayar.
+  - **Sıra güvencesi:** `server_seq` satır yazılırken alınır, işlemler ise farklı sırada bitebilir. Bu yüzden `sync_push` öğrenci başına bir danışma kilidi (advisory lock) tutar, `sync_pull` aynı kilidin paylaşımlı hâlini bekler. Çekme, sürmekte olan bir gönderimin satırlarını atlayıp imleci ilerletemez.
+  - **Tetikleyiciler:** Ana kabuk açıkken uygulama açılışı, uygulamaya dönüş, ön planda 5 dakikada bir, yerel yazmalar 20 sn durulunca (oturum sonu da böyle yakalanır) ve uygulama ekrandan çıkarken. "Bağlantı geri gelince" ayrıca izlenmiyor; dönüş ve 5 dakikalık tur bunu karşılıyor.
+  - Başarılı her senkrondan sonra LLM'i bekleyen cevaplar sorulur (`03` §0.5, `LateChecks`), ardından aylık test kayıtlarının sesi yüklenir (`RecordingFiles`, F1-22). Satır inmişse ya da cevap sonradan kontrol edilmişse Bugün ekranı yenilenir.
+  - Profil ve kurs karşılama akışında ve seviye testinden sonra ayrıca hemen, doğrudan tabloya yazılır (`ProfileRepository.push`; ekip adımı profili sunucuda bekler). Bu yol LWW karşılaştırması yapmaz ve kilidi tutmaz. F3-07'de tek yola indirilecek.
 - **Paketler** senkron dışındadır: manifest kontrolü + indirme (`11` §5).
+- **Kart gösterimi (F1-16):** Denemeler gösterim bitince tek işlemde yazılır: zincirli denemeler (puan ve `card_state_after` sonuncusunda), kartın yeni FSRS durumu ve outbox kayıtları.
 - **Plan B:** Özel senkron bakım yükü yaratırsa PowerSync (Flutter SDK 2.x, Supabase entegrasyonu, drift uyumlu) değerlendirilir.
 
 ## 7. Edge Functions
 
 | Fonksiyon | Rotalar | Notlar |
 |---|---|---|
-| `tutor` | `07` §4'teki tüm rotalar | Tek dağıtım, rota parametresi. Günlük bütçe kontrolü, şema doğrulaması, merdiven sızıntı kontrolü, `llm_usage` kaydı. |
-| `speech` | `transcribe`, `assess`, `tts` | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede, görev sesi Storage yolundan. `speech_usage` kaydı. |
+| `tutor` | `07` §4'teki tüm rotalar; `answer_check` (F1-15), `gap_suggest` (F1-17) | Tek dağıtım, rota parametresi. Sağlayıcı zinciri: veri onayı, adil pay, kota (`07` §3). Şema doğrulaması, merdiven sızıntı kontrolü, `llm_usage` kaydı (servis rolüyle). |
+| `speech` | `transcribe` (F1-14; Türkçe yedek F1-17), `assess`, `tts` (Faz 2) | Sağlayıcı adaptörleri (`08` §3.3). Kart sesi doğrudan gövdede (`08` §5.0), görev sesi Storage yolundan (F1-19). `speech_usage` kaydı; kullanım satırını fonksiyon `SUPABASE_SECRET_KEYS` içindeki gizli anahtarla yazar. |
 | `pair` | `create`, `join`, `submit` | Rol yüklerini yalnızca ilgili katılımcıya verir. Realtime kanalı `pair:{id}` (özel kanal, RLS). |
 | `ops` | `retention_cleanup`, `backup_export` | Yalnızca servis rolü, pg_cron + pg_net ile tetiklenir. |
 
@@ -160,7 +185,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 - Rotalar yol parçasıdır: `/functions/v1/tutor/<rota>`. Kod: `supabase/functions/<fonksiyon>/handler.ts` (bağımlılıklar enjekte edilir, testler ağsız) + `index.ts` (`Deno.serve`).
 - Kullanıcı başına dakikada 60 istek sınırı
 - Yapılandırılmış JSON log (kimlik ve süre; transkript ya da metin loglanmaz)
-- Anahtarlar Supabase secrets'ta tutulur (`ANTHROPIC_API_KEY`, `DEEPGRAM_API_KEY`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`)
+- Anahtarlar Supabase secrets'ta tutulur (`GEMINI_API_KEY`, `GROQ_API_KEY`, `DEEPGRAM_API_KEY`; ADR-0009)
 
 ## 8. Ortamlar ve yapılandırma
 
@@ -184,7 +209,7 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   2. `ops/backup_export`, kullanıcı tablolarını JSON olarak `backups/{tarih}/` (servis rolü) altına yazar.
   3. Son 14 gün tutulur.
 - **Haftalık tam döküm:** GitHub Actions (zamanlanmış) `supabase db dump` çalıştırır, sonuç şifreli artifact olarak saklanır. DB parolası GitHub secret'tır; kullanıcı ekler.
-- **Uygulama içi dışa aktarma:** Ayarlar > Veri > Dışa aktar (JSON + sesler, zip).
+- **Uygulama içi dışa aktarma:** Ayarlar > Veri > Dışa aktar (JSON + sesler, zip). F1-23'te yalnızca JSON var (`14` §4).
 
 ## 10. Platform notları
 
@@ -192,6 +217,11 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
   - İzinler: `RECORD_AUDIO`, `POST_NOTIFICATIONS`, `INTERNET`.
   - Paylaş menüsü hedefi, hızlı ayar kutucuğu, ana ekran widget'ı.
   - Dağıtım: iki telefona doğrudan APK (mağaza yok). İleride GitHub Releases ya da Firebase App Distribution.
+    - **Google Play (kullanıcı kararı, 2026-10-09):** Kullanıcının Play geliştirici hesabı var. Uygulama tamamlanınca Play dahili test kanalına geçilecek; o zaman bir ADR yazılır.
+      - Faydası: iki telefona güncelleme kendiliğinden gelir; bilinmeyen kaynak izni ve Play Protect uyarısı olmaz.
+      - Dikkat: Play kendi anahtarıyla yeniden imzalarsa Play'den gelen sürüm, doğrudan kurulanın üstüne kurulmaz. Yükleme anahtarı Play App Signing'e "uygulama imzalama anahtarı" olarak verilirse ikisi uyumlu kalır.
+    - Sürüm APK'sı yükleme anahtarıyla imzalanır (`android/key.properties`). Anahtar yoksa derleme hata ayıklama anahtarına düşer; böyle bir APK dağıtılmaz (`19` §5).
+    - Geliştirme kopyası telefona `DILBAZ_APP_ID_SUFFIX=.local` ile ayrı kimlikle kurulur. Asıl kimliğe Flutter araçlarıyla kurulum yapılmaz: imza farkında Flutter eski uygulamayı verisiyle kaldırır.
 - **Windows (Faz 3):**
   - Visual Studio "Desktop development with C++" gerekir.
   - Ses kaydı AAC-LC/WAV.
@@ -218,4 +248,4 @@ Yeni bağımlılık eklemeden ya da sürüm yükseltmeden önce pub.dev ve conte
 
 - **İstemci hataları:** `app_events` tablosuna yazılır. Oran sınırlıdır ve kişisel veri içermez.
 - **Fonksiyon logları:** Supabase log panosu. Yapılandırılmış log, rota, süre, `stop_reason`.
-- **Maliyet panosu:** Ayarlar > Kullanım. `llm_usage` + `speech_usage` aylık toplamları.
+- **Kullanım panosu:** Ayarlar > Kullanım. `llm_usage` + `speech_usage` toplamları: sağlayıcı başına kota tüketimi ve Deepgram kredisi (ADR-0009).

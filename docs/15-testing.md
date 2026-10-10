@@ -11,12 +11,14 @@ Kalite burada iki anlama gelir:
 | Motor birim + özellik testleri | `dart test` (packages/engine) | Satır kapsamı ≥ %90 | Her commit (CI) |
 | Uygulama birim/controller testleri | `flutter test` | ≥ %70 (application katmanı) | Her commit |
 | Widget ve golden testler | `flutter test` | Ana akışlar (kart, merdiven, bugün, ilerleme) | Her commit |
-| Entegrasyon testleri | `integration_test` (Android emülatör) | Uçtan uca çekirdek akış, sahte (mock) servislerle | Faz sonu + haftalık |
+| Entegrasyon testleri | `integration_test` (Android telefon ya da emülatör; ekransız `flutter-tester`) | Uçtan uca çekirdek akış, sahte (mock) servislerle (§4) | Faz sonu + haftalık, elle |
 | Veritabanı testleri | pgTAP (`supabase test db`) | Her tablo için RLS, RPC'ler, tetikleyiciler | Her commit (CI'da Docker ile) |
-| Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, bütçe | Her commit |
+| Edge Function testleri | `deno test` | Rota mantığı, şema doğrulama, sızıntı kontrolü, sağlayıcı sırası ve kota | Her commit |
 | İçerik hattı testleri | `pytest` | Doğrulayıcılar, kapsama hesabı, derleme | Her commit (content/ değişirse) |
-| LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Prompt/model değişikliğinde **zorunlu** (ücretli, CI'da elle tetiklenir) |
+| LLM değerlendirme (eval) | `evals/run.ts` | `07` §8 eşikleri | Sağlayıcı, model ya da prompt değişikliğinde **zorunlu** (ücretsiz kotaları tüketir; elle tetiklenir) |
+| Deterministik değerlendirme | `dart test` (motor, `answer_check_golden_test.dart`) | `answer_check` altın seti; `07` §8 deterministik eşikleri | Her commit |
 | ASR karşılaştırma testi | `evals/asr/` | `08` §3.2 | Faz 2, sağlayıcı değişikliğinde |
+| Canlı kontrol | `app/test_live` (`flutter test`, elle) | Uygulamanın istemcileri + yerel yığın + gerçek sağlayıcılar: ses ve tutor rotaları (§4a) | Sağlayıcı ya da rota değişikliğinden ve sürümden önce (birkaç ücretsiz çağrı) |
 
 ## 2. Değişmez kural → test eşlemesi
 
@@ -60,6 +62,41 @@ Kalite burada iki anlama gelir:
 6. İkili görev: iki sahte istemci → rol yükleri ayrı → cevap → sonuç
 7. Aylık test: 5 görev → rapor ekranı → "önce/sonra" oynatma
 
+**Uygulama (F1-24):** `app/integration_test/core_flows_test.dart` senaryo 1, 2, 3 ve 5'i koşturur.
+- **Gerçek olan:** ekranlar, denetleyiciler, depolar, motor ve cihazın SQLite'ı (bellekte). Paketler uygulamanın kendi içe aktarıcısıyla kurulur (sentetik dil `zz`).
+- **Sahte olan:** giriş, sunucu (`sync_push`/`sync_pull` kurallarıyla bellekte; çevrimdışı anahtarı var), LLM, ASR, ses, sistem izinleri ve bildirimler. Telefonda sistem penceresi açılmaz, bildirim kurulmaz.
+- **Saat senaryonun elindedir:** kart süresi ve "ertesi gün" böyle kurulur. Depolar satırları bu saatle damgalar.
+- **Nasıl koşturulur:** telefonda `.local` kimliğiyle ve `--no-uninstall` ile (`19` §2, "Uçtan uca testler"). Telefonsuz: `flutter test integration_test -d flutter-tester`. CI'da koşmaz: emülatör dakikaları sıfır bütçeye sığmaz.
+- **Plan/gerçek farkları:**
+  - **Senaryo 1:** 15 dakikalık ilk günde planlayıcı 4 yeni öğe verir, 5 değil. Neden: yeni kartların tekrar yükü tavanın %80'inde kalır (I-07). Kart başına en çok 3 dk sayıldığı için oturum 12 dk tutar; kalan 3 dk kısa gündür ve sırada kart yoktur. "Bugünlük yeter", öğrenci bugünkü süresini 5 dk seçince gelir.
+    - Not: Hiçbir bütçede tek bir ilk kart oturumu bütçeyi tek başına doldurmaz (yeni öğe sınırı × 3 dk < bütçe). İlk gün kalan süre seçeneklerle (konuşma görevi vb.) dolar ya da "Şu an sırada kart yok" görünür.
+  - **Senaryo 3:** Ertesi gün ilk iki kart, kişisel cümle ve kalıbıdır. İkisinin sırası belirsizdir: öncelikleri aynıdır ve kimlikleri aynı milisaniyede üretilmiş UUIDv7'dir. Test hangisi önce gelirse onu cevaplar.
+  - **Senaryo 4, 6 ve 7** uçtan uca test olarak henüz yok. Parçaları widget testlerinde: konuşma görevi, aylık test ve önce/sonra oynatma. İkili görev Faz 2'de gelir.
+
+## 4a. Canlı kontrol (elle)
+
+Uygulamanın kendi istemcileri (`SupabaseSpeechRepository`, `SupabaseTutorRepository`) yerel Supabase yığınına bağlanır; yığının fonksiyonları gerçek sağlayıcıları çağırır (Deepgram, Groq, Gemini).
+- Kullanıcının hesabına dokunulmaz: yerel bir test öğrencisi kullanılır.
+- Telefon ve insan sesi gerekmez: kayıtları Windows'un konuşma sentezi üretir.
+
+- **Neyi sınar:**
+  - İngilizce döküm kelimesi kelimesine yapılıyor mu (öğrencinin hatası kalmalı)?
+  - `speaking_annotate` cümlecik, hata ve düzeltme çıkarıyor mu?
+  - Türkçe döküm sunucu yolundan geliyor mu?
+  - `gap_suggest` öneri veriyor mu?
+  - Kullanım satırları (`llm_usage`, `speech_usage`) yazılıyor mu?
+- **Maliyet:** Her çalıştırma 4–5 ücretsiz kota çağrısı harcar.
+- **Nasıl:** Klasör depo dışında olmalı, çünkü `live.env` yerel anahtar ve parola taşır.
+  1. `npx supabase start` ve arka planda `npx supabase functions serve --env-file supabase/functions/.env --no-verify-jwt`.
+  2. `python -I app/test_live/make_live_user.py <depo> <klasör>/live.env`: yerel izinli listeye bir test öğrencisi, yapay zekâ onayıyla.
+  3. `powershell -File app/test_live/make_live_audio.ps1 -OutDir <klasör>`: `live_en.wav` (Zira, hatalı bir İngilizce tanıtma) ve `live_tr.wav` (Tolga, Türkçe bir cümle). Betik BOM'lu UTF-8'dir; BOM'suz hâlde Windows PowerShell 5.1 Türkçe harfleri bozar.
+  4. `cd app && flutter test test_live --dart-define=DILBAZ_LIVE=<klasör>`. Tanım yoksa testler atlanır.
+- **2026-10-09 sonucu: 4/4.**
+  - Deepgram Nova-3: 59 kelime; "i am work in a bank" olduğu gibi kaldı.
+  - `speaking_annotate` (gemini-3.5-flash): 21 sn, 10 cümlecik, 5'i hatasız, 4 düzeltme. Ekranda en çok 3'ü gösterilir (I-02, `correction_choice`).
+  - Türkçe (Groq whisper-large-v3): "Canım sıkıldı. Hadi dışarı çıkalım."
+  - `gap_suggest`: birincil model (3.5 Flash) günlük kotada "quota" döndü, Flash-Lite 2 sn'de önerdi: "I'm bored. Let's go out."
+
 ## 5. CI (GitHub Actions)
 
 `ci.yml` her push ve PR'da şunları çalıştırır:
@@ -69,7 +106,7 @@ Kalite burada iki anlama gelir:
 3. `dart test` (engine)
 4. `flutter test` (app; golden testler dahil)
 5. `supabase start` → `supabase test db` (pgTAP) → `supabase stop`
-6. `deno test` (functions)
+6. `deno test` (functions; ayrıca `evals/`: altın setin biçimi ve puanlama, sağlayıcı çağrısı yok)
 7. `uv run pytest` (content/tools, yalnızca `content/` değiştiyse)
 8. `flutter build apk --debug` (artifact)
 9. Gizli anahtar taraması
@@ -99,4 +136,4 @@ Bir görev ancak şu koşullar sağlanınca tamamlanmış sayılır:
 ## 8. Elle kullanım testi (dogfooding)
 
 - Her faz sonunda iki kullanıcı en az birkaç gün gerçek kullanım yapar. Geri bildirimler `docs/feedback.md` dosyasına tarih ve maddeyle yazılır.
-- Haftalık küçük inceleme: `llm_usage` maliyeti, `app_events` hataları, ret oranları, kullanıcı itirazları (`user_dispute`).
+- Haftalık küçük inceleme: `llm_usage` kota tüketimi, `app_events` hataları, ret oranları, kullanıcı itirazları (`user_dispute`).

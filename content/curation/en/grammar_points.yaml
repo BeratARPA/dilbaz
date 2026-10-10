@@ -1,0 +1,247 @@
+# S2 grammar points for en@1, A0-A2 (docs/02-curriculum.md §5).
+# Levels were checked against the CEFR-J Grammar Profile and its Core
+# Inventory and EGP columns; within a level the order follows CEFR-J.
+#
+# The codes form the closed list that items, error tags and LLM routes use
+# (docs/07 §1.4). A code never changes once published. Notes on Turkish
+# speakers' typical difficulties go into the tr-en pack (S5), not here.
+
+- code: gp.be.present
+  level: A0
+  name: "be: am / is / are"
+  description: "The verb be in the present: I am, you are, he/she/it is, we/they are."
+  examples: ["I am a student.", "She is at home.", "We are friends."]
+
+- code: gp.be.negative
+  level: A0
+  name: "be: negative"
+  description: "Add not after am/is/are; the short forms are isn't and aren't."
+  examples: ["I'm not tired.", "He isn't here.", "They aren't ready."]
+
+- code: gp.be.questions
+  level: A0
+  name: "be: questions"
+  description: "Put am/is/are before the subject; short answers repeat be (Yes, I am)."
+  examples: ["Are you busy?", "Is she your sister?", "Yes, she is."]
+
+- code: gp.pronouns.subject
+  level: A0
+  name: "Subject pronouns"
+  description: "I, you, he, she, it, we, they: he for a man, she for a woman, it for a thing."
+  examples: ["He is my brother.", "She is my sister.", "It is a nice car."]
+
+- code: gp.articles.a_an
+  level: A0
+  name: "a / an"
+  description: "Use a or an before a singular countable noun; an before a vowel sound."
+  examples: ["I have a car.", "She is an engineer.", "It's an old house."]
+
+- code: gp.nouns.plural
+  level: A0
+  name: "Plural nouns"
+  description: "Add -s or -es for more than one; some plurals are irregular (children, people)."
+  examples: ["I have two books.", "There are three boxes.", "They have five children."]
+
+- code: gp.possessive.adjectives
+  level: A0
+  name: "my, your, his, her, our, their"
+  description: "Show who something belongs to: my, your, his, her, its, our, their."
+  examples: ["This is my brother.", "What's your name?", "Their house is big."]
+
+- code: gp.age
+  level: A0
+  name: "Talking about age"
+  description: "Use be with years old, and ask with How old …?"
+  examples: ["How old are you?", "I'm thirty years old.", "My son is five."]
+
+- code: gp.articles.the
+  level: A1
+  name: "the"
+  description: "Use the when the listener knows which one, or when there is only one."
+  examples: ["The door is open.", "The sun is hot today.", "Close the window, please."]
+
+- code: gp.demonstratives
+  level: A1
+  name: "this / that / these / those"
+  description: "this and these for things near you, that and those for things further away."
+  examples: ["This is my phone.", "Those shoes are nice.", "Is that your bag?"]
+
+- code: gp.there_is_are
+  level: A1
+  name: "there is / there are"
+  description: "Say that something exists or is in a place; there is for one, there are for many."
+  examples: ["There is a bank near here.", "There are two cafés on this street.", "Is there a problem?"]
+
+- code: gp.have_got
+  level: A1
+  name: "have got / has got"
+  description: "Talk about possessions and family; has got for he, she and it."
+  examples: ["I've got two brothers.", "She has got a new car.", "Have you got a pen?"]
+
+- code: gp.present_simple.affirmative
+  level: A1
+  name: "Present simple: positive"
+  description: "Habits and facts; add -s or -es to the verb for he, she and it."
+  examples: ["I work in an office.", "He works at night.", "She lives in Ankara."]
+
+- code: gp.present_simple.negative
+  level: A1
+  name: "Present simple: negative"
+  description: "don't or doesn't before the base verb; the verb has no -s after doesn't."
+  examples: ["I don't like coffee.", "He doesn't work on Sundays.", "We don't live here."]
+
+- code: gp.present_simple.questions
+  level: A1
+  name: "Present simple: questions"
+  description: "Do or does before the subject, then the base verb."
+  examples: ["Do you speak English?", "Does he work here?", "Where does she live?"]
+
+- code: gp.adverbs.frequency
+  level: A1
+  name: "Adverbs of frequency"
+  description: "always, usually, often, sometimes and never go before the main verb and after be."
+  examples: ["I usually get up at seven.", "She is never late.", "We sometimes eat out."]
+
+- code: gp.can.ability
+  level: A1
+  name: "can / can't"
+  description: "Ability and permission: can plus the base verb, the same for every person."
+  examples: ["I can swim.", "She can't come today.", "Can I sit here?"]
+
+- code: gp.imperative
+  level: A1
+  name: "Imperatives"
+  description: "Give instructions with the base verb; use Don't for a negative."
+  examples: ["Open the window.", "Don't be late.", "Please sit down."]
+
+- code: gp.pronouns.object
+  level: A1
+  name: "Object pronouns"
+  description: "me, you, him, her, it, us and them after verbs and prepositions."
+  examples: ["Can you help me?", "I see him every day.", "This present is for them."]
+
+- code: gp.possessive.s
+  level: A1
+  name: "Possessive 's"
+  description: "Add 's to a person to show that something belongs to them."
+  examples: ["This is Ali's car.", "My sister's name is Elif.", "It's my parents' house."]
+
+- code: gp.prepositions.place
+  level: A1
+  name: "Prepositions of place"
+  description: "in (inside), on (on a surface), at (a point), next to, under, between."
+  examples: ["The keys are on the table.", "She is in the kitchen.", "The bank is next to the park."]
+
+- code: gp.prepositions.time
+  level: A1
+  name: "in / on / at for time"
+  description: "at for clock times, on for days and dates, in for months, years and parts of the day."
+  examples: ["The film starts at seven o'clock.", "I'm free on Monday.", "I get up early in the morning."]
+
+- code: gp.questions.wh
+  level: A1
+  name: "Wh- questions"
+  description: "what, where, when, who, why and how start the question."
+  examples: ["Where do you work?", "What time is it?", "Why are you tired?"]
+
+- code: gp.conjunctions.basic
+  level: A1
+  name: "and, but, because"
+  description: "Join ideas: and adds, but contrasts, because gives a reason."
+  examples: ["I like tea and coffee.", "I like tea, but I don't like coffee.", "I'm happy because it's Friday."]
+
+- code: gp.present_continuous.now
+  level: A1
+  name: "Present continuous: now"
+  description: "am/is/are plus the -ing form for actions happening now."
+  examples: ["I'm cooking dinner.", "She is talking on the phone.", "What are you doing?"]
+
+- code: gp.like_ing
+  level: A1
+  name: "like / love / hate + -ing"
+  description: "After like, love, enjoy and hate, use the -ing form of the verb."
+  examples: ["I like reading.", "She loves dancing.", "I hate getting up early."]
+
+- code: gp.would_like
+  level: A1
+  name: "would like"
+  description: "A polite way to ask for or offer something: would like plus a noun or to plus a verb."
+  examples: ["I'd like a coffee, please.", "Would you like some tea?", "I'd like to pay by card."]
+
+- code: gp.past_simple.be
+  level: A1
+  name: "Past simple: was / were"
+  description: "was for I, he, she and it; were for you, we and they."
+  examples: ["I was at home yesterday.", "They were tired.", "Was the film good?"]
+
+- code: gp.past_simple.regular
+  level: A1
+  name: "Past simple: regular verbs"
+  description: "Add -ed to the verb for finished actions in the past."
+  examples: ["I worked late yesterday.", "We watched a film.", "She called me last night."]
+
+- code: gp.past_simple.irregular
+  level: A1
+  name: "Past simple: irregular verbs"
+  description: "Common verbs have their own past forms: go-went, have-had, see-saw."
+  examples: ["We went to the beach.", "I had a sandwich.", "She saw her friend."]
+
+- code: gp.past_simple.negative_questions
+  level: A2
+  name: "Past simple: negatives and questions"
+  description: "didn't or did plus the base verb, never the past form."
+  examples: ["I didn't go to work.", "Did you see the match?", "Where did you go?"]
+
+- code: gp.future.going_to
+  level: A2
+  name: "be going to"
+  description: "Plans and intentions: am/is/are going to plus the base verb."
+  examples: ["I'm going to visit my parents.", "We're going to buy a car.", "Are you going to come?"]
+
+- code: gp.future.will
+  level: A2
+  name: "will"
+  description: "Predictions, and decisions made at the moment of speaking."
+  examples: ["I think it will rain.", "I'll call you later.", "Will you help me?"]
+
+- code: gp.comparatives
+  level: A2
+  name: "Comparatives"
+  description: "-er or more plus than to compare two things; good-better, bad-worse."
+  examples: ["My car is older than yours.", "This hotel is more expensive.", "Today is better than yesterday."]
+
+- code: gp.superlatives
+  level: A2
+  name: "Superlatives"
+  description: "the -est or the most for the top of a group; good-best, bad-worst."
+  examples: ["It's the biggest city in Turkey.", "She is the most famous singer here.", "This is the best day of my life."]
+
+- code: gp.countable_uncountable
+  level: A2
+  name: "some / any, much / many, a lot of"
+  description: "some in positive sentences, any in negatives and questions; many with countable nouns, much with uncountable ones."
+  examples: ["There is some milk in the fridge.", "Do you have any questions?", "I don't have much time."]
+
+- code: gp.modals.obligation
+  level: A2
+  name: "have to / must / should"
+  description: "have to and must for obligation; should for advice."
+  examples: ["I have to work tomorrow.", "You must wear a seat belt.", "You should see a doctor."]
+
+- code: gp.present_simple_vs_continuous
+  level: A2
+  name: "Present simple or present continuous"
+  description: "Present simple for habits and facts, present continuous for what is happening now."
+  examples: ["I usually walk to work, but today I'm taking the bus.", "What do you do? I'm a nurse.", "What are you doing? I'm reading."]
+
+- code: gp.present_perfect.experience
+  level: A2
+  name: "Present perfect: experience"
+  description: "have/has plus the past participle for life experience, often with ever and never."
+  examples: ["Have you ever been to London?", "I've never eaten sushi.", "She has visited Italy twice."]
+
+- code: gp.verb_patterns.to_ing
+  level: A2
+  name: "Verb + to or -ing"
+  description: "Some verbs take to plus a verb (want, need, decide); others take the -ing form (enjoy, finish)."
+  examples: ["I want to learn English.", "She decided to stay.", "We enjoy travelling."]

@@ -105,5 +105,1951 @@
   "signOut": "Çıkış yap",
   "@signOut": {
     "description": "Settings entry that ends the session on this device."
+  },
+  "contentPreparing": "İçerik indiriliyor…",
+  "@contentPreparing": {
+    "description": "Shown with a progress indicator while the course's packs are fetched and imported."
+  },
+  "contentReady": "İçerik hazır: {words} kelime, {chunks} kalıp, {sentences} cümle.",
+  "@contentReady": {
+    "description": "Concrete summary of the imported packs.",
+    "placeholders": {
+      "words": {
+        "type": "int"
+      },
+      "chunks": {
+        "type": "int"
+      },
+      "sentences": {
+        "type": "int"
+      }
+    }
+  },
+  "contentFailureNetwork": "İçerik indirilemedi, bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@contentFailureNetwork": {
+    "description": "No content on the device and no connection."
+  },
+  "contentFailureMissing": "İçerik henüz yayımlanmamış. Biraz sonra yeniden dene.",
+  "@contentFailureMissing": {
+    "description": "The registry has no published pack for the course."
+  },
+  "contentFailureDamaged": "İndirilen içerik eksik geldi. Yeniden dener misin?",
+  "@contentFailureDamaged": {
+    "description": "A downloaded pack did not match its checksum."
+  },
+  "contentFailureUnsupported": "Bu içerik için uygulamanın yeni sürümü gerekiyor.",
+  "@contentFailureUnsupported": {
+    "description": "The pack needs a newer app."
+  },
+  "contentFailureUnknown": "İçerik şu an indirilemedi. Birazdan yeniden dene.",
+  "@contentFailureUnknown": {
+    "description": "Any other problem while fetching content."
+  },
+  "contentRetry": "Yeniden dene",
+  "@contentRetry": {
+    "description": "Button that fetches the content again."
+  },
+  "openingUnreachable": "Profiline ulaşamadık, bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@openingUnreachable": {
+    "description": "Opening page: the server could not be asked whether the learner already has a profile."
+  },
+  "openingRetry": "Yeniden dene",
+  "@openingRetry": {
+    "description": "Opening page: asks the server again."
+  },
+  "onboardingNext": "İleri",
+  "@onboardingNext": {
+    "description": "Welcome flow: goes to the next step."
+  },
+  "onboardingBack": "Geri",
+  "@onboardingBack": {
+    "description": "Welcome flow: goes to the previous step."
+  },
+  "onboardingSkip": "Atla",
+  "@onboardingSkip": {
+    "description": "Welcome flow: leaves an optional step."
+  },
+  "onboardingStepOf": "{step} / {total}",
+  "@onboardingStepOf": {
+    "description": "Welcome flow: progress, read out by screen readers.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeTitle": "Dilbaz'a hoş geldin",
+  "@onboardingWelcomeTitle": {
+    "description": "Welcome flow step 1: title."
+  },
+  "onboardingPrinciple1": "Önce dene, sonra gör.",
+  "@onboardingPrinciple1": {
+    "description": "Welcome flow step 1: first principle."
+  },
+  "onboardingPrinciple1Detail": "Cevabı görmeden önce kendin söylersin. Öğrenme tam orada olur.",
+  "@onboardingPrinciple1Detail": {
+    "description": "Welcome flow step 1: why the learner answers before seeing the answer."
+  },
+  "onboardingPrinciple2": "Az ama her gün.",
+  "@onboardingPrinciple2": {
+    "description": "Welcome flow step 1: second principle."
+  },
+  "onboardingPrinciple2Detail": "Günde birkaç dakika, haftada bir uzun çalışmadan daha çok işe yarar.",
+  "@onboardingPrinciple2Detail": {
+    "description": "Welcome flow step 1: why practice is short and daily."
+  },
+  "onboardingPrinciple3": "İlerlemeni kendi sesinden duy.",
+  "@onboardingPrinciple3": {
+    "description": "Welcome flow step 1: third principle."
+  },
+  "onboardingPrinciple3Detail": "Her ay aynı konuşmayı yeniden kaydeder, farkı kendin dinlersin.",
+  "@onboardingPrinciple3Detail": {
+    "description": "Welcome flow step 1: how progress is shown."
+  },
+  "onboardingStart": "Başlayalım",
+  "@onboardingStart": {
+    "description": "Welcome flow step 1: starts the flow."
+  },
+  "onboardingNameTitle": "Sana nasıl seslenelim?",
+  "@onboardingNameTitle": {
+    "description": "Welcome flow step 2: title."
+  },
+  "onboardingNameLabel": "Adın",
+  "@onboardingNameLabel": {
+    "description": "Welcome flow step 2: label of the name field."
+  },
+  "onboardingCourseNote": "Kursun: Türkçe konuşanlar için İngilizce.",
+  "@onboardingCourseNote": {
+    "description": "Welcome flow step 2: the language pair, fixed for now."
+  },
+  "onboardingGoalTitle": "12 ay sonra İngilizceyle ne yapabilmek istersin?",
+  "@onboardingGoalTitle": {
+    "description": "Welcome flow step 3: title."
+  },
+  "onboardingGoalHint": "Birden fazlasını seçebilirsin.",
+  "@onboardingGoalHint": {
+    "description": "Welcome flow step 3: several goals may be chosen."
+  },
+  "goalConversation": "Rahatça sohbet etmek",
+  "@goalConversation": {
+    "description": "Goal option: everyday conversation."
+  },
+  "goalTravel": "Seyahatte derdimi anlatmak",
+  "@goalTravel": {
+    "description": "Goal option: travel."
+  },
+  "goalWork": "İşte toplantı ve yazışma",
+  "@goalWork": {
+    "description": "Goal option: work."
+  },
+  "goalMedia": "Dizi ve filmleri rahat izlemek",
+  "@goalMedia": {
+    "description": "Goal option: series and films."
+  },
+  "goalStudy": "Sınav ya da başvuruya hazırlanmak",
+  "@goalStudy": {
+    "description": "Goal option: exams and applications."
+  },
+  "onboardingGoalTextLabel": "Kendi cümlenle (isteğe bağlı)",
+  "@onboardingGoalTextLabel": {
+    "description": "Welcome flow step 3: label of the free-text goal."
+  },
+  "onboardingTimeTitle": "Günde ne kadar vakit ayırmak istersin?",
+  "@onboardingTimeTitle": {
+    "description": "Welcome flow step 4: title."
+  },
+  "onboardingBudgetMinutes": "{minutes} dk",
+  "@onboardingBudgetMinutes": {
+    "description": "Welcome flow step 4: a daily budget option.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingTimeNote": "Dilbaz bu süreyi aşmaz. Süre dolunca \"bugünlük yeter\" der.",
+  "@onboardingTimeNote": {
+    "description": "Welcome flow step 4: the budget is a ceiling (I-13)."
+  },
+  "onboardingWeeklyDaysTitle": "Haftada kaç gün?",
+  "@onboardingWeeklyDaysTitle": {
+    "description": "Welcome flow step 4: title of the weekly days choice."
+  },
+  "onboardingWeeklyDays": "{days} gün",
+  "@onboardingWeeklyDays": {
+    "description": "Welcome flow step 4: a weekly days option.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingAnchorTitle": "Günün hangi anına bağlayalım?",
+  "@onboardingAnchorTitle": {
+    "description": "Welcome flow step 5: title."
+  },
+  "onboardingAnchorNote": "Var olan bir alışkanlığın ardına eklenen şey daha kolay sürer.",
+  "@onboardingAnchorNote": {
+    "description": "Welcome flow step 5: why a habit anchor is asked for."
+  },
+  "anchorMorningCoffee": "Sabah kahvesi",
+  "@anchorMorningCoffee": {
+    "description": "Habit anchor option."
+  },
+  "anchorLunchBreak": "Öğle arası",
+  "@anchorLunchBreak": {
+    "description": "Habit anchor option."
+  },
+  "anchorAfterDinner": "Akşam yemeğinden sonra",
+  "@anchorAfterDinner": {
+    "description": "Habit anchor option."
+  },
+  "anchorBeforeBed": "Yatmadan önce",
+  "@anchorBeforeBed": {
+    "description": "Habit anchor option."
+  },
+  "onboardingAnchorTime": "Saat {time}",
+  "@onboardingAnchorTime": {
+    "description": "Welcome flow step 5: the chosen time; tapping it changes it.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingNotifyTitle": "Günde tek bir davet gönderelim mi?",
+  "@onboardingNotifyTitle": {
+    "description": "Welcome flow step 6: title."
+  },
+  "onboardingNotifyBody": "Seçtiğin saatte bir kez hatırlatırız. O gün çalıştıysan göndermeyiz. Başka bildirim yok.",
+  "@onboardingNotifyBody": {
+    "description": "Welcome flow step 6: what the single daily notification is."
+  },
+  "onboardingNotifyAllow": "İzin ver",
+  "@onboardingNotifyAllow": {
+    "description": "Welcome flow step 6: asks for the notification permission."
+  },
+  "onboardingNotifyLater": "Şimdi değil",
+  "@onboardingNotifyLater": {
+    "description": "Welcome flow step 6: goes on without notifications."
+  },
+  "onboardingPartnerTitle": "Birlikte mi çalışacaksınız?",
+  "@onboardingPartnerTitle": {
+    "description": "Welcome flow step 7: title."
+  },
+  "onboardingPartnerBody": "Partnerinle bir ekip kurabilirsiniz. Birbirinizin yalnızca haftalık özetini görürsünüz. Ses kayıtları ve hatalar kimseyle paylaşılmaz.",
+  "@onboardingPartnerBody": {
+    "description": "Welcome flow step 7: what a team shares and what it never shares (I-18)."
+  },
+  "onboardingTeamNameLabel": "Ekip adı",
+  "@onboardingTeamNameLabel": {
+    "description": "Welcome flow step 7: label of the team name field."
+  },
+  "onboardingTeamCreate": "Ekip kur",
+  "@onboardingTeamCreate": {
+    "description": "Welcome flow step 7: creates a team."
+  },
+  "onboardingInviteCodeLabel": "Davet kodu",
+  "@onboardingInviteCodeLabel": {
+    "description": "Welcome flow step 7: label of the invite code field."
+  },
+  "onboardingTeamJoin": "Koda katıl",
+  "@onboardingTeamJoin": {
+    "description": "Welcome flow step 7: joins a team by its invite code."
+  },
+  "onboardingTeamCreated": "Ekip hazır. Partnerine bu kodu ver: {code}",
+  "@onboardingTeamCreated": {
+    "description": "Welcome flow step 7: the team was created; shows its invite code.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingTeamJoined": "{name} ekibine katıldın.",
+  "@onboardingTeamJoined": {
+    "description": "Welcome flow step 7: the team was joined.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamFailureNetwork": "Bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@teamFailureNetwork": {
+    "description": "Team step: no connection."
+  },
+  "teamFailureInviteNotFound": "Bu kodla bir ekip bulunamadı. Kodu kontrol eder misin?",
+  "@teamFailureInviteNotFound": {
+    "description": "Team step: the invite code opens no team."
+  },
+  "teamFailureUnknown": "Şu an olmadı. Birazdan yeniden dene.",
+  "@teamFailureUnknown": {
+    "description": "Team step: any other problem."
+  },
+  "onboardingVoiceTitle": "Ses ve yapay zekâ",
+  "@onboardingVoiceTitle": {
+    "description": "Welcome flow step 8: title."
+  },
+  "onboardingAudioBody": "Dilbaz'da çoğu cevabı sesle verirsin. Kart cevaplarının sesi saklanmaz. Konuşma görevlerinin kaydı 30 gün sonra silinir, yazıya dökülmüş hâli kalır. Aylık test kayıtları, ilerlemeni dinleyebilmen için sen silene kadar durur.",
+  "@onboardingAudioBody": {
+    "description": "Welcome flow step 8: what is recorded and how long it is kept (docs/14 §4)."
+  },
+  "onboardingAudioConsent": "Ses kaydını onaylıyorum",
+  "@onboardingAudioConsent": {
+    "description": "Welcome flow step 8: audio consent switch."
+  },
+  "onboardingAudioOffNote": "Onay vermezsen cevaplarını yazarak verirsin.",
+  "@onboardingAudioOffNote": {
+    "description": "Welcome flow step 8: what happens without audio consent."
+  },
+  "onboardingAiBody": "Cevaplarını değerlendirmek için yazdıkların ve söylediklerinin metni Google'ın Gemini servisine gidebilir. Ücretsiz katmanda Google bu metinleri ürün geliştirmede kullanabilir ve insanlar inceleyebilir. Onay vermezsen metin, saklamayan bir servise ya da cihazındaki kontrole gider.",
+  "@onboardingAiBody": {
+    "description": "Welcome flow step 8: what the AI data consent means (ADR-0009)."
+  },
+  "onboardingAiConsent": "Gemini'ye gönderilmesini onaylıyorum",
+  "@onboardingAiConsent": {
+    "description": "Welcome flow step 8: AI data consent switch."
+  },
+  "onboardingLevelTitle": "Şu an neredesin?",
+  "@onboardingLevelTitle": {
+    "description": "Welcome flow step 9: title."
+  },
+  "onboardingLevelBody": "Yaklaşık bir başlangıç yeter. İstersen hemen ardından kısa bir seviye testiyle netleştirirsin; Dilbaz da cevaplarına göre kendini ayarlar.",
+  "@onboardingLevelBody": {
+    "description": "Welcome flow step 9: the level is a rough start."
+  },
+  "levelA0": "Yeni başlıyorum",
+  "@levelA0": {
+    "description": "Self-reported level A0."
+  },
+  "levelA1": "Basit cümleler kurabiliyorum",
+  "@levelA1": {
+    "description": "Self-reported level A1."
+  },
+  "levelA2": "Günlük konularda anlaşabiliyorum",
+  "@levelA2": {
+    "description": "Self-reported level A2."
+  },
+  "levelB1": "Sohbet edebiliyorum ama takılıyorum",
+  "@levelB1": {
+    "description": "Self-reported level B1."
+  },
+  "onboardingFinish": "Hazırım",
+  "@onboardingFinish": {
+    "description": "Welcome flow step 9: finishes the flow."
+  },
+  "placementTitle": "Seviye testi",
+  "@placementTitle": {
+    "description": "Placement test: page title."
+  },
+  "placementOverviewBody": "Bu bir sınav değil: not ya da puan yok, yalnızca nereden başlayacağını görmek için. Bilmediğin yerde \"bilmiyorum\" demek en doğru cevap. İstediğin an bırakabilirsin; bitirdiğin bölümler kaydedilir.",
+  "@placementOverviewBody": {
+    "description": "Placement test: what the test is and is not (docs/06 §6)."
+  },
+  "placementRetakeNote": "Bu testi daha önce yaptın. Bitirdiğin bölümler önceki sonucun yerine geçer, bitirmediklerin olduğu gibi kalır. Kartların ve çalışma geçmişin değişmez.",
+  "@placementRetakeNote": {
+    "description": "Placement test taken again: what happens to the earlier result (docs/06 §2)."
+  },
+  "placementPartWords": "Kelimeler, yaklaşık 5 dakika",
+  "@placementPartWords": {
+    "description": "Placement test: part 1."
+  },
+  "placementPartGrammar": "Gramer, yaklaşık 4 dakika",
+  "@placementPartGrammar": {
+    "description": "Placement test: part 2."
+  },
+  "placementPartDictation": "Dinle ve yaz, yaklaşık 3 dakika",
+  "@placementPartDictation": {
+    "description": "Placement test: part 3."
+  },
+  "placementBegin": "Başla",
+  "@placementBegin": {
+    "description": "Placement test: starts the test."
+  },
+  "placementWordsTitle": "Kelimeler",
+  "@placementWordsTitle": {
+    "description": "Placement test: title of the vocabulary part."
+  },
+  "placementWordsIntro": "Kelimeler tek tek gelecek. Anlamını biliyorsan \"Biliyorum\" de. Aralarında uydurma kelimeler de var; emin değilsen \"Bilmiyorum\" de.",
+  "@placementWordsIntro": {
+    "description": "Placement test: how the yes/no vocabulary part works."
+  },
+  "placementGrammarTitle": "Gramer",
+  "@placementGrammarTitle": {
+    "description": "Placement test: title of the grammar part."
+  },
+  "placementGrammarIntro": "Boşluğa uyan seçeneği seç. Emin değilsen tahmin etme, \"Emin değilim\" de. Sorular cevaplarına göre kolaylaşır ya da zorlaşır; 12 ile 15 arası soru gelir.",
+  "@placementGrammarIntro": {
+    "description": "Placement test: how the adaptive grammar part works."
+  },
+  "placementDictationTitle": "Dinle ve yaz",
+  "@placementDictationTitle": {
+    "description": "Placement test: title of the dictation part."
+  },
+  "placementDictationIntro": "Beş cümle dinleyeceksin. Her birini en fazla iki kez dinleyip duyduğunu yaz. Küçük yazım hataları sayılmaz.",
+  "@placementDictationIntro": {
+    "description": "Placement test: how the dictation part works."
+  },
+  "placementStartPart": "Bölüme başla",
+  "@placementStartPart": {
+    "description": "Placement test: starts a part."
+  },
+  "placementSkipDictation": "Şu an dinleyemiyorum, bu bölümü geç",
+  "@placementSkipDictation": {
+    "description": "Placement test: leaves out the dictation part."
+  },
+  "placementProgress": "{number} / {total}",
+  "@placementProgress": {
+    "description": "Placement test: position in the vocabulary part.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "placementWordKnown": "Biliyorum",
+  "@placementWordKnown": {
+    "description": "Placement test: the learner knows the word."
+  },
+  "placementWordUnknown": "Bilmiyorum",
+  "@placementWordUnknown": {
+    "description": "Placement test: the learner does not know it."
+  },
+  "placementQuestionNumber": "Soru {number}",
+  "@placementQuestionNumber": {
+    "description": "Placement test: number of the grammar question.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "placementNotSure": "Emin değilim",
+  "@placementNotSure": {
+    "description": "Placement test: no guess on a question."
+  },
+  "placementSentenceOf": "Cümle {number} / {total}",
+  "@placementSentenceOf": {
+    "description": "Placement test: position in the dictation part.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "placementListen": "Dinle",
+  "@placementListen": {
+    "description": "Placement test: plays the sentence."
+  },
+  "placementListenAgain": "Bir kez daha dinle",
+  "@placementListenAgain": {
+    "description": "Placement test: plays it again."
+  },
+  "placementPlaysLeft": "Kalan dinleme: {count}",
+  "@placementPlaysLeft": {
+    "description": "Placement test: how many more times the sentence may be played.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "placementWriteLabel": "Duyduğunu yaz",
+  "@placementWriteLabel": {
+    "description": "Placement test: label of the dictation field."
+  },
+  "placementContinue": "Devam",
+  "@placementContinue": {
+    "description": "Placement test: goes on to the next sentence."
+  },
+  "placementAudioFailure": "Ses şu an açılamadı. Yeniden deneyebilir ya da bu bölümü geçebilirsin.",
+  "@placementAudioFailure": {
+    "description": "Placement test: a clip could not be fetched or played."
+  },
+  "placementSaving": "Kaydediliyor…",
+  "@placementSaving": {
+    "description": "Placement test: the results are being saved."
+  },
+  "placementLeave": "Testi bırak",
+  "@placementLeave": {
+    "description": "Placement test: tooltip of the button that ends the test."
+  },
+  "placementLeaveTitle": "Testi bırakmak ister misin?",
+  "@placementLeaveTitle": {
+    "description": "Placement test: title of the dialog before leaving."
+  },
+  "placementLeaveBody": "Bitirdiğin bölümler kaydedilir, yarım kalan bölüm kaydedilmez. Testi sonra yeniden yapabilirsin.",
+  "@placementLeaveBody": {
+    "description": "Placement test: what leaving keeps."
+  },
+  "placementLeaveConfirm": "Bırak",
+  "@placementLeaveConfirm": {
+    "description": "Placement test: leaves the test."
+  },
+  "placementLeaveCancel": "Devam et",
+  "@placementLeaveCancel": {
+    "description": "Placement test: stays in the test."
+  },
+  "placementUnavailable": "Seviye testi bu cihazdaki içerikte henüz yok. İçerik güncellenince burada olacak.",
+  "@placementUnavailable": {
+    "description": "Placement test: the content on the device has no placement test yet."
+  },
+  "placementResultTitle": "Başlangıç noktan: {level}",
+  "@placementResultTitle": {
+    "description": "Placement test result: where the curriculum starts.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementResultVocabulary": "En sık 5.000 kelimenin yaklaşık {count} tanesini tanıyorsun.",
+  "@placementResultVocabulary": {
+    "description": "Placement test result: recognition vocabulary size.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "placementResultGuesswork": "Uydurma kelimelerin bazılarına da \"biliyorum\" dedin, bu yüzden bu sayı kaba bir tahmin.",
+  "@placementResultGuesswork": {
+    "description": "Placement test result: many yes answers to made-up words."
+  },
+  "placementSkillVocabulary": "Kelime: {level}",
+  "@placementSkillVocabulary": {
+    "description": "Placement test result: vocabulary level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementSkillGrammar": "Gramer: {level}",
+  "@placementSkillGrammar": {
+    "description": "Placement test result: grammar level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementSkillListening": "Dinleme: {level}",
+  "@placementSkillListening": {
+    "description": "Placement test result: listening level.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementResultNote": "Bu ilk ölçüm, o yüzden kaba bir tahmin. Dilbaz çalıştıkça cevaplarına göre bunu günceller.",
+  "@placementResultNote": {
+    "description": "Placement test result: the estimate is rough (I-04)."
+  },
+  "placementResultNoteRetake": "Bu da kaba bir tahmin. Buradaki sonuçlar öncekilerin yerine geçti; kartların ve geçmişin olduğu gibi duruyor. Dilbaz çalıştıkça cevaplarına göre bunu günceller.",
+  "@placementResultNoteRetake": {
+    "description": "Result of a placement test taken again: rough, and it replaced the earlier results (I-04, docs/06 §2)."
+  },
+  "placementDone": "Tamam",
+  "@placementDone": {
+    "description": "Placement test result: closes the page."
+  },
+  "levelRange": "{low}–{high}",
+  "@levelRange": {
+    "description": "A level range, such as A1–A2.",
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  },
+  "levelAndAbove": "{level} ve üstü",
+  "@levelAndAbove": {
+    "description": "A level whose upper end the test could not reach.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementInviteTitle": "Seviye testi",
+  "@placementInviteTitle": {
+    "description": "Today: title of the placement test invitation."
+  },
+  "placementInviteBody": "Üç kısa bölüm, 12–15 dakika. Nereden başlayacağımızı daha iyi görürüz. Not yok.",
+  "@placementInviteBody": {
+    "description": "Today: what the placement test invitation offers."
+  },
+  "placementInviteStart": "Teste başla",
+  "@placementInviteStart": {
+    "description": "Today: opens the placement test."
+  },
+  "placementInviteLater": "Şimdi değil",
+  "@placementInviteLater": {
+    "description": "Today: hides the invitation for now."
+  },
+  "microphoneCheckTitle": "Mikrofon denemesi",
+  "@microphoneCheckTitle": {
+    "description": "Settings: the microphone check page."
+  },
+  "microphoneCheckBody": "İngilizce bir cümle söyle, Dilbaz ne duyduğunu yazsın. Böylece mikrofonun ve ses tanıma çalışıyor mu görürsün. Kayıt saklanmaz.",
+  "@microphoneCheckBody": {
+    "description": "Microphone check: what the page does."
+  },
+  "microphoneCheckNoConsent": "Ses kaydına onay vermediğin için cevaplarını yazarak veriyorsun. Onayı yakında Ayarlar'dan değiştirebileceksin.",
+  "@microphoneCheckNoConsent": {
+    "description": "Microphone check: no audio consent, nothing is recorded (docs/14 §4)."
+  },
+  "microphoneCheckRecord": "Kaydet",
+  "@microphoneCheckRecord": {
+    "description": "Microphone check: starts recording."
+  },
+  "microphoneCheckStop": "Durdur",
+  "@microphoneCheckStop": {
+    "description": "Microphone check: stops recording."
+  },
+  "microphoneCheckRecognizing": "Dinliyorum…",
+  "@microphoneCheckRecognizing": {
+    "description": "Microphone check: waiting for the recognizer."
+  },
+  "microphoneCheckHeard": "Duyduğum:",
+  "@microphoneCheckHeard": {
+    "description": "Microphone check: what the recognizer heard."
+  },
+  "microphoneCheckNothing": "Hiçbir şey duyamadım.",
+  "@microphoneCheckNothing": {
+    "description": "Microphone check: an empty transcript."
+  },
+  "microphoneCheckLevel": "Ses düzeyi",
+  "@microphoneCheckLevel": {
+    "description": "Microphone check: label of the level meter."
+  },
+  "speechFailureNetwork": "Bağlantı yok gibi. Bağlanınca yeniden dene.",
+  "@speechFailureNetwork": {
+    "description": "Speech recognition: no connection."
+  },
+  "speechFailureUnavailable": "Ses tanıma henüz açık değil. Şimdilik cevaplarını yazarak verebilirsin.",
+  "@speechFailureUnavailable": {
+    "description": "Speech recognition: not set up yet."
+  },
+  "speechFailureQuota": "Ses tanımanın ücretsiz payı doldu. Şimdilik cevaplarını yazarak verebilirsin.",
+  "@speechFailureQuota": {
+    "description": "Speech recognition: the free quota or credit is spent (ADR-0009)."
+  },
+  "speechFailureBusy": "Ses tanıma şu an cevap vermiyor. Birazdan yeniden dene.",
+  "@speechFailureBusy": {
+    "description": "Speech recognition: the provider is busy."
+  },
+  "speechFailureBadAudio": "Kayıt okunamadı. Yeniden dener misin?",
+  "@speechFailureBadAudio": {
+    "description": "Speech recognition: the audio could not be read."
+  },
+  "speechFailureUnknown": "Şu an olmadı. Birazdan yeniden dene.",
+  "@speechFailureUnknown": {
+    "description": "Speech recognition: any other problem."
+  },
+  "recordFailurePermission": "Mikrofon izni yok. Telefonun ayarlarından Dilbaz'a mikrofon izni verebilirsin.",
+  "@recordFailurePermission": {
+    "description": "Recording: the system does not let the app use the microphone."
+  },
+  "recordFailureUnsupported": "Bu cihazda kayıt henüz yok.",
+  "@recordFailureUnsupported": {
+    "description": "Recording: the platform cannot record yet (web)."
+  },
+  "recordFailureDevice": "Mikrofon açılamadı.",
+  "@recordFailureDevice": {
+    "description": "Recording: the microphone could not be opened."
+  },
+  "practiceCardsTitle": "Kartlar",
+  "@practiceCardsTitle": {
+    "description": "Practice: the card session entry."
+  },
+  "practiceCardsBody": "Zamanı gelen tekrarlar ve yeni kelimeler: Türkçesini görüp İngilizcesini söylersin.",
+  "@practiceCardsBody": {
+    "description": "Practice: what the card session is."
+  },
+  "practiceMoreSoon": "Diğer etkinlikler hazırlanıyor.",
+  "@practiceMoreSoon": {
+    "description": "Practice: the other activities come later."
+  },
+  "cardsTitle": "Kartlar",
+  "@cardsTitle": {
+    "description": "Card session: page title."
+  },
+  "cardsProgress": "{number} / {total}",
+  "@cardsProgress": {
+    "description": "Card session: which card of how many (no percentage, docs/09 §5.3).",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsLeave": "Kartları bırak",
+  "@cardsLeave": {
+    "description": "Card session: tooltip of the close button."
+  },
+  "cardsUnavailable": "Kartlar için içerik bu cihazda henüz hazır değil. İçerik inince burada olacak.",
+  "@cardsUnavailable": {
+    "description": "Card session: no course or packs on the device yet."
+  },
+  "cardsEmpty": "Şu an sırada kart yok. Tekrar zamanı gelen kartlar ve yeni kelimeler burada olacak.",
+  "@cardsEmpty": {
+    "description": "Card session: nothing to review and nothing new now."
+  },
+  "cardsClose": "Tamam",
+  "@cardsClose": {
+    "description": "Card session: closes the page."
+  },
+  "cardsNew": "Yeni",
+  "@cardsNew": {
+    "description": "Card session: label of a new item's introduction (A00)."
+  },
+  "cardsListen": "Dinle",
+  "@cardsListen": {
+    "description": "Card session: plays the sentence."
+  },
+  "cardsSaySentence": "Örnek cümle",
+  "@cardsSaySentence": {
+    "description": "Card session introduction: label of the carrier sentence."
+  },
+  "cardsTrySpeak": "Şimdi sen söyle",
+  "@cardsTrySpeak": {
+    "description": "Card session introduction: goes on to saying it (A00 → A01)."
+  },
+  "cardsTryType": "Şimdi sen yaz",
+  "@cardsTryType": {
+    "description": "Card session introduction: goes on to typing it in silent mode (A02)."
+  },
+  "cardsSayIt": "Bunu İngilizce söyle",
+  "@cardsSayIt": {
+    "description": "Card session: what to do with the prompt, spoken card."
+  },
+  "cardsTypeIt": "Bunu İngilizce yaz",
+  "@cardsTypeIt": {
+    "description": "Card session: what to do with the prompt, typed card."
+  },
+  "cardsHoldToSpeak": "Basılı tut ve konuş",
+  "@cardsHoldToSpeak": {
+    "description": "Card session: the hold-to-talk microphone button."
+  },
+  "cardsRecording": "Konuş; bırakınca bakarım.",
+  "@cardsRecording": {
+    "description": "Card session: while recording."
+  },
+  "cardsChecking": "Bakıyorum…",
+  "@cardsChecking": {
+    "description": "Card session: while the answer is recognized and checked."
+  },
+  "cardsTypeInstead": "Yazarak cevapla",
+  "@cardsTypeInstead": {
+    "description": "Card session: switches to typing."
+  },
+  "cardsSpeakInstead": "Sesle cevapla",
+  "@cardsSpeakInstead": {
+    "description": "Card session: switches to speaking."
+  },
+  "cardsAnswerLabel": "Cevabın",
+  "@cardsAnswerLabel": {
+    "description": "Card session: label of the answer field."
+  },
+  "cardsSend": "Gönder",
+  "@cardsSend": {
+    "description": "Card session: sends a typed answer."
+  },
+  "cardsHeard": "Duyduğum",
+  "@cardsHeard": {
+    "description": "Card session: label of what speech recognition heard."
+  },
+  "cardsYourAnswer": "Cevabın",
+  "@cardsYourAnswer": {
+    "description": "Card session: label of the typed answer."
+  },
+  "cardsTryAgain": "Tekrar dene.",
+  "@cardsTryAgain": {
+    "description": "Card session: a miss; another try with a hint."
+  },
+  "cardsWithoutTarget": "Doğru! Bu kart başka bir kelimeyi çalışıyor, başka nasıl söylersin?",
+  "@cardsWithoutTarget": {
+    "description": "Card session: correct without the card's target (docs/03 §0.2)."
+  },
+  "cardsUnheard": "Anlaşılamadı. Bir daha söyleyebilir ya da yazabilirsin.",
+  "@cardsUnheard": {
+    "description": "Card session: nothing usable was heard; it does not count."
+  },
+  "cardsHintNumber": "İpucu {number}",
+  "@cardsHintNumber": {
+    "description": "Card session: label of a hint of the ladder.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsHint": "İpucu",
+  "@cardsHint": {
+    "description": "Card session: opens the next hint."
+  },
+  "cardsReveal": "Göster",
+  "@cardsReveal": {
+    "description": "Card session: shows the answer (H4)."
+  },
+  "cardsMisheard": "Yanlış duyuldu",
+  "@cardsMisheard": {
+    "description": "Card session: speech recognition got the answer wrong; type it instead (docs/03 §0.3)."
+  },
+  "cardsMisheardLabel": "Ne dediğini yaz",
+  "@cardsMisheardLabel": {
+    "description": "Card session: field for the answer typed over what was heard."
+  },
+  "cardsFixLabel": "Demek istediğini yaz",
+  "@cardsFixLabel": {
+    "description": "Card session: field for the corrected answer after \"did you mean\"."
+  },
+  "cardsFixSave": "Tamam",
+  "@cardsFixSave": {
+    "description": "Card session: sends the typed correction."
+  },
+  "cardsDidYouMean": "Bunu mu demek istedin?",
+  "@cardsDidYouMean": {
+    "description": "Card session: the LLM was not sure (docs/03 §0.2)."
+  },
+  "cardsDidYouMeanYes": "Evet",
+  "@cardsDidYouMeanYes": {
+    "description": "Card session: confirms the answer."
+  },
+  "cardsDidYouMeanFix": "Düzelt",
+  "@cardsDidYouMeanFix": {
+    "description": "Card session: corrects the answer."
+  },
+  "cardsOfflineNetwork": "Bağlantı yok gibi; cevabına basit kontrolle baktım.",
+  "@cardsOfflineNetwork": {
+    "description": "Card session: checked without the LLM, no connection (docs/07 §7)."
+  },
+  "cardsOfflineQuota": "Bugünkü yapay zekâ payı doldu; cevabına basit kontrolle baktım.",
+  "@cardsOfflineQuota": {
+    "description": "Card session: checked without the LLM, the free quota is used up (ADR-0009)."
+  },
+  "cardsOfflineOther": "Yapay zekâ şu an cevap vermedi; cevabına basit kontrolle baktım.",
+  "@cardsOfflineOther": {
+    "description": "Card session: checked without the LLM for another reason."
+  },
+  "hintMissingWord": "Bir kelime eksik.",
+  "@hintMissingWord": {
+    "description": "Hint H1: a word is missing."
+  },
+  "hintExtraWord": "Fazladan bir kelime var.",
+  "@hintExtraWord": {
+    "description": "Hint H1: a word too many."
+  },
+  "hintWrongForm": "Bir kelimenin biçimi farklı olmalı.",
+  "@hintWrongForm": {
+    "description": "Hint H1: a word is in another form."
+  },
+  "hintWordOrder": "Kelimelerin sırası farklı olmalı.",
+  "@hintWordOrder": {
+    "description": "Hint H1: the word order."
+  },
+  "hintMeaning": "İstenen anlam bu değil.",
+  "@hintMeaning": {
+    "description": "Hint H1: the answer says something else."
+  },
+  "hintPlaceAt": "\"{word}\" kelimesinde.",
+  "@hintPlaceAt": {
+    "description": "Hint H2: at the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "hintPlaceBefore": "\"{word}\" kelimesinden önce.",
+  "@hintPlaceBefore": {
+    "description": "Hint H2: before the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "hintPlaceAfter": "\"{word}\" kelimesinden sonra.",
+  "@hintPlaceAfter": {
+    "description": "Hint H2: after the learner's word.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsCorrect": "Doğru.",
+  "@cardsCorrect": {
+    "description": "Card session: recalled."
+  },
+  "cardsAlmost": "Neredeyse.",
+  "@cardsAlmost": {
+    "description": "Card session: recalled with a small error elsewhere."
+  },
+  "cardsTheSentence": "Doğru cümle bu:",
+  "@cardsTheSentence": {
+    "description": "Card session: the answer after the tries or on request."
+  },
+  "cardsWithoutTargetEnd": "Senin cevabın da doğruydu. Bu kartın cümlesi:",
+  "@cardsWithoutTargetEnd": {
+    "description": "Card session: ended with correct answers without the target."
+  },
+  "cardsUndecided": "Cevabını şimdi kesinleştiremedim; bağlantı gelince yeniden bakılacak. Cümle bu:",
+  "@cardsUndecided": {
+    "description": "Card session: undecided without the LLM (docs/03 §0.5)."
+  },
+  "cardsCorrection": "Düzeltilmiş hâli: {text}",
+  "@cardsCorrection": {
+    "description": "Card session: the learner's answer corrected.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsSayOnce": "Bir kez de sen söyle.",
+  "@cardsSayOnce": {
+    "description": "Card session: say the correct sentence once (A01 step 7)."
+  },
+  "cardsNext": "Devam",
+  "@cardsNext": {
+    "description": "Card session: stores the card and goes on."
+  },
+  "cardsDoneTitle": "Bu tur bitti.",
+  "@cardsDoneTitle": {
+    "description": "Card session: the session is over."
+  },
+  "cardsDoneReviewed": "{count} kart tekrarladın.",
+  "@cardsDoneReviewed": {
+    "description": "Card session summary: cards reviewed.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardsDoneIntroduced": "{count} yeni kelime ya da kalıpla tanıştın.",
+  "@cardsDoneIntroduced": {
+    "description": "Card session summary: new items introduced.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "practiceGapsTitle": "Söyleyemediklerim",
+  "@practiceGapsTitle": {
+    "description": "Practice: the list of things the learner could not say (A19)."
+  },
+  "practiceGapsBody": "Söyleyemediklerin ve önerileri; istediklerin karta dönüşür.",
+  "@practiceGapsBody": {
+    "description": "Practice: what the list holds."
+  },
+  "gapCaptureIntro": "Söylemek isteyip söyleyemediğin şeyi Türkçe yaz ya da söyle. İngilizcesini birlikte bulalım.",
+  "@gapCaptureIntro": {
+    "description": "Capture page: what to do."
+  },
+  "gapCaptureTextLabel": "Ne demek istedin?",
+  "@gapCaptureTextLabel": {
+    "description": "Capture page: label of the text field."
+  },
+  "gapCaptureDictate": "Sesle söyle",
+  "@gapCaptureDictate": {
+    "description": "Capture page: starts Turkish dictation."
+  },
+  "gapCaptureStop": "Bitti",
+  "@gapCaptureStop": {
+    "description": "Capture page: stops dictation."
+  },
+  "gapCaptureListening": "Dinliyorum…",
+  "@gapCaptureListening": {
+    "description": "Capture page: while dictating."
+  },
+  "gapCaptureContext": "Nerede aklına geldi?",
+  "@gapCaptureContext": {
+    "description": "Capture page: title of the context chips."
+  },
+  "gapContextLiveClass": "Canlı derste",
+  "@gapContextLiveClass": {
+    "description": "Context chip: in a live lesson."
+  },
+  "gapContextDaily": "Gün içinde",
+  "@gapContextDaily": {
+    "description": "Context chip: in daily life."
+  },
+  "gapContextPair": "Partnerle",
+  "@gapContextPair": {
+    "description": "Context chip: with the partner."
+  },
+  "gapContextSpeakingTask": "Konuşma görevinde",
+  "@gapContextSpeakingTask": {
+    "description": "Context chip: in a speaking task."
+  },
+  "gapContextMedia": "Dizi ya da filmde",
+  "@gapContextMedia": {
+    "description": "Context chip: while watching or reading."
+  },
+  "gapCaptureNoteLabel": "Not (isteğe bağlı)",
+  "@gapCaptureNoteLabel": {
+    "description": "Capture page: label of the note field."
+  },
+  "gapCaptureSave": "Kaydet ve öneri al",
+  "@gapCaptureSave": {
+    "description": "Capture page: saves and asks for the suggestion."
+  },
+  "dictationFailurePermission": "Mikrofon izni yok. Telefonun ayarlarından izin verebilir ya da yazabilirsin.",
+  "@dictationFailurePermission": {
+    "description": "Dictation: no microphone permission."
+  },
+  "dictationFailureUnavailable": "Türkçe ses tanıma şu an yok. Yazarak devam edebilirsin.",
+  "@dictationFailureUnavailable": {
+    "description": "Dictation: no recognizer for Turkish here."
+  },
+  "dictationFailureNetwork": "Bağlantı yok gibi. Yazarak devam edebilirsin.",
+  "@dictationFailureNetwork": {
+    "description": "Dictation: no connection."
+  },
+  "dictationFailureQuota": "Ses tanımanın ücretsiz payı doldu. Şimdilik yazarak devam edebilirsin.",
+  "@dictationFailureQuota": {
+    "description": "Dictation: the free quota is spent (ADR-0009)."
+  },
+  "dictationFailureBusy": "Ses tanıma şu an cevap vermiyor. Birazdan yeniden dene.",
+  "@dictationFailureBusy": {
+    "description": "Dictation: the recognizer is busy."
+  },
+  "dictationFailureNothingHeard": "Bir şey duyamadım. Bir daha söyleyebilir ya da yazabilirsin.",
+  "@dictationFailureNothingHeard": {
+    "description": "Dictation: nothing was heard."
+  },
+  "dictationFailureUnknown": "Şu an olmadı. Yazarak devam edebilirsin.",
+  "@dictationFailureUnknown": {
+    "description": "Dictation: any other problem."
+  },
+  "gapEntryTitle": "Öneri",
+  "@gapEntryTitle": {
+    "description": "Suggestion page: title."
+  },
+  "gapEntryYouWanted": "Demek istediğin",
+  "@gapEntryYouWanted": {
+    "description": "Suggestion page: label of the learner's own words."
+  },
+  "gapEntryWaiting": "Öneri hazırlanıyor…",
+  "@gapEntryWaiting": {
+    "description": "Suggestion page: while gap_suggest runs."
+  },
+  "gapEntryPending": "Öneri şu an alınamadı. Kaydın duruyor; sonra yeniden denenecek.",
+  "@gapEntryPending": {
+    "description": "Suggestion page: no suggestion yet; it is kept and tried again later."
+  },
+  "gapEntryRetry": "Yeniden dene",
+  "@gapEntryRetry": {
+    "description": "Suggestion page: asks for the suggestion again."
+  },
+  "gapEntryNatural": "Doğal hâli",
+  "@gapEntryNatural": {
+    "description": "Suggestion page: label of l2_natural."
+  },
+  "gapEntrySimple": "Sade hâli",
+  "@gapEntrySimple": {
+    "description": "Suggestion page: label of l2_simple."
+  },
+  "gapEntryChunk": "Akılda tutulacak kalıp",
+  "@gapEntryChunk": {
+    "description": "Suggestion page: label of the key chunk."
+  },
+  "gapEntryChunkLine": "{chunk}: {gloss}",
+  "@gapEntryChunkLine": {
+    "description": "Suggestion page: the key chunk and its meaning.",
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "gloss": {
+        "type": "String"
+      }
+    }
+  },
+  "gapEntryCardWhich": "Hangisi kart olsun?",
+  "@gapEntryCardWhich": {
+    "description": "Suggestion page: which version becomes the card."
+  },
+  "gapEntryWithChunk": "Kalıp da ayrı kart olsun",
+  "@gapEntryWithChunk": {
+    "description": "Suggestion page: the key chunk also becomes a card."
+  },
+  "gapEntryAddToCards": "Karta ekle",
+  "@gapEntryAddToCards": {
+    "description": "Suggestion page: makes the personal items."
+  },
+  "gapEntryDismiss": "Vazgeç",
+  "@gapEntryDismiss": {
+    "description": "Suggestion page: dismisses the capture."
+  },
+  "gapEntryCarded": "Karta eklendi. Yeni öğeler arasında ilk sırada; sırası gelince tanıtılacak.",
+  "@gapEntryCarded": {
+    "description": "Suggestion page: the capture became personal items, introduced within the day's new items."
+  },
+  "gapEntryDismissed": "Bunu kenara koydun. İstersen yine de karta ekleyebilirsin.",
+  "@gapEntryDismissed": {
+    "description": "Suggestion page: the capture was dismissed."
+  },
+  "gapListEmptyFresh": "Yeni bir şey yok. Söyleyemediğin bir şey olunca \"Söyleyemedim\" düğmesine bas.",
+  "@gapListEmptyFresh": {
+    "description": "List: no new captures."
+  },
+  "gapListEmptyCarded": "Henüz karta dönüşen yok.",
+  "@gapListEmptyCarded": {
+    "description": "List: nothing carded yet."
+  },
+  "gapListEmptyDismissed": "Vazgeçilen yok.",
+  "@gapListEmptyDismissed": {
+    "description": "List: nothing dismissed."
+  },
+  "gapListFresh": "Yeni",
+  "@gapListFresh": {
+    "description": "List filter: new captures."
+  },
+  "gapListCarded": "Karta dönüştü",
+  "@gapListCarded": {
+    "description": "List filter: carded captures."
+  },
+  "gapListDismissed": "Vazgeçildi",
+  "@gapListDismissed": {
+    "description": "List filter: dismissed captures."
+  },
+  "gapListWaiting": "Öneri bekliyor",
+  "@gapListWaiting": {
+    "description": "List: a capture without its suggestion yet."
+  },
+  "gapListAdd": "Yeni ekle",
+  "@gapListAdd": {
+    "description": "List: tooltip of the add button."
+  },
+  "todayTimeQuestion": "Bugün ne kadar vaktin var?",
+  "@todayTimeQuestion": {
+    "description": "Today: the quick choice of today's time (docs/05 §6)."
+  },
+  "todayMinutes": "{minutes} dk",
+  "@todayMinutes": {
+    "description": "Today: a time choice in minutes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCardsTitle": "Kartlar",
+  "@todayCardsTitle": {
+    "description": "Today: the planned cards."
+  },
+  "todayCardsSummary": "{reviews} tekrar · {fresh} yeni · yaklaşık {minutes} dk",
+  "@todayCardsSummary": {
+    "description": "Today: the planned reviews, new items and their time.",
+    "placeholders": {
+      "reviews": {
+        "type": "int"
+      },
+      "fresh": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCardsNone": "Şu an sırada kart yok. Yeni kart zamanı gelince burada olacak.",
+  "@todayCardsNone": {
+    "description": "Today: nothing to review or introduce now."
+  },
+  "todayCardsStart": "Başla",
+  "@todayCardsStart": {
+    "description": "Today: starts the card session."
+  },
+  "todayMinimumDay": "Kısa bir gün: yalnızca tekrar.",
+  "@todayMinimumDay": {
+    "description": "Today: a minimum day has reviews only (docs/05 §3)."
+  },
+  "todayWelcomeBack": "Hoş geldin. Önce kısa bir karışık tekrar yapalım.",
+  "@todayWelcomeBack": {
+    "description": "Today: reviews piled up; neutral words, nothing about the days in between (docs/05 §6, I-12)."
+  },
+  "todayWeek": "Bu hafta {days} / {goal} gün",
+  "@todayWeek": {
+    "description": "Today: the week's study days against the goal.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "todayEnoughTitle": "Bugünlük yeter.",
+  "@todayEnoughTitle": {
+    "description": "Today: the day's time is used up (docs/09 §5.14)."
+  },
+  "todaySpent": "Bugün {minutes} dakika çalıştın.",
+  "@todaySpent": {
+    "description": "Today: the time studied today.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayTomorrowMorningCoffee": "Yarın kahvenle görüşürüz.",
+  "@todayTomorrowMorningCoffee": {
+    "description": "Today, enough: tomorrow at the learner's anchor (morning coffee)."
+  },
+  "todayTomorrowLunchBreak": "Yarın öğle arasında görüşürüz.",
+  "@todayTomorrowLunchBreak": {
+    "description": "Today, enough: tomorrow at the learner's anchor (lunch break)."
+  },
+  "todayTomorrowAfterDinner": "Yarın akşam yemeğinden sonra görüşürüz.",
+  "@todayTomorrowAfterDinner": {
+    "description": "Today, enough: tomorrow at the learner's anchor (after dinner)."
+  },
+  "todayTomorrowBeforeBed": "Yarın yatmadan önce görüşürüz.",
+  "@todayTomorrowBeforeBed": {
+    "description": "Today, enough: tomorrow at the learner's anchor (before bed)."
+  },
+  "todayTomorrow": "Yarın görüşürüz.",
+  "@todayTomorrow": {
+    "description": "Today, enough: tomorrow, without an anchor."
+  },
+  "todayGoOn": "Devam etmek istersen",
+  "@todayGoOn": {
+    "description": "Today, enough: a quiet link to go on anyway (docs/09 §5.14)."
+  },
+  "todayGreetingMorning": "Günaydın.",
+  "@todayGreetingMorning": {
+    "description": "Today: the greeting from 05:00 to 11:00; no streak (docs/09 §5.2)."
+  },
+  "todayGreetingDay": "Merhaba.",
+  "@todayGreetingDay": {
+    "description": "Today: the greeting from 11:00 to 18:00."
+  },
+  "todayGreetingEvening": "İyi akşamlar.",
+  "@todayGreetingEvening": {
+    "description": "Today: the greeting from 18:00 to 05:00."
+  },
+  "practiceSpeakingTitle": "Konuşma görevi",
+  "@practiceSpeakingTitle": {
+    "description": "Practice: the speaking task (A11)."
+  },
+  "practiceSpeakingBody": "Bir konuyu bir iki dakika anlatırsın; sonra iyi gidenleri ve üç düzeltmeyi görürsün.",
+  "@practiceSpeakingBody": {
+    "description": "Practice: what a speaking task is."
+  },
+  "speakingTitle": "Konuşma görevi",
+  "@speakingTitle": {
+    "description": "Speaking task: the screen's title."
+  },
+  "speakingLeave": "Görevi bırak",
+  "@speakingLeave": {
+    "description": "Speaking task: leaves without a question; nothing is owed (I-14)."
+  },
+  "speakingUnavailable": "Konuşma görevleri için içerik bu cihazda henüz hazır değil. İçerik inince burada olacak.",
+  "@speakingUnavailable": {
+    "description": "Speaking task: no packs or course yet."
+  },
+  "speakingNeedsConsent": "Konuşma görevi sesini kaydeder. Ses kaydına izin verilmediği için şimdilik kapalı.",
+  "@speakingNeedsConsent": {
+    "description": "Speaking task: the learner did not agree to audio recordings (I-18)."
+  },
+  "speakingChooseTitle": "Ne anlatmak istersin?",
+  "@speakingChooseTitle": {
+    "description": "Speaking task: the tasks to choose from (I-14)."
+  },
+  "speakingOtherTasks": "Başka görevler",
+  "@speakingOtherTasks": {
+    "description": "Speaking task: the tasks beyond the suggestions."
+  },
+  "speakingPreparation": "Hazırlanmak için {seconds} sn",
+  "@speakingPreparation": {
+    "description": "Speaking task: the time left to prepare (docs/02 §3).",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingPreparationOver": "Hazır olduğunda başla.",
+  "@speakingPreparationOver": {
+    "description": "Speaking task: the preparation time is over; nothing starts by itself."
+  },
+  "speakingPhrases": "İşine yarayabilir",
+  "@speakingPhrases": {
+    "description": "Speaking task: the task's sentence starters."
+  },
+  "speakingShowPhrases": "Kalıpları göster",
+  "@speakingShowPhrases": {
+    "description": "Speaking task: opens the sentence starters above A2."
+  },
+  "speakingStart": "Konuşmaya başla",
+  "@speakingStart": {
+    "description": "Speaking task: starts the recording."
+  },
+  "speakingOtherTask": "Başka görev seç",
+  "@speakingOtherTask": {
+    "description": "Speaking task: back to the list before speaking."
+  },
+  "speakingListening": "Dinliyorum. Bitince \"Bitti\"ye bas.",
+  "@speakingListening": {
+    "description": "Speaking task: while recording."
+  },
+  "speakingInEnglish": "İngilizce anlat; birkaç kısa cümle de yeter.",
+  "@speakingInEnglish": {
+    "description": "Task card: the answer is spoken in English, whatever the prompt's language."
+  },
+  "speakingElapsed": "{elapsed} / {limit}",
+  "@speakingElapsed": {
+    "description": "Speaking task: time recorded and the limit, as m:ss.",
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "speakingStop": "Bitti",
+  "@speakingStop": {
+    "description": "Speaking task: stops the recording."
+  },
+  "speakingTranscribing": "Söylediklerin yazıya geçiriliyor…",
+  "@speakingTranscribing": {
+    "description": "Speaking task: transcribing the recording."
+  },
+  "speakingMarking": "Geri bildirim hazırlanıyor…",
+  "@speakingMarking": {
+    "description": "Speaking task: the tutor marks the transcript."
+  },
+  "speakingFailedPermission": "Mikrofon izni olmadan kayıt yapılamıyor. İzni telefonun ayarlarından verebilirsin.",
+  "@speakingFailedPermission": {
+    "description": "Speaking task: no microphone permission."
+  },
+  "speakingFailedMicrophone": "Mikrofon açılamadı. Bir kez daha dener misin?",
+  "@speakingFailedMicrophone": {
+    "description": "Speaking task: the microphone could not be opened."
+  },
+  "speakingFailedSilent": "İngilizce bir şey duyamadım. Bir kez daha, İngilizce dener misin?",
+  "@speakingFailedSilent": {
+    "description": "Speaking task or test: nothing was heard in English (silence, or another language)."
+  },
+  "speakingFailedNetwork": "Bağlantı yok gibi. Kaydın saklandı; bağlantı gelince yeniden deneyebilirsin.",
+  "@speakingFailedNetwork": {
+    "description": "Speaking task: no connection; the recording is kept."
+  },
+  "speakingFailedSpeech": "Ses şu an yazıya geçirilemedi. Kaydın saklandı; biraz sonra yeniden deneyebilirsin.",
+  "@speakingFailedSpeech": {
+    "description": "Speaking task: recognition failed; the recording is kept."
+  },
+  "speakingRetry": "Yeniden dene",
+  "@speakingRetry": {
+    "description": "Speaking task: processes the kept recording again."
+  },
+  "speakingRecordAgain": "Yeniden kaydet",
+  "@speakingRecordAgain": {
+    "description": "Speaking task: back to the task card for a new recording."
+  },
+  "speakingStats": "{minutes} dk {seconds} sn konuştun · {words} kelime",
+  "@speakingStats": {
+    "description": "Speaking task: how long the learner spoke and how many words; no grade (I-04).",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingStrengths": "İyi gidenler",
+  "@speakingStrengths": {
+    "description": "Speaking task: what went well (docs/03 A11 4a)."
+  },
+  "speakingWaiting": "Ayrıntılı geri bildirim şimdilik hazır değil; kaydın saklandı.",
+  "@speakingWaiting": {
+    "description": "Speaking task: the tutor's marks could not be had now."
+  },
+  "speakingNoCorrections": "Düzeltilecek bir şey görülmedi.",
+  "@speakingNoCorrections": {
+    "description": "Speaking task: the marks found nothing to practise."
+  },
+  "speakingCorrections": "Düzeltmeler",
+  "@speakingCorrections": {
+    "description": "Speaking task: the corrections to practise (docs/03 A11 4b)."
+  },
+  "speakingCorrectionNumber": "Düzeltme {number} / {total}",
+  "@speakingCorrectionNumber": {
+    "description": "Speaking task: which correction is being practised.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingYourSentence": "Senin cümlen",
+  "@speakingYourSentence": {
+    "description": "Speaking task: the learner's sentence as said."
+  },
+  "speakingSayCorrected": "Düzelterek söyle.",
+  "@speakingSayCorrected": {
+    "description": "Speaking task: say the sentence corrected."
+  },
+  "speakingTypeCorrected": "Düzelterek yaz.",
+  "@speakingTypeCorrected": {
+    "description": "Speaking task: type the sentence corrected (silent mode)."
+  },
+  "speakingNext": "Sonraki",
+  "@speakingNext": {
+    "description": "Speaking task: on to the next correction."
+  },
+  "speakingRedo": "Görevi yeniden yap",
+  "@speakingRedo": {
+    "description": "Speaking task: the same task once more (docs/03 A11 4c)."
+  },
+  "speakingFinish": "Bitir",
+  "@speakingFinish": {
+    "description": "Speaking task: ends the task; corrected sentences become cards."
+  },
+  "speakingDoneTitle": "Görev bitti.",
+  "@speakingDoneTitle": {
+    "description": "Speaking task: the end."
+  },
+  "speakingDoneCards": "{count, plural, =0{Kartlarına yeni cümle eklenmedi.} other{{count} düzeltilmiş cümle kartlarına eklendi.}}",
+  "@speakingDoneCards": {
+    "description": "Speaking task: corrected sentences added as cards (docs/03 A11 step 5).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyInviteTitle": "Bu ayın konuşma kaydı",
+  "@monthlyInviteTitle": {
+    "description": "Today: the invitation to the monthly speaking test (docs/06 §3); an invitation, not a demand."
+  },
+  "monthlyInviteBody": "Beş kısa görev, yaklaşık 15 dakika. Kayıtlarını aydan aya karşılaştırmak için.",
+  "@monthlyInviteBody": {
+    "description": "Today: what the monthly test is."
+  },
+  "monthlyInviteLater": "Şimdi değil",
+  "@monthlyInviteLater": {
+    "description": "Today: puts the monthly invitation aside until the next start (I-14)."
+  },
+  "monthlyInviteStart": "Kayda başla",
+  "@monthlyInviteStart": {
+    "description": "Today: opens the monthly test."
+  },
+  "monthlyTitle": "Aylık konuşma kaydı",
+  "@monthlyTitle": {
+    "description": "Monthly test: the screen's title."
+  },
+  "monthlyBaselineTitle": "Başlangıç kaydı",
+  "@monthlyBaselineTitle": {
+    "description": "Baseline: the screen's title (docs/06 §2 part 4)."
+  },
+  "monthlyLeave": "Kaydı bırak",
+  "@monthlyLeave": {
+    "description": "Monthly test: leaves; what was recorded is kept (I-14)."
+  },
+  "monthlyUnavailable": "Aylık kayıt için içerik bu cihazda henüz hazır değil.",
+  "@monthlyUnavailable": {
+    "description": "Monthly test: no tasks or course yet."
+  },
+  "monthlyIntro": "{tasks} kısa görev var: üçü her ay aynı, gerisi seviyene göre. Her görevde hazırlanır, en çok {minutes} dakika İngilizce konuşursun. Not yok; kayıtların aydan aya karşılaştırmak için saklanır.",
+  "@monthlyIntro": {
+    "description": "Monthly test: what the test is (docs/06 §3.1).",
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyIntroPlace": "Sessiz bir yer ve mümkünse hep aynı telefon karşılaştırmayı kolaylaştırır.",
+  "@monthlyIntroPlace": {
+    "description": "Monthly test: the same place and phone help comparison (docs/06 §5)."
+  },
+  "monthlyBaselineIntro": "Bir dakika İngilizce kendini tanıt; birkaç kısa cümle yeter. Bu kayıt seviyeni etkilemez; aylar sonra bugünkü sesini dinleyip karşılaştırmak için saklanır.",
+  "@monthlyBaselineIntro": {
+    "description": "Baseline: what the recording is for (docs/06 §2 part 4)."
+  },
+  "monthlyBegin": "Başla",
+  "@monthlyBegin": {
+    "description": "Monthly test: starts with the microphone check."
+  },
+  "monthlyMicCheck": "Önce mikrofonu deneyelim: \"Mikrofonu dene\"ye bas ve bir şey söyle. Çubuk hareket ediyorsa ses geliyor.",
+  "@monthlyMicCheck": {
+    "description": "Monthly test: the microphone check before recording (docs/06 §3.1)."
+  },
+  "monthlyMicTry": "Mikrofonu dene",
+  "@monthlyMicTry": {
+    "description": "Monthly test: listens for the level meter; nothing is kept."
+  },
+  "monthlyMicOk": "Devam",
+  "@monthlyMicOk": {
+    "description": "Monthly test: on to the first task."
+  },
+  "monthlyTaskNumber": "Görev {number} / {total}",
+  "@monthlyTaskNumber": {
+    "description": "Monthly test: which task.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyAnchorNote": "Bu görev her ay aynı.",
+  "@monthlyAnchorNote": {
+    "description": "Monthly test: an anchor task, the same every month."
+  },
+  "monthlyFinishing": "Kayıtların işleniyor…",
+  "@monthlyFinishing": {
+    "description": "Monthly test: the last recordings are processed."
+  },
+  "monthlyHearing": "Kaydına bakıyorum…",
+  "@monthlyHearing": {
+    "description": "Monthly test: a recording is written down to see that something was heard (docs/06 §3.3a)."
+  },
+  "monthlyReportTitle": "Bu ayın kaydı",
+  "@monthlyReportTitle": {
+    "description": "Monthly test report: the title; no grade (docs/06 §6)."
+  },
+  "monthlyReportIntro": "Not yok. Bunlar kendi geçmişinle karşılaştırman için ölçümler.",
+  "@monthlyReportIntro": {
+    "description": "Monthly test report: measures to compare with oneself."
+  },
+  "monthlySpeechRate": "Dakikada {count} kelime",
+  "@monthlySpeechRate": {
+    "description": "Monthly test report: speech rate.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyLongPauses": "Dakikada {count} uzun duraklama",
+  "@monthlyLongPauses": {
+    "description": "Monthly test report: long pauses per minute.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyErrorFree": "{clauses} cümleciğin {errorFree} tanesi hatasız",
+  "@monthlyErrorFree": {
+    "description": "Monthly test report: error-free clauses as counts, not a percentage (I-04).",
+    "placeholders": {
+      "clauses": {
+        "type": "int"
+      },
+      "errorFree": {
+        "type": "int"
+      }
+    }
+  },
+  "monthlyPrevious": "Geçen ay: {value}",
+  "@monthlyPrevious": {
+    "description": "Monthly test report: last month's value of the same anchor task.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyNotProcessed": "Bu kayıt henüz işlenmedi; saklandı.",
+  "@monthlyNotProcessed": {
+    "description": "Monthly test report: the recording waits for processing."
+  },
+  "monthlyNotMarked": "Ayrıntılı işaretleme daha sonra gelecek.",
+  "@monthlyNotMarked": {
+    "description": "Monthly test report: the marks are not there yet."
+  },
+  "monthlyWhatIsThis": "Bu ölçümler nedir?",
+  "@monthlyWhatIsThis": {
+    "description": "Monthly test report: explanations (docs/06 §6)."
+  },
+  "monthlyExplainRate": "Dakikada kelime: duraksamalar dahil konuşma hızın.",
+  "@monthlyExplainRate": {
+    "description": "Monthly test report: what speech rate is."
+  },
+  "monthlyExplainPauses": "Uzun duraklama: bir saniyeden uzun sessizlik. Azalması, akıcılığın arttığını gösterir.",
+  "@monthlyExplainPauses": {
+    "description": "Monthly test report: what long pauses are."
+  },
+  "monthlyExplainErrorFree": "Hatasız cümlecik: içinde hata işaretlenmemiş cümle parçaları. Konuşma uzayıp karmaşıklaştığında bir süre azalabilir; bu doğaldır.",
+  "@monthlyExplainErrorFree": {
+    "description": "Monthly test report: what error-free clauses are; a dip is neutral (docs/06 §3.4)."
+  },
+  "monthlyBaselineDone": "Kaydın saklandı. İlk aylık kaydınla yan yana dinleyebileceksin.",
+  "@monthlyBaselineDone": {
+    "description": "Baseline: done."
+  },
+  "placementBaselineOffer": "Başlangıç kaydı (isteğe bağlı, 1 dk)",
+  "@placementBaselineOffer": {
+    "description": "Placement result: offers the baseline recording (docs/06 §2 part 4)."
+  },
+  "progressEvidenceTitle": "Kanıtlar",
+  "@progressEvidenceTitle": {
+    "description": "Progress: the evidence counts (docs/04 §3); counts, never percentages (I-04)."
+  },
+  "progressKnown": "Tanıyor",
+  "@progressKnown": {
+    "description": "Progress: items known, produced or recognized."
+  },
+  "progressRecallable": "Hatırlıyor",
+  "@progressRecallable": {
+    "description": "Progress: items recallable for a week or more."
+  },
+  "progressDurable": "Kalıcı",
+  "@progressDurable": {
+    "description": "Progress: items stable for a month."
+  },
+  "progressUsed": "Kullanıyor",
+  "@progressUsed": {
+    "description": "Progress: items used without error in free speech on two days."
+  },
+  "progressWhatAreThese": "Bu sayılar nedir?",
+  "@progressWhatAreThese": {
+    "description": "Progress: explanations of the counts (docs/06 §6)."
+  },
+  "progressExplainKnown": "Tanıyor: kartlarında hatırladığın ya da dinlerken tanıdığın kelime ve kalıplar.",
+  "@progressExplainKnown": {
+    "description": "Progress: what known means."
+  },
+  "progressExplainRecallable": "Hatırlıyor: en az bir haftadır aklında duran, söyleyebildiğin kelime ve kalıplar.",
+  "@progressExplainRecallable": {
+    "description": "Progress: what recallable means."
+  },
+  "progressExplainDurable": "Kalıcı: bir aydır sağlam duran, araya zaman girince de hatırladığın kelime ve kalıplar.",
+  "@progressExplainDurable": {
+    "description": "Progress: what durable means."
+  },
+  "progressExplainUsed": "Kullanıyor: hatırladıklarından, konuşma görevlerinde iki ayrı gün hatasız kullandıkların.",
+  "@progressExplainUsed": {
+    "description": "Progress: what used means."
+  },
+  "progressVocabulary": "Seviye testine göre yaklaşık {count} kelime tanıyorsun.",
+  "@progressVocabulary": {
+    "description": "Progress: the X_Lex recognition size, an estimate (docs/04 §4.1).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressCanDoTitle": "Yapabildiklerin",
+  "@progressCanDoTitle": {
+    "description": "Progress: the can-do list (docs/04 §5)."
+  },
+  "progressCanDoEstablished": "Kanıtlandı",
+  "@progressCanDoEstablished": {
+    "description": "Progress: a can-do done on different days with different tasks."
+  },
+  "progressCanDoShown": "Gösterildi",
+  "@progressCanDoShown": {
+    "description": "Progress: a can-do done once."
+  },
+  "progressCanDoAttempted": "Denendi",
+  "@progressCanDoAttempted": {
+    "description": "Progress: a can-do tried."
+  },
+  "progressCanDoNone": "Henüz denenmedi",
+  "@progressCanDoNone": {
+    "description": "Progress: a can-do not tried yet."
+  },
+  "progressCanDoRefresh": "Bir süre geçti; tazelemeye değer.",
+  "@progressCanDoRefresh": {
+    "description": "Progress: an invitation to do an old can-do again, never a failure (docs/04 §5)."
+  },
+  "progressMonthlyTitle": "Aylık kayıtlar",
+  "@progressMonthlyTitle": {
+    "description": "Progress: the monthly recordings (docs/06 §3.4)."
+  },
+  "progressMonthlyEmpty": "Aylık kayıt yapınca kayıtlarını burada yan yana dinleyebilirsin.",
+  "@progressMonthlyEmpty": {
+    "description": "Progress: no monthly recording yet."
+  },
+  "progressBaselineOffer": "Başlangıç kaydı yap (isteğe bağlı, 1 dk)",
+  "@progressBaselineOffer": {
+    "description": "Progress: offers the baseline recording while no test recording has speech in it (docs/06 §2 part 4)."
+  },
+  "progressListenFirst": "İlk kayıt",
+  "@progressListenFirst": {
+    "description": "Progress: plays the first recording of an anchor task."
+  },
+  "progressListenPrevious": "Önceki ay",
+  "@progressListenPrevious": {
+    "description": "Progress: plays the recording of an earlier month."
+  },
+  "progressListenLatest": "Son kayıt",
+  "@progressListenLatest": {
+    "description": "Progress: plays the latest recording."
+  },
+  "progressRate": "dakikada {count} kelime",
+  "@progressRate": {
+    "description": "Progress: speech rate of a month.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPauses": "dakikada {count} uzun duraklama",
+  "@progressPauses": {
+    "description": "Progress: long pauses per minute of a month.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "progressClauses": "{clauses} cümleciğin {errorFree} tanesi hatasız",
+  "@progressClauses": {
+    "description": "Progress: error-free clauses as counts (I-04).",
+    "placeholders": {
+      "clauses": {
+        "type": "int"
+      },
+      "errorFree": {
+        "type": "int"
+      }
+    }
+  },
+  "progressNotMeasured": "henüz ölçülmedi",
+  "@progressNotMeasured": {
+    "description": "Progress: a month whose recording waits."
+  },
+  "cardsDispute": "Cevabım da doğru olabilir",
+  "@cardsDispute": {
+    "description": "Card end: the learner disputes the verdict; the answer goes to the tutor again (docs/03 §0.5 step 5)."
+  },
+  "cardsDisputed": "Not aldık. Cevabına yeniden bakılacak.",
+  "@cardsDisputed": {
+    "description": "Card end: after a dispute; nothing changes now, the tutor looks again later."
+  },
+  "reportTitle": "Bu içerikte hata var",
+  "@reportTitle": {
+    "description": "Report sheet title (long press on a card, docs/09 §5.3)."
+  },
+  "reportQuestion": "Neyi fark ettin?",
+  "@reportQuestion": {
+    "description": "Report sheet: asks what is wrong."
+  },
+  "reportReasonMeaning": "Türkçe anlamı yanlış",
+  "@reportReasonMeaning": {
+    "description": "Report reason: the Turkish meaning is wrong."
+  },
+  "reportReasonSentence": "İngilizce cümle yanlış ya da doğal değil",
+  "@reportReasonSentence": {
+    "description": "Report reason: the English sentence is wrong or unnatural."
+  },
+  "reportReasonAudio": "Ses bozuk ya da yanlış",
+  "@reportReasonAudio": {
+    "description": "Report reason: the audio is broken or wrong."
+  },
+  "reportReasonOther": "Başka bir şey",
+  "@reportReasonOther": {
+    "description": "Report reason: something else."
+  },
+  "reportNoteLabel": "Not (istersen)",
+  "@reportNoteLabel": {
+    "description": "Report sheet: optional note field."
+  },
+  "reportSend": "Gönder",
+  "@reportSend": {
+    "description": "Report sheet: sends the report."
+  },
+  "reportCancel": "Vazgeç",
+  "@reportCancel": {
+    "description": "Report sheet: closes without sending."
+  },
+  "reportThanks": "Teşekkürler. Bakacağız.",
+  "@reportThanks": {
+    "description": "After a report was sent."
+  },
+  "notifyInvitationChannel": "Günlük davet",
+  "@notifyInvitationChannel": {
+    "description": "Android notification channel name of the daily invitation (docs/09 §6)."
+  },
+  "notifyInvitationChannelDescription": "Seçtiğin saatte günde en çok bir kez. O gün çalıştıysan gelmez.",
+  "@notifyInvitationChannelDescription": {
+    "description": "Android notification channel description of the daily invitation."
+  },
+  "notifyInvitationMorningCoffee": "Kahve hazırsa 5 dakikalık tekrar seni bekliyor.",
+  "@notifyInvitationMorningCoffee": {
+    "description": "Daily invitation at the morning coffee anchor (docs/09 §6 example)."
+  },
+  "notifyInvitationLunchBreak": "Öğle arasında 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationLunchBreak": {
+    "description": "Daily invitation at the lunch break anchor."
+  },
+  "notifyInvitationAfterDinner": "Yemekten sonra 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationAfterDinner": {
+    "description": "Daily invitation at the after dinner anchor."
+  },
+  "notifyInvitationBeforeBed": "Yatmadan önce 5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationBeforeBed": {
+    "description": "Daily invitation at the before bed anchor."
+  },
+  "notifyInvitationAnyTime": "5 dakikalık bir tekrara ne dersin?",
+  "@notifyInvitationAnyTime": {
+    "description": "Daily invitation without a known anchor."
+  },
+  "notifyInvitationSpeaking": "Bugün kısa bir konuşma görevine ne dersin?",
+  "@notifyInvitationSpeaking": {
+    "description": "Daily invitation on alternate days: a speaking task (docs/09 §6 example)."
+  },
+  "settingsStudySection": "Çalışma",
+  "@settingsStudySection": {
+    "description": "Settings section: daily time, days, anchor and the placement test."
+  },
+  "settingsPlacement": "Seviye testi",
+  "@settingsPlacement": {
+    "description": "Settings: opens the placement test (docs/06 §2)."
+  },
+  "settingsPlacementFirst": "Üç kısa bölüm, 12–15 dakika. Nereden başlayacağını gösterir.",
+  "@settingsPlacementFirst": {
+    "description": "Settings: the placement test, before the first one."
+  },
+  "settingsPlacementAgain": "Yeniden yapabilirsin: üç kısa bölüm, 12–15 dakika. Kartların olduğu gibi kalır.",
+  "@settingsPlacementAgain": {
+    "description": "Settings: the placement test, taken again (docs/06 §2)."
+  },
+  "settingsInvitationSection": "Davet",
+  "@settingsInvitationSection": {
+    "description": "Settings section: the daily invitation and quiet hours."
+  },
+  "settingsInvitation": "Günde tek davet",
+  "@settingsInvitation": {
+    "description": "Settings switch: the daily invitation notification (docs/09 §6)."
+  },
+  "settingsQuietHours": "Sessiz saatler",
+  "@settingsQuietHours": {
+    "description": "Settings switch: hours with no invitation."
+  },
+  "settingsQuietFrom": "Başlangıç {time}",
+  "@settingsQuietFrom": {
+    "description": "Settings: start of the quiet hours.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQuietTo": "Bitiş {time}",
+  "@settingsQuietTo": {
+    "description": "Settings: end of the quiet hours.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAnswersSection": "Cevaplar",
+  "@settingsAnswersSection": {
+    "description": "Settings section: how answers are given."
+  },
+  "settingsSilentMode": "Sessiz mod",
+  "@settingsSilentMode": {
+    "description": "Settings switch: typed answers by default."
+  },
+  "settingsSilentModeNote": "Cevaplarını yazarak verirsin.",
+  "@settingsSilentModeNote": {
+    "description": "Settings: what silent mode does."
+  },
+  "settingsConsentsSection": "Onaylar",
+  "@settingsConsentsSection": {
+    "description": "Settings section: audio and AI data consents."
+  },
+  "settingsDataSection": "Verilerin",
+  "@settingsDataSection": {
+    "description": "Settings section: export and delete (docs/14 §4)."
+  },
+  "settingsExport": "Verilerimi dışa aktar",
+  "@settingsExport": {
+    "description": "Settings: export the learner's data as a JSON file."
+  },
+  "settingsExportNote": "Kartların, denemelerin, kayıtların ve ayarların tek bir JSON dosyasında.",
+  "@settingsExportNote": {
+    "description": "Settings: what the export holds."
+  },
+  "settingsDeleteAll": "Tüm verimi sil",
+  "@settingsDeleteAll": {
+    "description": "Settings: delete all of the learner's data."
+  },
+  "settingsDeleteTitle": "Tüm verin silinsin mi?",
+  "@settingsDeleteTitle": {
+    "description": "Delete-all dialog title."
+  },
+  "settingsDeleteBody": "Kartların, denemelerin, kayıtların ve ayarların bu cihazdan ve sunucudan silinir. Bu geri alınamaz. İstersen önce dışa aktar.",
+  "@settingsDeleteBody": {
+    "description": "Delete-all dialog body."
+  },
+  "settingsDeleteConfirm": "Sil",
+  "@settingsDeleteConfirm": {
+    "description": "Delete-all dialog: deletes."
+  },
+  "settingsDeleteCancel": "Vazgeç",
+  "@settingsDeleteCancel": {
+    "description": "Delete-all dialog: closes without deleting."
+  },
+  "settingsDeleting": "Siliniyor…",
+  "@settingsDeleting": {
+    "description": "Delete-all in progress."
+  },
+  "settingsNotificationsDenied": "Bildirim izni kapalı. Telefonun ayarlarından açabilirsin.",
+  "@settingsNotificationsDenied": {
+    "description": "Settings: the system did not allow notifications."
+  },
+  "settingsMicrophoneDenied": "Mikrofon izni kapalı. Telefonun ayarlarından açabilirsin.",
+  "@settingsMicrophoneDenied": {
+    "description": "Settings: the system did not allow the microphone."
+  },
+  "settingsOffline": "Bunun için bağlantı gerekiyor.",
+  "@settingsOffline": {
+    "description": "Settings: the server could not be reached."
+  },
+  "settingsFailed": "Şu an olmadı. Birazdan yeniden dene.",
+  "@settingsFailed": {
+    "description": "Settings: the request did not go through."
   }
 }

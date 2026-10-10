@@ -44,6 +44,40 @@ def test_documented_manifest_is_valid(tmp_path: Path) -> None:
     assert [s.license for s in manifest.sources] == ["CC BY-SA 4.0", "free with citation"]
 
 
+def test_the_placement_settings_give_each_level_its_vocabulary(tmp_path: Path) -> None:
+    text = VALID + (
+        "placement:\n"
+        "  vocab_levels:\n"
+        "    - {level: A1, from: 300, to: 1500}\n"
+        "    - {level: A2, from: 1500, to: 2500}\n"
+        "    - {level: B1, from: 2750, to: 3250}\n"
+    )
+
+    manifest = load_manifest(write(tmp_path, text))
+
+    assert manifest.placement is not None
+    first = manifest.placement.vocab_levels[0]
+    assert (first.level, first.start, first.end) == ("A1", 300, 1500)
+    # The pack file keeps the names of the manifest.
+    dumped = manifest.model_dump(mode="json", by_alias=True)["placement"]["vocab_levels"]
+    assert dumped[2] == {"level": "B1", "from": 2750, "to": 3250}
+
+
+@pytest.mark.parametrize(
+    "ranges",
+    [
+        "[{level: A1, from: 300, to: 1500}, {level: A2, from: 1400, to: 2500}]",
+        "[{level: A1, from: 300, to: 300}]",
+        "[]",
+    ],
+)
+def test_the_vocabulary_ranges_rise_without_overlap(tmp_path: Path, ranges: str) -> None:
+    text = VALID + f"placement:\n  vocab_levels: {ranges}\n"
+
+    with pytest.raises(ValidationError):
+        load_manifest(write(tmp_path, text))
+
+
 def test_sources_are_required(tmp_path: Path) -> None:
     text = VALID.split("sources:")[0] + "sources: []\n"
     with pytest.raises(ValidationError):

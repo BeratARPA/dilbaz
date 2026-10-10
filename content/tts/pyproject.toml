@@ -1,0 +1,51 @@
+[project]
+name = "dilbaz-tts"
+version = "0.1.0"
+description = "Dilbaz pack audio (S6): Kokoro text-to-speech in its own environment (ADR-0009)."
+readme = "README.md"
+# misaki (Kokoro's own G2P) supports Python < 3.13; the content tools run on 3.14.
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "en-core-web-sm",
+    "kokoro-onnx==0.6.1",
+    "misaki==0.9.4",
+    "num2words>=0.5.14",
+    "numpy>=2.2",
+    "soundfile>=0.13.1",
+    "spacy==3.8.16",
+]
+
+[project.scripts]
+dilbaz-tts = "dilbaz_tts.synth:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.1",
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "RUF", "ANN", "PT"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.uv.sources]
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }

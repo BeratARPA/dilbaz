@@ -1,0 +1,40 @@
+{"code":"gp.be.present","note":"Cümlede be olmalı: I ile am, he/she/it ile is, you/we/they ile are.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.be.negative","note":"Olumsuzda not, am/is/are'dan hemen sonra gelir: özne + am/is/are + not.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.be.questions","note":"Soruda be başa gelir: Am/Is/Are + özne + …? Kısa cevap: Yes/No + özne + be.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.pronouns.subject","note":"Özne düşmez. Erkek için he, kadın için she, şey ya da hayvan için it.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.articles.a_an","note":"Tekil sayılabilir isimden önce a/an gelir. Ünlü sesle başlayan kelimeden önce an: an egg, an hour.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.nouns.plural","note":"Birden fazlası için isme -s/-es eklenir; sayıdan sonra da: two books. Bazı isimlerin çoğulu düzensizdir ve -s almaz: man → men.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.possessive.adjectives","note":"Sahiplik ismin önündeki sözcükle gösterilir: my, your, his, her, its, our, their. Sahibi erkekse his, kadınsa her.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.age","note":"Yaşta be kullanılır: özne + am/is/are + sayı (+ years old). Soru: How old + be + özne?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.articles.the","note":"Hangisi olduğu biliniyorsa ya da tek bir tane varsa the; ilk kez söz edilen herhangi biriyse a/an.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.demonstratives","note":"Yakın: this (tekil), these (çoğul). Uzak: that (tekil), those (çoğul).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.there_is_are","note":"Bir yerde bir şey varsa there is (tekil) / there are (çoğul). Birinin bir şeyi varsa have.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.have_got","note":"Sahiplikte have got; he/she/it ile has got.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_simple.affirmative","note":"he/she/it ile fiile -s ya da -es eklenir: play → plays, fix → fixes. Diğer öznelerle fiil yalın kalır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_simple.negative","note":"Olumsuz: don't + yalın fiil; he/she/it ile doesn't + yalın fiil (fiile -s gelmez).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_simple.questions","note":"Soru: Do/Does + özne + yalın fiil. he/she/it ile does; fiile -s gelmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.adverbs.frequency","note":"Sıklık zarfı ana fiilden önce, be'den sonra gelir; often cümle sonunda da olabilir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.can.ability","note":"can + yalın fiil; her özneyle aynı biçim (can'e -s gelmez). Olumsuz: can't. Soru: Can + özne + fiil?","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.imperative","note":"Emir yalın fiille başlar; olumsuzu Don't + yalın fiil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.pronouns.object","note":"Fiilden ve edattan sonra nesne biçimi: me, you, him, her, it, us, them. Erkekse him, kadınsa her.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.possessive.s","note":"Sahip + 's + sahip olunan şey. -s ile biten çoğulda yalnız kesme işareti: parents'.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.prepositions.place","note":"İçinde in, bir yüzeyin üstünde on, bir noktada at; next to (yanında), under (altında).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.prepositions.time","note":"Saat: at. Gün ve tarih: on. Ay, yıl, mevsim ve günün bölümü: in; gece bu kuralın dışındadır.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.questions.wh","note":"Soru sözcüğü başa gelir; ardından soru sırası: be ya da do/does/can + özne + fiil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.conjunctions.basic","note":"Ekleme: and. Karşıtlık: but. Sebep: because + özne + fiil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_continuous.now","note":"Şu an olan iş: am/is/are + fiil-ing. be'yi atlama.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.like_ing","note":"like/love/hate'ten sonra fiil-ing (ya da to + fiil) gelir; enjoy'dan sonra yalnız fiil-ing.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.would_like","note":"Kibar istek: would like + isim ya da to + fiil. Soruda would özneden önce gelir.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.past_simple.be","note":"Geçmişte be: I/he/she/it ile was, you/we/they ile were.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.past_simple.regular","note":"Düzenli fiil + -ed; her özneyle aynı biçim. -e ile bitene yalnız -d: love → loved.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.past_simple.irregular","note":"Düzensiz fiilin kendine özgü geçmiş biçimi kullanılır (buy → bought); -ed eklenmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.past_simple.negative_questions","note":"didn't / did + yalın fiil; geçmiş biçim (went, saw) kullanılmaz.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.future.going_to","note":"Plan: am/is/are + going to + yalın fiil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.future.will","note":"will + yalın fiil; her özneyle aynı biçim. Olumsuzu will not.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.comparatives","note":"Kısa sıfat + -er + than; uzun sıfat: more + sıfat + than. good → better, bad → worse.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.superlatives","note":"the + kısa sıfat-est; uzun sıfatta the most + sıfat. good ve bad düzensizdir (bad → the worst).","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.countable_uncountable","note":"Olumluda some, olumsuz ve soruda any (teklif ve ricada some). Sayılabilirle many, sayılamayanla much; olumluda çoğunlukla a lot of.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.modals.obligation","note":"Gereklilik: have to / must + yalın fiil (he/she/it ile has to). Tavsiye: should + yalın fiil.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_simple_vs_continuous","note":"Her zaman ya da genelde olan: geniş zaman. Şu anda olan: am/is/are + -ing.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.present_perfect.experience","note":"have/has + fiilin üçüncü hâli (V3); he/she/it ile has. Ne zaman olduğu söylenmez.","provenance":{"source":"dilbaz curation","license":"own"}}
+{"code":"gp.verb_patterns.to_ing","note":"want/need/decide/hope/try + to + fiil; enjoy/finish/stop + fiil-ing.","provenance":{"source":"dilbaz curation","license":"own"}}

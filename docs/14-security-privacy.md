@@ -6,12 +6,12 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 
 | Tehdit | Etki | Önlem |
 |---|---|---|
-| API anahtarının sızması (uygulama içinden ya da git'ten) | Maliyet, kötüye kullanım | Anahtarlar yalnızca Supabase secrets'ta. Uygulamada yalnızca publishable key. `.gitignore` + commit öncesi gizli anahtar taraması. |
+| API anahtarının sızması (uygulama içinden ya da git'ten) | Kota ve kredinin tüketilmesi, kötüye kullanım | Anahtarlar yalnızca Supabase secrets'ta. Uygulamada yalnızca publishable key. `.gitignore` + commit öncesi gizli anahtar taraması. |
 | Yanlış RLS ile partnerin ya da başkasının verisine erişim | Mahremiyet ihlali | Varsayılan-red RLS, her tabloya pgTAP testi, partnere yalnızca özet fonksiyonu |
-| Döngüye giren istemci ya da hata yüzünden aşırı LLM/ASR kullanımı | Maliyet | Kullanıcı başı günlük bütçe, fonksiyon başı istek sınırı, Anthropic/Deepgram/Azure harcama limitleri |
+| Döngüye giren istemci ya da hata yüzünden aşırı LLM/ASR kullanımı | Kotanın ya da Deepgram kredisinin tükenmesi | Kullanıcı başı kota payı (adil paylaşım), fonksiyon başı istek sınırı. Ücretli plan ve kart yok, fatura oluşamaz (ADR-0009). |
 | Veri kaybı (ücretsiz planda otomatik yedek yok) | Öğrenme geçmişinin kaybı | Gece yedeği + haftalık döküm + uygulama içi dışa aktarma (`12` §9) |
 | Cihaz kaybı | Oturumun kötüye kullanımı | Supabase oturum yönetimi. Ayarlardan "tüm cihazlardan çıkış". |
-| Üçüncü taraf sağlayıcıların veriyi eğitimde kullanması | Mahremiyet | Model geliştirme programlarından çıkış parametreleri (Deepgram `mip_opt_out`), veri politikası kontrolü, veri en aza indirme |
+| Üçüncü taraf sağlayıcıların veriyi eğitimde kullanması | Mahremiyet | Gemini ücretsiz katmanı veriyi ürün geliştirmede kullanabilir: kullanıcı başına açık onay, onay yoksa Groq (ZDR) ya da deterministik yol. Deepgram `mip_opt_out`. Veri en aza indirme. |
 | Log'lara kişisel metin/ses düşmesi | Mahremiyet | Fonksiyon loglarında yalnızca kimlik ve süre. Transkript ve metin loglanmaz. |
 
 ## 2. Kimlik doğrulama
@@ -34,7 +34,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 
 ## 4. Ses verisi
 
-- **Açık onay:** Karşılama akışında mikrofon izninden önce hangi kayıtların ne kadar tutulduğu açıkça yazılır ve onay alınır.
+- **Açık onay:** Karşılama akışında mikrofon izninden önce hangi kayıtların ne kadar tutulduğu açıkça yazılır ve onay alınır. Onay kapalı başlar, zamanıyla birlikte `profiles.settings.audio_consent` içinde saklanır (`13` §2.1) ve Ayarlar'dan geri alınabilir. Onay yoksa mikrofon izni istenmez, cevaplar yazılı verilir.
 - **Saklama:**
 
   | Kayıt türü | Saklama |
@@ -45,25 +45,36 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
   | Aylık test ve seviye testi kayıtları | Kullanıcı silene kadar ("önce/sonra" için) |
 
 - **Silme hakkı:** Ayarlar > Veri > "Tüm verimi sil" (onaylı, geri alınamaz uyarısıyla) ve tekil kayıt silme.
+- **Uygulamadaki durum (F1-22):**
+  - Aylık test ve seviye testi kayıtlarının sesi `audio-private`'a da yedeklenir; yalnızca sahibi okur (I-18).
+  - Görev kayıtlarının sesi yalnızca cihazda kalır.
+  - **Açık nokta:** Görev seslerini 30 gün sonra silen iş henüz yok, ne cihazda ne sunucuda. F3-08'de gelecek, o zamana kadar görev sesleri de sunucuya yüklenmez.
 - **Taşınabilirlik:** Ayarlar > Veri > "Dışa aktar" (JSON + ses dosyaları, zip).
+- **Uygulamadaki durum (F1-23):**
+  - **Dışa aktarma:** tek JSON dosyası (`dilbaz-export@1`; sunucunun tablo ve sütun adlarıyla, cihazdaki tüm satırlar), sistemin paylaşım penceresiyle. Sesler henüz dosyaya girmiyor; zip sonraya kaldı.
+  - **"Tüm verimi sil":** Sıra şöyle: önce sunucudaki sesler (Storage API), sonra `delete_my_data()` (`13` §2.7), en son cihazdaki satırlar ve ses dosyaları. Sunucu kısmı başarısız olursa cihazda hiçbir şey silinmez. Hesap kalır; karşılama akışı yeniden başlar.
+  - **Bilinen sınır:** Başka bir cihazdaki kopya o cihazda kalır; silmeler senkronla taşınmaz (F3-07). Tekil kayıt silme henüz yok.
 - **Bölge:** Supabase projesi AB bölgesinde (Frankfurt) açılır.
 
 ## 5. Sağlayıcılara giden veri
 
 | Sağlayıcı | Ne gider | Ne gitmez |
 |---|---|---|
-| Anthropic | İstem metni, öğe bilgisi, transkript, seviye bilgisi | Ses, isim, e-posta, kullanıcı kimliği |
+| Gemini (ücretsiz katman) | İstem metni, öğe bilgisi, transkript, seviye bilgisi; yalnızca veri onayı veren kullanıcı için | Ses, isim, e-posta, kullanıcı kimliği |
+| Groq | Aynı metinler; hesapta ZDR açık | Ses (Türkçe yedek hariç), isim, e-posta, kullanıcı kimliği |
 | Deepgram | Ses (İngilizce), parametreler | Kimlik bilgisi |
-| Azure AI Speech | Ses (telaffuz, Türkçe), seslendirilecek metin | Kimlik bilgisi |
+| Cihaz üstü (Android konuşma servisi, TTS) | Türkçe ses, seslendirilecek metin (cihazda kalır; tanıyıcı çevrimiçi çalışabilir) | — |
 
-Her sağlayıcının veri kullanım ve saklama politikası kurulumda kontrol edilir ve `docs/adr/0005`, `0006` içine not edilir.
+- **Gemini ücretsiz katmanı:** Gönderilen içerik Google ürünlerini geliştirmede kullanılabilir ve insanlar tarafından incelenebilir. Bu yüzden onay kullanıcı başınadır ve karşılamada (F1-12) açıkça sorulur. Ayarlardan her zaman değiştirilebilir. Onay kapalı başlar ve zamanıyla birlikte `profiles.settings.ai_data_consent` içinde saklanır; kimse başkası adına veremez.
+- **Politika kontrolü:** Her sağlayıcının veri kullanım ve saklama politikası kurulumda kontrol edilir ve `docs/adr/0009` içine not edilir.
 
 ## 6. Gizli anahtar yönetimi
 
-- **Supabase secrets:** `ANTHROPIC_API_KEY`, `DEEPGRAM_API_KEY`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`. Kullanıcı kendisi ayarlar (`19-setup.md`). Anahtarlar sohbete, koda ya da commit'e yazılmaz.
+- **Supabase secrets:** `GEMINI_API_KEY`, `GROQ_API_KEY`, `DEEPGRAM_API_KEY` (ADR-0009). Kullanıcı kendisi ayarlar (`19-setup.md`). Anahtarlar sohbete, koda ya da commit'e yazılmaz.
 - **Yerel geliştirme:** `supabase/functions/.env` (git dışı).
 - **Uygulama:** `env/*.json` (git dışı). Yalnızca URL + publishable key.
 - **CI:** GitHub Actions secrets (DB parolası, gerekirse test anahtarları).
+- **Android yükleme anahtarı (F1-24):** `dilbaz-upload.jks` ve parolasını taşıyan `app/android/key.properties` yalnızca geliştiricinin bilgisayarında ve yedeğinde durur, git dışıdır (`19` §5.1). Parolayı kullanıcı belirler; ajan görmez. Anahtar kaybolursa uygulama güncellenemez.
 - **Commit öncesi kontrol:** `gitleaks` ya da basit bir desen taraması (pre-commit hook + CI adımı).
 
 ## 7. Bağımlılık güvenliği

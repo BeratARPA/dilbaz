@@ -422,7 +422,11 @@ enabled = true
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
 
 # The platform's verify_jwt check does not understand the new API keys; the
-# function verifies the user's JWT itself (docs/12 §7).
+# function verifies the user's JWT itself (docs/12 §7). Each function has its
+# own deno.json, as the CLI wants for deployment; they repeat the shared one
+# in supabase/functions (a test keeps them equal).
 [functions.tutor]
 verify_jwt = false
-import_map = "./functions/deno.json"
+
+[functions.speech]
+verify_jwt = false

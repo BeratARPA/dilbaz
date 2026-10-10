@@ -1,0 +1,73 @@
+# en@1: the English target pack (docs/11-language-packs.md §3).
+#
+# `dilbaz-content build` (S9) adds counts, created_at and the checksum of the
+# built file (build/en@1.manifest.json). Sources: content/sources.yaml.
+
+id: en@1
+kind: target
+l2: en
+version: 1
+min_engine_version: 2
+level_scheme: CEFR
+script: {direction: ltr, word_separator: space}
+tokenizer: {build_time: "spacy:en_core_web_md", runtime: forms_table}
+fsrs_defaults: null
+placement:
+  # Recognition vocabulary of each level as an X_Lex score: `from` up to but
+  # not including `to` (Milton 2010; docs/02-curriculum.md §2). A score
+  # between two ranges belongs to both levels.
+  vocab_levels:
+    - {level: A0, from: 0, to: 300}
+    - {level: A1, from: 300, to: 1500}
+    - {level: A2, from: 1500, to: 2500}
+    - {level: B1, from: 2750, to: 3250}
+    - {level: B2, from: 3250, to: 3750}
+    - {level: C1, from: 3750, to: 4500}
+    - {level: C2, from: 4500, to: 5001}
+sources:
+  - name: New General Service List (NGSL) and NGSL-Spoken
+    version: "1.2"
+    license: CC BY-SA 4.0
+    attribution: >-
+      Browne, C., Culligan, B., & Phillips, J. (2013). The New General Service List;
+      Browne, C., & Culligan, B. (2013). The New General Service List - Spoken.
+      https://www.newgeneralservicelist.com
+  - name: CEFR-J Wordlist and Grammar Profile
+    version: "1.5 / 20180315"
+    license: Free for research and commercial use with citation (Tono Laboratory, TUFS)
+    attribution: >-
+      The CEFR-J Wordlist Version 1.5 and Grammar Profile Version 20180315, compiled by
+      Yukio Tono, Tokyo University of Foreign Studies, via Open Language Profiles.
+  - name: Octanove Vocabulary Profile C1/C2
+    version: "1.0"
+    license: CC BY-SA 4.0
+    attribution: Octanove Vocabulary Profile C1/C2 (ver 1.0), Octanove Labs, via Open Language Profiles.
+  - name: wordfreq
+    version: "3.1.1"
+    license: Apache-2.0 (code), CC BY-SA 4.0 (data)
+    attribution: >-
+      Robyn Speer. (2022). rspeer/wordfreq. https://doi.org/10.5281/zenodo.7199437.
+      Includes SUBTLEX data (Brysbaert et al.).
+  - name: The CMU Pronouncing Dictionary
+    version: "74790861"
+    license: BSD-2-Clause
+    attribution: The CMU Pronouncing Dictionary, Carnegie Mellon University.
+  - name: Wiktionary, via Wiktextract (kaikki.org)
+    version: "2026-09-26"
+    license: CC BY-SA 4.0 and GFDL
+    attribution: >-
+      Wiktionary contributors (https://en.wiktionary.org), extracted with Wiktextract by
+      Tatu Ylonen (https://kaikki.org).
+  - name: Tatoeba
+    version: weekly export
+    license: CC BY 2.0 FR
+    attribution: >-
+      Sentences from Tatoeba (https://tatoeba.org); the author of each sentence is recorded
+      with it.
+  - name: Kokoro-82M (pack audio)
+    version: "1.0"
+    license: Apache-2.0
+    attribution: Kokoro-82M by hexgrad (https://huggingface.co/hexgrad/Kokoro-82M).
+  - name: Dilbaz content curation
+    license: own
+    attribution: Word-sense glosses, chunk and sentence choices, own sentences and grammar points of the Dilbaz content pipeline.

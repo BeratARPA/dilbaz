@@ -66,6 +66,20 @@ create table courses (
 );
 ```
 
+**`profiles.settings` anahtarları** (karşılama akışı yazar, Ayarlar değiştirir):
+
+| Anahtar | Değer | Anlam |
+|---|---|---|
+| `audio_consent` | `{granted: bool, at: ISO-8601 UTC}` | Ses kaydı onayı (`14` §4). Verilmediyse kayıt yapılmaz. |
+| `ai_data_consent` | `{granted: bool, at: ISO-8601 UTC}` | Metnin Gemini ücretsiz katmanına gitmesine onay (ADR-0009). Yoksa istek Groq'a ya da deterministik yola gider. |
+| `daily_invitation` | bool | Günde tek davet bildirimi isteniyor mu (`09` §6). |
+| `silent_mode` | bool | Yazılı cevap varsayılanı. Ses onayı ya da mikrofon izni yoksa `true` başlar. |
+| `onboarded_at` | ISO-8601 UTC | Karşılama akışının bittiği an. Yoksa akış gösterilir (ekip adımı için gönderilen taslak profilde bulunmaz). |
+
+**`assessments` satırı, `kind = placement`:** `results` = `{version, seed, xlex: {score, band_rates, false_alarm_rate, answers: [{key, known}]}, grammar: {steps: [{key, level, choice, correct}]}, dictation: {sentences: [{key, level, typed, plays, words, errors, slips}]}, duration_ms: {words, grammar, dictation}}`; yapılmayan bölümün anahtarı yoktur. `level_estimates` = ölçülen beceriler + `overall` (`06` §2). Satır değişmez; testin tekrarı yeni satırdır (sürüm sırası satır sayısından çıkar).
+
+**`courses.level_estimates` başlangıcı:** Seviye testi yapılana kadar `{overall: {low, high, confidence: "low", source: "self"}}`; `low` = `high` = kullanıcının seçtiği seviyenin ölçek değeri (`04` §10).
+
 ### 2.2 İçerik kayıt defteri ve kişisel öğeler
 
 ```sql
@@ -141,7 +155,23 @@ create table attempt_amendments (        -- değişmez denemelere sonradan gelen
 );
 ```
 
+- `attempts.card_state_after` motorun `CardMemory` JSON'udur: `{fsrs_card_id, state, step, stability, difficulty, due, last_review, reps, lapses}`. Bu alanlar `cards` satırının FSRS sütunlarının tamamıdır, bu yüzden kart satırı son puanlı denemeden yeniden kurulabilir (I-03).
+- **Kart denemeleri (F1-16):**
+  - `prompt` = `{prompt_l1, reference, carrier, context?}`
+  - `response` = `{text, source: 'asr'|'typed', transcript?, asr?: {provider, model, conf?}, asr_override?, corrected_from?}`
+  - `llm` = `{route, pending, provider?, model?, catalog?, confidence?, code?}` (`07` §7); deterministik eşleşmede `null`.
+  - `hints_used`, `hint_max_level`: cevaptan önce açılan ipuçları. Puanlı son denemede gösterimin en yüksek ipucudur; istekle açılan cevap (H4) dahil.
+- **Sonradan gelen bilgi (F1-21, `attempt_amendments`):**
+  - LLM'siz `uncertain` kalan denemenin `llm` alanı sorulan isteği de taşır: `request` (`answer_check` gövdesi). Bağlantı gelince aynı istek yeniden gönderilir.
+    - Yanında `target_intact` durur: motorun cevap anındaki hedef hükmü. Geç gelen `minor_error` kararını yerleştirir (ADR-0010).
+  - `user_dispute` = `{answer, request, target_intact}`. İtirazla aynı işlemde `content_reports` satırı da yazılır (`reason = answer`).
+  - `target_intact` alanından önce saklanmış cevaplarda geç gelen kararın `target_ok`'u LLM'den gelir.
+  - `llm_resolved` = `{verdict, target_ok, error_tags, provider, model, catalog, confidence}`. LLM karar veremezse (`refused`, `invalid`) `{code}` olur.
+  - Kanıt hesabı ve kişisel cevaplar `llm_resolved` kararını denemenin kendi kararından önce okur. FSRS puanı değişmez (I-03, I-08).
+
 ### 2.4 Kişisel içerik, kayıtlar, değerlendirme
+
+**F1-17:** `gap_entries.suggestion`, `gap_suggest` rotasının cevabıdır, olduğu gibi saklanır. "Karta ekle" aynı işlemde kişisel öğeleri (`source = gap`; cümle `kind = sentence`, kalıp `chunk`) yazar, yakalamayı `carded` yapar ve kimlikleri `personal_item_ids`'e koyar. Kişisel öğenin kartı `cards.item_ref = personal:<id>` taşır (`10` §7).
 
 ```sql
 create table gap_entries (
@@ -253,8 +283,11 @@ create table cheers (
 
 ```sql
 create table content_reports (id uuid primary key, profile_id uuid not null references profiles on delete cascade,
-  item_ref text not null, reason text not null, note text,
-  status text not null default 'open' check (status in ('open','fixed','rejected')), created_at timestamptz default now());
+  item_ref text not null,
+  reason text not null check (reason in ('meaning','sentence','audio','answer','other')), note text,
+  context jsonb not null default '{}',   -- kartın gösterdiği: {carrier, prompt_l1, reference, attempt_id?, answer?}
+  status text not null default 'open' check (status in ('open','fixed','rejected')),
+  server_seq bigint not null default nextval('sync_seq'), created_at timestamptz default now());
 
 create table experiments (id text primary key, hypothesis text not null, arms jsonb not null,
   unit text not null check (unit in ('item','card','session','profile')),
@@ -266,13 +299,15 @@ create table experiment_assignments (experiment_id text references experiments,
   assigned_at timestamptz default now(), primary key (experiment_id, profile_id, unit_ref));
 
 create table llm_usage (id bigserial primary key, profile_id uuid references profiles on delete set null,
-  route text not null, model text not null, input_tokens int, output_tokens int,
-  cache_read_tokens int, cache_write_tokens int, cost_usd numeric(10,6), stop_reason text,
+  route text not null, provider text not null, model text not null, input_tokens int, output_tokens int,
+  cache_read_tokens int, cache_write_tokens int, cost_usd numeric(10,6),  -- ücretsiz katmanda 0 (ADR-0009)
+  stop_reason text,
   latency_ms int, created_at timestamptz default now());
 
 create table speech_usage (id bigserial primary key, profile_id uuid references profiles on delete set null,
   provider text not null, kind text not null check (kind in ('stt','pron','tts')),
-  seconds numeric, characters int, cost_usd numeric(10,6), created_at timestamptz default now());
+  seconds numeric, characters int, cost_usd numeric(10,6),  -- Deepgram kredisinden düşen tutar
+  created_at timestamptz default now());
 
 create table devices (id uuid primary key, profile_id uuid not null references profiles on delete cascade,
   platform text not null, app_version text, last_sync_at timestamptz);
@@ -292,7 +327,10 @@ create table app_config (key text primary key, value jsonb not null);
   - birlikte görev sayısı
   - (`share_levels` açıksa) seviye aralıkları
   - (`share_monthly` açıksa) aylık özet
-- **`delete_my_data()`** (security definer): kullanıcının tüm satırlarını ve Storage nesnelerini siler (servis çağrısıyla).
+- **`delete_my_data()`** (security definer, F1-23; `20261008154225_delete_my_data.sql`): öğrencinin kurduğu ekipleri ve profilini siler. Profile bağlı her tablo zincirleme gider; kullanım sayıları (`llm_usage`, `speech_usage`) adsız kalır; partnerin kendi verisi kalır.
+  - Storage nesnelerini fonksiyon değil uygulama siler (Storage API), çünkü Storage doğrudan silmeye izin vermez. Uygulama önce sesleri, sonra bu fonksiyonu çağırır.
+  - Hesap (`auth.users`) kalır. Yalnızca `authenticated` çağırabilir. pgTAP: `11_delete_my_data.test.sql`.
+- **`llm_usage_counts(p_profile_id, p_models[], p_since[])`** (security invoker, yalnızca servis rolü; F1-15). Bir kullanıcının her modeldeki çağrı sayısını ve önbellek dışı token sayısını (`input − cache_read + output`) o modelin kota gününün başından beri verir. `tutor` adil payı bununla denetler (`07` §3).
 
 ## 3. İndeksler
 
@@ -319,7 +357,7 @@ create index on llm_usage (profile_id, created_at);
   - **Olay tablolarında update/delete yok** (§1).
 - **Ekip:**
   - `teams`: üyeler ve kurucu okur. Kullanıcı yalnızca kendi adına (`created_by = auth.uid()`) ekip kurar.
-  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır (F1-12).
+  - `team_members`: yalnızca üyesi olunan ekiplerin satırları okunur. Kurucu kendini ekler. Başka bir ekibe katılım doğrudan ekleme değil, davet kodu fonksiyonuyla yapılır: `join_team(p_invite_code)` (SECURITY DEFINER; kodu doğrular, üyeliği ekler, yinelenen katılım zararsızdır). `create_team(p_name)` çağıranın kendi yetkisiyle çalışır: 10 karakterlik davet kodunu sunucuda üretir, ekibi ve kurucunun `owner` üyeliğini birlikte yazar. Çağıranın kurduğu bir ekip zaten varsa yenisini kurmaz, onu döndürür: yanıtı kaybolan bir isteğin yinelenmesi ikinci ekip bırakmaz. İkisi de yalnızca `authenticated` rolüne açıktır. Profil sunucuda yoksa ikisi de reddedilir (yabancı anahtar), bu yüzden istemci önce profili gönderir.
   - Üye yalnızca kendi `share_levels` / `share_monthly` anahtarlarını değiştirir (sütun düzeyinde UPDATE yetkisi); `role` değiştirilemez.
   - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.
@@ -328,6 +366,7 @@ create index on llm_usage (profile_id, created_at);
   - `pair_roles`: `profile_id = auth.uid()` olan satır okunur.
   - Yazma işlemleri `pair` fonksiyonu üzerinden yapılır.
 - **`packs`:** kimliği doğrulanmış herkes `status = 'published'` satırları okur. Yazma yalnızca servis rolüyle.
+- **`content_reports`:** kullanıcı kendi bildirimini okur ve ekler, yalnızca `status = 'open'` ile. Durumu servis rolü değiştirir.
 - **`llm_usage`, `speech_usage`:** kullanıcı kendi satırını okur. Yazma yalnızca servis rolüyle.
 - **`app_config`:** herkes okur, yazma servis rolüyle.
 - **Realtime:** `pair:{id}` özel kanalı. `realtime.messages` üzerinde katılımcı kontrolü yapan politika.
@@ -349,18 +388,32 @@ create function sync_pull(p_since bigint, p_limit int default 1000) returns json
 --   dönüş: {rows: {table: […]}, next: bigint, more: boolean}
 ```
 
+**Uygulama (F1-21, `20261008114210_phase1_sync.sql`):**
+- **`sync_push`:**
+  - Önce cihaz satırı, profil ve kurslar yazılır; diğer satırlar onlara dayanır. Kurs kümesi bundan sonra hesaplanır, böylece aynı partideki yeni kursun satırları kabul edilir.
+  - `profile_id` her zaman çağıranındır. Zamanlar (`created_at`, `updated_at`) istemciden gelir: çevrimdışı yazılan satır yazıldığı anı korur.
+  - Çakışma nedenleri: `unknown_course` (kurs çağıranın değil), `unknown_attempt` (ekin denemesi yok), `stale` (kartın sunucudaki incelemesi daha yeni), `duplicate` (aynı öğe ve modun başka kartı ya da aynı dilin ikinci kursu).
+  - Profil, kurs, kişisel öğe, yakalama ve kayıt `updated_at`'e göre son yazanla birleşir. Eski güncelleme sessizce atlanır.
+  - Parti 500 satırı aşarsa `54000 batch_too_large`. Öğrenci başına danışma kilidi tutulur (`12` §6).
+- **`sync_pull`:** profil, kurslar, kişisel öğeler, kartlar, denemeler, ekler, yakalamalar, kayıtlar, değerlendirmeler, oturumlar ve içerik bildirimleri. Cihazlar dönmez. `p_limit` varsayılanı 500, en çok 1000. Kilidin paylaşımlı hâlini bekler.
+- İkisi de yalnızca `authenticated` rolüne açıktır. pgTAP: `10_sync.test.sql` (60 test).
+
 ## 6. Depolama (Storage) bucket'ları
 
 | Bucket | Yol | Erişim |
 |---|---|---|
 | `audio-private` | `{uid}/{yyyy}/{mm}/{uuid}.{m4a,webm,wav}` | Yalnız sahip (yol öneki = `auth.uid()`) |
 | `subtitles-private` | `{uid}/{uuid}.srt` | Yalnız sahip |
-| `packs` | `{pack_id}.sqlite` | Kimliği doğrulanmış okur |
+| `packs` | `{pack_id}.sqlite`, `{pack_id}.LICENSES.md` | Kimliği doğrulanmış okur |
 | `pack-audio` | `{l2}/{version}/{voice}/{hash}.mp3` | Kimliği doğrulanmış okur |
 | `tts-cache` | `{hash}.mp3` | Kimliği doğrulanmış okur, servis rolü yazar |
 | `backups` | `{tarih}/…` | Yalnız servis rolü |
 
 Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok altındadır.
+
+`audio-private` F1-21 göçünde açıldı: dosya başına en çok 10 MB, yalnızca ses türleri (`audio/mp4`, `audio/aac`, `audio/wav`, `audio/webm`, `audio/ogg`). Okuma, ekleme, değiştirme ve silme yolun ilk klasörü `auth.uid()` ise serbesttir.
+
+F1-22'den beri aylık test ve başlangıç kayıtlarının sesi senkrondan sonra yüklenir (`RecordingFiles`). Görev kayıtlarının sesi cihazda kalır: onay metnindeki 30 günlük silme sunucuda F3-08'de kurulacak.
 
 ## 7. Zamanlanmış işler (pg_cron → pg_net → `ops`)
 
@@ -371,7 +424,7 @@ Dosya boyutu sınırı: ücretsiz planda 50 MB. Uygulama kayıtları bunun çok 
 
 ## 8. Yerel veritabanı (drift) aynası
 
-Kod: `app/lib/data/db/` (şema v1, F0-05).
+Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `content_reports`).
 
 - **Kullanıcı tabloları:** Sunucuda senkronlanan 13 tablonun aynısı (§2.2–2.4 ile `profiles`, `courses`; aynı sütun adları, `server_seq` dahil) + `pending_push boolean`.
   - Yerelde `server_seq` sunucu atayana kadar `null`dır.
@@ -382,8 +435,29 @@ Kod: `app/lib/data/db/` (şema v1, F0-05).
 - **`outbox`:** `id` (artan), `target_table`, `row_id`, `op` (`insert` olay / `upsert` durum), `created_at`, `attempts`, `next_attempt_at`, `last_error` (yalnızca hata kodu).
   - Kayıt yalnızca satırı adlandırır. Push satırın o anki hâlini okur, aynı durum satırının birden çok güncellemesi tek gönderime iner.
   - Push yalnızca okuduğu kayıtları siler. Böylece gönderim sırasında gelen yeni yazmalar kaybolmaz.
+  - `upload` kaydı satırı değil kaydın sesini adlandırır. Onu senkron değil `RecordingFiles` işler (F1-22).
   - Gönderilemeyenler üstel geri çekilmeyle tekrar denenir.
+  - Senkron v1'in taşıdığı tablolar (`SyncRows`, `data/sync/sync_rows.dart`): profil, kurs, kişisel öğe, kart, deneme, ek, yakalama, kayıt, değerlendirme, oturum, içerik bildirimi. Yazılar, medya günlüğü ve altyazılar kendi fazlarıyla gelir; kayıtları outbox'ta bekler.
+  - Satırlar drift'in sütun bilgisinden çevrilir: zamanlar UTC ISO-8601, JSON sütunları JSON olarak gider. `server_seq` ve `pending_push` gönderilmez.
 - **`sync_state`:** profil başına son `server_seq` imleci (`last_server_seq`) ve son başarılı senkron (`last_sync_at`).
-- **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
+- **`sessions` (F1-18):** Kart oturumu bitince ya da bırakılınca tek satır yazılır. Satır olaydır: outbox'ta `insert` olarak durur. En az bir kart kaydedilmediyse satır yazılmaz.
+  - `strand_ms` anahtarları `Strand.code`'dur. `active_ms` kol sürelerinin toplamıdır; kart başına en çok 3 dk sayılır.
+  - `planned` = `{reviews, new, estimate_ms}`, `done` = `{reviewed, introduced}`.
+  - Bugün ekranı günün süresini ve haftanın çalışılan günlerini buradan okur. Gün yerel gece yarısında, hafta pazartesi başlar.
+- **Konuşma görevleri (F1-19):**
+  - **`recordings`:** Kayıt biter bitmez satır açılır.
+    - **Ses yolu:** `audio_path`, sesin sunucudaki yoludur (§6; `{uid}/{yyyy}/{mm}/{id}.{ext}`, ay UTC). Cihazdaki dosya aynı adla uygulama destek klasöründe `recordings/` altında durur (`RecordingStore.find`). F1-22'den önceki kayıtlarda cihazdaki tam yol kalmıştır; bulucu ikisini de tanır.
+    - **Yükleme:** Aylık test ve başlangıç kayıtlarının sesi outbox'a `upload` kaydıyla düşer ve senkrondan sonra yüklenir. Başka cihazda yapılmış bir kayıt dinlenirken sunucudan indirilir ve saklanır.
+    - Sonra sırayla dolar: `asr` (`{provider, model, words: [{w, start_ms, end_ms, conf}]}`), `annotation` (`{runs: [rota cevabı], merged: işaretleme}`), `outcome`, `metrics` (`SpeechMetrics`) ve en son `attempt_id`.
+    - Durum satırıdır: her değişiklik outbox'a `upsert` olarak düşer.
+  - **`attempts`:** Görev denemesinde:
+    - `prompt` = `{prompt_l1}`, `response` = `{source: 'asr', recording_id, text?, asr?: {provider, model}}`
+    - `error_tags` işaretlemedeki etiketlerdir, her biri bir kez. `duration_ms` kaydın süresidir.
+    - `llm` = `{route: 'speaking_annotate', pending, provider?, model?, catalog?, code?}`
+  - **Pratik denemeleri:** `prompt` = `{original, reference, tag}`, `response` = `{text, source}`. Önceki denemeye `parent_attempt_id` ile bağlıdır.
+  - **`personal_items`:** `source = task_correction`.
+- **Aylık konuşma kaydı (F1-19):** `assessments.kind = monthly_speaking`, `results` = `{month: 'YYYY-MM' (yerel), baseline, complete, tasks: [{task_ref, recording_id, anchor, metrics, clauses, error_free}]}`. Test bitince ya da bırakılınca bir kez yazılır. Kayıtları `is_assessment = true` ve `assessment_id` taşır. `recordings` ve `assessments` satırlarının zamanı uygulamanın saatinden gelir.
+- **`devices`:** bu kurulumun kimliği. Profil başına ilk kullanımda bir satır açılır; her deneme onu `device_id` olarak taşır. Sunucudaki `devices` satırını `sync_push` her gönderimde kendisi yazar (platform, son senkron); yerel tablo çekilmez.
+- **İçerik tabloları:** `content_packs`, `content_items`, `content_links`, `content_forms`, `content_texts`, `content_tasks`, `content_pair_entries` (karşılık, karşıtlık notu, hata etiketi, varyant, can-do özeti, görev yönergesi, öğrenme notu). Salt okunurdur ve paket SQLite dosyasından atomik olarak aktarılır (`11` §5). `content_packs.manifest`, paketin `pack_meta` tablosunun tamamıdır. Türe özgü alanlar `data` JSON sütunundadır, böylece paket biçimine eklemeler migrasyon gerektirmez.
 - **Türetilmiş önbellekler** (`model_snapshot`, `coverage_cache`): motorun ara sonuçları. Silinirse yeniden hesaplanır. İlk ihtiyaç duyan görevde eklenir.
 - **drift migrasyonları** şema sürümüyle ilerler. Her sürüm artışında `dart run drift_dev make-migrations` çalıştırılır: anlık görüntü `app/drift_schemas/` altına, doğrulama yardımcıları `app/test/drift/` altına üretilir ve her geçiş için bir yükseltme testi yazılır. `migration_test.dart`, koddaki şemanın dışa aktarılan son anlık görüntüyle aynı olduğunu denetler.

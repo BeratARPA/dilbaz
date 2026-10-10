@@ -1,0 +1,24 @@
+# tr-en@1: the Turkish-English pair pack (docs/11-language-packs.md §3).
+#
+# `dilbaz-content build` (S9) adds counts, created_at and the checksum of the
+# built file (build/tr-en@1.manifest.json).
+
+id: tr-en@1
+kind: pair
+l2: en
+l1: tr
+version: 1
+min_engine_version: 2
+level_scheme: CEFR
+sources:
+  - name: Dilbaz content curation
+    license: own
+    attribution: >-
+      Turkish meanings, prompts, answer variants, rule notes, contrast notes and the error
+      catalogue of the Dilbaz content pipeline, independently reviewed.
+  - name: Tatoeba
+    version: weekly export
+    license: CC BY 2.0 FR
+    attribution: >-
+      Turkish translations from Tatoeba (https://tatoeba.org); the translator of each
+      prompt is recorded with it.

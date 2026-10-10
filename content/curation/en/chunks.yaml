@@ -1,0 +1,150 @@
+# S2 conversation bag for en@1: 120 phrases learned as wholes (docs/02-curriculum.md §9).
+#
+# Chosen for A0-A2 everyday conversation, with NGSL-Spoken vocabulary; drafted
+# in a Claude Code session (ADR-0009) and reviewed by the users. Turkish
+# meanings and notes on typical Turkish-speaker errors go into the tr-en pack
+# (S5). `note` holds an English usage note where one helps.
+
+# greetings and goodbyes
+- {text: "Hello.", level: A0, function: greeting}
+- {text: "Hi.", level: A0, function: greeting}
+- {text: "Good morning.", level: A0, function: greeting}
+- {text: "Good evening.", level: A0, function: greeting}
+- {text: "How are you?", level: A0, function: greeting}
+- {text: "I'm fine, thanks.", level: A0, function: greeting}
+- {text: "And you?", level: A0, function: greeting}
+- {text: "How's it going?", level: A1, function: greeting, note: "informal"}
+- {text: "Nice to meet you.", level: A0, function: greeting}
+- {text: "See you later.", level: A0, function: goodbye}
+- {text: "See you tomorrow.", level: A0, function: goodbye}
+- {text: "Bye.", level: A0, function: goodbye}
+- {text: "Good night.", level: A0, function: goodbye, note: "only when you leave or go to bed, not as a greeting"}
+- {text: "Have a nice day.", level: A1, function: goodbye}
+- {text: "Take care.", level: A1, function: goodbye}
+
+# politeness
+- {text: "Please.", level: A0, function: politeness}
+- {text: "Thank you.", level: A0, function: politeness}
+- {text: "You're welcome.", level: A0, function: politeness, note: "the answer to Thank you"}
+- {text: "I'm sorry.", level: A0, function: politeness}
+- {text: "Excuse me.", level: A0, function: politeness, note: "to get attention or to pass someone"}
+- {text: "No problem.", level: A0, function: politeness}
+- {text: "That's OK.", level: A0, function: politeness}
+- {text: "Don't worry.", level: A1, function: politeness}
+- {text: "Never mind.", level: A2, function: politeness}
+
+# when you do not understand
+- {text: "Sorry?", level: A0, function: clarification, note: "asks someone to repeat"}
+- {text: "Can you say that again, please?", level: A1, function: clarification}
+- {text: "Can you speak more slowly, please?", level: A1, function: clarification}
+- {text: "I don't understand.", level: A0, function: clarification}
+- {text: "I don't know.", level: A0, function: clarification}
+- {text: "What does it mean?", level: A1, function: clarification}
+- {text: "What does this word mean?", level: A1, function: clarification}
+- {text: "How do you say it in English?", level: A1, function: clarification}
+- {text: "How do you spell it?", level: A1, function: clarification}
+- {text: "What do you mean?", level: A2, function: clarification}
+- {text: "I'm not sure.", level: A1, function: clarification}
+- {text: "Let me think.", level: A1, function: clarification}
+- {text: "Just a moment.", level: A1, function: clarification}
+
+# reactions and agreement
+- {text: "Yes, of course.", level: A0, function: reaction}
+- {text: "Sure.", level: A1, function: reaction}
+- {text: "Me too.", level: A0, function: reaction}
+- {text: "Me neither.", level: A2, function: reaction, note: "agrees with a negative sentence"}
+- {text: "I think so.", level: A1, function: reaction}
+- {text: "I don't think so.", level: A1, function: reaction}
+- {text: "That's right.", level: A1, function: reaction}
+- {text: "Really?", level: A0, function: reaction}
+- {text: "Great!", level: A0, function: reaction}
+- {text: "That's a good idea.", level: A1, function: reaction}
+- {text: "I agree.", level: A1, function: reaction, note: "agree is a verb: not 'I am agree'"}
+- {text: "I don't agree.", level: A2, function: reaction}
+- {text: "It depends.", level: A2, function: reaction}
+- {text: "Maybe.", level: A0, function: reaction}
+- {text: "Why not?", level: A1, function: reaction}
+- {text: "Of course not.", level: A2, function: reaction}
+- {text: "Well done!", level: A1, function: reaction}
+- {text: "Good luck!", level: A1, function: reaction}
+- {text: "That sounds good.", level: A2, function: reaction}
+
+# opinions and feelings
+- {text: "I like it.", level: A0, function: opinion}
+- {text: "I don't like it.", level: A0, function: opinion}
+- {text: "I love it.", level: A0, function: opinion}
+- {text: "I think it's great.", level: A1, function: opinion}
+- {text: "In my opinion", level: A2, function: opinion}
+- {text: "I'm tired.", level: A0, function: feeling}
+- {text: "I'm hungry.", level: A0, function: feeling}
+- {text: "I'm cold.", level: A0, function: feeling}
+- {text: "I'm bored.", level: A1, function: feeling}
+
+# about yourself
+- {text: "What's your name?", level: A0, function: personal}
+- {text: "My name is", level: A0, function: personal}
+- {text: "Where are you from?", level: A0, function: personal}
+- {text: "I'm from Turkey.", level: A0, function: personal}
+- {text: "Where do you live?", level: A0, function: personal}
+- {text: "I live in Istanbul.", level: A0, function: personal}
+- {text: "What do you do?", level: A1, function: personal, note: "asks about someone's job"}
+- {text: "I work in an office.", level: A1, function: personal}
+- {text: "How old are you?", level: A0, function: personal, note: "not 'How many years are you?'"}
+- {text: "I'm thirty years old.", level: A0, function: personal}
+- {text: "Are you married?", level: A1, function: personal}
+- {text: "Do you have any children?", level: A1, function: personal}
+
+# requests, offers and suggestions
+- {text: "Can I have a coffee, please?", level: A1, function: request}
+- {text: "Could you help me?", level: A1, function: request}
+- {text: "I'd like a glass of water.", level: A1, function: request}
+- {text: "Can you give me a hand?", level: A2, function: request, note: "asks for help"}
+- {text: "Would you like some tea?", level: A1, function: offer}
+- {text: "Here you are.", level: A1, function: offer, note: "said when you give something to someone"}
+- {text: "Can I help you?", level: A1, function: offer}
+- {text: "Let's go.", level: A1, function: suggestion}
+- {text: "How about tomorrow?", level: A2, function: suggestion}
+- {text: "What about you?", level: A1, function: suggestion}
+- {text: "Do you want to come?", level: A1, function: suggestion}
+
+# time and plans
+- {text: "What time is it?", level: A0, function: time}
+- {text: "It's five o'clock.", level: A0, function: time}
+- {text: "What day is it today?", level: A1, function: time}
+- {text: "What are you doing tonight?", level: A1, function: plans}
+- {text: "Are you free on Saturday?", level: A1, function: plans}
+- {text: "I'm busy right now.", level: A1, function: plans}
+- {text: "I'll be there in ten minutes.", level: A2, function: plans}
+
+# shopping and eating out
+- {text: "How much is it?", level: A0, function: shopping}
+- {text: "How much does it cost?", level: A1, function: shopping}
+- {text: "I'll take it.", level: A2, function: shopping}
+- {text: "Can I pay by card?", level: A1, function: shopping}
+- {text: "The bill, please.", level: A1, function: shopping}
+- {text: "I'm just looking.", level: A2, function: shopping}
+- {text: "A table for two, please.", level: A1, function: shopping}
+- {text: "Can I see the menu?", level: A1, function: shopping}
+
+# directions
+- {text: "Where is the station?", level: A0, function: directions}
+- {text: "Is it far?", level: A1, function: directions}
+- {text: "Go straight on.", level: A1, function: directions}
+- {text: "Turn left.", level: A1, function: directions}
+- {text: "Turn right.", level: A1, function: directions}
+- {text: "How do I get to the airport?", level: A2, function: directions}
+
+# keeping a conversation going
+- {text: "How was your day?", level: A1, function: conversation}
+- {text: "What happened?", level: A1, function: conversation}
+- {text: "By the way", level: A2, function: conversation}
+- {text: "You know", level: A2, function: conversation, note: "filler while you think"}
+- {text: "I mean", level: A2, function: conversation, note: "to explain or correct what you said"}
+- {text: "Guess what?", level: A2, function: conversation}
+
+# problems
+- {text: "I have a problem.", level: A1, function: problem, note: "problem needs a: not 'I have problem'"}
+- {text: "It doesn't work.", level: A1, function: problem}
+- {text: "I need help.", level: A1, function: problem}
+- {text: "I'm lost.", level: A1, function: problem}
+- {text: "I don't feel well.", level: A1, function: problem}

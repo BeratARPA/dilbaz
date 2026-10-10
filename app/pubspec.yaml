@@ -1,12 +1,13 @@
 name: dilbaz_app
 description: Dilbaz language learning app (Android, Windows, web).
 publish_to: none
-version: 0.1.0+1
+version: 0.1.3+4
 
 environment:
   sdk: ^3.13.0
 
 dependencies:
+  crypto: 3.0.7
   dilbaz_engine:
     path: ../packages/engine
   drift: ^2.35.0
@@ -21,14 +22,19 @@ dependencies:
   freezed_annotation: ^3.1.0
   go_router: ^18.0.1
   home_widget: ^0.10.0
+  http: 1.6.0
   intl: any
   json_annotation: ^4.12.0
   just_audio: ^0.10.6
+  path_provider: ^2.1.6
   permission_handler: ^13.0.2
   record: ^7.1.1
   riverpod_annotation: ^4.0.7
   share_handler: ^0.0.25
+  share_plus: ^13.3.1
+  speech_to_text: 7.5.0
   supabase_flutter: ^2.17.2
+  timezone: ^0.11.1
   uuid: ^4.6.0
 
 dev_dependencies:
@@ -37,7 +43,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^4.0.2
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.14.1
+  plugin_platform_interface: ^2.1.8
   riverpod_generator: ^4.0.9
   very_good_analysis: ^11.0.0
 

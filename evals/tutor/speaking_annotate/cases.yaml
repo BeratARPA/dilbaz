@@ -1,0 +1,327 @@
+# speaking_annotate gold set v1 (docs/07-ai-tutor.md §8): 30 transcripts of
+# A1–A2 speaking tasks as speech recognition writes them (lowercase, no
+# punctuation, hesitations kept), with the errors a careful annotator marks.
+#
+# task: an id of content/curation/en/tasks.yaml; the prompt and goal come
+#   from the curation, so the cases ask what the app asks.
+# errors: the error's words, quoted from `said` (the n-th occurrence with
+#   `nth`), and its tag. For a missing word the quote takes the words on
+#   both sides of the gap. A model's mark counts when it overlaps the span.
+# clauses / error_free: how many clauses, and how many of them without an
+#   error; their ratio is the gold EFC.
+# outcome: done | partial | not_done against the task's goal.
+#
+# Only errors that are clearly wrong in standard English are gold; what a
+# careful annotator could leave unmarked is not in the set. Transcripts must
+# not repeat the prompt's examples (cases_test.ts). Written in a Claude Code
+# session; blind check in validation.jsonl.
+
+- id: sa01
+  level: A1
+  task: daily_routine
+  said: "every day i wake up at six thirty i take a shower and i drink tea then i go to school my school is near my house i have lunch at twelve in the evening i watch tv and i sleep at eleven"
+  errors: []
+  clauses: 8
+  error_free: 8
+  outcome: done
+
+- id: sa02
+  level: A1
+  task: family
+  said: "in my family there are four people my father is a teacher he work in a school my mother is housewife my sister she is student she live in ankara"
+  errors:
+    - { words: "work", tag: agr.3sg_s }
+    - { words: "is housewife", tag: art.missing }
+    - { words: "is student", tag: art.missing }
+    - { words: "live", tag: agr.3sg_s }
+  clauses: 6
+  error_free: 2
+  outcome: done
+
+- id: sa03
+  level: A1
+  task: home
+  said: "my house uh have three room there is a big kitchen"
+  errors:
+    - { words: "have", tag: agr.3sg_s }
+    - { words: "room", tag: pl.missing }
+  clauses: 2
+  error_free: 1
+  outcome: partial
+
+- id: sa04
+  level: A1
+  task: favorite_food
+  said: "my favorite food is manti i very like manti my mother makes it on sundays i eat it with yogurt because it is delicious"
+  errors:
+    - { words: "very like", tag: lex.very_much }
+  clauses: 5
+  error_free: 4
+  outcome: done
+
+- id: sa05
+  level: A1
+  task: cafe_order
+  said: "hello give me coffee and cake how much it is the bill please"
+  errors:
+    - { words: "give me coffee and cake", tag: prag.too_direct }
+    - { words: "it is", tag: wo.question }
+  clauses: 4
+  error_free: 2
+  outcome: done
+
+- id: sa06
+  level: A1
+  task: free_time
+  said: "in my free time i am reading books and i am playing football with my friends every weekend we are going to the park"
+  errors:
+    - { words: "am reading", tag: tense.simple_continuous }
+    - { words: "am playing", tag: tense.simple_continuous }
+    - { words: "are going", tag: tense.simple_continuous }
+  clauses: 3
+  error_free: 0
+  outcome: done
+
+- id: sa07
+  level: A1
+  task: best_friend
+  said: "my best friend is ayse she is thirty years old he is a nurse we often go to the cinema together"
+  errors:
+    - { words: "he", tag: pron.he_she }
+  clauses: 4
+  error_free: 3
+  outcome: done
+
+- id: sa08
+  level: A1
+  task: weekends
+  said: "on the weekend i sleep late on saturday morning i go to the market in sunday i visit my parents"
+  errors:
+    - { words: "in sunday", tag: prep.in_on_at }
+  clauses: 3
+  error_free: 2
+  outcome: done
+
+- id: sa09
+  level: A1
+  task: my_city
+  said: "i live in izmir in izmir have a lot of beaches and the people are friendly i like it because the weather is warm"
+  errors:
+    - { words: "in izmir have", tag: exist.there_have }
+  clauses: 5
+  error_free: 4
+  outcome: done
+
+- id: sa10
+  level: A1
+  task: shopping
+  said: "i need to buy uh bread and milk and shay yani eggs"
+  errors: []
+  clauses: 1
+  error_free: 1
+  outcome: partial
+
+- id: sa11
+  level: A1
+  task: daily_routine
+  said: "uh i don't know uh english is difficult sorry"
+  errors: []
+  clauses: 3
+  error_free: 3
+  outcome: not_done
+
+- id: sa12
+  level: A1
+  task: family
+  said: "i have two brother and one sister my brothers are students my sister is married his husband is a doctor they live in bursa"
+  errors:
+    - { words: "brother", tag: pl.missing }
+    - { words: "his", tag: poss.form }
+  clauses: 5
+  error_free: 3
+  outcome: done
+
+- id: sa13
+  level: A1
+  task: home
+  said: "my apartment small it has two rooms in the living room there is a sofa and a tv my favorite place my balcony"
+  errors:
+    - { words: "apartment small", tag: be.missing }
+    - { words: "place my", tag: be.missing }
+  clauses: 4
+  error_free: 2
+  outcome: done
+
+- id: sa14
+  level: A1
+  task: cafe_order
+  said: "can i have a tea please and a sandwich thank you"
+  errors: []
+  clauses: 2
+  error_free: 2
+  outcome: partial
+
+- id: sa15
+  level: A2
+  task: last_holiday
+  said: "last summer i go i went to antalya with my family we stayed in a hotel near the sea every day we swim and we eat fish it was really nice"
+  errors:
+    - { words: "swim", tag: tense.past_missing }
+    - { words: "eat", tag: tense.past_missing }
+  clauses: 5
+  error_free: 3
+  outcome: done
+
+- id: sa16
+  level: A2
+  task: weekend_plans
+  said: "this weekend i am going to visit my grandmother on saturday we will to cook together and on sunday i will go to cinema with my friends if the weather is nice we will walk by the sea"
+  errors:
+    - { words: "will to", tag: tense.future }
+    - { words: "to cinema", tag: art.missing }
+  clauses: 5
+  error_free: 3
+  outcome: done
+
+- id: sa17
+  level: A2
+  task: directions
+  said: "from my house go straight on for two hundred meters then turn left at the pharmacy the bus stop is next to the bank it takes five minutes"
+  errors: []
+  clauses: 4
+  error_free: 4
+  outcome: done
+
+- id: sa18
+  level: A2
+  task: return_item
+  said: "excuse me i bought these headphones last week but they doesn't work"
+  errors:
+    - { words: "doesn't", tag: agr.3sg_s }
+  clauses: 3
+  error_free: 2
+  outcome: partial
+
+- id: sa19
+  level: A2
+  task: describe_friend
+  said: "my friend deniz has long black hair and green eyes she is very funny and kind she always helps me i am like her because she is honest"
+  errors:
+    - { words: "am like", tag: be.extra }
+  clauses: 5
+  error_free: 4
+  outcome: done
+
+- id: sa20
+  level: A2
+  task: childhood
+  said: "when i was a child i lived in a small village i used to play with my friends in the fields we didn't had a tv my favorite game was hide and seek"
+  errors:
+    - { words: "didn't had", tag: tense.past_form }
+  clauses: 5
+  error_free: 4
+  outcome: done
+
+- id: sa21
+  level: A2
+  task: recent_movie
+  said: "last week i looked a movie on netflix it's about a family in italy they open a restaurant i liked it because the story is funny and the actors are very good"
+  errors:
+    - { words: "looked", tag: lex.see_look_watch }
+  clauses: 6
+  error_free: 5
+  outcome: done
+
+- id: sa22
+  level: A2
+  task: compare_cities
+  said: "ankara is smaller than istanbul but istanbul is more beautiful istanbul has much people and the traffic is terrible i prefer ankara because life is more cheap there"
+  errors:
+    - { words: "much", tag: quant.much_many }
+    - { words: "more cheap", tag: comp.form }
+  clauses: 6
+  error_free: 4
+  outcome: done
+
+- id: sa23
+  level: A2
+  task: restaurant_problem
+  said: "excuse me i'm sorry but i didn't order this i ordered the chicken salad could you change it please"
+  errors: []
+  clauses: 5
+  error_free: 5
+  outcome: done
+
+- id: sa24
+  level: A2
+  task: learning_english
+  said: "i am learning english because i want to work abroad i enjoy to watch videos and i make exercises every day for me speaking is difficult but listening is easy"
+  errors:
+    - { words: "enjoy to watch", tag: verb.pattern }
+    - { words: "make", tag: lex.make_do }
+  clauses: 6
+  error_free: 4
+  outcome: done
+
+- id: sa25
+  level: A1
+  task: anc_1
+  said: "hi my name is emre i am twenty eight years i am a software developer i live in istanbul with my wife i like music and i love cats"
+  errors:
+    - { words: "twenty eight years", tag: age.form }
+  clauses: 7
+  error_free: 6
+  outcome: done
+
+- id: sa26
+  level: A1
+  task: anc_2
+  said: "yesterday i go to work i work all day uh in the evening i am tired i watch tv"
+  errors:
+    - { words: "go", tag: tense.past_missing }
+    - { words: "work", nth: 2, tag: tense.past_missing }
+    - { words: "am tired", tag: tense.past_missing }
+    - { words: "watch", tag: tense.past_missing }
+  clauses: 4
+  error_free: 0
+  outcome: done
+
+- id: sa27
+  level: A2
+  task: anc_3
+  said: "last month my laptop broke i couldn't work for two days so i called the shop they said me it takes one week then i borrowed my brother's laptop and i finished my project"
+  errors:
+    - { words: "said me", tag: lex.say_tell }
+  clauses: 7
+  error_free: 6
+  outcome: done
+
+- id: sa28
+  level: A1
+  task: anc_3
+  said: "problem uh yes my phone uh broken"
+  errors:
+    - { words: "phone uh broken", tag: be.missing }
+  # "problem" and "yes" lead into the one clause (blind check).
+  clauses: 1
+  error_free: 0
+  outcome: partial
+
+- id: sa29
+  level: A2
+  task: weekend_plans
+  said: "last weekend i went to my friend's house we played games and we ate pizza it was fun"
+  errors: []
+  clauses: 4
+  error_free: 4
+  outcome: not_done
+
+- id: sa30
+  level: A2
+  task: directions
+  said: "you go straight and uh you turn the left the market is on the right side i think it is not far"
+  errors:
+    - { words: "the left", tag: art.extra }
+  clauses: 5
+  error_free: 4
+  outcome: done

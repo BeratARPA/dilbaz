@@ -1,6 +1,6 @@
 # ADR-0008 — İçerik hattı: Python araçları ve versiyonlu SQLite paketleri
 
-- **Durum:** Kabul edildi (2026-09-26)
+- **Durum:** Kabul edildi (2026-09-26). **ADR-0009 ile kısmen değiştirildi:** LLM üretimi ve doğrulaması Batch API yerine Claude Code oturumlarında yapılır; paket sesleri Kokoro ile üretilir.
 
 ## Bağlam
 Her seviye için binlerce doğrulanmış öğe, ses, metin ve görev gerekiyor. Kaynakların lisansı temiz olmalı. İçerik dilden bağımsız paket formatında dağıtılmalı.

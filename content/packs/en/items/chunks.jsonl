@@ -1,0 +1,120 @@
+{"key":"en.chunk.hello","text":"Hello.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.hi","text":"Hi.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_morning","text":"Good morning.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_evening","text":"Good evening.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_are_you","text":"How are you?","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_fine_thanks","text":"I'm fine, thanks.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.and_you","text":"And you?","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_s_it_going","text":"How's it going?","level":"A1","function":"greeting","note":"informal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.nice_to_meet_you","text":"Nice to meet you.","level":"A0","function":"greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.see_you_later","text":"See you later.","level":"A0","function":"goodbye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.see_you_tomorrow","text":"See you tomorrow.","level":"A0","function":"goodbye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.bye","text":"Bye.","level":"A0","function":"goodbye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_night","text":"Good night.","level":"A0","function":"goodbye","note":"only when you leave or go to bed, not as a greeting","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.have_a_nice_day","text":"Have a nice day.","level":"A1","function":"goodbye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.take_care","text":"Take care.","level":"A1","function":"goodbye","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.please","text":"Please.","level":"A0","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.thank_you","text":"Thank you.","level":"A0","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.you_re_welcome","text":"You're welcome.","level":"A0","function":"politeness","note":"the answer to Thank you","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_sorry","text":"I'm sorry.","level":"A0","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.excuse_me","text":"Excuse me.","level":"A0","function":"politeness","note":"to get attention or to pass someone","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.no_problem","text":"No problem.","level":"A0","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_ok","text":"That's OK.","level":"A0","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.don_t_worry","text":"Don't worry.","level":"A1","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.never_mind","text":"Never mind.","level":"A2","function":"politeness","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.sorry","text":"Sorry?","level":"A0","function":"clarification","note":"asks someone to repeat","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_say_that_again_please","text":"Can you say that again, please?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_speak_more_slowly_please","text":"Can you speak more slowly, please?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_understand","text":"I don't understand.","level":"A0","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_know","text":"I don't know.","level":"A0","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_does_it_mean","text":"What does it mean?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_does_this_word_mean","text":"What does this word mean?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_you_say_it_in_english","text":"How do you say it in English?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_you_spell_it","text":"How do you spell it?","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_do_you_mean","text":"What do you mean?","level":"A2","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_not_sure","text":"I'm not sure.","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.let_me_think","text":"Let me think.","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.just_a_moment","text":"Just a moment.","level":"A1","function":"clarification","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.yes_of_course","text":"Yes, of course.","level":"A0","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.sure","text":"Sure.","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.me_too","text":"Me too.","level":"A0","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.me_neither","text":"Me neither.","level":"A2","function":"reaction","note":"agrees with a negative sentence","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_think_so","text":"I think so.","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_think_so","text":"I don't think so.","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_right","text":"That's right.","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.really","text":"Really?","level":"A0","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.great","text":"Great!","level":"A0","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_s_a_good_idea","text":"That's a good idea.","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_agree","text":"I agree.","level":"A1","function":"reaction","note":"agree is a verb: not 'I am agree'","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_agree","text":"I don't agree.","level":"A2","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_depends","text":"It depends.","level":"A2","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.maybe","text":"Maybe.","level":"A0","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.why_not","text":"Why not?","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.of_course_not","text":"Of course not.","level":"A2","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.well_done","text":"Well done!","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.good_luck","text":"Good luck!","level":"A1","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.that_sounds_good","text":"That sounds good.","level":"A2","function":"reaction","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_like_it","text":"I like it.","level":"A0","function":"opinion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_like_it","text":"I don't like it.","level":"A0","function":"opinion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_love_it","text":"I love it.","level":"A0","function":"opinion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_think_it_s_great","text":"I think it's great.","level":"A1","function":"opinion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.in_my_opinion","text":"In my opinion","level":"A2","function":"opinion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_tired","text":"I'm tired.","level":"A0","function":"feeling","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_hungry","text":"I'm hungry.","level":"A0","function":"feeling","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_cold","text":"I'm cold.","level":"A0","function":"feeling","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_bored","text":"I'm bored.","level":"A1","function":"feeling","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_s_your_name","text":"What's your name?","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.my_name_is","text":"My name is","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_are_you_from","text":"Where are you from?","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_from_turkey","text":"I'm from Turkey.","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_do_you_live","text":"Where do you live?","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_live_in_istanbul","text":"I live in Istanbul.","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_do_you_do","text":"What do you do?","level":"A1","function":"personal","note":"asks about someone's job","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_work_in_an_office","text":"I work in an office.","level":"A1","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_old_are_you","text":"How old are you?","level":"A0","function":"personal","note":"not 'How many years are you?'","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_thirty_years_old","text":"I'm thirty years old.","level":"A0","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.are_you_married","text":"Are you married?","level":"A1","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.do_you_have_any_children","text":"Do you have any children?","level":"A1","function":"personal","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_have_a_coffee_please","text":"Can I have a coffee, please?","level":"A1","function":"request","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.could_you_help_me","text":"Could you help me?","level":"A1","function":"request","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_d_like_a_glass_of_water","text":"I'd like a glass of water.","level":"A1","function":"request","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_you_give_me_a_hand","text":"Can you give me a hand?","level":"A2","function":"request","note":"asks for help","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.would_you_like_some_tea","text":"Would you like some tea?","level":"A1","function":"offer","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.here_you_are","text":"Here you are.","level":"A1","function":"offer","note":"said when you give something to someone","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_help_you","text":"Can I help you?","level":"A1","function":"offer","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.let_s_go","text":"Let's go.","level":"A1","function":"suggestion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_about_tomorrow","text":"How about tomorrow?","level":"A2","function":"suggestion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_about_you","text":"What about you?","level":"A1","function":"suggestion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.do_you_want_to_come","text":"Do you want to come?","level":"A1","function":"suggestion","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_time_is_it","text":"What time is it?","level":"A0","function":"time","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_s_five_o_clock","text":"It's five o'clock.","level":"A0","function":"time","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_day_is_it_today","text":"What day is it today?","level":"A1","function":"time","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_are_you_doing_tonight","text":"What are you doing tonight?","level":"A1","function":"plans","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.are_you_free_on_saturday","text":"Are you free on Saturday?","level":"A1","function":"plans","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_busy_right_now","text":"I'm busy right now.","level":"A1","function":"plans","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_ll_be_there_in_ten_minutes","text":"I'll be there in ten minutes.","level":"A2","function":"plans","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_much_is_it","text":"How much is it?","level":"A0","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_much_does_it_cost","text":"How much does it cost?","level":"A1","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_ll_take_it","text":"I'll take it.","level":"A2","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_pay_by_card","text":"Can I pay by card?","level":"A1","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.the_bill_please","text":"The bill, please.","level":"A1","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_just_looking","text":"I'm just looking.","level":"A2","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.a_table_for_two_please","text":"A table for two, please.","level":"A1","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.can_i_see_the_menu","text":"Can I see the menu?","level":"A1","function":"shopping","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.where_is_the_station","text":"Where is the station?","level":"A0","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.is_it_far","text":"Is it far?","level":"A1","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.go_straight_on","text":"Go straight on.","level":"A1","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.turn_left","text":"Turn left.","level":"A1","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.turn_right","text":"Turn right.","level":"A1","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_do_i_get_to_the_airport","text":"How do I get to the airport?","level":"A2","function":"directions","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.how_was_your_day","text":"How was your day?","level":"A1","function":"conversation","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.what_happened","text":"What happened?","level":"A1","function":"conversation","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.by_the_way","text":"By the way","level":"A2","function":"conversation","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.you_know","text":"You know","level":"A2","function":"conversation","note":"filler while you think","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_mean","text":"I mean","level":"A2","function":"conversation","note":"to explain or correct what you said","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.guess_what","text":"Guess what?","level":"A2","function":"conversation","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_have_a_problem","text":"I have a problem.","level":"A1","function":"problem","note":"problem needs a: not 'I have problem'","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.it_doesn_t_work","text":"It doesn't work.","level":"A1","function":"problem","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_need_help","text":"I need help.","level":"A1","function":"problem","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_m_lost","text":"I'm lost.","level":"A1","function":"problem","provenance":{"source":"dilbaz curation","license":"own"}}
+{"key":"en.chunk.i_don_t_feel_well","text":"I don't feel well.","level":"A1","function":"problem","provenance":{"source":"dilbaz curation","license":"own"}}

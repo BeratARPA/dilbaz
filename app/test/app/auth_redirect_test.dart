@@ -32,6 +32,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip(trStrings.settingsTitle));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(trStrings.signOut));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(trStrings.signOut));
     await tester.pumpAndSettle();
 

@@ -1,0 +1,1919 @@
+# answer_check gold set v1 (docs/07-ai-tutor.md §8).
+#
+# Each case is a card of en@1/tr-en@1 and one learner answer that the
+# deterministic check does not match (docs/03 §0.5): only such answers reach
+# the LLM. `dilbaz-content eval-cases` fills in the prompt, the reference,
+# the listed answers, the target and the forms table from the packs and
+# writes cases.jsonl; it refuses an answer that a listed one matches.
+#
+#   card       item key: en.ws.* (word), en.chunk.* (set phrase), en.gp.* (grammar)
+#   sent       carrier sentence, without "en.sent." (not for chunks)
+#   say        the answer
+#   src        asr (default) or typed; conf: ASR confidence (default 0.9)
+#   expect     verdicts that count as right
+#   target_ok  gold target_ok; left out when either reading is fair
+#   tags       for error verdicts: the answer should carry at least one of them
+#   why        a short note
+#
+# Ids: n ASR noise · v variant · p Turkish "o" · t without the target ·
+# m error outside the target · f error in the target · s typed misspelling ·
+# w wrong · g grammar card · c set phrase · o off target · x fragment ·
+# u unintelligible · q misheard or unsure.
+#
+# Sentences of the prompt's examples are not used here.
+
+# --- ASR noise the normalization does not remove: not errors -------------
+
+- id: n13
+  card: en.ws.hospital.n.1
+  sent: i_m_going_to_the_hospital
+  say: "i'm i'm going to the hospital"
+  expect: [correct]
+  target_ok: true
+- id: n16
+  card: en.ws.see.v.1
+  sent: i_saw_a_bear_yesterday
+  say: "i see i saw a bear yesterday"
+  expect: [correct, acceptable_variant]
+  target_ok: true
+  why: Öğrenci kendini düzeltmiş; son söylediği doğru.
+- id: n19
+  card: en.ws.problem.n.1
+  sent: i_have_the_same_problem
+  say: "i have the same the same problem"
+  expect: [correct]
+  target_ok: true
+
+# --- Variants not in the lists (I-17) --------------------------------------
+
+- id: v01
+  card: en.ws.milk.n.1
+  sent: i_drink_milk_every_morning
+  say: Every morning I drink some milk.
+  src: typed
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v02
+  card: en.ws.egg.n.1
+  sent: i_eat_eggs_for_breakfast
+  say: At breakfast I eat eggs.
+  src: typed
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v03
+  card: en.ws.tea.n.1
+  sent: this_tea_is_very_hot
+  say: "this tea is so hot"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v04
+  card: en.ws.bread.n.1
+  sent: don_t_forget_to_buy_bread
+  say: Remember to buy bread!
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v05
+  card: en.ws.chicken.n.1
+  sent: i_eat_chicken_every_day
+  say: "i eat chicken daily"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v06
+  card: en.ws.meat.n.1
+  sent: i_don_t_eat_red_meat
+  say: "i never eat red meat"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v07
+  card: en.ws.fish.n.1
+  sent: do_you_like_eating_fish
+  say: Do you enjoy fish?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v08
+  card: en.ws.rice.n.1
+  sent: i_don_t_eat_rice_every_day
+  say: "i don't eat rice every single day"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v09
+  card: en.ws.cake.n.1
+  sent: have_a_little_of_this_cake
+  say: Try a little of this cake.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v10
+  card: en.ws.glass.n.1
+  sent: can_i_have_a_glass_of_water
+  say: "could i please have a glass of water"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v11
+  card: en.ws.kitchen.n.1
+  sent: let_s_go_to_the_kitchen
+  say: "come on let's go to the kitchen"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v12
+  card: en.ws.chair.n.1
+  sent: you_re_sitting_in_my_chair
+  say: "hey you're sitting in my chair"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v13
+  card: en.ws.window.n.1
+  sent: don_t_leave_the_windows_open
+  say: Don't keep the windows open.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v14
+  card: en.ws.tuesday.n.1
+  sent: do_you_have_time_on_tuesday
+  say: "have you got any time on tuesday"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v15
+  card: en.ws.movie.n.1
+  sent: on_thursdays_we_go_to_the_movies
+  say: Every Thursday we go to the movies.
+  src: typed
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v16
+  card: en.ws.saturday.n.1
+  sent: i_can_t_go_on_saturday
+  say: "i won't be able to go on saturday"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v17
+  card: en.ws.afternoon.n.1
+  sent: i_have_lessons_in_the_afternoon
+  say: "i've got some lessons in the afternoon"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v18
+  card: en.ws.home.n.1
+  sent: i_was_at_home_yesterday
+  say: Yesterday I stayed at home.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v19
+  card: en.ws.holiday.n.1
+  sent: i_had_a_good_holiday
+  say: "i had a great holiday"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v20
+  card: en.ws.weather.n.1
+  sent: how_s_the_weather_out_there
+  say: "how is the weather outside"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v21
+  card: en.ws.cold.n.1
+  sent: i_have_a_cold_now
+  say: I've caught a cold.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v22
+  card: en.ws.restaurant.n.1
+  sent: when_does_the_restaurant_open
+  say: "when will the restaurant open"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v23
+  card: en.ws.airport.n.1
+  sent: i_m_going_to_the_airport
+  say: "i'm on my way to the airport"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v24
+  card: en.ws.ticket.n.1
+  sent: do_you_have_the_tickets
+  say: Have you got the tickets on you?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v25
+  card: en.ws.map.n.1
+  sent: i_d_like_a_city_map
+  say: "can i have a city map"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v26
+  card: en.ws.water.n.1
+  sent: can_i_have_a_glass_of_water
+  say: "can i get a glass of water please"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v27
+  card: en.chunk.do_you_have_any_children
+  say: Have you any children?
+  src: typed
+  expect: [acceptable_variant, correct]
+  target_ok: true
+  why: Eski İngiliz kullanımı ama doğru.
+- id: v28
+  card: en.chunk.i_work_in_an_office
+  say: "i work at an office"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v29
+  card: en.chunk.excuse_me
+  say: Excuse me, please.
+  src: typed
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v30
+  card: en.chunk.what_time_is_it
+  say: "what time is it please"
+  expect: [acceptable_variant, correct]
+  target_ok: true
+- id: v31
+  card: en.chunk.i_m_hungry
+  say: "i am hungry now"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v32
+  card: en.ws.shirt.n.1
+  sent: he_has_a_black_shirt
+  say: "he owns a black shirt"
+  expect: [acceptable_variant]
+  target_ok: true
+
+- id: v33
+  card: en.ws.coffee.n.1
+  sent: i_like_coffee
+  say: "i really like coffee"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v34
+  card: en.ws.bottle.n.1
+  sent: the_bottle_is_almost_full
+  say: "the bottle is almost full now"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v35
+  card: en.ws.door.n.1
+  sent: the_door_is_open_now
+  say: The door is open at the moment.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v36
+  card: en.ws.kid.n.1
+  sent: the_kids_are_playing_outside
+  say: "the kids are outside playing"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v37
+  card: en.ws.idea.n.1
+  sent: that_s_a_very_good_idea
+  say: What a good idea!
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v38
+  card: en.ws.friend.n.1
+  sent: we_re_very_good_friends
+  say: "we are really good friends"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v39
+  card: en.ws.sister.n.1
+  sent: do_you_have_a_sister
+  say: Do you have any sisters?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v40
+  card: en.ws.phone.n.1
+  sent: i_have_a_new_phone
+  say: "i got a new phone"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v41
+  card: en.ws.bed.n.1
+  sent: i_m_going_to_bed_now
+  say: "i'm heading to bed now"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v42
+  card: en.ws.hungry.adj.1
+  sent: i_m_starting_to_get_hungry
+  say: "i'm starting to feel a bit hungry"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v43
+  card: en.ws.book.n.1
+  sent: that_book_is_very_old
+  say: That's a very old book.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v44
+  card: en.ws.hair.n.1
+  sent: i_have_very_long_hair
+  say: "my hair is super long"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v45
+  card: en.ws.weekend.n.1
+  sent: are_you_free_this_weekend
+  say: "are you available this weekend"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v46
+  card: en.ws.hotel.n.1
+  sent: i_can_t_find_the_hotel
+  say: "i can't find my hotel"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v47
+  card: en.ws.bus.n.1
+  sent: where_can_i_catch_a_bus
+  say: Where can I get a bus?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+- id: v48
+  card: en.ws.party.n.1
+  sent: i_m_having_a_birthday_party
+  say: "i'm organizing a birthday party"
+  expect: [acceptable_variant]
+  target_ok: true
+
+# --- Turkish "o" and "-sı": any gender the prompt allows -------------------
+
+- id: p01
+  card: en.ws.husband.n.1
+  sent: her_husband_is_a_doctor
+  say: "his husband is a doctor"
+  expect: [acceptable_variant]
+  target_ok: true
+  why: '"Kocası": sahibi erkek de olabilir.'
+- id: p02
+  card: en.ws.name.n.1
+  sent: just_tell_me_her_name
+  say: Just tell me their name.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+  why: '"onun adı": cinsiyetsiz their da doğru.'
+- id: p03
+  card: en.ws.internet.n.1
+  sent: he_is_on_the_internet
+  say: "she's on the internet right now"
+  expect: [acceptable_variant]
+  target_ok: true
+- id: p04
+  card: en.ws.book.n.1
+  sent: give_her_the_book
+  say: Give them the book.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: true
+  why: '"ona" tekil; they cinsiyetsiz tekil olarak da kullanılır.'
+
+# --- Correct without the target: asked again, not an error (docs/03 §0.2) --
+
+- id: t01
+  card: en.ws.forget.v.1
+  sent: don_t_forget_to_buy_bread
+  say: Remember to buy bread!
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t02
+  card: en.ws.day.n.1
+  sent: i_eat_chicken_every_day
+  say: "i eat chicken daily"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t03
+  card: en.ws.have.v.1
+  sent: have_a_little_of_this_cake
+  say: Try a little of this cake.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t04
+  card: en.ws.leave.v.1
+  sent: don_t_leave_the_windows_open
+  say: Don't keep the windows open.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t05
+  card: en.ws.good.adj.1
+  sent: i_had_a_good_holiday
+  say: "i had a great holiday"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t06
+  card: en.ws.rain.n.1
+  sent: we_don_t_like_the_rain
+  say: "we don't like rainy weather"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t07
+  card: en.ws.warm.adj.1
+  sent: it_s_getting_warm_in_here
+  say: "it's getting hot in here"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t08
+  card: en.ws.difficult.adj.1
+  sent: it_s_too_difficult_for_me
+  say: This is too hard for me.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t09
+  card: en.ws.sick.adj.1
+  sent: i_m_too_sick_to_work
+  say: "i am so ill i can't work"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t10
+  card: en.ws.ride.v.1
+  sent: can_you_ride_a_bike
+  say: Can you cycle?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t11
+  card: en.ws.talk.v.1
+  sent: i_like_talking_to_people
+  say: "i like chatting with people"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t12
+  card: en.ws.start.v.1
+  sent: i_m_starting_to_get_hungry
+  say: "i'm slowly getting hungry"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t13
+  card: en.ws.get.v.1
+  sent: where_can_i_get_a_ticket
+  say: Where do I buy a ticket?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t14
+  card: en.ws.big.adj.1
+  sent: it_s_a_big_world
+  say: "the world is huge"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t15
+  card: en.ws.cold.adj.1
+  sent: the_house_is_too_cold
+  say: The house is freezing.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t16
+  card: en.ws.boring.adj.1
+  sent: i_have_a_boring_job
+  say: "my job is really dull"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t17
+  card: en.ws.expensive.adj.1
+  sent: i_think_that_s_too_expensive
+  say: I think that costs too much.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t18
+  card: en.ws.funny.adj.1
+  sent: i_don_t_think_that_s_funny
+  say: "i don't think that's amusing"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t19
+  card: en.ws.internet.n.1
+  sent: he_is_on_the_internet
+  say: "he's online"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t20
+  card: en.ws.get.v.1
+  sent: i_just_got_your_email
+  say: I've only just received your email.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t21
+  card: en.chunk.i_m_cold
+  say: "i feel so cold"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t22
+  card: en.chunk.nice_to_meet_you
+  say: "nice meeting you"
+  expect: [acceptable_variant, correct]
+
+- id: t23
+  card: en.ws.catch.v.1
+  sent: where_can_i_catch_a_bus
+  say: Where can I get a bus?
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t24
+  card: en.ws.have.v.1
+  sent: i_m_having_a_birthday_party
+  say: "i'm organizing a birthday party"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t25
+  card: en.ws.find.v.1
+  sent: i_can_t_find_the_hotel
+  say: "i don't know where the hotel is"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t26
+  card: en.ws.free.adj.2
+  sent: are_you_free_this_weekend
+  say: "are you available this weekend"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t27
+  card: en.ws.good.adj.1
+  sent: that_s_a_very_good_idea
+  say: "that's a great idea"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t28
+  card: en.ws.old.adj.1
+  sent: that_book_is_very_old
+  say: That book is ancient.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t29
+  card: en.ws.bed.n.1
+  sent: i_m_going_to_bed_now
+  say: "i'm off to sleep now"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t30
+  card: en.ws.almost.adv.1
+  sent: the_bottle_is_almost_full
+  say: The bottle is practically full.
+  src: typed
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t31
+  card: en.ws.really.adv.1
+  sent: the_water_is_really_dirty
+  say: "the water is so dirty"
+  expect: [acceptable_variant]
+  target_ok: false
+- id: t32
+  card: en.ws.very.adv.1
+  sent: this_tea_is_very_hot
+  say: "this tea is so hot"
+  expect: [acceptable_variant]
+  target_ok: false
+
+# --- A small error outside the target: the card's word is right ------------
+
+- id: m01
+  card: en.ws.strong.adj.1
+  sent: this_coffee_is_too_strong
+  say: "this coffee too strong"
+  expect: [minor_error]
+  target_ok: true
+  tags: [be.missing]
+- id: m02
+  card: en.ws.bottle.n.1
+  sent: the_bottle_is_almost_full
+  say: Bottle is almost full.
+  src: typed
+  expect: [minor_error]
+  target_ok: true
+  tags: [art.missing]
+- id: m03
+  card: en.ws.door.n.1
+  sent: the_door_is_open_now
+  say: "the door open now"
+  expect: [minor_error]
+  target_ok: true
+  tags: [be.missing]
+- id: m04
+  card: en.ws.floor.n.1
+  sent: don_t_sit_on_the_floor
+  say: "don't sit in the floor"
+  expect: [minor_error]
+  target_ok: true
+  tags: [prep.in_on_at]
+- id: m05
+  card: en.ws.work.v.1
+  sent: i_don_t_work_on_monday
+  say: "i don't work in monday"
+  expect: [minor_error]
+  target_ok: true
+  tags: [prep.in_on_at]
+- id: m06
+  card: en.ws.evening.n.1
+  sent: we_watch_tv_in_the_evening
+  say: "we watch tv at the evening"
+  expect: [minor_error]
+  target_ok: true
+  tags: [prep.in_on_at]
+- id: m07
+  card: en.ws.have.v.1
+  sent: i_have_two_brothers
+  say: "i have two brother"
+  expect: [minor_error]
+  target_ok: true
+  tags: [pl.missing]
+- id: m08
+  card: en.ws.homework.n.1
+  sent: i_do_my_homework_every_day
+  say: "i make my homework every day"
+  expect: [minor_error]
+  target_ok: true
+  tags: [lex.make_do]
+- id: m09
+  card: en.ws.sea.n.1
+  sent: we_go_to_the_sea_every_year
+  say: "we go to sea every year"
+  expect: [minor_error, acceptable_variant]
+  target_ok: true
+  tags: [art.missing]
+- id: m10
+  card: en.ws.bus.n.1
+  sent: i_always_take_the_bus
+  say: "i take always the bus"
+  expect: [minor_error]
+  target_ok: true
+  tags: [wo.adverb]
+- id: m11
+  card: en.ws.brother.n.1
+  sent: i_also_have_a_brother
+  say: "i also have brother"
+  expect: [minor_error]
+  target_ok: true
+  tags: [art.missing]
+- id: m12
+  card: en.ws.write.v.1
+  sent: i_m_writing_a_letter_now
+  say: "i writing a letter now"
+  expect: [minor_error]
+  target_ok: true
+  tags: [be.missing]
+- id: m13
+  card: en.ws.hand.n.1
+  sent: what_do_you_have_in_your_right_hand
+  say: "what you have in your right hand"
+  expect: [minor_error]
+  target_ok: true
+  tags: [aux.do_missing, wo.question]
+- id: m14
+  card: en.ws.phone.n.1
+  sent: can_i_use_your_phone
+  say: "can i use you phone"
+  expect: [minor_error]
+  target_ok: true
+  tags: [poss.form]
+- id: m15
+  card: en.ws.good.adj.1
+  sent: we_re_very_good_friends
+  say: "we are very good friend"
+  expect: [minor_error]
+  target_ok: true
+  tags: [pl.missing]
+- id: m16
+  card: en.ws.sunday.n.1
+  sent: he_works_even_on_sundays
+  say: "he work even on sundays"
+  expect: [minor_error]
+  target_ok: true
+  tags: [agr.3sg_s]
+- id: m17
+  card: en.ws.book.n.1
+  sent: give_her_the_book
+  say: "give she the book"
+  expect: [minor_error]
+  target_ok: true
+  tags: [pron.object]
+- id: m18
+  card: en.ws.kid.n.1
+  sent: the_kids_are_playing_outside
+  say: "the kids is playing outside"
+  expect: [minor_error]
+  target_ok: true
+- id: m19
+  card: en.ws.today.adv.1
+  sent: i_went_to_see_a_show_today
+  say: "i go to see a show today"
+  expect: [minor_error, wrong]
+  tags: [tense.past_missing]
+- id: m20
+  card: en.ws.bear.n.1
+  sent: i_saw_a_bear_yesterday
+  say: "i see a bear yesterday"
+  expect: [minor_error]
+  target_ok: true
+  tags: [tense.past_missing]
+- id: m21
+  card: en.ws.window.n.1
+  sent: the_girl_broke_the_window
+  say: The girl breaked the window.
+  src: typed
+  expect: [minor_error]
+  target_ok: true
+  tags: [tense.past_form]
+- id: m22
+  card: en.ws.flower.n.1
+  sent: the_cold_weather_killed_the_flowers
+  say: "the cold weather kill the flowers"
+  expect: [minor_error]
+  target_ok: true
+  tags: [tense.past_missing]
+- id: m23
+  card: en.ws.hear.v.1
+  sent: can_you_hear_me
+  say: "can you hear i"
+  expect: [minor_error]
+  target_ok: true
+  tags: [pron.object]
+- id: m24
+  card: en.ws.number.n.1
+  sent: seven_is_a_lucky_number
+  say: Seven is lucky number.
+  src: typed
+  expect: [minor_error]
+  target_ok: true
+  tags: [art.missing]
+- id: m25
+  card: en.ws.close.v.1
+  sent: what_time_does_it_close
+  say: "what time it closes"
+  expect: [minor_error]
+  target_ok: true
+  tags: [aux.do_missing, wo.question]
+- id: m26
+  card: en.ws.music.n.1
+  sent: what_music_do_you_like
+  say: "what music you like"
+  expect: [minor_error]
+  target_ok: true
+  tags: [aux.do_missing, wo.question]
+- id: m27
+  card: en.ws.photo.n.1
+  sent: let_s_get_a_group_photo
+  say: "let's take group photo"
+  expect: [minor_error]
+  target_ok: true
+  tags: [art.missing]
+- id: m28
+  card: en.ws.sun.n.1
+  sent: the_sun_is_going_down
+  say: "the sun goes down"
+  expect: [minor_error, acceptable_variant]
+  target_ok: true
+  tags: [tense.simple_continuous]
+- id: m29
+  card: en.ws.see.v.1
+  sent: i_can_see_the_sea
+  say: "i can to see the sea"
+  expect: [minor_error]
+  tags: [modal.form]
+- id: m30
+  card: en.ws.help.v.1
+  sent: let_me_help_you
+  say: "let me to help you"
+  expect: [minor_error]
+  tags: [verb.pattern]
+- id: m31
+  card: en.ws.full.adj.1
+  sent: the_bottle_is_almost_full
+  say: "the bottle almost full"
+  expect: [minor_error]
+  target_ok: true
+  tags: [be.missing]
+- id: m32
+  card: en.ws.show.v.1
+  sent: i_ve_got_something_to_show_you
+  say: "i have got something for show you"
+  expect: [minor_error]
+  target_ok: true
+  tags: [verb.pattern, prep.missing_extra]
+
+# --- An error in the target itself -----------------------------------------
+
+- id: f01
+  card: en.ws.brother.n.1
+  sent: i_have_two_brothers
+  say: "i have two brother"
+  expect: [minor_error]
+  target_ok: false
+  tags: [pl.missing]
+- id: f02
+  card: en.ws.always.adv.1
+  sent: i_always_take_the_bus
+  say: "i take always the bus"
+  expect: [minor_error]
+  target_ok: false
+  tags: [wo.adverb]
+- id: f03
+  card: en.ws.speak.v.1
+  sent: you_speak_english_very_well
+  say: "you speaks english very well"
+  expect: [minor_error]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: f04
+  card: en.ws.well.adv.1
+  sent: you_speak_english_very_well
+  say: "you speak english very good"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: f05
+  card: en.ws.feel.v.1
+  sent: i_am_not_feeling_well
+  say: "i am not feel well"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [be.extra, tense.simple_continuous]
+- id: f06
+  card: en.ws.answer.n.1
+  sent: that_s_not_the_right_answer
+  say: "that's not the right answers"
+  expect: [minor_error]
+  target_ok: false
+- id: f07
+  card: en.ws.friend.n.1
+  sent: we_re_very_good_friends
+  say: "we are very good friend"
+  expect: [minor_error]
+  target_ok: false
+  tags: [pl.missing]
+- id: f08
+  card: en.ws.man.n.1
+  sent: who_is_that_man
+  say: "who is that men"
+  expect: [minor_error]
+  target_ok: false
+- id: f09
+  card: en.ws.work.v.1
+  sent: he_works_even_on_sundays
+  say: "he work even on sundays"
+  expect: [minor_error]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: f10
+  card: en.ws.play.v.1
+  sent: the_kids_are_playing_outside
+  say: "the kids are play outside"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: f11
+  card: en.ws.see.v.1
+  sent: i_went_to_see_a_show_today
+  say: "i went to saw a show today"
+  expect: [minor_error]
+  target_ok: false
+  tags: [tense.past_form]
+- id: f12
+  card: en.ws.go.v.1
+  sent: i_went_to_see_a_show_today
+  say: "i go to see a show today"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [tense.past_missing]
+- id: f13
+  card: en.ws.see.v.1
+  sent: i_saw_a_bear_yesterday
+  say: I seed a bear yesterday.
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+  tags: [tense.past_form]
+- id: f14
+  card: en.ws.break.v.1
+  sent: the_girl_broke_the_window
+  say: The girl breaked the window.
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+  tags: [tense.past_form]
+- id: f15
+  card: en.ws.come.v.1
+  sent: spring_came_late_this_year
+  say: "spring come late this year"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [tense.past_missing]
+- id: f16
+  card: en.ws.use.v.1
+  sent: can_i_use_your_phone
+  say: "can i using your phone"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: f17
+  card: en.ws.people.n.1
+  sent: i_m_good_with_people
+  say: "i'm good with peoples"
+  expect: [minor_error]
+  target_ok: false
+- id: f18
+  card: en.ws.year.n.1
+  sent: we_go_to_the_sea_every_year
+  say: "we go to the sea every years"
+  expect: [minor_error]
+  target_ok: false
+- id: f19
+  card: en.ws.late.adj.1
+  sent: i_know_it_s_too_late
+  say: "i know it's too lately"
+  expect: [minor_error, wrong]
+  target_ok: false
+
+# --- Typed misspellings ----------------------------------------------------
+
+- id: s01
+  card: en.ws.kitchen.n.1
+  sent: let_s_go_to_the_kitchen
+  say: Let's go to the kitchin.
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+- id: s02
+  card: en.ws.bathroom.n.1
+  sent: i_m_going_to_the_bathroom
+  say: I'm going to the bathrom.
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+- id: s03
+  card: en.ws.tomorrow.adv.1
+  sent: do_you_have_time_tomorrow
+  say: Do you have time tommorow?
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+- id: s04
+  card: en.ws.weather.n.1
+  sent: how_s_the_weather_out_there
+  say: How's the wheather out there?
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+- id: s05
+  card: en.ws.thirsty.adj.1
+  sent: it_looks_like_your_dog_is_thirsty
+  say: It looks like your dog is thirsy.
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+- id: s06
+  card: en.ws.tea.n.1
+  sent: this_tea_is_very_hot
+  say: This tea is verry hot.
+  src: typed
+  expect: [minor_error, correct]
+  target_ok: true
+- id: s07
+  card: en.ws.kitchen.n.1
+  sent: let_s_go_to_the_kitchen
+  say: Lets go to the kitchen.
+  src: typed
+  expect: [correct, acceptable_variant, minor_error]
+  target_ok: true
+  why: Kesme işareti unutulmuş.
+- id: s08
+  card: en.ws.meat.n.1
+  sent: i_don_t_eat_red_meat
+  say: I dont eat red meat.
+  src: typed
+  expect: [correct, acceptable_variant, minor_error]
+  target_ok: true
+  why: Kesme işareti unutulmuş.
+- id: s09
+  card: en.ws.garden.n.1
+  sent: do_you_have_a_garden
+  say: Do you have a gardn?
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+
+# --- Wrong: the target is missing or replaced, or the meaning changed ------
+
+- id: w01
+  card: en.ws.bedroom.n.1
+  sent: my_bedroom_is_too_small
+  say: My bathroom is too small.
+  src: typed
+  expect: [wrong]
+  target_ok: false
+- id: w02
+  card: en.ws.small.adj.1
+  sent: my_bedroom_is_too_small
+  say: "my bedroom is too big"
+  expect: [wrong]
+  target_ok: false
+- id: w03
+  card: en.ws.chair.n.1
+  sent: you_re_sitting_in_my_chair
+  say: "you're sitting in my table"
+  expect: [wrong]
+  target_ok: false
+- id: w04
+  card: en.ws.open.adj.1
+  sent: the_door_is_open_now
+  say: "the door is close now"
+  expect: [wrong]
+  target_ok: false
+- id: w05
+  card: en.ws.tuesday.n.1
+  sent: do_you_have_time_on_tuesday
+  say: "do you have time on thursday"
+  expect: [wrong]
+  target_ok: false
+- id: w06
+  card: en.ws.wednesday.n.1
+  sent: today_is_wednesday_not_tuesday
+  say: "today is tuesday not wednesday"
+  expect: [wrong]
+  target_ok: false
+- id: w07
+  card: en.ws.afternoon.n.1
+  sent: i_have_lessons_in_the_afternoon
+  say: "i have lessons in the morning"
+  expect: [wrong]
+  target_ok: false
+- id: w08
+  card: en.ws.cold.adj.1
+  sent: it_s_very_cold_this_winter
+  say: "it's very hot this winter"
+  expect: [wrong]
+  target_ok: false
+- id: w09
+  card: en.ws.winter.n.1
+  sent: it_s_very_cold_this_winter
+  say: "it's very cold this summer"
+  expect: [wrong]
+  target_ok: false
+- id: w10
+  card: en.ws.spring.n.1
+  sent: spring_came_late_this_year
+  say: "autumn came late this year"
+  expect: [wrong]
+  target_ok: false
+- id: w11
+  card: en.ws.late.adv.1
+  sent: spring_came_late_this_year
+  say: "spring came early this year"
+  expect: [wrong]
+  target_ok: false
+- id: w12
+  card: en.ws.hope.v.1
+  sent: i_hope_it_doesn_t_rain
+  say: "i hope it rains"
+  expect: [wrong]
+  target_ok: false
+- id: w13
+  card: en.ws.rain.v.1
+  sent: i_hope_it_doesn_t_rain
+  say: "i hope it doesn't snow"
+  expect: [wrong]
+  target_ok: false
+- id: w14
+  card: en.ws.hospital.n.1
+  sent: i_m_going_to_the_hospital
+  say: "i'm going to the hotel"
+  expect: [wrong]
+  target_ok: false
+- id: w15
+  card: en.ws.shoe.n.1
+  sent: do_you_have_new_shoes
+  say: "do you have new socks"
+  expect: [wrong]
+  target_ok: false
+- id: w16
+  card: en.ws.dress.n.1
+  sent: i_don_t_like_that_dress
+  say: "i like that dress"
+  expect: [wrong]
+  target_ok: false
+- id: w17
+  card: en.ws.computer.n.1
+  sent: i_have_a_new_computer
+  say: "i have a new phone"
+  expect: [wrong]
+  target_ok: false
+- id: w18
+  card: en.ws.doctor.n.1
+  sent: her_husband_is_a_doctor
+  say: "her husband is a teacher"
+  expect: [wrong]
+  target_ok: false
+- id: w19
+  card: en.ws.daughter.n.1
+  sent: do_you_have_a_daughter
+  say: "do you have a son"
+  expect: [wrong]
+  target_ok: false
+- id: w20
+  card: en.ws.tired.adj.1
+  sent: i_m_too_tired_to_think
+  say: "i'm too hungry to think"
+  expect: [wrong]
+  target_ok: false
+- id: w21
+  card: en.ws.cheap.adj.1
+  sent: it_s_easy_to_make_and_it_s_cheap
+  say: It's easy to make and it's expensive.
+  src: typed
+  expect: [wrong]
+  target_ok: false
+- id: w22
+  card: en.ws.rich.adj.1
+  sent: my_family_thinks_i_m_rich
+  say: "my family thinks i'm poor"
+  expect: [wrong]
+  target_ok: false
+- id: w23
+  card: en.ws.dirty.adj.1
+  sent: the_water_is_really_dirty
+  say: "the water is really clean"
+  expect: [wrong]
+  target_ok: false
+- id: w24
+  card: en.ws.slow.adj.1
+  sent: my_computer_is_very_slow
+  say: "my computer is very fast"
+  expect: [wrong]
+  target_ok: false
+- id: w25
+  card: en.ws.cook.v.1
+  sent: do_you_like_to_cook
+  say: "do you like to eat"
+  expect: [wrong]
+  target_ok: false
+- id: w26
+  card: en.ws.wash.v.1
+  sent: are_you_washing_the_car
+  say: "are you driving the car"
+  expect: [wrong]
+  target_ok: false
+- id: w27
+  card: en.ws.swim.v.1
+  sent: i_don_t_swim_very_well
+  say: "i swim very well"
+  expect: [wrong]
+  target_ok: false
+- id: w28
+  card: en.ws.do.v.1
+  sent: i_do_my_homework_every_day
+  say: "i make my homework every day"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [lex.make_do]
+- id: w29
+  card: en.ws.tall.adj.1
+  sent: my_brother_is_very_tall
+  say: "my brother is very high"
+  expect: [wrong, minor_error]
+  target_ok: false
+- id: w30
+  card: en.ws.see.v.1
+  sent: do_you_see_the_river
+  say: "do you look the river"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [lex.see_look_watch]
+- id: w31
+  card: en.ws.watch.v.1
+  sent: we_watch_tv_in_the_evening
+  say: "we look tv in the evening"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [lex.see_look_watch]
+- id: w32
+  card: en.chunk.i_m_bored
+  say: "i am boring"
+  expect: [wrong]
+  target_ok: false
+  why: '"boring" anlamı değiştiriyor: sıkıcı biriyim.'
+
+# --- Grammar cards: the whole sentence is the target -----------------------
+
+- id: g01
+  card: en.gp.be.present
+  sent: this_tea_is_very_hot
+  say: "this tea very hot"
+  expect: [wrong]
+  target_ok: false
+  tags: [be.missing]
+- id: g02
+  card: en.gp.be.present
+  sent: the_room_is_very_clean
+  say: "the room are very clean"
+  expect: [wrong, minor_error]
+  target_ok: false
+- id: g03
+  card: en.gp.present_simple.negative
+  sent: i_don_t_eat_red_meat
+  say: "i not eat red meat"
+  expect: [wrong]
+  target_ok: false
+  tags: [aux.do_missing]
+- id: g04
+  card: en.gp.present_simple.negative
+  sent: she_doesn_t_like_eating_vegetables
+  say: "she don't like eating vegetables"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: g05
+  card: en.gp.present_simple.questions
+  sent: do_you_like_to_cook
+  say: You like to cook?
+  src: typed
+  expect: [wrong]
+  target_ok: false
+  tags: [aux.do_missing]
+- id: g06
+  card: en.gp.present_simple.questions
+  sent: do_you_love_the_sea
+  say: "are you love the sea"
+  expect: [wrong]
+  target_ok: false
+  tags: [be.extra, aux.do_missing]
+- id: g07
+  card: en.gp.present_simple.affirmative
+  sent: we_watch_tv_in_the_evening
+  say: We watches TV in the evening.
+  src: typed
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: g08
+  card: en.gp.present_simple.affirmative
+  sent: i_like_coffee
+  say: "i likes coffee"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: g09
+  card: en.gp.be.negative
+  sent: that_s_not_the_right_answer
+  say: "that's no the right answer"
+  expect: [wrong, minor_error]
+  target_ok: false
+- id: g10
+  card: en.gp.be.questions
+  sent: are_you_free_this_weekend
+  say: "you are free this weekend"
+  expect: [wrong]
+  target_ok: false
+  tags: [wo.question]
+- id: g11
+  card: en.gp.can.ability
+  sent: i_can_t_go_on_saturday
+  say: "i don't can go on saturday"
+  expect: [wrong]
+  target_ok: false
+  tags: [modal.form]
+- id: g12
+  card: en.gp.can.ability
+  sent: can_you_ride_a_bike
+  say: "do you can ride a bike"
+  expect: [wrong]
+  target_ok: false
+  tags: [modal.form]
+- id: g13
+  card: en.gp.there_is_are
+  sent: there_s_a_bus_stop_there
+  say: "there have a bus stop there"
+  expect: [wrong]
+  target_ok: false
+  tags: [exist.there_have]
+- id: g14
+  card: en.gp.past_simple.be
+  sent: i_was_at_home_yesterday
+  say: "i am at home yesterday"
+  expect: [wrong]
+  target_ok: false
+  tags: [tense.past_missing]
+- id: g15
+  card: en.gp.past_simple.be
+  sent: the_food_was_very_good
+  say: "the food were very good"
+  expect: [wrong, minor_error]
+  target_ok: false
+- id: g16
+  card: en.gp.future.going_to
+  sent: i_m_going_to_take_a_short_break
+  say: "i going to take a short break"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [be.missing, tense.future]
+- id: g17
+  card: en.gp.future.going_to
+  sent: when_are_we_going_to_land
+  say: "when we are going to land"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [wo.question]
+- id: g18
+  card: en.gp.modals.obligation
+  sent: i_have_to_pay_this_bill_today
+  say: "i have pay this bill today"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [modal.form]
+- id: g19
+  card: en.gp.modals.obligation
+  sent: i_ve_got_to_go_to_the_police
+  say: "i must to go to the police"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [modal.form]
+- id: g20
+  card: en.gp.present_perfect.experience
+  sent: have_you_been_here_the_whole_time
+  say: "did you be here the whole time"
+  expect: [wrong]
+  target_ok: false
+- id: g21
+  card: en.gp.would_like
+  sent: i_d_like_to_help_you
+  say: "i would like help you"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [verb.pattern]
+- id: g22
+  card: en.gp.like_ing
+  sent: do_you_like_eating_fish
+  say: "do you like eat fish"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [verb.pattern]
+- id: g23
+  card: en.gp.imperative
+  sent: don_t_sit_on_the_floor
+  say: "not sit on the floor"
+  expect: [wrong]
+  target_ok: false
+- id: g24
+  card: en.gp.possessive.adjectives
+  sent: my_family_is_small
+  say: "me family is small"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [poss.form]
+- id: g25
+  card: en.gp.articles.a_an
+  sent: i_m_an_only_child
+  say: "i'm a only child"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [art.wrong]
+- id: g26
+  card: en.gp.nouns.plural
+  sent: i_have_big_hands
+  say: "i have big hand"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [pl.missing]
+- id: g27
+  card: en.gp.pronouns.subject
+  sent: i_m_good_at_games
+  say: "am good at games"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [pron.subject_missing]
+- id: g28
+  card: en.gp.adverbs.frequency
+  sent: i_m_never_free_on_mondays
+  say: "i never am free on mondays"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [wo.adverb]
+- id: g29
+  card: en.gp.questions.wh
+  sent: what_s_your_name
+  say: "what your name"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [be.missing]
+- id: g30
+  card: en.gp.questions.wh
+  sent: what_music_do_you_like
+  say: "what music you like"
+  expect: [wrong]
+  target_ok: false
+  tags: [aux.do_missing, wo.question]
+- id: g31
+  card: en.gp.demonstratives
+  sent: that_book_is_very_old
+  say: "this book is very old"
+  expect: [wrong, minor_error]
+  target_ok: false
+- id: g32
+  card: en.gp.past_simple.irregular
+  sent: the_girl_broke_the_window
+  say: The girl breaked the window.
+  src: typed
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [tense.past_form]
+- id: g33
+  card: en.gp.past_simple.regular
+  sent: the_cold_weather_killed_the_flowers
+  say: "the cold weather kill the flowers"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [tense.past_missing]
+- id: g34
+  card: en.gp.present_continuous.now
+  sent: i_m_writing_a_letter_now
+  say: "i writing a letter now"
+  expect: [wrong]
+  target_ok: false
+  tags: [be.missing]
+
+# --- Set phrases: the whole phrase is the target ---------------------------
+
+- id: c01
+  card: en.chunk.how_old_are_you
+  say: How many years are you?
+  src: typed
+  expect: [wrong]
+  target_ok: false
+  tags: [age.form]
+  why: Türkçedeki "kaç yaşındasın" kalıbının aktarımı.
+- id: c02
+  card: en.chunk.i_m_thirty_years_old
+  say: "i have thirty years"
+  expect: [wrong]
+  target_ok: false
+  tags: [age.form]
+- id: c03
+  card: en.chunk.where_are_you_from
+  say: "where you are from"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [wo.question]
+- id: c04
+  card: en.chunk.i_m_from_turkey
+  say: "i from turkey"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [be.missing]
+- id: c05
+  card: en.chunk.see_you_tomorrow
+  say: "see you on tomorrow"
+  expect: [minor_error]
+  target_ok: false
+  tags: [prep.missing_extra]
+- id: c06
+  card: en.chunk.i_don_t_understand
+  say: "i am not understand"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [be.extra]
+- id: c07
+  card: en.chunk.i_don_t_know
+  say: "i no know"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [aux.do_missing]
+- id: c08
+  card: en.chunk.what_does_it_mean
+  say: "what is it mean"
+  expect: [wrong, minor_error]
+  target_ok: false
+  tags: [be.extra, aux.do_missing]
+- id: c09
+  card: en.chunk.how_do_you_spell_it
+  say: "how you spell it"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [aux.do_missing, wo.question]
+- id: c10
+  card: en.chunk.can_i_have_a_coffee_please
+  say: "give me a coffee"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [prag.too_direct]
+  why: Anlam aynı ama istek kaba.
+- id: c11
+  card: en.chunk.are_you_married
+  say: "are you marry"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: c12
+  card: en.chunk.how_much_is_it
+  say: "how much it is"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [wo.question]
+- id: c13
+  card: en.chunk.can_i_pay_by_card
+  say: "can i pay with credit card"
+  expect: [minor_error, acceptable_variant]
+  tags: [art.missing]
+- id: c14
+  card: en.chunk.where_is_the_station
+  say: "where is station"
+  expect: [minor_error]
+  target_ok: false
+  tags: [art.missing]
+- id: c15
+  card: en.chunk.turn_left
+  say: "turn to left"
+  expect: [minor_error, acceptable_variant]
+  tags: [prep.missing_extra, art.missing]
+- id: c16
+  card: en.chunk.i_m_lost
+  say: "i am losing"
+  expect: [wrong]
+  target_ok: false
+- id: c17
+  card: en.chunk.it_doesn_t_work
+  say: "it don't work"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [agr.3sg_s]
+- id: c18
+  card: en.chunk.i_need_help
+  say: "i need a help"
+  expect: [minor_error]
+  target_ok: false
+  tags: [pl.uncountable]
+- id: c19
+  card: en.chunk.i_agree
+  say: "i am agree"
+  expect: [minor_error, wrong]
+  target_ok: false
+  tags: [be.extra]
+- id: c20
+  card: en.chunk.i_think_so
+  say: "i think yes"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: c21
+  card: en.chunk.see_you_later
+  say: "see you after"
+  expect: [minor_error, wrong]
+  target_ok: false
+- id: c22
+  card: en.chunk.good_luck
+  say: Good lucks!
+  src: typed
+  expect: [minor_error]
+  target_ok: false
+
+# --- Off target: another meaning, another sentence, or Turkish ------------
+
+- id: o01
+  card: en.ws.milk.n.1
+  sent: i_drink_milk_every_morning
+  say: "i like milk very much"
+  expect: [off_target]
+  target_ok: false
+- id: o02
+  card: en.ws.garden.n.1
+  sent: do_you_have_a_garden
+  say: "my garden is very big"
+  expect: [off_target]
+  target_ok: false
+- id: o03
+  card: en.ws.tea.n.1
+  sent: this_tea_is_very_hot
+  say: "i want a cup of tea"
+  expect: [off_target]
+  target_ok: false
+- id: o04
+  card: en.ws.bread.n.1
+  sent: don_t_forget_to_buy_bread
+  say: "where is the bread"
+  expect: [off_target]
+  target_ok: false
+- id: o05
+  card: en.ws.station.n.1
+  sent: this_is_the_right_station
+  say: "where is the station"
+  expect: [off_target]
+  target_ok: false
+- id: o06
+  card: en.ws.weather.n.1
+  sent: how_s_the_weather_out_there
+  say: "it is raining today"
+  expect: [off_target]
+  target_ok: false
+- id: o07
+  card: en.ws.pen.n.1
+  sent: do_you_have_a_pen
+  say: "this is my pen"
+  expect: [off_target]
+  target_ok: false
+- id: o08
+  card: en.ws.sister.n.1
+  sent: do_you_have_a_sister
+  say: "i have a sister"
+  expect: [off_target, wrong]
+  target_ok: false
+  why: Soru yerine cevap vermiş.
+- id: o09
+  card: en.ws.cat.n.1
+  sent: do_you_have_a_cat
+  say: "yes i have a cat"
+  expect: [off_target, wrong]
+  target_ok: false
+  why: Soru yerine cevap vermiş.
+- id: o10
+  card: en.ws.name.n.1
+  sent: what_s_your_name
+  say: "my name is ali"
+  expect: [off_target]
+  target_ok: false
+- id: o11
+  card: en.ws.game.n.1
+  sent: when_does_the_game_start
+  say: "the game is very good"
+  expect: [off_target]
+  target_ok: false
+- id: o12
+  card: en.ws.hotel.n.1
+  sent: the_hotel_is_down_there
+  say: Otel aşağıda.
+  src: typed
+  expect: [off_target]
+  target_ok: false
+  why: Türkçe cevap.
+- id: o13
+  card: en.ws.help.n.1
+  sent: i_m_going_to_need_a_little_help
+  say: "can you help me"
+  expect: [off_target]
+  target_ok: false
+- id: o14
+  card: en.ws.idea.n.1
+  sent: that_s_a_very_good_idea
+  say: "i have an idea"
+  expect: [off_target]
+  target_ok: false
+- id: o15
+  card: en.ws.job.n.1
+  sent: i_have_a_boring_job
+  say: "i don't have a job"
+  expect: [off_target, wrong]
+  target_ok: false
+- id: o16
+  card: en.ws.boss.n.1
+  sent: my_boss_is_very_nice
+  say: "i am the boss"
+  expect: [off_target]
+  target_ok: false
+- id: o17
+  card: en.ws.problem.n.1
+  sent: i_have_the_same_problem
+  say: "what is the problem"
+  expect: [off_target]
+  target_ok: false
+- id: o18
+  card: en.ws.time.n.1
+  sent: do_you_have_time_tomorrow
+  say: "what time is it"
+  expect: [off_target]
+  target_ok: false
+- id: o19
+  card: en.ws.phone.n.1
+  sent: i_have_a_new_phone
+  say: "where is my phone"
+  expect: [off_target]
+  target_ok: false
+- id: o20
+  card: en.ws.bird.n.1
+  sent: do_you_have_a_bird
+  say: "i see a bird"
+  expect: [off_target]
+  target_ok: false
+- id: o21
+  card: en.ws.family.n.1
+  sent: my_family_is_small
+  say: "i love my family"
+  expect: [off_target]
+  target_ok: false
+- id: o22
+  card: en.chunk.good_morning
+  say: Good night.
+  src: typed
+  expect: [off_target, wrong]
+  target_ok: false
+- id: o23
+  card: en.chunk.i_m_sorry
+  say: Excuse me.
+  src: typed
+  expect: [off_target, wrong]
+  target_ok: false
+- id: o24
+  card: en.ws.coffee.n.1
+  sent: i_like_coffee
+  say: Kahveyi severim.
+  src: typed
+  expect: [off_target]
+  target_ok: false
+  why: Türkçe cevap.
+- id: o25
+  card: en.ws.kitchen.n.1
+  sent: let_s_go_to_the_kitchen
+  say: asdkjh
+  src: typed
+  expect: [off_target]
+  target_ok: false
+  why: Anlamsız yazı; yazılı cevap anlaşılmaz sayılmaz.
+
+# --- Only a fragment of the sentence ---------------------------------------
+
+- id: x01
+  card: en.ws.egg.n.1
+  sent: i_eat_eggs_for_breakfast
+  say: "eggs"
+  expect: [wrong, off_target]
+  target_ok: false
+- id: x02
+  card: en.ws.window.n.1
+  sent: don_t_leave_the_windows_open
+  say: "the windows"
+  expect: [wrong, off_target]
+  target_ok: false
+- id: x03
+  card: en.ws.hungry.adj.1
+  sent: i_m_starting_to_get_hungry
+  say: "hungry"
+  expect: [wrong, off_target]
+  target_ok: false
+- id: x04
+  card: en.ws.city.n.1
+  sent: i_d_like_a_city_map
+  say: "city map"
+  expect: [wrong, off_target]
+  target_ok: false
+
+# --- Unintelligible speech: not an attempt to judge ------------------------
+
+- id: u01
+  card: en.ws.table.n.1
+  sent: put_it_on_the_table
+  say: "uh uh the"
+  conf: 0.31
+  expect: [unintelligible]
+  target_ok: false
+- id: u02
+  card: en.ws.garden.n.1
+  sent: do_you_have_a_garden
+  say: "mmm"
+  conf: 0.2
+  expect: [unintelligible]
+  target_ok: false
+- id: u03
+  card: en.ws.sea.n.1
+  sent: do_you_love_the_sea
+  say: "hot dog fun kiss"
+  conf: 0.37
+  expect: [unintelligible, off_target]
+  target_ok: false
+- id: u04
+  card: en.ws.number.n.1
+  sent: seven_is_a_lucky_number
+  say: "is a a the"
+  conf: 0.28
+  expect: [unintelligible]
+  target_ok: false
+- id: u05
+  card: en.ws.hotel.n.1
+  sent: the_hotel_is_down_there
+  say: "o tell a shaw da"
+  conf: 0.35
+  expect: [unintelligible, off_target]
+  target_ok: false
+  why: Türkçe "Otel aşağıda" İngilizce tanımayla duyulmuş.
+- id: u06
+  card: en.ws.shop.n.1
+  sent: we_re_going_to_the_shop
+  say: "and so the"
+  conf: 0.33
+  expect: [unintelligible]
+  target_ok: false
+- id: u07
+  card: en.ws.river.n.1
+  sent: do_you_see_the_river
+  say: "so what uh go the"
+  conf: 0.36
+  expect: [unintelligible]
+  target_ok: false
+- id: u08
+  card: en.ws.dress.n.1
+  sent: i_don_t_like_that_dress
+  say: "la la la"
+  conf: 0.5
+  expect: [unintelligible]
+  target_ok: false
+- id: u09
+  card: en.ws.beach.n.1
+  sent: i_m_going_to_the_beach
+  say: "the the the"
+  conf: 0.3
+  expect: [unintelligible]
+  target_ok: false
+- id: u10
+  card: en.ws.hospital.n.1
+  sent: i_m_going_to_the_hospital
+  say: "if shine now what"
+  conf: 0.34
+  expect: [unintelligible, off_target]
+  target_ok: false
+- id: u11
+  card: en.ws.house.n.1
+  sent: we_have_a_house
+  say: "been are me"
+  conf: 0.29
+  expect: [unintelligible]
+  target_ok: false
+- id: u12
+  card: en.ws.bag.n.1
+  sent: do_you_want_a_bag
+  say: "uh"
+  conf: 0.25
+  expect: [unintelligible]
+  target_ok: false
+- id: u13
+  card: en.ws.mountain.n.1
+  sent: we_re_going_to_the_mountains
+  say: "da la run a get the org"
+  conf: 0.32
+  expect: [unintelligible, off_target]
+  target_ok: false
+  why: Türkçe "Dağlara gidiyoruz" İngilizce tanımayla duyulmuş.
+
+# --- Maybe misheard: the verdict hangs on one word the ASR may have missed --
+# target_ok is a guess here, so it is not scored.
+
+- id: q01
+  card: en.ws.see.v.1
+  sent: i_can_see_the_sea
+  say: "i can't see the sea"
+  conf: 0.6
+  expect: [uncertain, wrong]
+- id: q02
+  card: en.ws.find.v.1
+  sent: i_can_t_find_the_hotel
+  say: "i can find the hotel"
+  conf: 0.62
+  expect: [uncertain, wrong]
+- id: q03
+  card: en.ws.hungry.adj.1
+  sent: i_m_starting_to_get_hungry
+  say: "i'm starting to get angry"
+  conf: 0.55
+  expect: [uncertain, wrong]
+- id: q04
+  card: en.ws.thirsty.adj.1
+  sent: it_looks_like_your_dog_is_thirsty
+  say: "it looks like your dog is thursday"
+  conf: 0.5
+  expect: [uncertain, wrong]
+- id: q05
+  card: en.ws.work.n.1
+  sent: i_m_going_back_to_work
+  say: "i'm going back to walk"
+  conf: 0.58
+  expect: [uncertain, wrong]
+  why: work/walk ayrımı Türk konuşucular için zor; tanıma da karıştırabilir.
+- id: q06
+  card: en.ws.live.v.1
+  sent: they_live_in_a_little_house
+  say: "they leave in a little house"
+  conf: 0.6
+  expect: [uncertain, wrong]
+- id: q07
+  card: en.ws.bag.n.1
+  sent: do_you_want_a_bag
+  say: "do you want a back"
+  conf: 0.55
+  expect: [uncertain, wrong]
+  why: Sondaki b'nin p gibi söylenmesi (phon.final_devoicing) ya da yanlış duyma.
+- id: q08
+  card: en.ws.kitchen.n.1
+  sent: let_s_go_to_the_kitchen
+  say: "let's go to the kitten"
+  conf: 0.6
+  expect: [uncertain, wrong]

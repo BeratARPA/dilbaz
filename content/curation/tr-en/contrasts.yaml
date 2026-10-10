@@ -1,0 +1,75 @@
+# Contrast notes for Turkish speakers (docs/10 §6; shown in A00 introductions
+# and after an A08 contrast drill attempt, docs/03).
+#
+# Most pairs share one Turkish word (söylemek, yapmak, iş, yol, uzun, var…) or
+# are false friends (market, kolej). Every item exists in en@1; a note is one
+# short sentence and holds no card answer of the pack.
+
+- items: [en.ws.say.v.1, en.ws.tell.v.1]
+  note: "İkisi de söylemek: tell'den sonra kişi gelir (tell him), say'den sonra söz gelir (say yes, say it to him)."
+- items: [en.ws.see.v.1, en.ws.look.v.1, en.ws.watch.v.1]
+  note: "see kendiliğinden görmek, look (at) bilerek bakmak, watch hareket eden bir şeyi bir süre izlemektir."
+- items: [en.ws.make.v.1, en.ws.do.v.1]
+  note: "İkisi de yapmak: make ortaya bir şey çıkarır (make a cake), do bir işi ya da görevi yerine getirir (do the dishes)."
+- items: [en.ws.hear.v.1, en.ws.listen.v.1]
+  note: "hear ses kulağa gelince duymak, listen (to) dikkatini verip dinlemektir."
+- items: [en.ws.speak.v.1, en.ws.talk.v.1]
+  note: "İkisi de konuşmak: bir dil için speak, biriyle sohbet için talk to ya da talk with."
+- items: [en.ws.bring.v.1, en.ws.take.v.1]
+  note: "bring konuşanın ya da dinleyenin bulunduğu yere getirmek, take başka bir yere götürmektir."
+- items: [en.ws.come.v.1, en.ws.go.v.1]
+  note: "come konuşanın ya da dinleyenin bulunduğu yere gelmek (I'm coming!), go başka bir yere gitmektir."
+- items: [en.ws.house.n.1, en.ws.home.n.1]
+  note: "house bina olarak ev, home insanın yaşadığı yer, yuvadır; go home'da to gelmez."
+- items: [en.ws.job.n.1, en.ws.work.n.1]
+  note: "İkisi de iş: job sayılır (a job, two jobs), work sayılmaz (a work denmez)."
+- items: [en.ws.work.v.1, en.ws.study.v.1]
+  note: "Türkçede ikisi de çalışmak: iş için work, ders için study."
+- items: [en.ws.bored.adj.1, en.ws.boring.adj.1]
+  note: "Sıkılan kişi bored (she's bored), sıkan şey boring'dir (the film is boring)."
+- items: [en.ws.fun.adj.1, en.ws.funny.adj.1]
+  note: "fun eğlenceli, funny komik demektir: güldüren şey funny'dir."
+- items: [en.ws.person.n.1, en.ws.people.n.1]
+  note: "person tek kişidir, çoğulu people'dır: one person, two people; people are."
+- items: [en.ws.lose.v.1, en.ws.miss.v.1]
+  note: "lose kaybetmek (lose a bag), miss kaçırmak ya da özlemektir (miss the train, miss someone)."
+- items: [en.ws.very.adv.1, en.ws.too.adv.2]
+  note: "very yalnızca çok demektir; too fazla demektir ve bir sorun anlatır (too hot to drink)."
+- items: [en.ws.wait.v.1, en.ws.expect.v.1]
+  note: "İkisi de beklemek: zaman geçirerek beklemek wait (for), olacağını düşünmek expect'tir."
+- items: [en.ws.tall.adj.1, en.ws.long.adj.1, en.ws.high.adj.1]
+  note: "Türkçedeki uzun, boy için tall (a tall man), uzunluk için long (a long road) olur; yükseklik ve miktar için high kullanılır (a high wall, a high price)."
+- items: [en.ws.good.adj.1, en.ws.well.adv.1]
+  note: "good sıfattır (a good singer), well fiili niteler (she sings well)."
+- items: [en.ws.quite.adv.1, en.ws.quiet.adj.1]
+  note: "quite /kwaɪt/ oldukça, quiet /ˈkwaɪət/ sessiz demektir; yazılışları çok benzer ama okunuşları farklıdır."
+- items: [en.ws.way.n.1, en.ws.road.n.1]
+  note: "İkisi de yol: road arabaların gittiği yol, way bir yere giden güzergâh ya da yöntemdir (the way to the station)."
+- items: [en.ws.market.n.1, en.ws.shop.n.1]
+  note: "İngilizcede market çoğunlukla açık hava pazarıdır; Türkçedeki market için supermarket ya da shop denir."
+- items: [en.ws.school.n.1, en.ws.college.n.1]
+  note: "college yüksekokul ya da üniversitedir; Türkçedeki kolej İngilizcede bir school'dur."
+- items: [en.ws.hope.v.1, en.ws.wish.v.1]
+  note: "Olabilecek bir şey için hope (I hope it's sunny), birine iyi bir şey dilemek için wish (I wish you luck)."
+- items: [en.gp.past_simple.regular, en.gp.present_perfect.experience]
+  note: "Zamanı söylenen geçmiş için geçmiş zaman (I visited Rome in May), zamanı söylenmeyen deneyim için present perfect (I've visited Rome)."
+- items: [en.gp.articles.a_an, en.gp.articles.the]
+  note: "İlk kez söz edilen bir şey için a/an, konuşanların ikisinin de bildiği şey için the."
+- items: [en.gp.there_is_are, en.gp.have_got]
+  note: "Türkçede ikisi de var: bir yerde bulunmak için there is, sahip olmak için have ya da have got."
+- items: [en.gp.present_simple.affirmative, en.gp.present_continuous.now]
+  note: "Alışkanlık ve genel doğrular için geniş zaman (she works), şu anda olan için şimdiki zaman (she's working)."
+- items: [en.gp.future.going_to, en.gp.future.will]
+  note: "Önceden verilmiş karar ya da plan için going to, konuşurken verilen karar ve tahmin için will."
+- items: [en.gp.like_ing, en.gp.would_like]
+  note: "like genel olarak sevmek (I like tea), would like şu an kibarca istemektir (I'd like some tea)."
+- items: [en.ws.take.v.1, en.ws.get.v.1, en.ws.buy.v.1]
+  note: "Türkçede üçü de almak: parayla almak buy (buy bread), eline geçmek get (get a message), bir şeyi yanına alıp götürmek ya da araca binmek take (take an umbrella, take the bus)."
+- items: [en.ws.very.adv.1, en.ws.much.adv.1]
+  note: "Türkçede ikisi de çok: sıfat ve zarftan önce very gelir (very good), fiille very much cümle sonunda kullanılır (I like it very much; I very like it denmez)."
+- items: [en.ws.bill.n.1, en.ws.account.n.1]
+  note: "Türkçede ikisi de hesap: restoranda ya da faturada ödenen hesap bill (Amerikan İngilizcesinde restoranda check), bankadaki ya da sitedeki hesap account."
+- items: [en.ws.eat.v.1, en.ws.drink.v.1]
+  note: "Türkçede çorba ve ilaç içilir; İngilizcede çorba eat ile (eat soup), ilaç take ile söylenir (take medicine), drink yalnızca içecekler içindir."
+- items: [en.ws.forget.v.1, en.ws.leave.v.1]
+  note: "Bir şeyi bir yerde unuttuğunda leave kullanılır (I left my keys at home); yer söylemiyorsan forget (I forgot my keys)."

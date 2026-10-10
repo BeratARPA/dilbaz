@@ -1,0 +1,30 @@
+{
+  "route": "speaking_annotate",
+  "prompt": "speaking_annotate@1",
+  "date": "2026-10-08",
+  "cases": 30,
+  "scores": [
+    {
+      "model": "gemini-3.1-flash-lite",
+      "cases": 30,
+      "failures": 0,
+      "errorPrecision": 0.95,
+      "errorRecall": 0.9743589743589743,
+      "errorF1": 0.9620253164556962,
+      "tagAgreement": 1,
+      "efcMedianDiff": 0,
+      "outcomeAgreement": 0.9666666666666667,
+      "leakedHints": 9,
+      "schemaValid": 1,
+      "latencyP50": 5694,
+      "latencyP90": 9773,
+      "tokensPerCase": 5889,
+      "passes": {
+        "errorF1": true,
+        "efc": true,
+        "outcome": true
+      },
+      "complete": true
+    }
+  ]
+}

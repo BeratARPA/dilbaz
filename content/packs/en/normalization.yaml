@@ -1,0 +1,178 @@
+# Answer normalization for English (docs/03-activities.md §0.5, docs/11 §6).
+#
+# The engine (LanguageServices.normalize) and the content tools apply these
+# rules in this order, so an answer and a reference compare word for word:
+#   1. lowercase
+#   2. apostrophes: every character in `apostrophes` becomes '
+#   3. every character in `punctuation` becomes a space
+#   4. split on spaces; a word in `fillers` is dropped ("uh"); per remaining
+#      word, the first rule that applies:
+#      a. `currency`: a sign before digits becomes the digits and the
+#         currency's word ("$30" → "30 dollars", "$1" → "1 dollar")
+#      b. `words`: whole-word replacements (contractions such as "can't")
+#      c. `endings`: a word ending in one of these keys loses it and gets the
+#         value ("didn't" → "did not", "bedroom's" → "bedroom is")
+#   5. per word again: `spellings` (British → American, variants); then any
+#      remaining apostrophe is removed ("o'clock" → "oclock") and a hyphen
+#      becomes a space ("twenty-one" → "twenty one")
+#   6. `phrases`: whole-word phrases are replaced, left to right in the file's
+#      order; they fix what the word rules cannot know ("he's got" → "he is
+#      got" → "he has got")
+#   7. a word of digits (0-999) is written in words ("35" → "thirty five")
+#   8. with `collapse_repeats`, a word that repeats the one before it is
+#      dropped ("the the" → "the"): speech recognition writes hesitations so
+#   9. words are joined by single spaces
+# `tests` hold examples both implementations must pass.
+#
+# "'s" is read as "is" everywhere, the possessive too: both sides of a
+# comparison read it the same way ("Tom's car" → "tom is car"), so only an
+# answer that says "Tom is car" would match "Tom's car".
+
+version: 1
+
+apostrophes: ["’", "‘", "`", "´", "ʼ"]
+
+punctuation: ".,!?;:\"“”()[]{}…/—–"
+
+# Hesitations as Deepgram writes them with filler_words (docs/08 §5.0).
+# "uh-huh" and "mm-mm" are answers (yes, no) and stay.
+fillers: [uh, um, er, erm, ah, hmm, mm]
+
+collapse_repeats: true
+
+words:
+  "can't": "can not"
+  "cannot": "can not"
+  "won't": "will not"
+  "shan't": "shall not"
+  "ain't": "is not"
+  "let's": "let us"
+  "i'm": "i am"
+  "it's": "it is"
+  "that's": "that is"
+  "this's": "this is"
+  "what's": "what is"
+  "where's": "where is"
+  "when's": "when is"
+  "who's": "who is"
+  "how's": "how is"
+  "why's": "why is"
+  "there's": "there is"
+  "here's": "here is"
+  "he's": "he is"
+  "she's": "she is"
+  "gonna": "going to"
+  "wanna": "want to"
+  "gotta": "got to"
+
+endings:
+  "n't": " not"
+  "'re": " are"
+  "'ve": " have"
+  "'ll": " will"
+  "'d": " would"
+  "'m": " am"
+  "'s": " is"
+
+currency:
+  "$": [dollar, dollars]
+  "£": [pound, pounds]
+  "€": [euro, euros]
+
+spellings:
+  aeroplane: airplane
+  analyse: analyze
+  behaviour: behavior
+  centre: center
+  centres: centers
+  cheque: check
+  colour: color
+  colours: colors
+  cosy: cozy
+  defence: defense
+  e-mail: email
+  e-mails: emails
+  favourite: favorite
+  favourites: favorites
+  goodnight: good night
+  flavour: flavor
+  grey: gray
+  harbour: harbor
+  honour: honor
+  humour: humor
+  jewellery: jewelry
+  kilometre: kilometer
+  kilometres: kilometers
+  labour: labor
+  licence: license
+  litre: liter
+  litres: liters
+  metre: meter
+  metres: meters
+  mum: mom
+  neighbour: neighbor
+  neighbours: neighbors
+  ok: okay
+  organise: organize
+  practise: practice
+  programme: program
+  programmes: programs
+  pyjamas: pajamas
+  realise: realize
+  theatre: theater
+  theatres: theaters
+  travelled: traveled
+  travelling: traveling
+  turkiye: turkey
+  türkiye: turkey
+  tyre: tire
+
+# 's and 'd stand for has and had before these words, where is and would are
+# never right.
+phrases:
+  "is got": "has got"
+  "is been": "has been"
+  "is happened": "has happened"
+  "would better": "had better"
+  "would been": "had been"
+
+numbers:
+  units: [zero, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve,
+          thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen]
+  tens: [null, null, twenty, thirty, forty, fifty, sixty, seventy, eighty, ninety]
+  hundred: hundred
+
+tests:
+  - ["I'm fine, thanks.", "i am fine thanks"]
+  - ["Don't worry!", "do not worry"]
+  - ["I can't swim.", "i can not swim"]
+  - ["I cannot swim.", "i can not swim"]
+  - ["What's your favourite colour?", "what is your favorite color"]
+  - ["I have 2 brothers.", "i have two brothers"]
+  - ["She's twenty-one.", "she is twenty one"]
+  - ["She is 21.", "she is twenty one"]
+  - ["We'll see.", "we will see"]
+  - ["I'd like a coffee.", "i would like a coffee"]
+  - ["They've got 305 cats.", "they have got three hundred five cats"]
+  - ["That is Tom's car.", "that is tom is car"]
+  - ["My bedroom's too small.", "my bedroom is too small"]
+  - ["It's five o'clock.", "it is five oclock"]
+  - ["Uh, I'm fine, um, thanks.", "i am fine thanks"]
+  - ["I I have a a car.", "i have a car"]
+  - ["Thank you so so much.", "thank you so much"]
+  - ["OK, let's go.", "okay let us go"]
+  - ["It’s  a   nice day…", "it is a nice day"]
+  - ["Send me an e-mail.", "send me an email"]
+  - ["I didn't know.", "i did not know"]
+  - ["You're right, aren't you?", "you are right are not you"]
+  - ["\"Hello\", she said.", "hello she said"]
+  - ["I'm gonna call you.", "i am going to call you"]
+  - ["He's got a black shirt.", "he has got a black shirt"]
+  - ["She's been there.", "she has been there"]
+  - ["What's happened?", "what has happened"]
+  - ["You'd better go.", "you had better go"]
+  - ["It costs $30.", "it costs thirty dollars"]
+  - ["Only $1!", "only one dollar"]
+  - ["What programmes do you watch?", "what programs do you watch"]
+  - ["Goodnight!", "good night"]
+  - ["I'm from Türkiye.", "i am from turkey"]

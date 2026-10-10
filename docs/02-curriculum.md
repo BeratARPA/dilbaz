@@ -53,6 +53,8 @@ Not: Roman ve film gibi otantik içeriği rahat anlamak için 8–9 bin kelime a
 
 Okumada anlam aramaları loglanır ve bilinmeyen kelime sinyali olarak kullanılır.
 
+**Motorda (F1-16):** `Scaffolds.forLevel` kartların iskelelerini verir: açıklama dili, varsayılan yavaş ses, bir hatanın kendiliğinden açtığı en yüksek ipucu ve deneme hakkı. A0'da deneme hakkı 2'dir; ikinci hatada cevap açılır ("2 hatadan sonra otomatik"). Kendiliğinden açılmayan ipuçları "ipucu" ve "göster" düğmeleriyle açılır. İskeleleri Ayarlar'dan elle açıp kapatmak F1-23'le gelir. F1-19'dan beri konuşma görevinin iskelelerini de verir: hazırlık süresi (`taskPreparation`) ve başlangıçların kendiliğinden açık olup olmadığı (`taskPhrases`). C1–C2 için tablodaki "0–15 sn"den 15 sn alındı.
+
 ## 4. Müfredat haritası (curriculum graph)
 
 ### 4.1 Düğümler
@@ -92,15 +94,33 @@ puan = 3.0 · kişisel_ilgi      (Söyleyemediklerim'den geldiyse 1, ilgi alanı
      − 1.0 · benzerlik_cezası  (son 3 günde tanıtılan bir öğeyle contrasts_with ise 1)
 ```
 
+**Ayrıntılar (motorda `Curriculum.next` ve `Curriculum.score`, F1-10):**
+
+- **Adaylar:** kartı olmayan kelime anlamları ve kalıplar. Kaldırılmış (`deprecated`) öğe aday olmaz.
+- **Seviye uyumu:** üç ve daha fazla seviye üstündeki öğe 0 alır.
+- **Sıklık:** `max_sıra`, paketteki en büyük sıklık sırasıdır. Kalıpların sırası pakette verilir: sohbet çantasındaki sıralarıyla, aynı seviyedeki kelimelerin arasına eşit aralıklarla yerleştirilirler (`11` §5.1). Hiç sırası olmayan öğe 0,5 alır.
+- **Eşit puanda** sıklık sırası küçük olan, sonra anahtarı küçük olan öndedir. Sonuç, paket listelerinin sırasından bağımsızdır.
+- **Aynı gün kuralı:** Liste, birbiriyle `contrasts_with` olan iki öğeyi birlikte içermez; puanı yüksek olan kalır. Bugün tanıtılmış bir öğenin karşıtı da listede olmaz. Böylece planlayıcı listenin başından kaç öğe alırsa alsın kural sağlanır (`05` §8 madde 10).
+- **Aynı kelimenin iki anlamı** da aynı gün tanıtılmaz (only: "sadece" ve "tek"). Gerekçe aynıdır: yeni öğrenilen iki benzer şey birbirini bozar.
+- **v1:** Kişisel ilgi yalnızca Söyleyemediklerim'den gelen öğeler için 1'dir; ilgi alanı etiketi sonraya kaldı. Bu öğeler (F1-17) müfredata kalıp gibi girer: kendi seviyeleri yoksa öğrencinin seviyesinde sayılır, sıklıkları yoktur.
+
 Ağırlıklar motor yapılandırmasındadır ve deneylerle ayarlanır. Son satır bilinçli bir tercih: karışan öğeler **aynı gün birlikte tanıtılmaz**, önce biri oturur, sonra karşıtlık çalışılır (Nation'ın "interference" uyarısı). Birlikte karışık çalışma ancak ikisi de öğrenildikten sonra başlar (I-10).
 
 ### 4.4 Taşıyıcı cümle kuralı (i+1)
 
 Yeni bir kelime ya da kalıp, **içindeki diğer tüm kelimeleri bilinen** 1–2 taşıyıcı cümleyle tanıtılır. Paket her cümle için lemma listesini taşır. Motor, öğrencinin bildiği lemmalara göre uygun taşıyıcıyı seçer. Uygun taşıyıcı yoksa `gap_suggest` rotası anlık üretir, cümle doğrulanır ve kişisel öğe olarak kaydedilir.
 
+**Ayrıntılar (motorda `CarrierPicker.pick`, F1-10):**
+
+- **Adaylar, paketin o anlam için seçtiği cümlelerdir** (kelime anlamının `carriers` alanı). Cümlelerin `contains` bağları lemma ve sözcük türüyle eşleştirilir; aynı kelimenin başka bir anlamını ya da kullanımını da getirebilir. Bu yüzden taşıyıcı adayı sayılmaz.
+- **Sıralama:** hedef dışındaki lemmalardan bilinmeyenlerin beklenen sayısı en az olan öndedir. Beklenen sayı = Σ (1 − lemmanın bilinme olasılığı) (`06` §2: kartla bilinen 1, diğerleri bant olasılığı). Eşitlikte kısa olan, sonra seviyesi düşük olan öndedir.
+- **Uygunluk (i+1):** beklenen bilinmeyen sayısı ≤ 0,5.
+- **Kalıp:** Cümlesi olmayan kalıp kendi taşıyıcısıdır.
+- **v1:** Uygun taşıyıcı yoksa en iyi aday kullanılır. Hedef dışındaki küçük hatalar kartı düşürmez (`03` §0.5), bu yüzden başlangıçta tam uygun taşıyıcı bulunmaması öğrenmeyi durdurmaz. Anlık üretim sonraki faza kaldı.
+
 ## 5. Gramer ilerlemesi (taslak)
 
-Aşağıdaki liste standart ELT ilerlemesidir ve **English Grammar Profile (EGP) ile doğrulanacaktır** (EGP, 1200'den fazla gramer maddesini öğrenci korpusundan seviyelendirir). Her maddede Türkçe konuşanlar için bilinen zorluk notu yer alır.
+Aşağıdaki liste standart ELT ilerlemesidir. A0–A2 maddeleri **CEFR-J Grammar Profile** ile karşılaştırıldı. Bu profil her madde için Core Inventory ve English Grammar Profile (EGP) seviyelerini de verir; EGP, 1200'den fazla gramer maddesini öğrenci korpusundan seviyelendirir. Üç kaynağın da A1 dediği maddeler A1'e alındı: nesne zamirleri, and/but/because, sıklık zarfları, olumlu Past Simple ve was/were. Kaynakların ayrıştığı maddelerde standart ilerleme korundu. Bir seviyenin içindeki sıra CEFR-J alt seviyelerini (A1.1 → A1.3) izler. Her maddede Türkçe konuşanlar için bilinen zorluk notu yer alır.
 
 ### A0–A1
 - **be** (am/is/are): olumlu, olumsuz, soru.
@@ -109,20 +129,23 @@ Aşağıdaki liste standart ELT ilerlemesidir ve **English Grammar Profile (EGP)
 - Çoğul -s; this/that/these/those.
 - **there is/are** ve **have/has got**. *TR: ikisi de "var"; karışır.*
 - **Present Simple** ve 3. tekil **-s**; do/does ile soru ve olumsuz. *TR: -s düşer, "Does he works?" hatası.*
+- Sıklık zarfları (always, usually, never…) ve cümledeki yerleri.
 - can/can't; emir kipi; sahiplik (my/your…, 's).
+- **Nesne zamirleri** (me, him, us, them): emir kipi ve temel kalıplarla birlikte gelir (Help me. Tell me.). *TR: "onu" üçüne birden karşılık gelir; him/her/it karışır.*
 - Yer ve zaman edatları **in/on/at**. *TR: hal ekleri tek biçimde, edat seçimi zor.*
 - Wh- soruları; **How old are you?** *TR: "Kaç yaşındasın?" → "How many years…" hatası.*
+- Bağlaçlar: and, but, because.
 - Present Continuous (şu an); like + -ing.
+- **Past Simple girişi:** was/were ve olumlu cümle (düzenli -ed; went, had, saw gibi sık düzensizler).
 
 ### A2
-- **Past Simple** (düzenli/düzensiz), was/were, did ile soru ve olumsuz.
+- **Past Simple:** did ile soru ve olumsuz; düzensiz fiillerin genişlemesi. *TR: "I didn't went" hatası.*
 - going to / will (plan, tahmin).
 - Karşılaştırma: -er/-est, more/most.
 - Sayılabilir/sayılamaz; some/any, much/many, a lot of.
-- Sıklık zarfları ve cümledeki yerleri.
 - have to / should / must (temel).
 - **Present Simple ↔ Present Continuous** karşıtlığı.
-- Nesne zamirleri; bağlaçlar: and/but/because/so/when/then.
+- Bağlaçlar: so, when, then.
 - **Present Perfect girişi** (ever/never, just). *TR: doğrudan karşılığı yok.*
 - Fiil + to/-ing (want to, enjoy -ing).
 
@@ -207,7 +230,15 @@ Paket, Companion Volume'dan şu ölçeklerdeki tanımları içerir (her seviye i
 - **Aracılık:** belirli bilgiyi aktarma, metni açıklama.
 - **Stratejiler:** telafi.
 
-Tanımların tam metni pakete kopyalanmaz; yalnızca kod ve kendi kısa Türkçe özetimiz tutulur (lisans: `10-content-pipeline.md` §2). Her görev, desteklediği can-do kodlarını taşır. Can-do kanıtı görev sonuçlarından birikir (`04-learner-model.md`).
+Tanımların tam metni pakete kopyalanmaz; yalnızca kod ve kendi kısa Türkçe özetimiz tutulur (lisans: `10-content-pipeline.md` §2). Her görev, desteklediği can-do kodlarını taşır.
+
+**`en@1` (F1-19):** Kodlar `cd.<ölçek>.<seviye>` biçimindedir. Altı kod vardır:
+- deneyim anlatma, A1 ve A2
+- mal ve hizmet edinme, A1 ve A2
+- bilgi alışverişi, A2
+- görüş bildirme, A2
+
+Görevler `curation/en/tasks.yaml`'dadır (`10` §5.4). Can-do kanıtı görev sonuçlarından birikir (`04-learner-model.md`).
 
 ## 9. Başlangıç kapsamı (paket sürümlerine göre)
 

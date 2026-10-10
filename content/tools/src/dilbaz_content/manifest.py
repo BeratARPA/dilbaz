@@ -46,6 +46,35 @@ class Tokenizer(BaseModel):
     runtime: Literal["forms_table", "remote"] = "forms_table"
 
 
+class VocabLevel(BaseModel):
+    """The X_Lex scores of one level: from `from` up to but not including `to`."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, populate_by_name=True)
+
+    level: Literal["A0", "A1", "A2", "B1", "B2", "C1", "C2"]
+    start: int = Field(alias="from", ge=0)
+    end: int = Field(alias="to", gt=0)
+
+
+class Placement(BaseModel):
+    """Settings of the placement test that belong to the language (docs/06 §2)."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    # Recognition vocabulary of each level (docs/02 §2); scores between two
+    # ranges belong to both levels.
+    vocab_levels: tuple[VocabLevel, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _ranges_rise(self) -> Placement:
+        last = 0
+        for entry in self.vocab_levels:
+            if entry.start < last or entry.end <= entry.start:
+                raise ValueError(f"vocab_levels: the range of {entry.level} is out of order")
+            last = entry.end
+        return self
+
+
 class Manifest(BaseModel):
     """`manifest.yaml` of a target (`en@1`) or pair (`tr-en@1`) pack."""
 
@@ -61,6 +90,7 @@ class Manifest(BaseModel):
     script: Script = Script()
     tokenizer: Tokenizer | None = None
     fsrs_defaults: list[float] | None = Field(default=None, min_length=21, max_length=21)
+    placement: Placement | None = None
     counts: dict[str, int] = Field(default_factory=dict)
     sources: list[Source] = Field(min_length=1)
     checksum: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")

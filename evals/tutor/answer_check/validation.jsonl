@@ -1,0 +1,295 @@
+{"id": "n13", "round": 1, "verdicts": ["correct"], "target_ok": true}
+{"id": "n16", "round": 1, "verdicts": ["correct"], "target_ok": true, "note": "self-correction ends in 'saw'"}
+{"id": "n19", "round": 1, "verdicts": ["correct"], "target_ok": true}
+{"id": "v01", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'some'"}
+{"id": "v02", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "reordering of listed 'I eat eggs at breakfast'"}
+{"id": "v03", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'so' for 'very'"}
+{"id": "v04", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'remember to' = 'don't forget to'"}
+{"id": "v05", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'daily' for 'every day'"}
+{"id": "v06", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'never' for 'don't'; same habitual meaning"}
+{"id": "v07", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'enjoy fish' drops 'eating'"}
+{"id": "v08", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "emphatic 'every single day'"}
+{"id": "v09", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'try' for 'have'"}
+{"id": "v10", "round": 1, "verdicts": ["acceptable_variant", "correct"], "target_ok": true, "note": "listed 'Could I have...' plus 'please'"}
+{"id": "v11", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'come on'"}
+{"id": "v12", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'hey'"}
+{"id": "v13", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'keep' for 'leave'"}
+{"id": "v14", "round": 1, "verdicts": ["acceptable_variant", "correct"], "target_ok": true, "note": "blend of two listed answers"}
+{"id": "v15", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "reordering of listed 'We go to the movies every Thursday'"}
+{"id": "v16", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'won't be able to' = 'can't'"}
+{"id": "v17", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'some'"}
+{"id": "v18", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'stayed at home' for 'was at home'"}
+{"id": "v19", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'great' for 'good'"}
+{"id": "v20", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'outside' for 'out there'; close enough"}
+{"id": "v21", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'have caught a cold' implies having one now"}
+{"id": "v22", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "future for present; the Turkish aorist allows it"}
+{"id": "v23", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'on my way to' = 'going to'"}
+{"id": "v24", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'on you' = 'with you'"}
+{"id": "v25", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "request instead of statement; same intent"}
+{"id": "v26", "round": 1, "verdicts": ["acceptable_variant", "correct"], "target_ok": true, "note": "listed 'Can I get...' plus 'please'"}
+{"id": "v27", "round": 1, "verdicts": ["acceptable_variant", "minor_error"], "target_ok": true, "note": "'Have you any...' is correct but formal/dated British"}
+{"id": "v28", "round": 1, "verdicts": ["acceptable_variant", "minor_error"], "target_ok": "either", "note": "'at an office' is acceptable English but the chunk is 'in an office'"}
+{"id": "v29", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'please'"}
+{"id": "v30", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'please'"}
+{"id": "v31", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "adds 'now'"}
+{"id": "v32", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'owns' for 'has'"}
+{"id": "p01", "round": 1, "verdicts": ["acceptable_variant", "minor_error"], "target_ok": true, "note": "Turkish possessive is gender-neutral so 'his' is possible, but it may be a his/her slip"}
+{"id": "p02", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "singular 'their'"}
+{"id": "p03", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'she' allowed; adds 'right now'"}
+{"id": "p04", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "singular 'them' for 'ona'"}
+{"id": "t01", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "same meaning without 'forget'"}
+{"id": "t02", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'daily' is not the noun 'day'"}
+{"id": "t03", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'try' instead of 'have'"}
+{"id": "t04", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'keep' instead of 'leave'"}
+{"id": "t05", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'great' instead of 'good'"}
+{"id": "t06", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'rainy weather'; the noun 'rain' is absent"}
+{"id": "t07", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'hot' instead of 'warm'"}
+{"id": "t08", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'hard' instead of 'difficult' (listed without target)"}
+{"id": "t09", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'ill' instead of 'sick'"}
+{"id": "t10", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'cycle' instead of 'ride a bike'"}
+{"id": "t11", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'chatting' instead of 'talking'"}
+{"id": "t12", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "no 'start'; the pack lists 'I'm getting hungry.' as with-target"}
+{"id": "t13", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'buy' instead of 'get' (listed without target)"}
+{"id": "t14", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'huge' instead of 'big'"}
+{"id": "t15", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'freezing' instead of 'cold'"}
+{"id": "t16", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'dull' instead of 'boring'"}
+{"id": "t17", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'costs too much' instead of 'expensive'"}
+{"id": "t18", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'amusing' instead of 'funny'"}
+{"id": "t19", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'online' instead of 'on the Internet'"}
+{"id": "t20", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'received' instead of 'got'; the pack lists 'received' answers as with-target"}
+{"id": "t21", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'feel cold' (listed without target) plus 'so'"}
+{"id": "t22", "round": 1, "verdicts": ["acceptable_variant"], "target_ok": "either", "note": "standard variant of the chunk; 'meet' appears as 'meeting'"}
+{"id": "m01", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'is' missing"}
+{"id": "m02", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "article missing"}
+{"id": "m03", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'is' missing"}
+{"id": "m04", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'in' for 'on'"}
+{"id": "m05", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'in' for 'on'"}
+{"id": "m06", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'at' for 'in'"}
+{"id": "m07", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'brother' lacks -s; target 'have' fine"}
+{"id": "m08", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'make' for 'do'; target 'homework' fine"}
+{"id": "m09", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": true, "note": "'the' missing; 'go to sea' idiomatically means to sail"}
+{"id": "m10", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "adverb position"}
+{"id": "m11", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'a' missing"}
+{"id": "m12", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'am' missing; 'writing' fine"}
+{"id": "m13", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'do' missing"}
+{"id": "m14", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'you' for 'your'"}
+{"id": "m15", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'friend' lacks -s"}
+{"id": "m16", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'work' lacks -s"}
+{"id": "m17", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'she' for 'her'"}
+{"id": "m18", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'is' for 'are'"}
+{"id": "m19", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": true, "note": "present for past; with 'today' the past meaning is lost"}
+{"id": "m20", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'see' for 'saw'; 'yesterday' keeps the meaning"}
+{"id": "m21", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'breaked'"}
+{"id": "m22", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'kill' for 'killed'"}
+{"id": "m23", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'i' for 'me'"}
+{"id": "m24", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'a' missing"}
+{"id": "m25", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'does' and inversion missing"}
+{"id": "m26", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'do' missing"}
+{"id": "m27", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'a' missing"}
+{"id": "m28", "round": 1, "verdicts": ["minor_error", "acceptable_variant"], "target_ok": true, "note": "present simple for an ongoing event"}
+{"id": "m29", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'can to'"}
+{"id": "m30", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'let me to'"}
+{"id": "m31", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'is' missing"}
+{"id": "m32", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'for show' instead of 'to show'"}
+{"id": "f01", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target 'brothers' lacks -s"}
+{"id": "f02", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target adverb misplaced"}
+{"id": "f03", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'you speaks'"}
+{"id": "f04", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": false, "note": "'good' in place of target 'well'"}
+{"id": "f05", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'am not feel'"}
+{"id": "f06", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'answers' plural"}
+{"id": "f07", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target 'friends' lacks -s"}
+{"id": "f08", "round": 1, "verdicts": ["minor_error", "uncertain"], "target_ok": false, "note": "'men' for 'man'; could be an ASR/vowel confusion"}
+{"id": "f09", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target 'works' lacks -s"}
+{"id": "f10", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'are play'"}
+{"id": "f11", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'to saw'"}
+{"id": "f12", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": false, "note": "'go' for 'went'; past meaning lost"}
+{"id": "f13", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'seed' for 'saw'"}
+{"id": "f14", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'breaked' for 'broke'"}
+{"id": "f15", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'come' for 'came'"}
+{"id": "f16", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'can i using'"}
+{"id": "f17", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'peoples'"}
+{"id": "f18", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'every years'"}
+{"id": "f19", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": false, "note": "'lately' (= recently) for 'late'"}
+{"id": "s01", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "s02", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "s03", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "s04", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "s05", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "s06", "round": 1, "verdicts": ["minor_error"], "target_ok": true, "note": "'verry' misspelled; target fine"}
+{"id": "s07", "round": 1, "verdicts": ["minor_error", "correct"], "target_ok": true, "note": "only the apostrophe of 'Let's' is missing"}
+{"id": "s08", "round": 1, "verdicts": ["minor_error", "correct"], "target_ok": true, "note": "only the apostrophe of 'don't' is missing"}
+{"id": "s09", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "target misspelled"}
+{"id": "w01", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'bathroom' for 'bedroom'"}
+{"id": "w02", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'big' for 'small'"}
+{"id": "w03", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'table' for 'chair'"}
+{"id": "w04", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'close' for 'open'"}
+{"id": "w05", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'Thursday' for 'Tuesday'"}
+{"id": "w06", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "days swapped; meaning reversed"}
+{"id": "w07", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'morning' for 'afternoon'"}
+{"id": "w08", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'hot' for 'cold'"}
+{"id": "w09", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'summer' for 'winter'"}
+{"id": "w10", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'autumn' for 'spring'"}
+{"id": "w11", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'early' for 'late'"}
+{"id": "w12", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "negation lost; meaning reversed"}
+{"id": "w13", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'snow' for 'rain'"}
+{"id": "w14", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'hotel' for 'hospital'"}
+{"id": "w15", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'socks' for 'shoes'"}
+{"id": "w16", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "negation lost; meaning reversed"}
+{"id": "w17", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'phone' for 'computer'"}
+{"id": "w18", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'teacher' for 'doctor'"}
+{"id": "w19", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'son' for 'daughter'"}
+{"id": "w20", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'hungry' for 'tired'"}
+{"id": "w21", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'expensive' for 'cheap'"}
+{"id": "w22", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'poor' for 'rich'"}
+{"id": "w23", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'clean' for 'dirty'"}
+{"id": "w24", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'fast' for 'slow'"}
+{"id": "w25", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'eat' for 'cook'"}
+{"id": "w26", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'driving' for 'washing'"}
+{"id": "w27", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "negation lost; meaning reversed"}
+{"id": "w28", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'make' replaces target 'do'"}
+{"id": "w29", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'high' does not fit for a person"}
+{"id": "w30", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "'look' (without 'at') replaces 'see'"}
+{"id": "w31", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'look' replaces target 'watch'"}
+{"id": "w32", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'boring' for 'bored' changes the meaning"}
+{"id": "g01", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'is' missing"}
+{"id": "g02", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'are' for 'is'"}
+{"id": "g03", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: no do-support"}
+{"id": "g04", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'don't' for 'doesn't'"}
+{"id": "g05", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: declarative question without 'do'"}
+{"id": "g06", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'are' for 'do'"}
+{"id": "g07", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'we watches'"}
+{"id": "g08", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'i likes'"}
+{"id": "g09", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'no' for 'not' (ASR may have dropped the t)"}
+{"id": "g10", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: no inversion"}
+{"id": "g11", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'don't can'"}
+{"id": "g12", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'do you can'"}
+{"id": "g13", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'there have'"}
+{"id": "g14", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'am' for 'was'"}
+{"id": "g15", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'were' for 'was'"}
+{"id": "g16", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'am' missing"}
+{"id": "g17", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": "either", "note": "'going to' formed correctly; only the question inversion is missing"}
+{"id": "g18", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'have pay' ('to' missing)"}
+{"id": "g19", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'must to'"}
+{"id": "g20", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'did you be'"}
+{"id": "g21", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'would like help' ('to' missing)"}
+{"id": "g22", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'like eat'"}
+{"id": "g23", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'not' for 'don't'"}
+{"id": "g24", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'me' for 'my'"}
+{"id": "g25", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'a' for 'an'"}
+{"id": "g26", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'hand' for 'hands'"}
+{"id": "g27", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: subject 'I' dropped"}
+{"id": "g28", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: adverb before 'am'"}
+{"id": "g29", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'is' missing"}
+{"id": "g30", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'do' missing"}
+{"id": "g31", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'this' for 'that'"}
+{"id": "g32", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'breaked'"}
+{"id": "g33", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'kill' for 'killed'"}
+{"id": "g34", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "grammar card: 'am' missing"}
+{"id": "c01", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "calque; 'How old' missing"}
+{"id": "c02", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "calque 'have ... years'; chunk missing"}
+{"id": "c03", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "no inversion"}
+{"id": "c04", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'am' missing"}
+{"id": "c05", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "extra 'on'"}
+{"id": "c06", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'am not' for 'don't'"}
+{"id": "c07", "round": 1, "verdicts": ["minor_error", "wrong"], "target_ok": false, "note": "'no' for 'don't'"}
+{"id": "c08", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'is' for 'does'"}
+{"id": "c09", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'do' missing"}
+{"id": "c10", "round": 1, "verdicts": ["wrong", "acceptable_variant"], "target_ok": false, "note": "blunt imperative; chunk and 'please' missing"}
+{"id": "c11", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'marry' for 'married'"}
+{"id": "c12", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "word order"}
+{"id": "c13", "round": 1, "verdicts": ["minor_error", "acceptable_variant"], "target_ok": "either", "note": "'with credit card' lacks the article; otherwise close to listed variants"}
+{"id": "c14", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'the' missing"}
+{"id": "c15", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'turn to left'"}
+{"id": "c16", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'losing' for 'lost' changes the meaning"}
+{"id": "c17", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'don't' for 'doesn't'"}
+{"id": "c18", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'a help'"}
+{"id": "c19", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'am agree'"}
+{"id": "c20", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'yes' for 'so'"}
+{"id": "c21", "round": 1, "verdicts": ["wrong", "minor_error"], "target_ok": false, "note": "'after' for 'later'"}
+{"id": "c22", "round": 1, "verdicts": ["minor_error"], "target_ok": false, "note": "'lucks'"}
+{"id": "o01", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o02", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o03", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o04", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o05", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o06", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "a reply, not the prompt"}
+{"id": "o07", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o08", "round": 1, "verdicts": ["off_target", "wrong"], "target_ok": false, "note": "reads as a reply to the question"}
+{"id": "o09", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "reply to the question"}
+{"id": "o10", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "reply to the question"}
+{"id": "o11", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o12", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "Turkish"}
+{"id": "o13", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o14", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o15", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o16", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o17", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o18", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o19", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o20", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o21", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "different sentence"}
+{"id": "o22", "round": 1, "verdicts": ["wrong", "off_target"], "target_ok": false, "note": "'Good night' for 'Good morning'"}
+{"id": "o23", "round": 1, "verdicts": ["wrong", "off_target"], "target_ok": false, "note": "'Excuse me' is a different phrase, not an apology here"}
+{"id": "o24", "round": 1, "verdicts": ["off_target"], "target_ok": false, "note": "Turkish"}
+{"id": "o25", "round": 1, "verdicts": ["off_target", "wrong"], "target_ok": false, "note": "typed gibberish; 'unintelligible' is ASR-only"}
+{"id": "x01", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "fragment only"}
+{"id": "x02", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "fragment only"}
+{"id": "x03", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "fragment only"}
+{"id": "x04", "round": 1, "verdicts": ["wrong"], "target_ok": false, "note": "fragment only"}
+{"id": "u01", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u02", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u03", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u04", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u05", "round": 1, "verdicts": ["unintelligible", "off_target"], "target_ok": false, "note": "probably the Turkish 'Otel asagida' misrecognized"}
+{"id": "u06", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u07", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u08", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u09", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u10", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u11", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u12", "round": 1, "verdicts": ["unintelligible"], "target_ok": false}
+{"id": "u13", "round": 1, "verdicts": ["unintelligible", "off_target"], "target_ok": false, "note": "possibly the Turkish 'Daglara gidiyoruz' misrecognized"}
+{"id": "q01", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "can/can't decides it; confidence 0.6"}
+{"id": "q02", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "can/can't decides it; confidence 0.62"}
+{"id": "q03", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'angry' may be a misheard 'hungry'"}
+{"id": "q04", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'thursday' is likely a misheard 'thirsty'"}
+{"id": "q05", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'walk' may be a misheard 'work'"}
+{"id": "q06", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'leave' may be a misheard or mispronounced 'live'"}
+{"id": "q07", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'back' may be 'bag' with final devoicing"}
+{"id": "q08", "round": 1, "verdicts": ["uncertain", "wrong"], "target_ok": true, "note": "'kitten' may be a misheard 'kitchen'"}
+{"id": "t30", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'practically' = almost; target 'almost' not used"}
+{"id": "t31", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'so' as intensifier in place of 'really'"}
+{"id": "v46", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'my hotel' for definite 'oteli': natural in the lost-traveller situation; target present"}
+{"id": "m04", "round": 2, "verdicts": ["minor_error"], "target_ok": true, "note": "preposition 'in the floor' for 'on the floor'; target word correct"}
+{"id": "v40", "round": 2, "verdicts": ["acceptable_variant", "minor_error"], "target_ok": true, "note": "'I got' = colloquial/reduced 'I've got' or 'I (just) got' = obtained; meaning kept, target present"}
+{"id": "v39", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'any sisters' is the idiomatic form of the question"}
+{"id": "v41", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "t25", "round": 2, "verdicts": ["acceptable_variant", "wrong"], "target_ok": false, "note": "paraphrase without 'find'; 'don't know where it is' is close to, but not quite, 'can't find'"}
+{"id": "v33", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "added intensifier 'really'"}
+{"id": "g03", "round": 2, "verdicts": ["wrong"], "target_ok": false, "note": "grammar card: the practised negative lacks do-support ('I not eat')"}
+{"id": "c19", "round": 2, "verdicts": ["minor_error", "wrong"], "target_ok": false, "note": "'I am agree': extra 'be' inside the chunk itself"}
+{"id": "m22", "round": 2, "verdicts": ["minor_error"], "target_ok": true, "note": "past tense missing ('kill' for 'killed'); target 'flowers' correct"}
+{"id": "t28", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'ancient' = very old (hyperbole); target 'old' not used"}
+{"id": "v44", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "v43", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "restructured as 'a very old book', same meaning"}
+{"id": "t29", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'off to sleep' = going to sleep; no 'bed'"}
+{"id": "w12", "round": 2, "verdicts": ["wrong"], "target_ok": false, "note": "negation lost: says the opposite ('I hope it rains')"}
+{"id": "v34", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "extra 'now'"}
+{"id": "t24", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false, "note": "'organizing' instead of 'having'; meaning close enough, target missing"}
+{"id": "v35", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "v37", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "exclamative 'What a good idea!', same evaluation"}
+{"id": "v42", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "v47", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "v36", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "s02", "round": 2, "verdicts": ["minor_error"], "target_ok": false, "note": "typed misspelling of the target ('bathrom')"}
+{"id": "t26", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false}
+{"id": "t27", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false}
+{"id": "v48", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true, "note": "'organizing' instead of 'having'; target 'party' present"}
+{"id": "t23", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false}
+{"id": "t32", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": false}
+{"id": "v38", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "v45", "round": 2, "verdicts": ["acceptable_variant"], "target_ok": true}
+{"id": "w25", "round": 2, "verdicts": ["wrong"], "target_ok": false, "note": "'eat' replaces 'cook' (yemek = food / to eat), meaning changed"}
+{"id": "o06", "round": 2, "verdicts": ["off_target"], "target_ok": false, "note": "answers the question instead of saying it"}
+{"id": "f16", "round": 2, "verdicts": ["minor_error"], "target_ok": false, "note": "target in the wrong verb form ('can I using')"}
+{"id": "f07", "round": 2, "verdicts": ["minor_error"], "target_ok": false, "note": "plural -s missing on the target ('friend')"}

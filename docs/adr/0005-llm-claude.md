@@ -1,6 +1,6 @@
 # ADR-0005 — Yapay zekâ: Claude API, sunucu tarafında
 
-- **Durum:** Kabul edildi (2026-09-26)
+- **Durum:** Kabul edildi (2026-09-26). **Askıda:** ADR-0009 (sıfır bütçe) ile kısmen değiştirildi. Rotalar ücretsiz katman sağlayıcılarıyla çalışır (Gemini, Groq); içerik Claude Code oturumlarında üretilir. Bütçe olursa Claude aynı rota sözleşmeleriyle geri döner.
 
 ## Bağlam
 Cevap değerlendirme, ipucu merdiveni, konuşma işaretleme, rol oyunu ve içerik üretimi için bir LLM gerekiyor. Pedagojik korkuluklar ve maliyet kontrolü şart (P21, I-11).
