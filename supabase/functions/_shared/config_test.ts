@@ -14,8 +14,9 @@ Deno.test("every route has a valid effort and a generous max_tokens", () => {
 });
 
 Deno.test("route settings follow docs/07 §2–§3", () => {
+  // Groq missed the answer_check thresholds (docs/07 §8): no fallback model.
   assertEquals(llmConfig.routes.answer_check, {
-    chain: ["gemini-3.1-flash-lite", "openai/gpt-oss-120b"],
+    chain: ["gemini-3.1-flash-lite"],
     effort: "low",
     maxTokens: 4000,
     timeoutMs: 15_000,

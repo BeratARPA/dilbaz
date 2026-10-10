@@ -5,32 +5,32 @@
   "cases": 285,
   "scores": [
     {
-      "model": "gemini-3.1-flash-lite",
-      "cases": 285,
-      "failures": 0,
-      "accuracy": 0.9368421052631579,
-      "falseWrong": 0.022988505747126436,
-      "goldCorrect": 87,
-      "targetOk": 0.8487084870848709,
-      "tagHit": 0.9444444444444444,
+      "model": "openai/gpt-oss-120b",
+      "cases": 54,
+      "failures": 2,
+      "accuracy": 0.6851851851851852,
+      "falseWrong": 0.14893617021276595,
+      "goldCorrect": 47,
+      "targetOk": 0.8461538461538461,
+      "tagHit": 0.8571428571428571,
       "schemaValid": 1,
       "leakServed": 0,
-      "leakRaw": 0.1105072463768116,
+      "leakRaw": 0.10416666666666667,
       "longHints": 0,
-      "latencyP50": 1472,
-      "latencyP95": 5165,
+      "latencyP50": 1065,
+      "latencyP95": 1818,
       "tokens": {
-        "input": 1722173,
-        "cached": 955742,
-        "output": 73371
+        "input": 327271,
+        "cached": 98304,
+        "output": 13656
       },
       "passes": {
-        "accuracy": true,
-        "falseWrong": true,
+        "accuracy": false,
+        "falseWrong": false,
         "leakServed": true,
         "schemaValid": true
       },
-      "complete": true
+      "complete": false
     }
   ]
 }

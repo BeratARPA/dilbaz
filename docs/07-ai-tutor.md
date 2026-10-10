@@ -19,7 +19,7 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
 
   | Rota | Birincil | Yedek | Son çare |
   |---|---|---|---|
-  | `answer_check` | Gemini 3.1 Flash-Lite | Groq `openai/gpt-oss-120b` | Deterministik değerlendirme |
+  | `answer_check` | Gemini 3.1 Flash-Lite | – (Groq eşikleri geçmedi, 2026-10-10) | Deterministik değerlendirme |
   | `gap_suggest` | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite → Groq | Yakalama + bekleyen öneri |
   | `speaking_annotate` (aylık test dahil) | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite | Deterministik akıcılık ölçümleri; işaretleme sonradan |
   | Sonraki fazların rotaları | O fazda eval ile seçilir | | |
@@ -27,6 +27,7 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
   - **Model kimlikleri** (Gemini belgeleri, 2026-09-30): `gemini-3.1-flash-lite` belgelerin düşük maliyetli ve yüksek hacimli işler için önerdiği kararlı, uzun ömürlü model; `gemini-3.5-flash` genel kullanımda (GA). ADR-0009'daki "Flash-Lite 3.5" belgelerde yok.
 
   - **Sıra eval'le kesinleşir.** Bu sıra bir tahmindir; her rota için birincil ve yedek sağlayıcıyı eval belirler (§8). "En iyi", eşikleri geçenler arasında en yüksek doğruluğu veren seçenektir; eşitlikte gecikmeye bakılır.
+  - **`answer_check`'te Groq yok (2026-10-10, 👤 karar):** Groq `gpt-oss-120b` 54 vakada doğruluk %68,5 ✗ ve doğruyu yanlış sayma %14,9 ✗ (eşik ≤ %3) verdi. Her 7 doğru cevaptan ~1'ini "yanlış" sayıyordu. Gemini yoksa ya da öğrenci veri onayı vermediyse kartı motor değerlendirir (altın sette eşikleri geçiyor). Belirsiz kalan cevap bekleyen kontrol olur; onay yoksa her senkronda bir kez denenip bekler. Kalan 231 vaka koşturulmadı: sapma eşiğin 5 katı.
   - **Groq ve uzun rotalar:** Groq'un ücretsiz katmanındaki dakikada 8K token sınırı, uzun rotalara (`speaking_annotate`) izin vermez.
 - **Ayarların yeri:** Sağlayıcılar, model adları, rota sıraları ve kotalar tek bir yapılandırma dosyasındadır: `supabase/functions/_shared/llm_config.ts`. Kodda model adı sabit yazılmaz. İçerik araçlarında çalışma anı LLM'i yoktur; içerik Claude Code oturumlarında üretilir (`10`).
 - **Düşünme derinliği:** Rota başına anlamsal bir **effort** düzeyi (low, medium, high) tanımlanır. Adaptör bunu sağlayıcının ayarına çevirir: Gemini'de `thinkingConfig.thinkingLevel` (`LOW`, `MEDIUM`, `HIGH`), `gpt-oss`'ta `reasoning_effort` (düşünme metni cevaba eklenmez: `include_reasoning: false`).
@@ -324,7 +325,7 @@ ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 | Kota doldu (sağlayıcı ya da kullanıcı payı) | Sıradaki sağlayıcı; hepsi doluysa deterministik mod. Kullanıcıya nötr bilgi verilir, suçlayıcı değil. |
 | Güvenlik engeli / reddetme (tüm sağlayıcılarda) | Nötr mesaj, deneme `uncertain` sayılır, olay kodu loglanır |
 | Şema ihlali / katalog dışı kod | 1 yeniden deneme, sonra sıradaki sağlayıcı, sonra `uncertain` |
-| Kullanıcının veri onayı yok | Groq ya da deterministik yol (§3) |
+| Kullanıcının veri onayı yok | `answer_check`: deterministik yol; `gap_suggest`: Groq; `speaking_annotate`: işaretleme bekler (§2, §3) |
 | LLM ile deterministik sonuç çelişirse | Deterministik "doğru" ise her zaman doğru kabul edilir |
 
 **İstemci (F1-16):** Kart, cevabı en çok 15 sn bekler (`SupabaseTutorRepository.answerCheckWait`; rotanın model başına sınırı). Sonra isteği keser ve deterministik yola geçer; kullanıcıya nötr bir satır gösterilir. Denemenin `llm` alanı, LLM cevap verdiyse `{route, pending: false, provider, model, catalog, confidence}`, vermediyse `{route, pending, code}` olur. `code` değerleri: `network`, `quota`, `unavailable`, `refused`, `failed`, `invalid`, `unknown`. Deterministik yolda `uncertain` kalan denemede `llm` alanı sorulan isteği de taşır (`request`). Her başarılı senkrondan sonra bu istekler yeniden sorulur (F1-21, `LateChecks`, en çok 10 cevap); sonuç `llm_resolved` ekidir (`13` §2.3).

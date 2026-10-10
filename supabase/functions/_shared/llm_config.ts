@@ -93,8 +93,11 @@ export const llmConfig = {
   fairShare: 0.5,
 
   routes: {
+    // Groq missed the thresholds here (2026-10-10: 68.5 % right, 14.9 %
+    // of right answers called wrong); without Gemini the card is judged by
+    // the engine alone (docs/07 §2).
     answer_check: {
-      chain: ["gemini-3.1-flash-lite", "openai/gpt-oss-120b"],
+      chain: ["gemini-3.1-flash-lite"],
       effort: "low",
       maxTokens: 4000,
       timeoutMs: 15_000,

@@ -274,9 +274,12 @@ Deno.test("when the learner's state cannot be read, Gemini is not asked", async 
 
   const response = await handle(check(cardInput));
 
-  assertEquals(response.status, 200);
-  assertEquals((await response.json()).provider, "groq");
+  // answer_check has no Groq (docs/07 §2): nothing may answer, and the card
+  // is judged by the engine.
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
   assertEquals(primary.asked.length, 0);
+  assertEquals(fallback.asked.length, 0);
   assert(lines.some((line) => JSON.parse(line).event === "state_unavailable"));
 });
 
