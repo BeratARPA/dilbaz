@@ -120,3 +120,4 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 - 2026-09-25: Plan tamamlandı. Kodlama başlamadı. Başlangıç: `17-roadmap.md` → Faz 0.
 - 2026-09-26: Faz 0 başladı (dal `faz-0`). Güncel durum `17-roadmap.md` ilerleme günlüğündedir.
 - 2026-09-26: Faz 0 tamamlandı ve `main`'e birleştirildi. Faz 1 başladı (dal `faz-1`); ADR-0009 (sıfır bütçe) kabul edildi.
+- 2026-10-10: Faz 1 tamamlandı (tek kullanıcıyla; ikinci kullanıcı bekliyor) ve `main`'e birleştirildi. Faz 2 başladı (dal `faz-2`).

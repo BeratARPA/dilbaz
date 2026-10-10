@@ -351,6 +351,7 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
         - Bir iki zararsız ekleme var (g08 "I'm sorry", g39 "get a refund").
       - **3.1 Flash-Lite (44 vaka):** Gelen 42 cevabın 42'si anlamca doğru. g22 ve g27'de cevap yok; uygulamada öneri bekler ve yeniden denenir.
       - Engelleyici sorun yok. Tek kelimelik girdi zayıf nokta: kalıp kelimenin kendisi olmalı (sonraki prompt sürümü için not).
+      - **2026-10-10:** 3.5 Flash'ın kalan 3 vakası (B1) da doğru; 44/44 tamam (seviye %100, şema %100, p50 1,3 sn).
   - `speaking_annotate` seti v1 (F1-19): 30 transkript (`tutor/speaking_annotate/cases.yaml`). `evals/speaking_cases.ts` görevlerin istemi ve hedefini içerik küratörlüğünden alır ve `cases.jsonl`'ı kurar.
     - İçerik: A1–A2, paketin 17 görevi ve üç sabit görev; 23 tamam, 5 kısmi, 2 yapılmamış (biri konu dışı); 39 altın hata, 24 farklı etiket; 7 hatasız transkript; Türkçe dolgu, onarım ve bağımlı cümlecik.
     - Altın hatalar kelime alıntısıyla yazılır; eksik kelimede boşluğun iki yanı alınır.
@@ -383,6 +384,7 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   - `answer_check@1`, Flash-Lite, 285 vaka: doğruluk %77,5 ✗; doğruyu yanlış sayma %2,3 ✓; sunulan sızıntı %0 ✓; şema %100 ✓. 26 çağrı 15 sn'de zaman aşımına uğradı (p50 2,9 sn, p95 13,5 sn). Öğrenciye yansıyan geçti/kaldı sonucu yanıtlı vakalarda %92,3 doğru. Groq 76 vakada durduruldu; p50 1,0 sn. Sonuç: `answer_check@2` (§5).
   - `gap_suggest@1`: Flash-Lite 44 vaka, seviye %100 ✓, şema %95,5, p50 10,4 sn. 3.5 Flash ilk 20 vakada seviye %100, p50 1,4 sn.
   - `speaking_annotate@1`: Flash-Lite 30 vaka, F1 0,96 ✓, EFC farkı 0 ✓, görev sonucu %96,7 ✓. Sızıntı denetimi 9 ipucunu boşalttı; öğrenciye sızan yok.
+    - 3.5 Flash (2026-10-10, günlük 20 istek sınırıyla 7/30): F1 1,0 ✓, etiket uyumu 1,0, EFC farkı 0 ✓, görev sonucu 1,0 ✓, şema %100; denetim 2 ipucunu boşalttı, öğrenciye sızan yok; p50 10,4 sn. Kalan 23 vaka günlük kotayla Faz 2 sırasında koşar.
 - **Öğrenciye yansıyan uyum:** Katı karar doğruluğu kart için sonucu tek başına göstermez. Örneğin `minor_error` ve `target_ok=true` öğrenciyi geçirir, `wrong` kaldırır. Bu yüzden kararlar geçti/kaldı olarak da karşılaştırılır; `minor_error`'da hedefi motorun hükmü verir (ADR-0010). Henüz eşik değil, raporlanır.
 - **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır (`packages/engine/test/scoring/answer_check_golden_test.dart`). Eşikler:
   - doğru ya da varyant cevabı "yanlış" sayma ≤ %3

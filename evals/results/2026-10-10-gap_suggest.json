@@ -1,0 +1,26 @@
+{
+  "route": "gap_suggest",
+  "prompt": "gap_suggest@1",
+  "date": "2026-10-10",
+  "cases": 44,
+  "scores": [
+    {
+      "model": "gemini-3.5-flash",
+      "cases": 44,
+      "failures": 0,
+      "levelChecked": 39,
+      "levelOk": 1,
+      "simplified": 0,
+      "chunkCopied": 1,
+      "longNotes": 0,
+      "schemaValid": 1,
+      "latencyP50": 1317,
+      "latencyP90": 2820,
+      "tokensPerCase": 1629,
+      "passes": {
+        "levelOk": true
+      },
+      "complete": true
+    }
+  ]
+}
