@@ -1015,7 +1015,7 @@
   "@cardsWithoutTargetEnd": {
     "description": "Card session: ended with correct answers without the target."
   },
-  "cardsUndecided": "Cevabını şimdi kesinleştiremedim; bağlantı gelince yeniden bakılacak. Cümle bu:",
+  "cardsUndecided": "Cevabını şimdi kesinleştiremedim; sonra yeniden bakılacak. Cümle bu:",
   "@cardsUndecided": {
     "description": "Card session: undecided without the LLM (docs/03 §0.5)."
   },
