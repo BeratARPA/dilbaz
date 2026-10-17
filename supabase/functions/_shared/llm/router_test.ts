@@ -191,12 +191,16 @@ Deno.test("a 429 cools the model down: until the quota day ends, or for a while"
 
   // Gemini's day ends at midnight Pacific time: 07:00 UTC in summer.
   clock = Date.parse("2026-10-01T06:59:00Z");
-  assert(cooldown.blocked(lite, clock));
-  assert(!cooldown.blocked(oss, clock));
+  assertEquals(cooldown.blocked(lite, clock), "quota");
+  assertEquals(cooldown.blocked(oss, clock), null);
   clock = Date.parse("2026-09-30T10:00:06Z");
-  assert(cooldown.blocked(oss, clock), "still within the 7 s asked for");
+  assertEquals(
+    cooldown.blocked(oss, clock),
+    "busy",
+    "still within the 7 s asked for",
+  );
 
-  // While cooling down, the model is skipped like a spent share.
+  // A spent quota is skipped like a spent share.
   const again = await runChain(
     deps({ models: [model(lite, "gemini", good).fake], cooldown, now }),
     request,
@@ -204,6 +208,15 @@ Deno.test("a 429 cools the model down: until the quota day ends, or for a while"
   );
   assert(!again.ok);
   assertEquals(again.code, "quota_exhausted");
+
+  // A busy model is not a day's share spent: the learner hears "not now".
+  const soon = await runChain(
+    deps({ models: [model(oss, "groq", good).fake], cooldown, now }),
+    request,
+    accept,
+  );
+  assert(!soon.ok);
+  assertEquals(soon.code, "llm_failed");
 });
 
 Deno.test("refusals everywhere read as llm_refused, other failures as llm_failed", async () => {

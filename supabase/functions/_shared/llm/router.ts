@@ -43,14 +43,17 @@ export type ChainResult<T> =
 
 /** Models to leave alone for a while after a 429, per isolate. */
 export class Cooldown {
-  readonly #until = new Map<string, number>();
+  readonly #until = new Map<string, { at: number; why: "quota" | "busy" }>();
 
-  blocked(model: string, now: number): boolean {
-    return (this.#until.get(model) ?? 0) > now;
+  /** Why [model] waits at [now]: a spent daily quota, a per-minute limit,
+   * or null when it may be tried. */
+  blocked(model: string, now: number): "quota" | "busy" | null {
+    const hold = this.#until.get(model);
+    return hold !== undefined && hold.at > now ? hold.why : null;
   }
 
-  hold(model: string, until: number): void {
-    this.#until.set(model, until);
+  hold(model: string, until: number, why: "quota" | "busy" = "quota"): void {
+    this.#until.set(model, { at: until, why });
   }
 }
 
@@ -82,9 +85,13 @@ export async function runChain<T>(
     const provider = llmConfig.providers[model.provider];
     if (!config || (provider.needsConsent && !deps.consent)) continue;
     const use = deps.use.get(model.id) ?? { requests: 0, tokens: 0 };
-    if (
-      deps.cooldown.blocked(model.id, deps.now()) || !withinShare(config, use)
-    ) {
+    // A per-minute limit is a model busy for now, not a day's share spent.
+    const blocked = deps.cooldown.blocked(model.id, deps.now());
+    if (blocked === "busy") {
+      ends.push("failed");
+      continue;
+    }
+    if (blocked === "quota" || !withinShare(config, use)) {
       ends.push("quota");
       continue;
     }
@@ -131,6 +138,7 @@ export async function runChain<T>(
           end === "quota"
             ? quotaDayEnd(provider.quotaDay, new Date(now)).getTime()
             : now + Math.min(outcome.retryAfterMs ?? defaultBusyMs, maxBusyMs),
+          end,
         );
       }
       break;
