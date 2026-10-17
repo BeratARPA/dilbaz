@@ -75,6 +75,10 @@ typedef _Done = ({
   AnnotatedSpeech? annotated,
   TutorFailure? waiting,
   List<_Practice> practice,
+
+  /// The task's attempt, when it was written before: a recording opened
+  /// again (docs/08 §5.2).
+  String? attemptId,
 });
 
 /// A speaking task (A11, docs/03 §A11, docs/09 §5.6): choose, prepare,
@@ -97,6 +101,9 @@ class SpeakingController extends _$SpeakingController {
   final _done = <_Done>[];
   var _recorded = false;
 
+  /// The attempt of a recording opened again, written before.
+  String? _openedAttempt;
+
   /// Time spent speaking, and when the feedback of the latest recording
   /// opened: the session's time on output (docs/05 §2).
   DateTime? _startedAt;
@@ -109,6 +116,9 @@ class SpeakingController extends _$SpeakingController {
 
   /// Suggestions shown first (I-14: at least two).
   static const suggestions = 3;
+
+  /// How long a feedback that came later waits in the list.
+  static const readyFor = Duration(days: 7);
 
   /// Longest practice time one feedback counts.
   static const _practiceCap = Duration(minutes: 5);
@@ -168,10 +178,49 @@ class SpeakingController extends _$SpeakingController {
         if (byKey[key] case final task?)
           (key: task.key, title: task.title, level: task.level),
     ];
+    final waiting = await ref
+        .read(recordingRepositoryProvider)
+        .readyFeedback(course.id, now.subtract(readyFor));
     return SpeakingState.choosing(
       suggested: choices.take(suggestions).toList(),
       others: choices.skip(suggestions).toList(),
+      ready: [
+        for (final row in waiting)
+          if (byKey[row.taskRef] case final task?)
+            (
+              recordingId: row.id,
+              title: task.title,
+              day: startOfLocalDay(row.createdAt),
+            ),
+      ],
     );
+  }
+
+  /// Opens the feedback of an earlier recording whose marks came later
+  /// (docs/08 §5.2): the same corrections to practise, hints first (I-01).
+  Future<void> openRecording(String id) async {
+    if (state.value is! SpeakingChoosing) return;
+    final row = await ref.read(recordingRepositoryProvider).recording(id);
+    if (!ref.mounted || row == null) return;
+    final task = _tasks.where((t) => t.key == row.taskRef).firstOrNull;
+    final transcript = row.transcript;
+    final annotated = row.annotated;
+    if (task == null || transcript == null || annotated == null) return;
+    _task = task;
+    _view = _taskView(task);
+    final now = ref.read(clockProvider)();
+    _startedAt ??= now;
+    _recordingId = id;
+    _openedAttempt = row.attemptId;
+    _transcript = transcript;
+    _marks = (annotated: annotated, waiting: null);
+    _practice = [
+      for (final correction in pickCorrections(annotated.annotation))
+        _Practice(correction, _context.scaffolds.review()),
+    ];
+    _current = 0;
+    _feedbackAt = now;
+    _emit();
   }
 
   TaskView _taskView(SpeakingTask task) => TaskView(
@@ -517,7 +566,9 @@ class SpeakingController extends _$SpeakingController {
       annotated: _marks?.annotated,
       waiting: _marks?.waiting,
       practice: _practice,
+      attemptId: _openedAttempt,
     ));
+    _openedAttempt = null;
     _recordingId = null;
     _transcript = null;
     _marks = null;
@@ -536,18 +587,20 @@ class SpeakingController extends _$SpeakingController {
     final recordings = ref.read(recordingRepositoryProvider);
     final now = ref.read(clockProvider)();
     for (final done in _done) {
-      final attemptId = await recordings.recordAttempt(
-        userId: _context.userId,
-        courseId: _context.courseId,
-        deviceId: _context.deviceId,
-        recordingId: done.recordingId,
-        taskRef: done.taskRef,
-        prompt: done.prompt,
-        at: now,
-        transcript: done.transcript,
-        annotated: done.annotated,
-        llmCode: done.waiting?.name,
-      );
+      final attemptId =
+          done.attemptId ??
+          await recordings.recordAttempt(
+            userId: _context.userId,
+            courseId: _context.courseId,
+            deviceId: _context.deviceId,
+            recordingId: done.recordingId,
+            taskRef: done.taskRef,
+            prompt: done.prompt,
+            at: now,
+            transcript: done.transcript,
+            annotated: done.annotated,
+            llmCode: done.waiting?.name,
+          );
       for (final practice in done.practice) {
         if (practice.answers.isEmpty) continue;
         await recordings.recordPractice(

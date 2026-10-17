@@ -8,6 +8,7 @@ import 'package:dilbaz_app/data/sync/sync_repository.dart';
 import 'package:dilbaz_app/data/tasks/recording_files.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
+import 'package:dilbaz_app/features/speaking/application/late_recordings.dart';
 import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:flutter/widgets.dart';
@@ -48,6 +49,18 @@ final class FakeLateChecks implements LateChecks {
   }
 }
 
+/// Recordings that wait, processed as told.
+final class FakeLateRecordings implements LateRecordings {
+  int processes = 0;
+  final runs = <String>[];
+
+  @override
+  Future<int> run(String userId) async {
+    runs.add(userId);
+    return processes;
+  }
+}
+
 /// Recordings' audio that counts its uploads.
 final class FakeRecordingFiles implements RecordingFiles {
   int uploads = 0;
@@ -63,18 +76,21 @@ void main() {
   late FakeSyncRepository repository;
   late FakeRecordingFiles files;
   late FakeLateChecks checks;
+  late FakeLateRecordings recordings;
   late ProviderContainer container;
 
   /// The controller kept alive, with [signedIn] the learner's id.
   Future<void> start(WidgetTester tester, {String? signedIn = userId}) async {
     repository = FakeSyncRepository();
     checks = FakeLateChecks();
+    recordings = FakeLateRecordings();
     files = FakeRecordingFiles();
     container = ProviderContainer(
       overrides: [
         currentUserIdProvider.overrideWith((ref) => Stream.value(signedIn)),
         syncRepositoryProvider.overrideWithValue(repository),
         lateChecksProvider.overrideWithValue(checks),
+        lateRecordingsProvider.overrideWithValue(recordings),
         recordingFilesProvider.overrideWithValue(files),
         clockProvider.overrideWithValue(() => t0),
       ],
@@ -179,6 +195,15 @@ void main() {
   testWidgets('answers checked late change the data too', (tester) async {
     await start(tester);
     checks.settles = 2;
+    await container.read(syncControllerProvider.notifier).sync();
+    expect(status().changedAt, t0);
+    container.dispose();
+  });
+
+  testWidgets('recordings processed late change the data too', (tester) async {
+    await start(tester);
+    expect(recordings.runs, [userId]);
+    recordings.processes = 1;
     await container.read(syncControllerProvider.notifier).sync();
     expect(status().changedAt, t0);
     container.dispose();

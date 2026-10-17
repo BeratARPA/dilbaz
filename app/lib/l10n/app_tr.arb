@@ -1539,6 +1539,19 @@
   "@speakingRedo": {
     "description": "Speaking task: the same task once more (docs/03 A11 4c)."
   },
+  "speakingReadyTitle": "Hazır geri bildirimler",
+  "@speakingReadyTitle": {
+    "description": "Speaking task list: earlier recordings whose feedback came later (docs/08 §5.2)."
+  },
+  "speakingReadyRecorded": "{day} kaydı",
+  "@speakingReadyRecorded": {
+    "description": "Speaking task list: the day a recording with ready feedback was made.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
   "speakingFinish": "Bitir",
   "@speakingFinish": {
     "description": "Speaking task: ends the task; corrected sentences become cards."
@@ -1913,6 +1926,18 @@
   "notifyInvitationChannelDescription": "Seçtiğin saatte günde en çok bir kez. O gün çalıştıysan gelmez.",
   "@notifyInvitationChannelDescription": {
     "description": "Android notification channel description of the daily invitation."
+  },
+  "notifyFeedbackChannel": "Geri bildirim",
+  "@notifyFeedbackChannel": {
+    "description": "Android notification channel of the feedback that came later (docs/08 §5.2)."
+  },
+  "notifyFeedbackChannelDescription": "Bağlantı yokken yaptığın konuşma görevlerinin geri bildirimi hazır olunca.",
+  "@notifyFeedbackChannelDescription": {
+    "description": "Android notification channel description of the feedback that came later."
+  },
+  "notifyFeedbackReady": "Konuşma görevinin geri bildirimi hazır. Pratik → Konuşma görevi'nde bulabilirsin.",
+  "@notifyFeedbackReady": {
+    "description": "Notification: a recording made offline now has its feedback (docs/08 §5.2)."
   },
   "notifyInvitationMorningCoffee": "Kahve hazırsa 5 dakikalık tekrar seni bekliyor.",
   "@notifyInvitationMorningCoffee": {

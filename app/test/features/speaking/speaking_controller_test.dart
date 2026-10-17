@@ -1,9 +1,12 @@
 import 'package:dilbaz_app/data/audio/answer_recorder.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
+import 'package:dilbaz_app/data/speech/transcript.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
+import 'package:dilbaz_app/features/cards/application/card_plan.dart'
+    show startOfLocalDay;
 import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_app/features/speaking/application/speaking_controller.dart';
 import 'package:dilbaz_app/features/speaking/application/speaking_state.dart';
@@ -418,5 +421,97 @@ void main() {
         expect(await db.select(db.sessions).get(), hasLength(1));
       },
     );
+  });
+  group('a feedback that came later (docs/08 §5.2)', () {
+    /// The tutor out of reach while the task was done: shown without marks.
+    Future<String> doneWithoutMarks() async {
+      tutor
+        ..annotated = null
+        ..annotateFailure = TutorFailure.network;
+      await speak();
+      await controller().finish();
+      return (await db.select(db.recordings).get()).single.id;
+    }
+
+    /// The marks came after (LateRecordings), and the task list opens again.
+    Future<SpeakingChoosing> marksCame(String id) async {
+      await DriftRecordingRepository(db).update(id, annotated: marks);
+      // The screen opens again: a new controller.
+      container.dispose();
+      return await start() as SpeakingChoosing;
+    }
+
+    test('waits in the list, opens with its corrections, hints first (I-01); '
+        'the practice joins the attempt written before (I-03)', () async {
+      final id = await doneWithoutMarks();
+      final choosing = await marksCame(id);
+      expect(choosing.ready, [
+        (recordingId: id, title: 'Şehrin', day: startOfLocalDay(cardNow)),
+      ]);
+
+      await controller().openRecording(id);
+      expect(feedback().transcript, said);
+      expect(feedback().waiting, isNull);
+      expect(feedback().strengths, ['bada doğru.']);
+      expect(feedback().corrections, hasLength(2));
+      // Nothing corrected is shown before a try.
+      expect(feedback().corrections.first.corrected, isNull);
+
+      await say('sima dero');
+      controller().nextCorrection();
+      await controller().finish();
+      expect(current(), const SpeakingState.done(cards: 2));
+
+      final stored = await attempts();
+      final task = stored.where((a) => a.activity == 'speaking_task').single;
+      expect(task.llm, containsPair('pending', true));
+      final practice = stored
+          .where((a) => a.activity == 'speaking_task.correction')
+          .single;
+      expect(practice.parentAttemptId, task.id);
+      expect(practice.verdict, 'correct');
+
+      // Practised: it no longer waits.
+      container.dispose();
+      final again = await start() as SpeakingChoosing;
+      expect(again.ready, isEmpty);
+    });
+
+    test('a recording never shown gets its attempt, with the marks', () async {
+      await start();
+      await DriftRecordingRepository(db, now: () => cardNow).create(
+        id: 'offline',
+        userId: FakeAuthRepository.id,
+        courseId: FakeAssessmentRepository.zzCourse.id,
+        taskRef: homeTask,
+        audioPath: '/recordings/offline.m4a',
+        duration: const Duration(seconds: 20),
+      );
+      await DriftRecordingRepository(db).update(
+        'offline',
+        transcript: const Transcript(
+          text: said,
+          provider: 'fake',
+          model: 'fake',
+          durationMs: 20000,
+          words: [
+            TranscriptWord(w: 'bada', startMs: 0, endMs: 400),
+            TranscriptWord(w: 'kolu', startMs: 500, endMs: 900),
+          ],
+        ),
+        annotated: marks,
+      );
+      final choosing = await marksCame('offline');
+      expect(choosing.ready.single.title, 'Evin');
+
+      await controller().openRecording('offline');
+      expect(feedback().transcript, 'bada kolu');
+      await controller().leave();
+
+      final task = (await attempts()).single;
+      expect(task.activity, 'speaking_task');
+      expect(task.taskRef, homeTask);
+      expect(task.llm, containsPair('pending', false));
+    });
   });
 }

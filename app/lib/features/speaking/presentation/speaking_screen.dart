@@ -52,11 +52,13 @@ class SpeakingScreen extends ConsumerWidget {
                 text: l10n.speakingNeedsConsent,
                 onClose: () => unawaited(leave()),
               ),
-              SpeakingChoosing(:final suggested, :final others) =>
+              SpeakingChoosing(:final suggested, :final others, :final ready) =>
                 TaskChoicePage(
                   suggested: suggested,
                   others: others,
                   onChoose: controller.choose,
+                  ready: ready,
+                  onOpen: (id) => unawaited(controller.openRecording(id)),
                 ),
               SpeakingPreparing(:final task) => TaskCardPage(
                 task: task,

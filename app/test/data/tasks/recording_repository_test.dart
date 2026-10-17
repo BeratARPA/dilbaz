@@ -306,4 +306,126 @@ void main() {
       {'zz.task.city'},
     );
   });
+
+  group('feedback that came later (docs/08 §5.2)', () {
+    test('a recording gives its transcript and marks back as kept', () async {
+      final recordings = repository();
+      await create(recordings);
+      var row = (await recordings.recording('rec-1'))!;
+      expect(row.transcript, isNull);
+      expect(row.annotated, isNull);
+
+      await recordings.update(
+        'rec-1',
+        transcript: transcript,
+        annotated: marks,
+      );
+      row = (await recordings.recording('rec-1'))!;
+      expect(row.transcript!.text, 'bada kulu');
+      expect(row.transcript!.words.map((w) => w.w), ['bada', 'kulu']);
+      expect(row.transcript!.durationMs, 70000);
+      expect(row.annotated!.annotation.corrections, [correction]);
+    });
+
+    test('a recording the tutor will not mark is not asked again', () async {
+      final recordings = repository();
+      await create(recordings);
+      await recordings.cannotMark('rec-1', 'refused');
+      final row = (await recordings.recording('rec-1'))!;
+      expect(row.annotation, {'failed': 'refused'});
+      expect(row.annotated, isNull);
+      expect(await recordings.readyFeedback(courseId, now), isEmpty);
+    });
+
+    test('ready: marked and never shown, or shown before its marks', () async {
+      final recordings = repository();
+      Future<void> make(String id, {bool assessment = false}) =>
+          recordings.create(
+            id: id,
+            userId: userId,
+            courseId: courseId,
+            taskRef: taskRef,
+            audioPath: '/recordings/$id.m4a',
+            duration: const Duration(seconds: 30),
+            isAssessment: assessment,
+          );
+      Future<String> attempt(String id, {AnnotatedSpeech? annotated}) =>
+          recordings.recordAttempt(
+            userId: userId,
+            courseId: courseId,
+            deviceId: 'device-1',
+            recordingId: id,
+            taskRef: taskRef,
+            prompt: 'Evini anlat.',
+            at: now,
+            transcript: transcript,
+            annotated: annotated,
+            llmCode: annotated == null ? 'network' : null,
+          );
+
+      // Never shown, marked later.
+      await make('never');
+      await recordings.update(
+        'never',
+        transcript: transcript,
+        annotated: marks,
+      );
+      // Shown without marks; marked later.
+      await make('late');
+      await attempt('late');
+      await recordings.update('late', transcript: transcript, annotated: marks);
+      // Shown with its marks.
+      await make('live');
+      await recordings.update('live', transcript: transcript, annotated: marks);
+      await attempt('live', annotated: marks);
+      // Not marked yet; a test recording.
+      await make('waiting');
+      await make('test', assessment: true);
+      await recordings.update('test', transcript: transcript, annotated: marks);
+
+      final since = now.subtract(const Duration(days: 7));
+      expect(
+        [
+          for (final row in await recordings.readyFeedback(courseId, since))
+            row.id,
+        ],
+        ['never', 'late'],
+      );
+
+      // Once a correction of it is practised, it is seen.
+      final lateAttempt = (await recordings.recording('late'))!.attemptId!;
+      await recordings.recordPractice(
+        userId: userId,
+        courseId: courseId,
+        deviceId: 'device-1',
+        parentAttemptId: lateAttempt,
+        taskRef: taskRef,
+        correction: correction,
+        answers: [
+          (
+            text: 'Bada kolu.',
+            heard: true,
+            verdict: Verdict.correct,
+            hintsUsed: 0,
+            at: now,
+          ),
+        ],
+      );
+      expect(
+        [
+          for (final row in await recordings.readyFeedback(courseId, since))
+            row.id,
+        ],
+        ['never'],
+      );
+      // Older than the window, it no longer waits.
+      expect(
+        await recordings.readyFeedback(
+          courseId,
+          now.add(const Duration(minutes: 1)),
+        ),
+        isEmpty,
+      );
+    });
+  });
 }

@@ -448,7 +448,7 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `c
   - **`recordings`:** Kayıt biter bitmez satır açılır.
     - **Ses yolu:** `audio_path`, sesin sunucudaki yoludur (§6; `{uid}/{yyyy}/{mm}/{id}.{ext}`, ay UTC). Cihazdaki dosya aynı adla uygulama destek klasöründe `recordings/` altında durur (`RecordingStore.find`). F1-22'den önceki kayıtlarda cihazdaki tam yol kalmıştır; bulucu ikisini de tanır.
     - **Yükleme:** Aylık test ve başlangıç kayıtlarının sesi outbox'a `upload` kaydıyla düşer ve senkrondan sonra yüklenir. Başka cihazda yapılmış bir kayıt dinlenirken sunucudan indirilir ve saklanır.
-    - Sonra sırayla dolar: `asr` (`{provider, model, words: [{w, start_ms, end_ms, conf}]}`), `annotation` (`{runs: [rota cevabı], merged: işaretleme}`), `outcome`, `metrics` (`SpeechMetrics`) ve en son `attempt_id`.
+    - Sonra sırayla dolar: `asr` (`{provider, model, words: [{w, start_ms, end_ms, conf}]}`), `annotation` (`{runs: [rota cevabı], merged: işaretleme}`; yapay zekâ reddettiyse ya da sözleşme dışı cevap verdiyse `{failed: code}` ve kayıt bir daha sorulmaz, `08` §5.2), `outcome`, `metrics` (`SpeechMetrics`) ve en son `attempt_id`.
     - Durum satırıdır: her değişiklik outbox'a `upsert` olarak düşer.
   - **`attempts`:** Görev denemesinde:
     - `prompt` = `{prompt_l1}`, `response` = `{source: 'asr', recording_id, text?, asr?: {provider, model}}`

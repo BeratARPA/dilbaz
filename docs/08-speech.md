@@ -154,7 +154,17 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 - Ses, kart gibi doğrudan `speech/transcribe`'a gider. 2 dakikalık AAC yaklaşık 0,5 MB'dir, 2 MB sınırının altında kalır.
 - Kayıt satırları ve ölçümler senkronla sunucuya gider (F1-21). Aylık test ve başlangıç kayıtlarının sesi `audio-private`'a yüklenir (F1-22). Görev seslerinin yüklenmesi, 30 günlük silmeyle birlikte F3-08'de.
 - Yolla tanıma gerekmedi: ses doğrudan gidiyor ve 2 MB sınırının altında kalıyor.
-- Bağlantı yoksa kayıt satırı transkriptsiz kalır ve görevde "Yeniden dene" çıkar. Otomatik kuyruk ve "Geri bildirimin hazır" bildirimi F2-02'de: geçmiş bir kaydın geri bildirim ekranını gerektiriyor.
+- Bağlantı yoksa kayıt satırı transkriptsiz kalır ve görevde "Yeniden dene" çıkar.
+
+**Sonradan işleme (F2-02, `LateRecordings`):** Her senkrondan sonra, kartların geç kontrolünün ardından çalışır.
+- **Neyi alır:** Bu cihazda sesi duran, 5 dakikadan eski, transkripti ya da işaretlemesi eksik kayıtları (görev ve test). Yeni kayıt kendi ekranında işleniyor olabilir, onu beklemez.
+- **Sıra:** transkript → ölçümler → `speaking_annotate` (test kaydında `assessment: true`) → işaretlemeyle yeniden ölçüm. İçinde konuşma duyulmayan kayıt işaretlemeye gitmez.
+- **Sınır:** Bir çalıştırmada en çok 4 çağrı; ücretsiz kotalar paylaşılır. Bağlantı ya da kota yoksa durur, sonraki senkronda kaldığı yerden sürer. Yapay zekâ reddederse ya da sözleşme dışı cevap verirse kayda `annotation = {failed: code}` yazılır ve bir daha sorulmaz.
+- **Ses onayı** kapalıysa hiçbir kayıt bir yere gitmez (I-18).
+- **Bildirim:** Bir görev kaydının işaretlemesi bu yolla gelince "Konuşma görevinin geri bildirimi hazır. Pratik → Konuşma görevi'nde bulabilirsin." bir kez çıkar (kanal "Geri bildirim"). Yalnızca öğrenci günlük daveti açtıysa, sistem izin veriyorsa ve sessiz saat değilse. Aynı numarayla gösterildiği için bildirimler üst üste binmez.
+- **Geçmiş kaydın geri bildirimi:** Pratik → Konuşma görevi'nin başında "Hazır geri bildirimler" listesi (7 gün). Liste, işaretlemesi sonradan gelen ve ya hiç gösterilmemiş ya da işaretlemesiz gösterilip henüz düzeltmesi çalışılmamış görev kayıtlarıdır (`readyFeedback`). Dokununca aynı geri bildirim ekranı açılır: iyi gidenler, en çok 3 düzeltme, önce deneme ve ipucu merdiveni (I-01, I-02), "Görevi yeniden yap".
+  - Deneme yazılmışsa yenisi yazılmaz; pratik cevapları o denemeye zincirlenir (I-03). Yazılmamışsa görev denemesi işaretlemeyle birlikte yazılır.
+  - Sonradan gelen işaretlemenin hata etiketleri kayıt satırındadır; o kaydın denemesi bekleyen olarak kalır (değişmez). Hata profili (F3-02) kayıt satırını da okumalıdır.
 
 ### 5.3 Çevrimdışı davranış
 

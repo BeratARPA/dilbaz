@@ -6,6 +6,7 @@ import 'package:dilbaz_app/data/sync/sync_providers.dart';
 import 'package:dilbaz_app/data/sync/sync_remote.dart';
 import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/features/onboarding/application/onboarding_gate.dart';
+import 'package:dilbaz_app/features/speaking/application/late_recordings.dart';
 import 'package:dilbaz_app/features/sync/application/late_checks.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,7 +29,8 @@ typedef SyncStatus = ({
 ///
 /// Without a connection nothing is lost: the outbox waits for the next
 /// time. After a sync, answers that wait for the tutor are checked
-/// ([LateChecks]) and recordings' audio goes up (RecordingFiles).
+/// ([LateChecks]), recordings that wait are processed ([LateRecordings])
+/// and recordings' audio goes up (RecordingFiles).
 @Riverpod(keepAlive: true)
 class SyncController extends _$SyncController {
   static const period = Duration(minutes: 5);
@@ -86,13 +88,16 @@ class SyncController extends _$SyncController {
       case Ok(value: (pushed: _, :final pulled)):
         final checked = await ref.read(lateChecksProvider).run(userId);
         if (!ref.mounted) return;
+        // Recordings that wait are written down and marked (docs/08 §5.2).
+        final processed = await ref.read(lateRecordingsProvider).run(userId);
+        if (!ref.mounted) return;
         // Recordings' audio goes up once their rows are on the server.
         await ref.read(recordingFilesProvider).uploadWaiting();
         if (!ref.mounted) return;
         final now = ref.read(clockProvider)();
         state = (
           lastSyncAt: now,
-          changedAt: pulled + checked > 0 ? now : state.changedAt,
+          changedAt: pulled + checked + processed > 0 ? now : state.changedAt,
           failure: null,
         );
       case Err(:final error):

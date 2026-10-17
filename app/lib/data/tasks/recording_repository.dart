@@ -31,6 +31,50 @@ extension RecordingSpeech on RecordingRow {
   /// marked in it (silence, or not the course's language), it has none;
   /// not written down yet, it may.
   bool get hasSpeech => asr == null || metrics != null || annotation != null;
+
+  /// The words written down, with their times; null before the transcript.
+  List<TimedWord>? get timedWords => switch (asr?['words']) {
+    final List<Object?> words => [
+      for (final word in words)
+        if (word case final Map<String, Object?> json) TimedWord.fromJson(json),
+    ],
+    _ => null,
+  };
+
+  /// The transcript as kept: its words, the text they make and its source.
+  Transcript? get transcript {
+    final words = timedWords;
+    final asr = this.asr;
+    if (words == null || asr == null) return null;
+    return Transcript(
+      text: words.map((word) => word.text).join(' '),
+      provider: switch (asr['provider']) {
+        final String provider => provider,
+        _ => '',
+      },
+      model: switch (asr['model']) {
+        final String model => model,
+        _ => '',
+      },
+      durationMs: durationMs,
+      words: [
+        for (final word in words)
+          TranscriptWord(
+            w: word.text,
+            startMs: word.startMs,
+            endMs: word.endMs,
+            conf: word.confidence,
+          ),
+      ],
+    );
+  }
+
+  /// The tutor's marks as kept; null before them, or when they could not
+  /// be had ([RecordingRepository.cannotMark]).
+  AnnotatedSpeech? get annotated => switch (annotation?['runs']) {
+    [final Map<String, Object?> run, ...] => AnnotatedSpeech.fromJson(run),
+    _ => null,
+  };
 }
 
 /// Whether the course has a test recording to listen back to: kept, with
@@ -67,6 +111,15 @@ abstract interface class RecordingRepository {
   });
 
   Future<RecordingRow?> recording(String id);
+
+  /// The tutor will not mark this recording ([code]: refused, or an answer
+  /// off the contract): it is not asked again (docs/08 §5.2).
+  Future<void> cannotMark(String id, String code);
+
+  /// Task recordings since [since] whose marks came after their feedback
+  /// was shown, or that were never shown: their feedback waits (docs/08
+  /// §5.2). Oldest first.
+  Future<List<RecordingRow>> readyFeedback(String courseId, DateTime since);
 
   /// The tasks recorded since [since] (UTC).
   Future<Set<String>> taskRefsSince(String courseId, DateTime since);
@@ -221,6 +274,56 @@ class DriftRecordingRepository implements RecordingRepository {
     TaskOutcome.partial => 'partial',
     TaskOutcome.notDone => 'not_done',
   };
+
+  @override
+  Future<void> cannotMark(String id, String code) => _db.transaction(() async {
+    await (_db.update(_db.recordings)..where((t) => t.id.equals(id))).write(
+      RecordingsCompanion(
+        annotation: Value({'failed': code}),
+        updatedAt: Value(_now()),
+        pendingPush: const Value(true),
+      ),
+    );
+    await _queue(_recordings, id, 'upsert');
+  });
+
+  @override
+  Future<List<RecordingRow>> readyFeedback(
+    String courseId,
+    DateTime since,
+  ) async {
+    final rows =
+        await (_db.select(_db.recordings)
+              ..where(
+                (t) =>
+                    t.courseId.equals(courseId) &
+                    t.isAssessment.equals(false) &
+                    t.createdAt.isBiggerOrEqualValue(since),
+              )
+              ..orderBy([(t) => OrderingTerm(expression: t.createdAt)]))
+            .get();
+    final ready = <RecordingRow>[];
+    for (final row in rows) {
+      if (row.annotated == null) continue;
+      final attemptId = row.attemptId;
+      if (attemptId == null) {
+        ready.add(row);
+        continue;
+      }
+      // Shown without marks: it waits until a correction is practised.
+      final attempt = await (_db.select(
+        _db.attempts,
+      )..where((t) => t.id.equals(attemptId))).getSingleOrNull();
+      if (attempt?.llm?['pending'] != true) continue;
+      final practised =
+          await (_db.select(_db.attempts)
+                ..where((t) => t.parentAttemptId.equals(attemptId))
+                ..limit(1))
+              .getSingleOrNull();
+      if (practised == null) ready.add(row);
+    }
+    return ready;
+  }
 
   @override
   Future<RecordingRow?> recording(String id) => (_db.select(

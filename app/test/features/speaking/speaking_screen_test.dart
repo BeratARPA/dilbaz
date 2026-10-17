@@ -1,5 +1,7 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/speech/speech_repository.dart';
+import 'package:dilbaz_app/data/speech/transcript.dart';
+import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/hold_to_speak_button.dart';
 import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
@@ -9,7 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/card_fixture.dart';
 import '../../helpers/fake_profile_repository.dart';
 import '../../helpers/fake_speech.dart';
+import '../../helpers/fake_auth_repository.dart';
 import '../../helpers/pack_fixture.dart';
+import '../../helpers/placement_fixture.dart';
 import '../../helpers/pump_app.dart';
 import 'speaking_controller_test.dart' show marks, said;
 
@@ -133,6 +137,56 @@ void main() {
     speech.failure = null;
     await tapText(tester, trStrings.speakingRetry);
     expect(find.text(trStrings.speakingStrengths), findsOneWidget);
+  });
+
+  testWidgets('a feedback that came later waits at the top and opens', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      db = memoryDatabase();
+      await installCardPacks(db);
+      final recordings = DriftRecordingRepository(db, now: () => cardNow);
+      await recordings.create(
+        id: 'offline',
+        userId: FakeAuthRepository.id,
+        courseId: FakeAssessmentRepository.zzCourse.id,
+        taskRef: cityTask,
+        audioPath: '/recordings/offline.m4a',
+        duration: const Duration(seconds: 20),
+      );
+      await recordings.update(
+        'offline',
+        transcript: const Transcript(
+          text: said,
+          provider: 'fake',
+          model: 'fake',
+          durationMs: 20000,
+          words: [
+            TranscriptWord(w: 'bada', startMs: 0, endMs: 400),
+            TranscriptWord(w: 'kolu', startMs: 500, endMs: 900),
+          ],
+        ),
+        annotated: marks,
+      );
+    });
+    addTearDown(db.close);
+    await tester.pumpDilbazApp(
+      profiles: profiles,
+      speech: speech,
+      recorder: recorder,
+      db: db,
+      extra: cardDataOverrides(db: db, tutor: tutor),
+    );
+    await tapText(tester, trStrings.tabPractice);
+    await tapText(tester, trStrings.practiceSpeakingTitle);
+
+    expect(find.text(trStrings.speakingReadyTitle), findsOneWidget);
+    // The same task is in the list below too.
+    expect(find.text('Şehrin'), findsNWidgets(2));
+    await tester.tap(find.byIcon(Icons.mark_chat_read_outlined));
+    await tester.pumpAndSettle();
+    expect(find.text(trStrings.speakingStrengths), findsOneWidget);
+    expect(find.text('bada doğru.'), findsOneWidget);
   });
 
   testWidgets('leaving needs no confirmation', (tester) async {

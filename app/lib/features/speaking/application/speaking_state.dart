@@ -36,6 +36,10 @@ enum ProcessingStep {
 /// A task in the list to choose from.
 typedef TaskChoice = ({String key, String title, CefrLevel level});
 
+/// A recording whose feedback came later and waits (docs/08 §5.2): the
+/// task's title and the day it was made, on the learner's clock.
+typedef ReadyFeedback = ({String recordingId, String title, DateTime day});
+
 /// A sentence starter of a task with what it means.
 typedef TaskPhrase = ({String phrase, String meaning});
 
@@ -135,6 +139,7 @@ sealed class SpeakingState with _$SpeakingState {
   const factory choosing({
     required List<TaskChoice> suggested,
     required List<TaskChoice> others,
+    @Default(<ReadyFeedback>[]) List<ReadyFeedback> ready,
   }) = SpeakingChoosing;
 
   /// The task card and the time to prepare.

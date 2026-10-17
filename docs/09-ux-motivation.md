@@ -156,6 +156,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 3. "Görevi yeniden yap" (isteğe bağlı)
 
 **Uygulama notları (F1-19):**
+- **Hazır geri bildirimler (F2-02):** Listenin başında, işaretlemesi sonradan gelen kayıtlar (görevin adı, "… kaydı"); dokununca geri bildirim ekranı açılır.
 - **Giriş ve seçim:** Pratik → "Konuşma görevi". "Ne anlatmak istersin?" altında motorun önerdiği 3 görev, kalanlar "Başka görevler"de (I-14). Sabit görevler (ANC) yalnızca aylık testte çıkar.
 - **Görev kartı:**
   - Başlık, yönerge, üç başlangıç ve anlamları. B1 ve üstünde başlangıçlar "Kalıpları göster" ile açılır.
@@ -313,7 +314,7 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Platform:** Yalnızca Android. Windows'ta F3-09'da denenecek; web'de yok.
 - **Sonraya kalanlar:**
   - Ayarlarda davet açma/kapama, çıpa saati ve sessiz saatler: F1-23.
-  - "Geri bildirimin hazır": F2-02. Geçmiş bir kaydın geri bildirim ekranını gerektiriyor.
+- **"Geri bildirimin hazır" (F2-02):** Bağlantısız yapılan bir konuşma görevinin işaretlemesi sonradan gelince bir kez. Günlük davet açıksa ve sessiz saat değilse; kanal "Geri bildirim" (`08` §5.2).
 
 ## 7. Çift özellikleri ve mahremiyet
 
