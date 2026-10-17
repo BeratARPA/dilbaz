@@ -2615,5 +2615,29 @@
   "cardsRecognizeRightChoice": "doğru anlam",
   "@cardsRecognizeRightChoice": {
     "description": "Listening card: screen reader label of the right meaning's check."
+  },
+  "widgetToday": "Bugün: {cards} kart · ~{minutes} dk",
+  "@widgetToday": {
+    "description": "Home screen widget: today's cards and their time (docs/09 §9).",
+    "placeholders": {
+      "cards": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetNoCards": "Bugün sırada kart yok.",
+  "@widgetNoCards": {
+    "description": "Home screen widget: no card planned now."
+  },
+  "widgetOpen": "Bugünün kartlarını gör",
+  "@widgetOpen": {
+    "description": "Home screen widget: the line on a day the app has not planned yet (also android strings.xml)."
+  },
+  "widgetDescription": "Bugünün kartları ve Söyleyemedim",
+  "@widgetDescription": {
+    "description": "Home screen widget: its description in the widget picker (android strings.xml)."
   }
 }

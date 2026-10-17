@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="today_widget_background">#FF211F26</color>
+    <color name="today_widget_text">#FFE6E0E9</color>
+    <color name="today_widget_button">#FFD0BCFF</color>
+    <color name="today_widget_button_text">#FF381E72</color>
+</resources>

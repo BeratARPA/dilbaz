@@ -1,6 +1,9 @@
 import 'package:dilbaz_app/app/app.dart';
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
+import 'package:dilbaz_app/data/launch/app_shortcuts.dart';
+import 'package:dilbaz_app/data/launch/home_screen_widget.dart';
+import 'package:dilbaz_app/data/launch/launch_providers.dart';
 import 'package:dilbaz_app/data/notifications/notification_gateway.dart';
 import 'package:dilbaz_app/data/notifications/notification_providers.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
@@ -51,6 +54,8 @@ List<Override> appOverrides({
   FakeSpeechRepository? speech,
   FakeDictation? dictation,
   SharedTextSource? shared,
+  ShortcutSource? shortcuts,
+  HomeScreenWidget? homeWidget,
   AppDatabase? db,
   List<Override> extra = const [],
 }) => [
@@ -90,6 +95,12 @@ List<Override> appOverrides({
   sharedTextSourceProvider.overrideWithValue(
     shared ?? const NoSharedTextSource(),
   ),
+  shortcutSourceProvider.overrideWithValue(
+    shortcuts ?? const NoShortcutSource(),
+  ),
+  homeScreenWidgetProvider.overrideWithValue(
+    homeWidget ?? const NoHomeScreenWidget(),
+  ),
   ...extra,
 ];
 
@@ -109,6 +120,8 @@ extension PumpApp on WidgetTester {
     FakeSpeechRepository? speech,
     FakeDictation? dictation,
     SharedTextSource? shared,
+    ShortcutSource? shortcuts,
+    HomeScreenWidget? homeWidget,
     AppDatabase? db,
     List<Override> extra = const [],
   }) async {
@@ -128,6 +141,8 @@ extension PumpApp on WidgetTester {
           speech: speech,
           dictation: dictation,
           shared: shared,
+          shortcuts: shortcuts,
+          homeWidget: homeWidget,
           db: db,
           extra: extra,
         ),

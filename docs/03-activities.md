@@ -388,7 +388,7 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   3. Kullanıcı onaylarsa cümle ve kalıp kişisel öğe olarak kart olur.
 - **Not:** Kullanıcı karşılığı kendisi istediği için cevabın hemen gösterilmesi I-01'in istisnasıdır.
 - **Uygulama (F1-17):**
-  - Yakalama noktaları: her sekmedeki "Söyleyemedim" düğmesi ve Android paylaş menüsü. Paylaşılan metin, uygulama giriş ve karşılamadan sonra ana ekrana gelince yakalama sayfasını açar (bağlam: dizi ya da film). Hızlı ayarlar kutucuğu, ana ekran widget'ı ve "nasıl derim?" düğmesi sonraki görevlerde.
+  - Yakalama noktaları: her sekmedeki "Söyleyemedim" düğmesi ve Android paylaş menüsü. Paylaşılan metin, uygulama giriş ve karşılamadan sonra ana ekrana gelince yakalama sayfasını açar (bağlam: dizi ya da film). Hızlı ayarlar kutucuğu ve ana ekran widget'ı F2-10'da geldi (`09` §9); "nasıl derim?" düğmesi sonraki görevlerde.
   - Türkçe sesli yakalama önce cihazda tanınır; cihazda Türkçe yoksa kaydedilip `speech` fonksiyonuna gider (`08` §3.1). Ses onayı yoksa yalnızca yazı vardır.
   - Öneri gelmezse (kota, bağlantı) yakalama kayıtlı kalır ve "öneri bekliyor" görünür. Liste açıldığında bekleyenler eskiden yeniye bir kez daha istenir; ilk başarısızlıkta durulur.
   - "Karta ekle": seçilen cümle (A seviyelerinde sade hâli, B1 ve üstünde doğal hâli; kullanıcı değiştirebilir) kişisel öğe olur. Kart, öğrencinin kendi Türkçe cümlesiyle sorar; öbür hâl geçerli varyanttır. Anahtar kalıp istenirse ayrı bir kişisel öğe olur, kendi Türkçe karşılığıyla sorulur. Kart hemen açılmaz: kişisel öğeler müfredata kişisel ağırlıkla girer, günlük yeni öğe tavanı içinde ilk sırada tanıtılır (I-07, `02` §4.3).

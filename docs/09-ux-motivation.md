@@ -151,7 +151,7 @@ F1-16'da kalıp cümle içinde ayrıca işaretlenmez: öğe başlık olarak, ta�
 - Liste Pratik sekmesinde "Söyleyemediklerim"dir; üstte Yeni / Karta dönüştü / Vazgeçildi seçimi vardır.
 - Yakalama sayfası: metin alanı, "Sesle söyle" (ses onayı varsa; dokununca dinler, "Bitti" ile durur, en çok 30 sn), bağlam çipleri, isteğe bağlı not, "Kaydet ve öneri al".
 - Öneri sayfası: demek istenen, doğal hâl, sade hâl, akılda tutulacak kalıp ve Türkçe karşılığı, varsa not; "Hangisi kart olsun?", "Kalıp da ayrı kart olsun", "Karta ekle" ve "Vazgeç". Öneri gelmezse sakin bir not ve "Yeniden dene".
-- Hızlı ayarlar kutucuğu ve ana ekran widget'ı sonraya kaldı.
+- Hızlı ayarlar kutucuğu ve ana ekran widget'ı F2-10'da geldi (§9).
 
 ### 5.6 Konuşma görevi (A11)
 Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + süre) → "işleniyor" → geri bildirim:
@@ -349,3 +349,11 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 
 - "Bugün: 12 kart · ~5 dk" + **Söyleyemedim** butonu.
 - Dokununca doğrudan kart oturumu ya da yakalama sayfası açılır.
+
+**Uygulama notları (F2-10):**
+- **Widget** (`TodayWidgetProvider`, `home_widget`): 4×1, yatayda boyutlanır. Solda bugünün satırı, sağda "Söyleyemedim" düğmesi. Satıra dokununca kart oturumu (`dilbaz://cards`), düğmeye dokununca yakalama sayfası (`dilbaz://capture`) açılır. Giriş ve karşılama bitmeden gelen bağlantı ana ekranı bekler (paylaş menüsü gibi).
+- **Satır:** "Bugün: 5 kart · ~4 dk"; sırada kart yoksa "Bugün sırada kart yok."; süre dolduysa "Bugünlük yeter.". Bitmeyen işin sayısı yazılmaz (I-12). Satır, uygulamanın planladığı günde gösterilir; başka bir günde "Bugünün kartlarını gör" yazar, dünün sayısı kalmaz.
+- **Güncelleme:** Uygulama Bugün planı değişince (açılış, dönüş, oturum sonrası, senkron) metinleri yazar ve widget'ı çizdirir; aynı metin yeniden yazılmaz. Widget kendi kendine güncellenmez (`updatePeriodMillis = 0`).
+- **Hızlı ayarlar kutucuğu** (`CaptureTileService`): "Söyleyemedim"; dokununca kilit açılır ve yakalama sayfası açılır.
+- **Metinler:** Uygulamanın gösterdiği metinler ARB'den yazılır. Sistemin uygulama hiç açılmadan gösterdiği üç metin (kutucuk adı, widget açıklaması, ilk satır) Android `strings.xml`'dedir; bir test ARB'deki karşılıklarıyla aynı olduklarını denetler.
+- **Renkler:** Açık ve koyu tema; kırmızı yok.

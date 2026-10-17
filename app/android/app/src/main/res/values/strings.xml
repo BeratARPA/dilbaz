@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- What the system shows before the app has run once: copies of
+         app_tr.arb (gapCaptureButton, widgetDescription, widgetOpen); a test
+         keeps them equal. The app writes the live texts for the widget. -->
+    <string name="capture_tile">Söyleyemedim</string>
+    <string name="today_widget_description">Bugünün kartları ve Söyleyemedim</string>
+    <string name="today_widget_open">Bugünün kartlarını gör</string>
+</resources>
