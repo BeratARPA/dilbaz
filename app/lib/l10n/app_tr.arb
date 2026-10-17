@@ -2574,9 +2574,9 @@
       }
     }
   },
-  "cardsRecognizeHeard": "Duyduğun: {heard}. Anlamı işaretli olan.",
+  "cardsRecognizeHeard": "Anlamı işaretli olan. Duyduğun: {heard}",
   "@cardsRecognizeHeard": {
-    "description": "Listening card: another meaning was chosen; the right one is marked.",
+    "description": "Listening card: another meaning was chosen; the right one is marked. The heard item comes last: it ends in its own punctuation.",
     "placeholders": {
       "heard": {
         "type": "String"
