@@ -1,6 +1,7 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/together/together_providers.dart';
 import 'package:dilbaz_app/data/together/together_repository.dart';
+import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/features/together/application/info_gap_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_controller.dart'
     show pairTaskActivity, togetherActionsProvider, togetherProvider;
@@ -65,6 +66,10 @@ void main() {
           player: FakeClipPlayer(),
         ),
         togetherRepositoryProvider.overrideWithValue(server),
+        // The sync has its own tests; here the app stays on the device.
+        syncControllerProvider.overrideWithBuild(
+          (ref, notifier) => (lastSyncAt: null, changedAt: null, failure: null),
+        ),
       ],
     )..listen(togetherProvider, (_, _) {});
     made = true;

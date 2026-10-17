@@ -146,6 +146,29 @@ void main() {
     expect(server.calls, contains('cheer $partnerId steady'));
   });
 
+  testWidgets('pulling down asks for the week again', (tester) async {
+    MemberWeek me(int days) => (
+      id: self,
+      name: 'Berat',
+      days: days,
+      minutes: days * 10,
+      strands: const {},
+      together: 0,
+    );
+    server.teamWeek = (goalDays: 10, members: [me(0)]);
+    await open(tester);
+    expect(find.text(trStrings.togetherGoal(0, 10)), findsOneWidget);
+
+    server.teamWeek = (goalDays: 10, members: [me(1)]);
+    await tester.fling(
+      find.byType(SingleChildScrollView).first,
+      const Offset(0, 400),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text(trStrings.togetherGoal(1, 10)), findsOneWidget);
+  });
+
   testWidgets('fits a small phone at double text size', (tester) async {
     tester.view
       ..physicalSize = const Size(360, 640)

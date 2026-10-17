@@ -177,6 +177,15 @@ void main() {
       final summary = (week as Ok<TeamWeek, TogetherFailure>).value;
       expect(summary.members.map((m) => m.id).toSet(), {idA, idB});
       expect(summary.goalDays, greaterThan(0));
+      // Minutes by strand come as numbers, whole or not; none is dropped.
+      for (final member in summary.members) {
+        final byStrand = member.strands.values.fold(0, (a, b) => a + b);
+        expect(
+          (byStrand - member.minutes).abs(),
+          lessThanOrEqualTo(member.strands.length),
+          reason: member.name,
+        );
+      }
 
       final seen = rb.cheers().asBroadcastStream();
       await first(seen, (_) => true);

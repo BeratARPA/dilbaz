@@ -8,8 +8,11 @@ import 'package:dilbaz_app/data/tasks/task_providers.dart';
 import 'package:dilbaz_app/data/together/together_providers.dart';
 import 'package:dilbaz_app/data/together/together_repository.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
+import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_view.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,10 +37,12 @@ Future<Result<TeamView?, TogetherFailure>> team(Ref ref) =>
 Stream<List<PairInvite>> invites(Ref ref) =>
     ref.watch(togetherRepositoryProvider).invites();
 
-/// The team's week so far (the learner's Monday on), asked once a screen
-/// needs it; null when the server cannot be reached.
+/// The team's week so far (the learner's Monday on); asked again after each
+/// sync, which brings the learner's own sessions up. Null when the server
+/// cannot be reached.
 @riverpod
 Future<TeamWeek?> teamWeek(Ref ref, String teamId) async {
+  ref.watch(syncControllerProvider.select((status) => status.lastSyncAt));
   final now = ref.watch(clockProvider)();
   final found = await ref
       .watch(togetherRepositoryProvider)

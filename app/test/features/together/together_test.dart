@@ -2,6 +2,7 @@ import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/session_repository.dart';
 import 'package:dilbaz_app/data/together/together_providers.dart';
 import 'package:dilbaz_app/data/together/together_repository.dart';
+import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/features/together/application/chat_card_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_view.dart';
@@ -41,6 +42,15 @@ PairInvite invited({
   createdAt: at ?? cardNow,
 );
 
+/// The sync, which only says when it last ran.
+class _Sync extends SyncController {
+  @override
+  SyncStatus build() => (lastSyncAt: null, changedAt: null, failure: null);
+
+  void ran(DateTime at) =>
+      state = (lastSyncAt: at, changedAt: state.changedAt, failure: null);
+}
+
 void main() {
   late AppDatabase db;
   late FakeTogetherRepository server;
@@ -72,6 +82,7 @@ void main() {
           player: FakeClipPlayer(),
         ),
         togetherRepositoryProvider.overrideWithValue(server),
+        syncControllerProvider.overrideWith(_Sync.new),
       ],
     )..listen(togetherProvider, (_, _) {});
     made = true;
@@ -222,6 +233,24 @@ void main() {
         expect(server.calls, contains('cheer $partnerId together'));
       },
     );
+
+    test('asked again after a sync: my own days went up', () async {
+      MemberWeek me(int days) => (
+        id: self,
+        name: 'Berat',
+        days: days,
+        minutes: days * 10,
+        strands: const {},
+        together: 0,
+      );
+      server.teamWeek = (goalDays: 10, members: [me(0)]);
+      expect(((await view()) as TogetherReady).week?.members.single.days, 0);
+
+      server.teamWeek = (goalDays: 10, members: [me(1)]);
+      (container.read(syncControllerProvider.notifier) as _Sync).ran(cardNow);
+      final ready = await container.read(togetherProvider.future);
+      expect((ready as TogetherReady).week?.members.single.days, 1);
+    });
 
     test('without the week: the rest still shows', () async {
       server.teamWeek = null;

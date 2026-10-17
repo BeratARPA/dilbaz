@@ -439,7 +439,8 @@ class SupabaseTogetherRepository implements TogetherRepository {
                 strands: switch (member['strands']) {
                   final Map<String, dynamic> strands => {
                     for (final MapEntry(:key, :value) in strands.entries)
-                      if (value case final int minutes) key: minutes,
+                      // The server sums minutes as numbers, whole or not.
+                      if (value case final num minutes) key: minutes.round(),
                   },
                   _ => const <String, int>{},
                 },

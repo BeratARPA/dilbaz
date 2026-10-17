@@ -24,7 +24,9 @@ class TogetherScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.tabTogether)),
       body: RefreshIndicator(
         onRefresh: () {
-          ref.invalidate(teamProvider);
+          ref
+            ..invalidate(teamProvider)
+            ..invalidate(teamWeekProvider);
           return ref.refresh(togetherProvider.future);
         },
         child: SingleChildScrollView(
