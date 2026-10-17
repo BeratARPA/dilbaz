@@ -35,6 +35,9 @@ abstract final class AppRoutes {
   /// 4/3/2, over the tabs (A12).
   static const fluency = '/fluency';
 
+  /// Dictation, over the tabs (A05).
+  static const dictation = '/dictation';
+
   /// The monthly speaking test, over the tabs (A23).
   static const monthly = '/monthly';
 

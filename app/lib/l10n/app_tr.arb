@@ -1371,6 +1371,200 @@
   "@practiceFluencyBody": {
     "description": "Practice: what 4/3/2 is."
   },
+  "practiceDictationTitle": "Dikte",
+  "@practiceDictationTitle": {
+    "description": "Practice: the dictation activity (A05)."
+  },
+  "practiceDictationBody": "Bildiğin kelimelerle kurulu cümleleri dinleyip yazarsın; küçük kelimeleri ve ekleri duymayı çalıştırır.",
+  "@practiceDictationBody": {
+    "description": "Practice: what dictation is."
+  },
+  "dictationTitle": "Dikte",
+  "@dictationTitle": {
+    "description": "Dictation: page title."
+  },
+  "dictationLeave": "Bitir ve çık",
+  "@dictationLeave": {
+    "description": "Dictation: closes the page; what was written is kept."
+  },
+  "dictationNothingToHear": "Şu an rahat anlayabileceğin bir cümle yok. Kart çalıştıkça dikte cümleleri açılır.",
+  "@dictationNothingToHear": {
+    "description": "Dictation: no sentence with personal coverage of 95 % yet (I-06)."
+  },
+  "dictationSentenceOf": "Cümle {number} / {total}",
+  "@dictationSentenceOf": {
+    "description": "Dictation: which sentence.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationIntro": "Cümleyi dinle ve duyduğunu yaz. İstediğin kadar dinleyebilirsin. Yazım kaymaları sayılmaz.",
+  "@dictationIntro": {
+    "description": "Dictation: what to do."
+  },
+  "dictationSlowIntro": "Şimdi yavaş dinle ve cümleyi yeniden yaz.",
+  "@dictationSlowIntro": {
+    "description": "Dictation: the second try, slowly (A05 step 5)."
+  },
+  "dictationListen": "Dinle",
+  "@dictationListen": {
+    "description": "Dictation: plays the sentence."
+  },
+  "dictationListenAgain": "Bir kez daha dinle",
+  "@dictationListenAgain": {
+    "description": "Dictation: plays the sentence again."
+  },
+  "dictationAudioFailure": "Ses şu an çalınamadı. Bağlantını kontrol edip yeniden deneyebilirsin.",
+  "@dictationAudioFailure": {
+    "description": "Dictation: the clip could not be had."
+  },
+  "dictationWriteLabel": "Duyduğun",
+  "@dictationWriteLabel": {
+    "description": "Dictation: the field to write in."
+  },
+  "dictationCheck": "Kontrol et",
+  "@dictationCheck": {
+    "description": "Dictation: checks what was written."
+  },
+  "dictationAllHeard": "Hepsini duydun.",
+  "@dictationAllHeard": {
+    "description": "Dictation: no error."
+  },
+  "dictationSentence": "Cümle",
+  "@dictationSentence": {
+    "description": "Dictation: label of the sentence as said."
+  },
+  "dictationYours": "Senin yazdığın",
+  "@dictationYours": {
+    "description": "Dictation: label of what the learner wrote."
+  },
+  "dictationMarkWeakForm": "Duyulmayan küçük kelime: {words}",
+  "@dictationMarkWeakForm": {
+    "description": "Dictation: function words not heard (perc.weak_forms).",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationMarkEnding": "Duyulmayan ek: {words}",
+  "@dictationMarkEnding": {
+    "description": "Dictation: endings not heard (perc.endings).",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationMarkMissed": "Kaçan kelime: {words}",
+  "@dictationMarkMissed": {
+    "description": "Dictation: words missed.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationMarkChanged": "Farklı duyulan: {words}",
+  "@dictationMarkChanged": {
+    "description": "Dictation: words heard as others or out of place.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationMarkExtra": "Fazladan yazılan: {words}",
+  "@dictationMarkExtra": {
+    "description": "Dictation: words written that the sentence does not have.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationMarkSlip": "Yazım kayması (sayılmaz): {words}",
+  "@dictationMarkSlip": {
+    "description": "Dictation: misspellings that count as heard.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "dictationTryAgainSlowly": "Yavaş dinle, yeniden yaz",
+  "@dictationTryAgainSlowly": {
+    "description": "Dictation: the second try (A05 step 5)."
+  },
+  "dictationNext": "Sıradaki cümle",
+  "@dictationNext": {
+    "description": "Dictation: on to the next sentence."
+  },
+  "dictationFinish": "Bitir",
+  "@dictationFinish": {
+    "description": "Dictation: after the last sentence."
+  },
+  "dictationDoneTitle": "Dikte bitti",
+  "@dictationDoneTitle": {
+    "description": "Dictation: the end."
+  },
+  "dictationDoneHeard": "Eksiksiz duyduğun cümle: {heard} / {total}",
+  "@dictationDoneHeard": {
+    "description": "Dictation: sentences without an error, a count (I-04).",
+    "placeholders": {
+      "heard": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationDoneWeakForm": "Duyulmayan küçük kelime: {count}",
+  "@dictationDoneWeakForm": {
+    "description": "Dictation summary: function words not heard.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationDoneEnding": "Duyulmayan ek: {count}",
+  "@dictationDoneEnding": {
+    "description": "Dictation summary: endings not heard.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationDoneMissed": "Kaçan kelime: {count}",
+  "@dictationDoneMissed": {
+    "description": "Dictation summary: words missed.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationDoneChanged": "Farklı duyulan ya da fazla kelime: {count}",
+  "@dictationDoneChanged": {
+    "description": "Dictation summary: words changed or too many.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dictationDoneNote": "Küçük kelimeler ve ekler hızlı konuşmada zayıf söylenir; onları duymak dinlemeyi en çok geliştiren şeylerden biri.",
+  "@dictationDoneNote": {
+    "description": "Dictation: why (A05), no grade."
+  },
   "fluencyTitle": "4/3/2 akıcılık",
   "@fluencyTitle": {
     "description": "4/3/2: page title."

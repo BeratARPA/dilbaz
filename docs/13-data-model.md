@@ -454,6 +454,7 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `c
     - `prompt` = `{prompt_l1}`, `response` = `{source: 'asr', recording_id, text?, asr?: {provider, model}}`
     - `error_tags` işaretlemedeki etiketlerdir, her biri bir kez. `duration_ms` kaydın süresidir.
     - `llm` = `{route: 'speaking_annotate', pending, provider?, model?, catalog?, code?}`
+  - **Dikte (F2-04):** `activity = 'dictation'`, `item_ref` cümle, `card_id` cümlenin `dictation` kartı, `prompt` = `{reference, clip}`, `response` = `{text, source: 'typed', plays, slow}`, `verdict` `correct` ya da `wrong`, `error_tags` `perc.*`. Yavaş ikinci deneme ilkine zincirlenir; puan ve `card_state_after` son denemededir, puanı ilk deneme belirler.
   - **4/3/2 turu (F2-03):** `activity = 'fluency_432'`, `task_ref` konu, `prompt` = `{round, limit_ms}`, `response` = `{source: 'asr', text?, asr?: {provider, model}, metrics?: SpeechMetrics}`, `duration_ms` turun süresi. 2. ve 3. tur `parent_attempt_id` ile 1. tura bağlanır. Kayıt satırı ve ses yoktur.
   - **Pratik denemeleri:** `prompt` = `{original, reference, tag}`, `response` = `{text, source}`. Önceki denemeye `parent_attempt_id` ile bağlıdır.
   - **`personal_items`:** `source = task_correction`.

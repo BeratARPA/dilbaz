@@ -26,7 +26,21 @@ abstract interface class CardContentRepository {
     String itemKey, {
     required LemmaKnowledge knowledge,
   });
+
+  /// The packs' sentences that have audio, for dictation (A05).
+  Future<List<SentenceAudio>> sentences();
 }
+
+/// A sentence of the packs to hear: its text, lemmas and level, and its
+/// clips at normal and slow speed (bucket paths).
+typedef SentenceAudio = ({
+  String key,
+  String text,
+  List<String> lemmas,
+  CefrLevel level,
+  String clip,
+  String? slowClip,
+});
 
 /// Keys of the learner's own items: `personal:<id>` (docs/10 §7).
 const personalKeyPrefix = 'personal:';
@@ -167,6 +181,50 @@ class DriftCardContentRepository implements CardContentRepository {
     );
   }
 
+  Future<String> _audioPrefix() async {
+    final pack = await _db.contentDao.targetPack(_l2);
+    return switch (pack?.manifest) {
+      {'audio': {'prefix': final String prefix}} => prefix,
+      _ => '',
+    };
+  }
+
+  /// The clip of [speed] in an item's `data.audio`, as a bucket path.
+  static String? _clip(Map<String, Object?> data, String prefix, double speed) {
+    final clips = data['audio'];
+    if (clips is! List<Object?>) return null;
+    for (final entry in clips) {
+      if (entry case {'speed': final num s, 'file': final String file}
+          when s == speed) {
+        return '$prefix$file';
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<List<SentenceAudio>> sentences() async {
+    final prefix = await _audioPrefix();
+    final rows = await (_db.select(
+      _db.contentItems,
+    )..where((t) => t.kind.equals(ItemKind.sentence.code))).get();
+    return [
+      for (final row in rows)
+        if ((row.textL2, _clip(row.data, prefix, 1))
+            case (final String text, final String clip)
+            when !row.deprecated &&
+                CefrLevel.values.any((l) => l.code == row.level))
+          (
+            key: row.key,
+            text: text,
+            lemmas: row.lemmas,
+            level: CefrLevel.values.firstWhere((l) => l.code == row.level),
+            clip: clip,
+            slowClip: _clip(row.data, prefix, 0.8),
+          ),
+    ];
+  }
+
   @override
   Future<CardContent?> content(
     String itemKey, {
@@ -229,22 +287,8 @@ class DriftCardContentRepository implements CardContentRepository {
       },
     );
     final language = await this.language();
-    final pack = await _db.contentDao.targetPack(_l2);
-    final prefix = switch (pack?.manifest) {
-      {'audio': {'prefix': final String prefix}} => prefix,
-      _ => '',
-    };
-    String? clip(double speed) {
-      final clips = carrierRow.data['audio'];
-      if (clips is! List<Object?>) return null;
-      for (final entry in clips) {
-        if (entry case {'speed': final num s, 'file': final String file}
-            when s == speed) {
-          return '$prefix$file';
-        }
-      }
-      return null;
-    }
+    final prefix = await _audioPrefix();
+    String? clip(double speed) => _clip(carrierRow.data, prefix, speed);
 
     final contrasts = _contrasts ??= await _contrastNotes();
     return CardContent(

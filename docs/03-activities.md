@@ -174,6 +174,15 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
 - **Değerlendirme:** Deterministik (hizalama, WER). LLM gerekmez.
 - **FSRS:** Cümle öğesinin `dictation` modu kartı.
 - **Kanıt:** Dinleme çözme kanıtı. Algı hata etiketleri (`perc.*`) profile yazılır.
+- **Uygulama (F2-04):**
+  - **Seçim (motor, `pickDictations`):** Önce zamanı gelen dikte kartları, sonra yeni cümleler. Yeni cümlenin kişisel kapsaması ≥ %95 (I-06), seviyesi öğrencininki ya da altı (A1'in altında A1). Oturumda en çok 5 cümle, en çok 3'ü yeni. Paket sesi olan cümleler alınır.
+  - **Kontrol (motor, `DictationCheck`):** Kelime düzeyinde hizalama; her kelimeye bir işaret: duyuldu, yazım kayması (sayılmaz; dilin kelimesi değil ve 1–2 harf farklı), ek (aynı lemma, fark yalnızca sonda), zayıf biçim (kaçan ya da değişen sık kelime: lemmanın sıklık sırası ≤ 60), kaçan, değişen; fazladan yazılanlar ayrı. İşlev kelimesi listesi yoktur, sıklık sırası paketin sözlüğündendir (I-15).
+  - **Etiketler:** `ek` → `perc.endings`, `zayıf biçim` → `perc.weak_forms` (çift paketinin kataloğu). Kelime sınırı ve ses karışıklığı katalogda yok; o hatalar "kaçan" ya da "değişen" olarak gösterilir.
+  - **Akış:** Pratik → "Dikte". Cümle istendiği kadar dinlenir; alan dinleyince açılır, otomatik düzeltme kapalı. Kontrol: cümle kelime kelime (kaçanlar altı çizili ve vurgulu, kırmızı değil; I-12), yazılan ve türlere göre notlar. Hata varsa "Yavaş dinle, yeniden yaz" (0,8 hızlı klip) bir kez.
+  - **FSRS:** Her cümle bir `dictation` kartıdır (`ModeGroup.dictation`). Puanı ilk deneme verir: hatasız Good, hata oranı ≤ %25 Hard, üstü Again. Her deneme yazılır (`activity = dictation`, I-03); ikinci deneme ilkine zincirlenir. Dikte kartı alıcı kanıttır ("tanıyor"), üretim kanıtı değildir (I-05).
+  - **Kart oturumu dikte kartlarını almaz:** Kart planı onları dışarıda bırakır (ne tekrar ne yeni öğe sayılır); dikte etkinliğinde tekrar edilirler.
+  - **Oturum:** `language` kolu.
+  - **Sonraya kalanlar:** Bölüm bölüm dinleme; hata profiline yazma (F3-02); Bugün'de öneri (F3-01).
 
 ## A06 — Ses ayırt etme (`minimal_pairs`, HVPT)
 - **Amaç:** Karışan sesleri algılamak (P17).

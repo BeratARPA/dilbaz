@@ -5,6 +5,7 @@ import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/repositories/auth_repository_provider.dart';
 import 'package:dilbaz_app/features/auth/presentation/sign_in_screen.dart';
 import 'package:dilbaz_app/features/cards/presentation/card_session_screen.dart';
+import 'package:dilbaz_app/features/dictation_practice/presentation/dictation_practice_screen.dart';
 import 'package:dilbaz_app/features/fluency/presentation/fluency_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_capture_screen.dart';
 import 'package:dilbaz_app/features/gap_journal/presentation/gap_entry_screen.dart';
@@ -165,6 +166,11 @@ GoRouter router(Ref ref) {
         path: AppRoutes.fluency,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const FluencyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.dictation,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const DictationPracticeScreen(),
       ),
       GoRoute(
         path: AppRoutes.monthly,

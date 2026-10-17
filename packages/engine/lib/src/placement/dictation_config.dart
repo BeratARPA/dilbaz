@@ -16,5 +16,14 @@ abstract class DictationConfig with _$DictationConfig {
     /// A level is reached up to this word error rate
     /// (docs/04-learner-model.md §7).
     @Default(0.15) double maxErrorRate,
+
+    /// A lemma this frequent or more is a function word: missing it or
+    /// writing another word in its place is a weak form not heard (A05,
+    /// `perc.weak_forms`). Ranks come from the pack's lexicon.
+    @Default(60) int weakRank,
+
+    /// A dictation card is Hard up to this word error rate, Again above
+    /// it; without an error it is Good.
+    @Default(0.25) double hardErrorRate,
   }) = _DictationConfig;
 }

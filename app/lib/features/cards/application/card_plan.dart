@@ -102,7 +102,12 @@ Future<CardPlan?> planCards(Ref ref, {bool beyondBudget = false}) async {
   final items = await content.items();
   final personal = await content.personalItems(course.id, course.level);
   final links = await content.links();
-  final stored = await cards.cards(course.id);
+  // Dictation cards are sentences reviewed by writing them down (A05): not
+  // the session's cards, and not new items of the curriculum.
+  final stored = [
+    for (final card in await cards.cards(course.id))
+      if (card.mode.group != ModeGroup.dictation) card,
+  ];
   final evidence = await cards.evidence(course.id);
   final today = startOfLocalDay(now);
   final lately = today.subtract(const Duration(days: 2));
