@@ -12,6 +12,8 @@ import 'package:dilbaz_app/data/repositories/profile_repository_provider.dart';
 import 'package:dilbaz_app/data/share/share_providers.dart';
 import 'package:dilbaz_app/data/share/shared_text_source.dart';
 import 'package:dilbaz_app/data/speech/speech_providers.dart';
+import 'package:dilbaz_app/data/together/together_providers.dart';
+import 'package:dilbaz_app/data/together/together_repository.dart';
 import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/content/application/content_status.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
@@ -24,6 +26,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'fake_auth_repository.dart';
 import 'fake_profile_repository.dart';
 import 'fake_speech.dart';
+import 'fake_together.dart';
 import 'pack_fixture.dart';
 import 'placement_fixture.dart';
 
@@ -56,6 +59,7 @@ List<Override> appOverrides({
   SharedTextSource? shared,
   ShortcutSource? shortcuts,
   HomeScreenWidget? homeWidget,
+  TogetherRepository? together,
   AppDatabase? db,
   List<Override> extra = const [],
 }) => [
@@ -101,6 +105,10 @@ List<Override> appOverrides({
   homeScreenWidgetProvider.overrideWithValue(
     homeWidget ?? const NoHomeScreenWidget(),
   ),
+  // Without a team unless the test brings one.
+  togetherRepositoryProvider.overrideWithValue(
+    together ?? FakeTogetherRepository(),
+  ),
   ...extra,
 ];
 
@@ -122,6 +130,7 @@ extension PumpApp on WidgetTester {
     SharedTextSource? shared,
     ShortcutSource? shortcuts,
     HomeScreenWidget? homeWidget,
+    TogetherRepository? together,
     AppDatabase? db,
     List<Override> extra = const [],
   }) async {
@@ -143,6 +152,7 @@ extension PumpApp on WidgetTester {
           shared: shared,
           shortcuts: shortcuts,
           homeWidget: homeWidget,
+          together: together,
           db: db,
           extra: extra,
         ),

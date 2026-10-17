@@ -22,6 +22,7 @@ import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
 import 'package:dilbaz_app/features/shadowing/presentation/shadowing_screen.dart';
 import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
+import 'package:dilbaz_app/features/together/presentation/chat_card_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
 import 'package:dilbaz_app/features/week/presentation/week_screen.dart';
 import 'package:flutter/material.dart';
@@ -178,6 +179,12 @@ GoRouter router(Ref ref) {
         path: AppRoutes.shadowing,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const ShadowingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.chatCard,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) =>
+            ChatCardScreen(cardKey: state.uri.queryParameters['key'] ?? ''),
       ),
       GoRoute(
         path: AppRoutes.week,

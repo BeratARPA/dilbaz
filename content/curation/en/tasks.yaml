@@ -269,3 +269,155 @@ connectors:
   - { text: "therefore", level: B2 }
   - { text: "moreover", level: B2 }
   - { text: "in addition", level: B2 }
+
+# Chat cards (A14, docs/03-activities.md): talked about face to face with the
+# partner, e.g. at dinner; nothing is recorded. question: what to talk
+# about; follow_ups: two questions to go on with; phrases: three sentence
+# starters ("..." is the speaker's part). level: the lowest level the card
+# suits. Each needs an accepted check in curation/<l1>-en/tasks.validation.jsonl.
+chat_cards:
+  # --- A1 -----------------------------------------------------------------
+  - id: chat_food
+    level: A1
+    question: "What is your favorite food?"
+    follow_ups: ["Who cooks it best?", "When do you eat it?"]
+    phrases: ["My favorite food is ...", "I eat it when ...", "I don't like ..."]
+
+  - id: chat_weekend
+    level: A1
+    question: "What do you like to do on the weekend?"
+    follow_ups: ["Do you like to stay home or go out?", "What did you do last weekend?"]
+    phrases: ["On the weekend, I like to ...", "I usually ...", "Last weekend, I ..."]
+
+  - id: chat_morning
+    level: A1
+    question: "What do you do in the morning?"
+    follow_ups: ["Do you drink tea or coffee?", "What time do you get up?"]
+    phrases: ["In the morning, I ...", "I drink ...", "I get up at ..."]
+
+  - id: chat_animals
+    level: A1
+    question: "Do you like animals?"
+    follow_ups: ["Which animal do you like most?", "Did you have a pet as a child?"]
+    phrases: ["I like ... because ...", "My favorite animal is ...", "When I was a child, I had ..."]
+
+  - id: chat_music
+    level: A1
+    question: "What music do you like?"
+    follow_ups: ["Who is your favorite singer?", "Do you sing at home?"]
+    phrases: ["I like ...", "My favorite singer is ...", "I listen to music when ..."]
+
+  - id: chat_hometown
+    level: A1
+    question: "Where are you from?"
+    follow_ups: ["What is your hometown like?", "What do you miss about it?"]
+    phrases: ["I am from ...", "My hometown is ...", "I miss ..."]
+
+  - id: chat_seasons
+    level: A1
+    question: "What is your favorite season?"
+    follow_ups: ["What do you do in that season?", "What kind of weather don't you like?"]
+    phrases: ["My favorite season is ...", "In the summer, I ...", "I don't like ... weather."]
+
+  - id: chat_friend
+    level: A1
+    question: "Tell me about your best friend."
+    follow_ups: ["How did you meet?", "What do you do together?"]
+    phrases: ["My best friend is ...", "We met ...", "We like to ..."]
+
+  - id: chat_shopping
+    level: A1
+    question: "What do you like to buy?"
+    follow_ups: ["Where do you usually shop?", "What did you buy last?"]
+    phrases: ["I like to buy ...", "I usually shop at ...", "Last week, I bought ..."]
+
+  - id: chat_clothes
+    level: A1
+    question: "What do you like to wear?"
+    follow_ups: ["What is your favorite color?", "Do you like to buy clothes?"]
+    phrases: ["I like to wear ...", "My favorite color is ...", "I never wear ..."]
+
+  - id: chat_evening
+    level: A1
+    question: "What do you do in the evening?"
+    follow_ups: ["Do you watch TV?", "What time do you go to bed?"]
+    phrases: ["In the evening, I ...", "I watch ...", "I go to bed at ..."]
+
+  - id: chat_sports
+    level: A1
+    question: "Do you like sports?"
+    follow_ups: ["Which sport do you like to watch?", "Do you play a sport?"]
+    phrases: ["I like ...", "I watch ... on TV.", "I play ... with ..."]
+
+  # --- A2 -----------------------------------------------------------------
+  - id: chat_childhood
+    level: A2
+    question: "What did you like to do when you were a child?"
+    follow_ups: ["What was your favorite game?", "Who did you play with?"]
+    phrases: ["When I was a child, I liked ...", "My favorite game was ...", "I often played with ..."]
+
+  - id: chat_travel
+    level: A2
+    question: "Where would you like to travel?"
+    follow_ups: ["Why do you want to go there?", "Who would you go with?"]
+    phrases: ["I would like to go to ...", "I want to see ...", "I would go with ..."]
+
+  - id: chat_movie
+    level: A2
+    question: "What is the best movie you have ever seen?"
+    follow_ups: ["What is it about?", "Who did you watch it with?"]
+    phrases: ["The best movie I have ever seen is ...", "It is about ...", "I watched it with ..."]
+
+  - id: chat_today
+    level: A2
+    question: "How was your day today?"
+    follow_ups: ["What was the best part?", "Did anything funny happen?"]
+    phrases: ["My day was ...", "The best part was ...", "Something funny happened: ..."]
+
+  - id: chat_plans
+    level: A2
+    question: "What are you going to do next weekend?"
+    follow_ups: ["Who are you going to see?", "Is there anything you need to do?"]
+    phrases: ["Next weekend, I'm going to ...", "I'm going to see ...", "I need to ..."]
+
+  - id: chat_cooking
+    level: A2
+    question: "Can you cook?"
+    follow_ups: ["What can you cook well?", "What did you cook last?"]
+    phrases: ["I can cook ...", "I'm good at making ...", "The last thing I cooked was ..."]
+
+  - id: chat_holiday
+    level: A2
+    question: "What was your best vacation?"
+    follow_ups: ["Where did you stay?", "What did you eat there?"]
+    phrases: ["My best vacation was in ...", "We stayed at ...", "We ate ..."]
+
+  - id: chat_dream_house
+    level: A2
+    question: "What would your dream house be like?"
+    follow_ups: ["Where would it be?", "How many rooms would it have?"]
+    phrases: ["My dream house would be ...", "It would have ...", "I would like a ..."]
+
+  - id: chat_english
+    level: A2
+    question: "Why are you learning English?"
+    follow_ups: ["What is easy for you?", "What is difficult for you?"]
+    phrases: ["I'm learning English because ...", "... is easy for me.", "... is difficult for me."]
+
+  - id: chat_phone
+    level: A2
+    question: "What do you use your phone for?"
+    follow_ups: ["Which app do you use the most?", "Could you live without your phone?"]
+    phrases: ["I use my phone to ...", "I use ... the most.", "I couldn't live without it because ..."]
+
+  - id: chat_series
+    level: A2
+    question: "What series are you watching now?"
+    follow_ups: ["Who is your favorite character?", "Would you watch it again?"]
+    phrases: ["Now I'm watching ...", "My favorite character is ...", "I would watch it again because ..."]
+
+  - id: chat_memory
+    level: A2
+    question: "Tell me about a happy memory."
+    follow_ups: ["When did it happen?", "Who was with you?"]
+    phrases: ["One happy memory is ...", "It happened when ...", "... was with me."]

@@ -180,6 +180,8 @@ Kişinin geçmişindeki medyan süreler kullanılır. Geçmiş yoksa varsayılan
   - Partnerin çevrimiçi olması Supabase presence ile görülür.
   - "Birlikte yapalım mı?" daveti partnere bildirim olarak gider. Kullanıcının izni ve sessiz saat kuralı geçerlidir.
   - Kabul edilirse iki uygulamada da "Birlikte" seçeneği önerilen olur.
+  - **Uygulama (F2-07, 👤 karar 2026-10-17):** Davet telefon bildirimi değil, uygulama içidir: `pair_invites` satırı. Partnerin uygulaması açıksa Realtime ile anında, değilse bir sonraki açılışta Bugün ekranında görünür ("Ada birlikte yapmak istiyor: …", "Evet, yapalım" / "Şimdi değil"). Kabul edilen kart o gün iki uygulamanın Bugün ekranında "Bugün birlikte: …" olarak durur. Sessiz saat kuralı bu yüzden gerekmez; telefon bildirimi (FCM) ileride.
+  - Varlık: Supabase presence, özel kanal `team:<ekip>`; yalnızca "şu an uygulamada" bilgisi.
 - **Aylık test daveti** ayın 1–7'si arasında görünür. Kabul edilmezse hafta sonuna kadar ara sıra tekrar görünür, sonra bir sonraki aya kalır. Hatırlatma dili davettir, uyarı değildir.
   - Uygulama notu (F1-19): Davet Bugün ekranında, öğrencinin yerel ayının 1–7'sinde görünür. Bu ay test yapıldıysa görünmez; başlangıç kaydı sayılmaz.
   - Seviye testi daveti varken çıkmaz.

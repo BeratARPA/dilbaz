@@ -326,6 +326,11 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   2. Partnerler konuşur. Varsayılan olarak **kayıt yoktur**.
   3. Sonunda her kişi isterse "söyleyemediklerim"i hızlıca girer.
 - **Log:** Süre ve katılım (ortak haftalık hedefe sayılır).
+- **Uygulama (F2-07):**
+  - **İçerik:** `en@1`'de 24 kart (A1 12, A2 12), görev türü `pair_chat`: İngilizce soru, 2 devam sorusu, 3 kalıp; çift paketinde başlık ve Türkçe karşılıklar. Claude Code oturumunda yazıldı, ayrı ajanla kör kontrol iki tur (1. tur 15/24, düzeltmelerden sonra 10/10; `tasks.validation.jsonl`, I-16).
+  - **Seçim (motor `chatCardOrder`):** Öğrencinin seviyesi ve altı (A0'da A1 kartları); son 7 günde konuşulan kart sona. Seçimi partnerler yapar (I-14).
+  - **Akış:** Birlikte sekmesinde kart listesi → kart sayfası (soru, A0–A2'de Türkçe karşılıklar, devam soruları, kalıplar) → "Birlikte yapalım mı?" (partnere davet) ve "Başlayalım" → "Bitti". Kayıt yok. Sonda "Söyleyemediğin bir şey oldu mu?" ile yakalama sayfası.
+  - **Log:** `sessions` satırı: `output` kolu, en çok 30 dk; `planned` = `{activity: 'pair_chat', task}`, `done` = `{with_partner: true}`. Ortak hedefe katkısı F2-09'da.
 
 ## A15 — Bilgi boşluğu görevi (`pair_info_gap`)
 - **Amaç:** Gerçek iletişim ihtiyacı yaratan ikili görev.

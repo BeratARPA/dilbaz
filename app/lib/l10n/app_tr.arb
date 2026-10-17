@@ -2802,5 +2802,164 @@
   "todayLastWeekSummary": "Geçen haftanın özeti",
   "@todayLastWeekSummary": {
     "description": "Today: last week's summary on a new week's first opening."
+  },
+  "togetherNoTeam": "Henüz bir ekibin yok. Birlikte çalışmak için bir ekip gerekiyor.",
+  "@togetherNoTeam": {
+    "description": "Together: no team."
+  },
+  "togetherAlone": "{team} ekibinde şimdilik yalnızsın. Partnerin, ekibin davet koduyla katılabilir.",
+  "@togetherAlone": {
+    "description": "Together: a team without a partner.",
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherOffline": "Birlikte sekmesi bağlantı ister. Bağlantı gelince yeniden dene.",
+  "@togetherOffline": {
+    "description": "Together: the server cannot be reached."
+  },
+  "togetherRetry": "Yeniden dene",
+  "@togetherRetry": {
+    "description": "Together: tries to reach the server again."
+  },
+  "togetherPartnerHere": "{name} şu an uygulamada.",
+  "@togetherPartnerHere": {
+    "description": "Together: the partner has the app open.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherPartnerAway": "{name} şu an uygulamada değil.",
+  "@togetherPartnerAway": {
+    "description": "Together: the partner does not have the app open.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherIncoming": "{name} birlikte yapmak istiyor: {title}",
+  "@togetherIncoming": {
+    "description": "Together: the partner's invitation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherYes": "Evet, yapalım",
+  "@togetherYes": {
+    "description": "Together: accepts the invitation and opens the card."
+  },
+  "togetherNotNow": "Şimdi değil",
+  "@togetherNotNow": {
+    "description": "Together: answers the invitation, calmly."
+  },
+  "togetherAgreed": "Bugün birlikte: {title}",
+  "@togetherAgreed": {
+    "description": "Together: the chat card agreed on today.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherOpenCard": "Kartı aç",
+  "@togetherOpenCard": {
+    "description": "Together: opens the agreed chat card."
+  },
+  "togetherSent": "Davetin gitti: {title}",
+  "@togetherSent": {
+    "description": "Together: the learner's invitation waits for an answer.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherSentAccepted": "{name} kabul etti: {title}",
+  "@togetherSentAccepted": {
+    "description": "Together: the partner accepted.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherSentDeclined": "{name} şimdilik olmaz dedi. Başka zaman olur.",
+  "@togetherSentDeclined": {
+    "description": "Together: the partner said not now.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "togetherCancel": "Geri al",
+  "@togetherCancel": {
+    "description": "Together: takes the invitation back."
+  },
+  "togetherFailed": "Şu an gönderilemedi. Birazdan yeniden dene.",
+  "@togetherFailed": {
+    "description": "Together: an invitation or answer did not go through."
+  },
+  "togetherCardsTitle": "Sohbet kartları",
+  "@togetherCardsTitle": {
+    "description": "Together: the chat cards (A14)."
+  },
+  "togetherCardsNote": "Yüz yüze, İngilizce konuşun. Kayıt yapılmaz.",
+  "@togetherCardsNote": {
+    "description": "Together: how chat cards are used."
+  },
+  "chatNote": "Yüz yüze konuşun; kayıt yapılmaz.",
+  "@chatNote": {
+    "description": "Chat card: nothing is recorded."
+  },
+  "chatFollowUps": "Devam soruları",
+  "@chatFollowUps": {
+    "description": "Chat card: heading of the follow-up questions."
+  },
+  "chatPhrases": "İşine yarayacak kalıplar",
+  "@chatPhrases": {
+    "description": "Chat card: heading of the phrases."
+  },
+  "chatInvite": "Birlikte yapalım mı?",
+  "@chatInvite": {
+    "description": "Chat card: invites the partner to this card."
+  },
+  "chatStart": "Başlayalım",
+  "@chatStart": {
+    "description": "Chat card: the two begin talking."
+  },
+  "chatTalking": "Konuşuyorsunuz. Bitince haber ver.",
+  "@chatTalking": {
+    "description": "Chat card: while talking."
+  },
+  "chatFinish": "Bitti",
+  "@chatFinish": {
+    "description": "Chat card: the two are done."
+  },
+  "chatDone": "{minutes} dk konuştunuz.",
+  "@chatDone": {
+    "description": "Chat card: how long they talked.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "chatDoneGap": "Söyleyemediğin bir şey oldu mu? Hemen not al.",
+  "@chatDoneGap": {
+    "description": "Chat card: offers a gap capture at the end (A14 step 3)."
   }
 }

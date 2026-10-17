@@ -41,6 +41,11 @@ abstract final class AppRoutes {
   /// Shadowing, over the tabs (A07).
   static const shadowing = '/shadowing';
 
+  /// A chat card (A14), over the tabs: `/chat?key=<task key>`.
+  static const chatCard = '/chat';
+  static String chatCardOf(String key) =>
+      Uri(path: chatCard, queryParameters: {'key': key}).toString();
+
   /// The week summary, over the tabs (docs/09 §5.13); last week's.
   static const week = '/week';
   static const weekLast = '/week?last=1';

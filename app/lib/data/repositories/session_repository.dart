@@ -25,6 +25,13 @@ abstract interface class SessionRepository {
   /// The days (local midnights) with a session since [since].
   Future<Set<DateTime>> daysSince(String courseId, DateTime since);
 
+  /// The tasks of [activity] done since [since] (`planned.task`).
+  Future<Set<String>> tasksSince(
+    String courseId,
+    DateTime since,
+    String activity,
+  );
+
   /// When the latest session of [userId] began (UTC), and again after
   /// each new one; null before the first.
   Stream<DateTime?> watchLatestStart(String userId);
@@ -114,6 +121,19 @@ class DriftSessionRepository implements SessionRepository {
   @override
   Future<Set<DateTime>> daysSince(String courseId, DateTime since) async => {
     for (final row in await _since(courseId, since)) _localDay(row.startedAt),
+  };
+
+  @override
+  Future<Set<String>> tasksSince(
+    String courseId,
+    DateTime since,
+    String activity,
+  ) async => {
+    for (final row in await _since(courseId, since))
+      if (row.planned
+          case {'activity': final String done, 'task': final String task}
+          when done == activity)
+        task,
   };
 
   static DateTime _localDay(DateTime instant) {

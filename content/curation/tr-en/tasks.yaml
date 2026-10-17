@@ -202,3 +202,152 @@ can_do_summaries:
     summary: "Yol tarifi gibi basit bilgileri adım adım anlatabilirsin."
   - code: cd.opinion.a2
     summary: "Bir şeyi neden sevdiğini ya da tercih ettiğini basit gerekçelerle söyleyebilir, iki şeyi karşılaştırabilirsin."
+
+# What the chat cards (curation/en/tasks.yaml chat_cards) mean, in Turkish:
+# a title for lists, the question, the follow-ups and the phrases in the
+# same order ("..." stays where the speaker fills in). Shown under the
+# English at A1-A2 (docs/02 §3). Checked in tasks.validation.jsonl (I-16).
+chat_instructions:
+  - id: chat_food
+    title: "En sevdiğin yemek"
+    question: "En sevdiğin yemek ne?"
+    follow_ups: ["Onu en iyi kim yapar?", "Onu ne zaman yersin?"]
+    phrases: ["En sevdiğim yemek ...", "Onu ... zaman yerim.", "... sevmem."]
+
+  - id: chat_weekend
+    title: "Hafta sonu"
+    question: "Hafta sonu ne yapmayı seversin?"
+    follow_ups: ["Evde kalmayı mı seversin, dışarı çıkmayı mı?", "Geçen hafta sonu ne yaptın?"]
+    phrases: ["Hafta sonu ... severim.", "Genelde ...", "Geçen hafta sonu ..."]
+
+  - id: chat_morning
+    title: "Sabahlar"
+    question: "Sabahları ne yaparsın?"
+    follow_ups: ["Çay mı içersin, kahve mi?", "Saat kaçta kalkarsın?"]
+    phrases: ["Sabahları ...", "... içerim.", "Saat ...'te kalkarım."]
+
+  - id: chat_animals
+    title: "Hayvanlar"
+    question: "Hayvanları sever misin?"
+    follow_ups: ["En çok hangi hayvanı seversin?", "Çocukken evcil hayvanın var mıydı?"]
+    phrases: ["... severim çünkü ...", "En sevdiğim hayvan ...", "Çocukken benim bir ... vardı."]
+
+  - id: chat_music
+    title: "Müzik"
+    question: "Ne tür müzik seversin?"
+    follow_ups: ["En sevdiğin şarkıcı kim?", "Evde şarkı söyler misin?"]
+    phrases: ["... severim.", "En sevdiğim şarkıcı ...", "... zaman müzik dinlerim."]
+
+  - id: chat_hometown
+    title: "Memleket"
+    question: "Nerelisin?"
+    follow_ups: ["Memleketin nasıl bir yer?", "Oranın neyini özlüyorsun?"]
+    phrases: ["...liyim.", "Memleketim ...", "... özlüyorum."]
+
+  - id: chat_seasons
+    title: "Mevsimler"
+    question: "En sevdiğin mevsim hangisi?"
+    follow_ups: ["O mevsimde neler yaparsın?", "Hangi havayı sevmezsin?"]
+    phrases: ["En sevdiğim mevsim ...", "Yazın ...", "... havayı sevmem."]
+
+  - id: chat_friend
+    title: "En yakın arkadaşın"
+    question: "Bana en yakın arkadaşını anlat."
+    follow_ups: ["Nasıl tanıştınız?", "Birlikte neler yaparsınız?"]
+    phrases: ["En yakın arkadaşım ...", "... tanıştık.", "... severiz."]
+
+  - id: chat_shopping
+    title: "Alışveriş"
+    question: "Ne almayı seversin?"
+    follow_ups: ["Genelde nereden alışveriş yaparsın?", "En son ne aldın?"]
+    phrases: ["... almayı severim.", "Genelde ...'den alışveriş yaparım.", "Geçen hafta ... aldım."]
+
+  - id: chat_clothes
+    title: "Giyim"
+    question: "Ne giymeyi seversin?"
+    follow_ups: ["En sevdiğin renk ne?", "Kıyafet almayı sever misin?"]
+    phrases: ["... giymeyi severim.", "En sevdiğim renk ...", "Hiç ... giymem."]
+
+  - id: chat_evening
+    title: "Akşamlar"
+    question: "Akşamları ne yaparsın?"
+    follow_ups: ["Televizyon izler misin?", "Saat kaçta yatarsın?"]
+    phrases: ["Akşamları ...", "... izlerim.", "Saat ...'te yatarım."]
+
+  - id: chat_sports
+    title: "Spor"
+    question: "Sporu sever misin?"
+    follow_ups: ["Hangi sporu izlemeyi seversin?", "Bir spor yapar mısın?"]
+    phrases: ["... severim.", "Televizyonda ... izlerim.", "... ile ... oynarım."]
+
+  - id: chat_childhood
+    title: "Çocukluk"
+    question: "Çocukken ne yapmayı severdin?"
+    follow_ups: ["En sevdiğin oyun neydi?", "Kiminle oynardın?"]
+    phrases: ["Çocukken ... severdim.", "En sevdiğim oyun ...", "Sık sık ... ile oynardım."]
+
+  - id: chat_travel
+    title: "Seyahat"
+    question: "Nereye seyahat etmek isterdin?"
+    follow_ups: ["Neden oraya gitmek istiyorsun?", "Kiminle giderdin?"]
+    phrases: ["...'e gitmek isterdim.", "... görmek istiyorum.", "... ile giderdim."]
+
+  - id: chat_movie
+    title: "En iyi film"
+    question: "Şimdiye kadar izlediğin en iyi film hangisi?"
+    follow_ups: ["Ne anlatıyor?", "Kiminle izledin?"]
+    phrases: ["Şimdiye kadar izlediğim en iyi film ...", "... anlatıyor.", "... ile izledim."]
+
+  - id: chat_today
+    title: "Bugün"
+    question: "Bugün günün nasıl geçti?"
+    follow_ups: ["En güzel kısmı neydi?", "Komik bir şey oldu mu?"]
+    phrases: ["Günüm ... geçti.", "En güzel kısmı ...", "Komik bir şey oldu: ..."]
+
+  - id: chat_plans
+    title: "Gelecek hafta sonu"
+    question: "Gelecek hafta sonu ne yapacaksın?"
+    follow_ups: ["Kimi göreceksin?", "Yapman gereken bir şey var mı?"]
+    phrases: ["Gelecek hafta sonu ...", "... göreceğim.", "... gerekiyor."]
+
+  - id: chat_cooking
+    title: "Yemek yapmak"
+    question: "Yemek yapabilir misin?"
+    follow_ups: ["Neyi iyi yapabilirsin?", "En son ne pişirdin?"]
+    phrases: ["... yapabilirim.", "... yapmakta iyiyim.", "En son ... pişirdim."]
+
+  - id: chat_holiday
+    title: "En güzel tatil"
+    question: "En güzel tatilin hangisiydi?"
+    follow_ups: ["Nerede kaldınız?", "Orada ne yediniz?"]
+    phrases: ["En güzel tatilim ...'deydi.", "...'de kaldık.", "... yedik."]
+
+  - id: chat_dream_house
+    title: "Hayalindeki ev"
+    question: "Hayalindeki ev nasıl olurdu?"
+    follow_ups: ["Nerede olurdu?", "Kaç odası olurdu?"]
+    phrases: ["Hayalimdeki ev ... olurdu.", "İçinde ... olurdu.", "Bir ... isterdim."]
+
+  - id: chat_english
+    title: "Neden İngilizce?"
+    question: "Neden İngilizce öğreniyorsun?"
+    follow_ups: ["Sana ne kolay geliyor?", "Sana ne zor geliyor?"]
+    phrases: ["İngilizce öğreniyorum çünkü ...", "... bana kolay geliyor.", "... bana zor geliyor."]
+
+  - id: chat_phone
+    title: "Telefon"
+    question: "Telefonunu ne için kullanıyorsun?"
+    follow_ups: ["En çok hangi uygulamayı kullanıyorsun?", "Telefonsuz yaşayabilir miydin?"]
+    phrases: ["Telefonumu ... için kullanıyorum.", "En çok ... kullanıyorum.", "Onsuz yaşayamazdım çünkü ..."]
+
+  - id: chat_series
+    title: "Dizi"
+    question: "Şu an hangi diziyi izliyorsun?"
+    follow_ups: ["En sevdiğin karakter kim?", "Tekrar izler miydin?"]
+    phrases: ["Şu an ... izliyorum.", "En sevdiğim karakter ...", "Tekrar izlerdim çünkü ..."]
+
+  - id: chat_memory
+    title: "Güzel bir anı"
+    question: "Bana mutlu bir anını anlat."
+    follow_ups: ["Ne zaman oldu?", "Yanında kim vardı?"]
+    phrases: ["Mutlu bir anım ...", "... zaman oldu.", "Yanımda ... vardı."]

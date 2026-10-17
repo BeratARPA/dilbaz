@@ -218,6 +218,12 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - Ortak haftalık hedef ve birlikte yapılanların geçmişi.
 - İsteğe bağlı "tebrik gönder".
 
+**Uygulama notları (F2-07):**
+- **Sekme:** Partnerin adı ve "şu an uygulamada" / "şu an uygulamada değil" (dolu ya da boş halka, renk anlam taşımaz). Altında bugünün daveti: gelen (Evet / Şimdi değil), kabul edilen ("Bugün birlikte: …", Kartı aç) ya da giden ("Davetin gitti", Geri al; kabul ya da "şimdilik olmaz" cevabı). Kimin daha çok yaptığı, bekleyen davetin süresi gösterilmez (I-12). Sonra sohbet kartları listesi.
+- **Ekipsiz / yalnız / bağlantısız:** "Henüz bir ekibin yok", "… ekibinde şimdilik yalnızsın", "Birlikte sekmesi bağlantı ister" + Yeniden dene. Sekme yalnızca çevrimiçi çalışır; kartın kendisi paketten gelir.
+- **Bugün:** Gelen davet ya da o gün anlaşılan kart Bugün ekranında da görünür.
+- **Sonraya kalanlar:** bilgi boşluğu (F2-08), ortak hedef ve tebrik (F2-09), kaydırılabilir deste görünümü.
+
 ### 5.10 Dinle, Oku, İzle, Yaz
 - **Dinle:**
   - Kişisel kapsamaya göre filtrelenmiş dinleme kütüphanesi. Her metnin yanında "~%97 anlarsın" etiketi (ölçülmüş tahmin).

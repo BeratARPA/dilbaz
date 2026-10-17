@@ -248,6 +248,11 @@ create table subtitle_imports (
 
 ### 2.5 Birlikte
 
+- **`pair_invites` (F2-07, `20261017190643_together.sql`):** `id`, `team_id`, `from_profile`, `to_profile`, `activity` (`chat`), `task_ref`, `state` (`sent` / `accepted` / `declined` / `cancelled`), `created_at`, `answered_at`. Yalnızca iki taraf okur. Gönderen kendi adına ve yalnızca ekip arkadaşına, `sent` olarak ekler; açık daveti alıcı kabul eder ya da reddeder, gönderen geri alır; cevaplanmış davet değişmez. `authenticated` için SELECT, INSERT ve yalnızca `state`/`answered_at` sütunlarında UPDATE. `supabase_realtime` yayınında. Senkron edilmez: sekme çevrimiçidir.
+- **`my_team()`** (security definer): çağıranın ilk ekibi, üyelerin kimliği ve görünen adıyla (`14` §3).
+- **Presence:** `realtime.messages` üzerinde iki politika: yalnızca `extension = 'presence'`, yalnızca `team:<ekip kimliği>` konusunda ve yalnızca o ekibin üyesi (`private.may_use_team_topic`). Yayın (broadcast) açık değildir.
+- pgTAP: `12_together.test.sql` (23 test).
+
 ```sql
 create table pair_sessions (
   id uuid primary key, team_id uuid not null references teams on delete cascade,

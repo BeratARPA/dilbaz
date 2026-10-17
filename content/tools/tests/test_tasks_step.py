@@ -16,9 +16,12 @@ from dilbaz_content.tasks_step import (
     TASKS_VALIDATION,
     CanDo,
     CanDoSummary,
+    ChatCardDraft,
+    ChatInstruction,
     Instruction,
     TaskCheck,
     TaskDraft,
+    chat_texts,
     run_tasks,
     summary_texts,
     task_texts,
@@ -235,3 +238,124 @@ def test_the_tasks_command_reports_and_fails_on_issues(tmp_path: Path) -> None:
     failed = runner.invoke(app, ["tasks", "--content-dir", str(tmp_path)])
     assert failed.exit_code == 1
     assert "unvalidated" in failed.output
+
+
+# --- Chat cards (A14) ---------------------------------------------------------
+
+FOOD = {
+    "id": "chat_food",
+    "level": "A1",
+    "question": "What is your favorite food?",
+    "follow_ups": ["Who cooks it best?", "When do you eat it?"],
+    "phrases": ["My favorite food is ...", "I eat it when ...", "I don't like ..."],
+}
+FOOD_TR = {
+    "id": "chat_food",
+    "title": "En sevdiğin yemek",
+    "question": "En sevdiğin yemek ne?",
+    "follow_ups": ["Onu en iyi kim yapar?", "Onu ne zaman yersin?"],
+    "phrases": ["En sevdiğim yemek ...", "Onu ... zaman yerim.", "... sevmem."],
+}
+
+
+def add_chats(
+    root: Path,
+    cards: list[dict[str, object]],
+    meanings: list[dict[str, object]],
+    checked: list[str],
+) -> None:
+    """Adds chat cards to a curation made by `write_curation`."""
+    en = root / "curation" / "en" / TASKS_CURATION
+    data = yaml.safe_load(en.read_text(encoding="utf-8"))
+    data["chat_cards"] = cards
+    en.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    pair = root / "curation" / "tr-en" / TASKS_CURATION
+    data = yaml.safe_load(pair.read_text(encoding="utf-8"))
+    data["chat_instructions"] = meanings
+    pair.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    by_id = {str(m["id"]): ChatInstruction.model_validate(m) for m in meanings}
+    validation = root / "curation" / "tr-en" / TASKS_VALIDATION
+    with validation.open("a", encoding="utf-8") as stream:
+        for card in cards:
+            draft = ChatCardDraft.model_validate(card)
+            if draft.id not in checked or draft.id not in by_id:
+                continue
+            check = TaskCheck(
+                id=draft.id,
+                round=1,
+                texts=chat_texts(draft, by_id[draft.id]),
+                clear=True,
+                faithful=True,
+                correct=True,
+                level_ok=True,
+            )
+            stream.write(check.model_dump_json() + "\n")
+
+
+def test_checked_chat_cards_go_to_both_packs(tmp_path: Path) -> None:
+    write_curation(tmp_path, [ANCHOR, ROUTINE], INSTRUCTIONS)
+    add_chats(tmp_path, [FOOD], [FOOD_TR], ["chat_food"])
+
+    report = run_tasks(tmp_path, l1="tr", l2="en")
+
+    assert report.issues == ()
+    assert report.chat_cards_by_level == {"A1": 1}
+    tasks = lines(tmp_path / "packs" / "en" / TASKS_FILE)
+    assert tasks[-1] == {
+        "key": "en.chat.chat_food",
+        "kind": "pair_chat",
+        "level": "A1",
+        "question": FOOD["question"],
+        "follow_ups": FOOD["follow_ups"],
+        "phrases": FOOD["phrases"],
+        "provenance": {"source": "dilbaz curation", "license": "own"},
+    }
+    instruction = lines(tmp_path / "packs" / "tr-en" / INSTRUCTIONS_FILE)[-1]
+    assert instruction == {
+        "key": "en.chat.chat_food",
+        "title": FOOD_TR["title"],
+        "prompt": FOOD_TR["question"],
+        "follow_ups": FOOD_TR["follow_ups"],
+        "phrases": FOOD_TR["phrases"],
+        "provenance": {"source": "dilbaz curation", "license": "own"},
+    }
+
+
+def test_unchecked_or_broken_chat_cards_stay_out(tmp_path: Path) -> None:
+    write_curation(tmp_path, [ANCHOR, ROUTINE], INSTRUCTIONS)
+    one_follow_up = FOOD | {"id": "chat_one", "follow_ups": ["Why?"]}
+    unchecked = FOOD | {"id": "chat_new"}
+    no_meaning = FOOD | {"id": "chat_alone"}
+    short = FOOD_TR | {"id": "chat_short", "phrases": ["En sevdiğim yemek ..."]}
+    add_chats(
+        tmp_path,
+        [one_follow_up, unchecked, no_meaning, FOOD | {"id": "chat_short"}, ROUTINE_AS_CHAT],
+        [
+            FOOD_TR | {"id": "chat_one", "follow_ups": ["Neden?"]},
+            FOOD_TR | {"id": "chat_new"},
+            short,
+            FOOD_TR | {"id": "daily_routine"},
+        ],
+        ["chat_one", "chat_short"],
+    )
+
+    report = run_tasks(tmp_path, l1="tr", l2="en")
+
+    kinds = {issue.id: issue.kind for issue in report.issues}
+    assert kinds == {
+        "chat_one": "phrases",
+        "chat_new": "unvalidated",
+        "chat_alone": "missing_instruction",
+        "chat_short": "phrases",
+        "daily_routine": "duplicate",
+    }
+    tasks = lines(tmp_path / "packs" / "en" / TASKS_FILE)
+    assert not [t for t in tasks if t["kind"] == "pair_chat"]
+    assert (
+        json.loads((tmp_path / "work" / "tasks.en.report.json").read_text())["chat_cards_by_level"]
+        == {}
+    )
+
+
+# A chat card whose id is a task's.
+ROUTINE_AS_CHAT = FOOD | {"id": "daily_routine"}

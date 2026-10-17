@@ -96,6 +96,18 @@ Future<void> installCardPacks(AppDatabase db) async {
               'goal': 'Talk about $key.',
               'phrases': phrases,
             }),
+          ), // Chat cards (A14).
+        for (final (key, level) in [(chatB, 'A2'), (chatA, 'A1')])
+          ContentTasksCompanion.insert(
+            key: key,
+            packId: target,
+            kind: 'pair_chat',
+            level: level,
+            data: Value({
+              'question': 'Bada $key?',
+              'follow_ups': ['Kolu?', 'Sima?'],
+              'phrases': ['Bada ...', 'Kolu ...', 'Sima ...'],
+            }),
           ),
       ],
       normalization: soundNormalization,
@@ -206,6 +218,18 @@ Future<void> installCardPacks(AppDatabase db) async {
               ],
             },
           ),
+        for (final (key, title) in [(chatA, 'Yemek'), (chatB, 'Tatil')])
+          ContentPairEntriesCompanion.insert(
+            kind: 'task_instruction',
+            key: key,
+            packId: pair,
+            data: {
+              'title': title,
+              'prompt': '$title sorusu',
+              'follow_ups': ['Kolu mu?', 'Sima mı?'],
+              'phrases': ['Bada ...', 'Kolu ...', 'Sima ...'],
+            },
+          ),
         for (final (code, summary) in [
           ('cd.zz.A1', 'Kendini anlatabilirsin.'),
           ('cd.zz.A2', 'Şehrini anlatabilirsin.'),
@@ -248,6 +272,10 @@ Future<void> installCardPacks(AppDatabase db) async {
     expect(result, isA<Ok<void, PackFailure>>(), reason: built.info.id);
   }
 }
+
+/// Chat cards of [installCardPacks] (A14): A1, then A2.
+const chatA = 'zz.chat.food';
+const chatB = 'zz.chat.trip';
 
 /// What the fake tutor answers.
 LlmAnswerCheck llmCheck(

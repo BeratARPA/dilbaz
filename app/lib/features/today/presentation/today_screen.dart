@@ -7,6 +7,7 @@ import 'package:dilbaz_app/features/content/presentation/content_status_view.dar
 import 'package:dilbaz_app/features/monthly/presentation/monthly_invitation_card.dart';
 import 'package:dilbaz_app/features/placement/presentation/placement_invitation_card.dart';
 import 'package:dilbaz_app/features/today/application/today_controller.dart';
+import 'package:dilbaz_app/features/together/presentation/together_today_card.dart';
 import 'package:dilbaz_app/features/week/application/week_summary.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 const PlacementInvitationCard(),
                 const MonthlyInvitationCard(),
                 const _WeekOffer(),
+                const TogetherTodayCard(),
                 const _Today(),
                 const SizedBox(height: 24),
                 Text(

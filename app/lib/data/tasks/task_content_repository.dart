@@ -18,7 +18,25 @@ abstract interface class TaskContentRepository {
   /// The pack's can-do codes with their level and the pair pack's summary;
   /// a code without a summary is left out.
   Future<List<CanDo>> canDos();
+
+  /// The chat cards (A14) with what they mean; a card without its meaning
+  /// in the pair pack is left out.
+  Future<List<ChatCard>> chatCards();
 }
+
+/// A chat card (A14): a question to talk about with the partner, two
+/// follow-ups and three phrases, each with its meaning.
+typedef ChatCard = ({
+  String key,
+  CefrLevel level,
+  String title,
+  String question,
+  String meaning,
+  List<String> followUps,
+  List<String> followUpMeanings,
+  List<String> phrases,
+  List<String> phraseMeanings,
+});
 
 /// A can-do code as the Progress tab lists it (docs/04 §5).
 typedef CanDo = ({String code, CefrLevel level, String summary});
@@ -30,6 +48,7 @@ class DriftTaskContentRepository implements TaskContentRepository {
   final String _l2;
 
   static const _speaking = 'speaking';
+  static const _chat = 'pair_chat';
   static const _instruction = 'task_instruction';
   static const _lemma = 'lemma';
   static const _summary = 'can_do_summary';
@@ -119,5 +138,38 @@ class DriftTaskContentRepository implements TaskContentRepository {
       ],
       _ => const [],
     };
+  }
+
+  @override
+  Future<List<ChatCard>> chatCards() async {
+    final instructions = await _db.contentDao.pairEntries(_instruction);
+    final cards = <ChatCard>[];
+    for (final row in await _db.contentDao.tasks()) {
+      final level = CefrLevel.values
+          .where((l) => l.code == row.level)
+          .firstOrNull;
+      final read = instructions[row.key];
+      if (row.kind != _chat || level == null || read == null) continue;
+      final (title, meaning, question) = (
+        read['title'],
+        read['prompt'],
+        row.data['question'],
+      );
+      if (title is! String || meaning is! String || question is! String) {
+        continue;
+      }
+      cards.add((
+        key: row.key,
+        level: level,
+        title: title,
+        question: question,
+        meaning: meaning,
+        followUps: _strings(row.data['follow_ups']),
+        followUpMeanings: _strings(read['follow_ups']),
+        phrases: _strings(row.data['phrases']),
+        phraseMeanings: _strings(read['phrases']),
+      ));
+    }
+    return cards;
   }
 }

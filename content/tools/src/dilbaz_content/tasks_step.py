@@ -1,10 +1,12 @@
-"""Speaking tasks, can-do codes and connectors of a pack (A11, A23;
-docs/02-curriculum.md §7-§8, docs/11-language-packs.md §2).
+"""Speaking tasks, chat cards, can-do codes and connectors of a pack (A11,
+A14, A23; docs/02-curriculum.md §7-§8, docs/11-language-packs.md §2).
 
 `curation/<l2>/tasks.yaml` holds the tasks in the target language's terms
 (goal, phrases), the can-do codes and the connectors;
 `curation/<l1>-<l2>/tasks.yaml` holds what the learner reads (title, prompt,
-the phrases' meanings, can-do summaries). A task or a summary enters the
+the phrases' meanings, can-do summaries). Chat cards (A14) are tasks of kind
+`pair_chat`: a question to talk about with the partner, follow-up questions
+and three phrases, with their meanings. A task or a summary enters the
 packs only when an independent check of its exact texts accepted it
 (`curation/<l1>-<l2>/tasks.validation.jsonl`, I-16): a changed text needs a
 new check.
@@ -36,6 +38,8 @@ REPORT_FILE = "tasks.{l2}.report.json"
 _PROVENANCE = Provenance(source="dilbaz curation", license="own")
 # Phrases shown with a task (docs/02 §3: "3 kalıp"); anchors have none.
 PHRASES = 3
+# Follow-up questions of a chat card (A14).
+FOLLOW_UPS = (2, 3)
 
 IssueKind = Literal[
     "unvalidated",
@@ -84,12 +88,25 @@ class Connector(BaseModel):
     level: Level
 
 
+class ChatCardDraft(BaseModel):
+    """A chat card (A14): what the partners talk about, in the target language."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    id: str = Field(pattern=r"^[a-z0-9_]+$")
+    level: Level
+    question: str = Field(min_length=1)
+    follow_ups: tuple[str, ...]
+    phrases: tuple[str, ...]
+
+
 class TasksCuration(BaseModel):
     """`curation/<l2>/tasks.yaml`."""
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     tasks: tuple[TaskDraft, ...] = Field(min_length=1)
+    chat_cards: tuple[ChatCardDraft, ...] = ()
     can_dos: tuple[CanDo, ...] = Field(min_length=1)
     connectors: tuple[Connector, ...] = Field(min_length=1)
 
@@ -114,6 +131,18 @@ class CanDoSummary(BaseModel):
     summary: str = Field(min_length=1)
 
 
+class ChatInstruction(BaseModel):
+    """What a chat card means in the learner's language."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    id: str
+    title: str = Field(min_length=1)
+    question: str = Field(min_length=1)
+    follow_ups: tuple[str, ...]
+    phrases: tuple[str, ...]
+
+
 class PairTasksCuration(BaseModel):
     """`curation/<l1>-<l2>/tasks.yaml`."""
 
@@ -121,6 +150,7 @@ class PairTasksCuration(BaseModel):
 
     instructions: tuple[Instruction, ...]
     can_do_summaries: tuple[CanDoSummary, ...]
+    chat_instructions: tuple[ChatInstruction, ...] = ()
 
 
 class TaskCheck(BaseModel):
@@ -165,6 +195,7 @@ class TasksReport(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     tasks_by_level: dict[str, int]
+    chat_cards_by_level: dict[str, int] = Field(default_factory=dict)
     anchors: tuple[str, ...]
     can_dos: int
     connectors: int
@@ -180,6 +211,53 @@ def task_texts(task: TaskDraft, instruction: Instruction) -> dict[str, str | lis
         "prompt": instruction.prompt,
         "phrase_meanings": list(instruction.phrases),
     }
+
+
+def chat_texts(card: ChatCardDraft, instruction: ChatInstruction) -> dict[str, str | list[str]]:
+    """What a check of a chat card must have seen."""
+    return {
+        "question": card.question,
+        "follow_ups": list(card.follow_ups),
+        "phrases": list(card.phrases),
+        "title": instruction.title,
+        "question_meaning": instruction.question,
+        "follow_up_meanings": list(instruction.follow_ups),
+        "phrase_meanings": list(instruction.phrases),
+    }
+
+
+def chat_issues(
+    curation: TasksCuration,
+    pair: PairTasksCuration,
+    checks: Mapping[str, TaskCheck],
+) -> list[Issue]:
+    """What keeps chat cards out of the packs."""
+    issues: list[Issue] = []
+    ids = [task.id for task in curation.tasks] + [card.id for card in curation.chat_cards]
+    instructions = {instruction.id: instruction for instruction in pair.chat_instructions}
+    low, high = FOLLOW_UPS
+    for card in curation.chat_cards:
+        instruction = instructions.get(card.id)
+        found: Issue | None = None
+        if ids.count(card.id) > 1:
+            found = Issue(id=card.id, kind="duplicate", detail="the id is used twice")
+        elif not low <= len(card.follow_ups) <= high or len(card.phrases) != PHRASES:
+            found = Issue(
+                id=card.id,
+                kind="phrases",
+                detail=f"{len(card.follow_ups)} follow-ups and {len(card.phrases)} phrases",
+            )
+        elif instruction is None:
+            found = Issue(id=card.id, kind="missing_instruction", detail="no instruction")
+        elif len(instruction.follow_ups) != len(card.follow_ups) or len(instruction.phrases) != len(
+            card.phrases
+        ):
+            found = Issue(id=card.id, kind="phrases", detail="the meanings do not match")
+        else:
+            found = _check_issue(card.id, checks.get(card.id), chat_texts(card, instruction))
+        if found is not None:
+            issues.append(found)
+    return issues
 
 
 def summary_texts(can_do: CanDo, summary: CanDoSummary) -> dict[str, str | list[str]]:
@@ -259,11 +337,12 @@ def task_issues(
     return issues
 
 
-def _write(path: Path, rows: Iterable[Mapping[str, object]]) -> None:
+def _write(path: Path, *groups: Iterable[Mapping[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as stream:
-        for row in rows:
-            stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+        for rows in groups:
+            for row in rows:
+                stream.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
 def load_curation(path: Path) -> TasksCuration:
@@ -281,9 +360,12 @@ def run_tasks(content_dir: Path, *, l1: str, l2: str) -> TasksReport:
     curation = load_curation(content_dir / "curation" / l2 / TASKS_CURATION)
     pair_dir = content_dir / "curation" / f"{l1}-{l2}"
     pair = load_pair_curation(pair_dir / TASKS_CURATION)
-    issues = task_issues(curation, pair, read_checks(pair_dir / TASKS_VALIDATION))
+    checks = read_checks(pair_dir / TASKS_VALIDATION)
+    issues = task_issues(curation, pair, checks) + chat_issues(curation, pair, checks)
     out = {issue.id for issue in issues}
     tasks = [task for task in curation.tasks if task.id not in out]
+    chats = [card for card in curation.chat_cards if card.id not in out]
+    chatted = {card.id for card in chats}
     can_dos = [can_do for can_do in curation.can_dos if can_do.code not in out]
     kept = {task.id for task in tasks} | {can_do.code for can_do in can_dos}
     provenance = _PROVENANCE.model_dump(exclude_none=True)
@@ -303,6 +385,18 @@ def run_tasks(content_dir: Path, *, l1: str, l2: str) -> TasksReport:
                 "provenance": provenance,
             }
             for task in tasks
+        ),
+        (
+            {
+                "key": f"{l2}.chat.{card.id}",
+                "kind": "pair_chat",
+                "level": card.level,
+                "question": card.question,
+                "follow_ups": list(card.follow_ups),
+                "phrases": list(card.phrases),
+                "provenance": provenance,
+            }
+            for card in chats
         ),
     )
     _write(packs / l2 / CAN_DOS_FILE, (can_do.model_dump() for can_do in can_dos))
@@ -328,6 +422,18 @@ def run_tasks(content_dir: Path, *, l1: str, l2: str) -> TasksReport:
             for instruction in pair.instructions
             if instruction.id in kept
         ),
+        (
+            {
+                "key": f"{l2}.chat.{instruction.id}",
+                "title": instruction.title,
+                "prompt": instruction.question,
+                "follow_ups": list(instruction.follow_ups),
+                "phrases": list(instruction.phrases),
+                "provenance": provenance,
+            }
+            for instruction in pair.chat_instructions
+            if instruction.id in chatted
+        ),
     )
     _write(
         packs / f"{l1}-{l2}" / SUMMARIES_FILE,
@@ -342,8 +448,12 @@ def run_tasks(content_dir: Path, *, l1: str, l2: str) -> TasksReport:
     for task in tasks:
         if not task.anchor:
             by_level[task.level] = by_level.get(task.level, 0) + 1
+    chats_by_level: dict[str, int] = {}
+    for card in chats:
+        chats_by_level[card.level] = chats_by_level.get(card.level, 0) + 1
     report = TasksReport(
         tasks_by_level=dict(sorted(by_level.items())),
+        chat_cards_by_level=dict(sorted(chats_by_level.items())),
         anchors=tuple(sorted(task.anchor for task in tasks if task.anchor)),
         can_dos=len(can_dos),
         connectors=len(curation.connectors),
