@@ -118,12 +118,7 @@ class SupabaseTutorRepository implements TutorRepository {
   @override
   Future<Result<HeardPronunciation, TutorFailure>> pronCheck(
     PronCheckRequest request,
-  ) => _call(
-    _pronCheck,
-    request.toJson(),
-    _pronWait,
-    HeardPronunciation.read,
-  );
+  ) => _call(_pronCheck, request.toJson(), _pronWait, HeardPronunciation.read);
 
   Future<Result<T, TutorFailure>> _call<T>(
     String route,

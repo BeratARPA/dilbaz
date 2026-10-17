@@ -72,19 +72,34 @@ class _CardPageState extends ConsumerState<CardPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 16,
         children: [
-          Text(
-            view.input == AnswerInput.speak
-                ? l10n.cardsSayIt
-                : l10n.cardsTypeIt,
-            style: theme.textTheme.labelLarge,
-          ),
+          Text(switch ((view.cloze, view.input)) {
+            (_?, AnswerInput.speak) => l10n.cardsClozeSay,
+            (_?, AnswerInput.type) => l10n.cardsClozeType,
+            (null, AnswerInput.speak) => l10n.cardsSayIt,
+            (null, AnswerInput.type) => l10n.cardsTypeIt,
+          }, style: theme.textTheme.labelLarge),
           ReportOnLongPress(
             onReport: _report,
             child: Semantics(
               header: true,
-              child: Text(view.prompt, style: theme.textTheme.headlineSmall),
+              child: switch (view.cloze) {
+                final cloze? => Text(
+                  '${cloze.before}____${cloze.after}',
+                  semanticsLabel: l10n.cardsClozeSentence(
+                    cloze.before.trim(),
+                    cloze.after.trim(),
+                  ),
+                  style: theme.textTheme.headlineSmall,
+                ),
+                null => Text(view.prompt, style: theme.textTheme.headlineSmall),
+              },
             ),
           ),
+          if (view.cloze case final cloze?)
+            _Line(
+              icon: Icons.lightbulb_outline,
+              text: l10n.cardsClozeHint(cloze.hint),
+            ),
           if (view.contextNote case final note?)
             _Line(icon: Icons.chat_bubble_outline, text: note),
           if (phase is CardEnded)

@@ -9,7 +9,7 @@ part 'attempt_draft.freezed.dart';
 abstract class AttemptDraft with _$AttemptDraft {
   /// Creates a draft.
   const factory({
-    /// `card.produce_speak` or `card.produce_type`.
+    /// The activity code (docs/03), such as `card.produce_speak`.
     required String activity,
 
     /// What was asked: `{prompt_l1, reference, carrier?}`.

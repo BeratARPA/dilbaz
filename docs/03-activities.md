@@ -156,11 +156,23 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   2. Kullanıcı Türkçe anlamı söyler/yazar. A0–A1'de 4 seçenekten biri seçilebilir.
   3. Doğru/yanlış ve tekrar dinleme.
 - **Kanıt:** Yalnızca alıcı kanıt (I-05: üretim sayılmaz).
+- **Uygulama (F2-06):**
+  - **Ne zaman açılır (👤 karar 2026-10-17, motor `CompanionCards.listening`):** Kelime ve kalıplara, öğrenci A0–B1 iken, öğe tanıtılıp ilk kartı kaydedilince üretim kartının yanında açılır. Öğenin kendi sesi pakette yoksa açılmaz.
+  - **Akış:** Kart oturumunda tekrar olarak gelir. Kelimenin ya da kalıbın kendi sesi çalar (A0–A1'de yavaş; sessiz modda kendiliğinden çalmaz). Dört Türkçe anlam gösterilir; seçim ancak ses bir kez dinlenince açılır. Tek seçim kartı bitirir: doğru anlam işaretlenir (yanlış seçim kırmızı değil, I-12) ve duyulan kelime yazılır.
+  - **Seçenekler (motor `pickChoices`):** Aynı türden (kelime/kalıp), anlamı farklı öğeler; seviyesi en yakın olanlar önce, sıra seed'le. Üç seçenek bulunamazsa kart o oturumda gösterilmez.
+  - **Serbest cevap yok:** Belgedeki "Türkçe anlamı söyler/yazar" yolu sonraya kaldı; Türkçe serbest cevabın deterministik denetimi I-17'yi koruyamaz. Her seviyede dört seçenek.
+  - **FSRS:** `recognize_audio` kartı (alıcı grup). Doğru seçim Good, yanlış Again (`recognitionRating`); Easy ve Hard yok. Deneme `card.recognize_audio`, `response.source = 'choice'`.
 
 ## A04 — Bağlamda boşluk (`card.cloze`)
 - **Amaç:** Bağlam içinde biçim çağırma: eşdizim, edat, zaman.
 - **Kol:** language · **Seviye:** A1–C2
 - **Akış:** Boşluklu İngilizce cümle + eksik parçanın Türkçe ipucu gösterilir. Kullanıcı eksik parçayı söyler/yazar. Değerlendirme A01 gibi.
+- **Uygulama (F2-06):**
+  - **Ne zaman açılır (👤 karar 2026-10-17, motor `CompanionCards.cloze`):** Kelimelere, öğrenci A1 ve üstündeyken, üretim kartı "hatırlıyor" düzeyine (kanıtlı tekrarda S ≥ 7 gün) ulaşınca. Üretim kartının tekrarı kaydedilirken kontrol edilir. Kalıp ve gramer öğeleri için boşluk yok: kalıbın taşıyıcısı kendisi, gramerin hedef kelimesi yok.
+  - **Boşluk (motor `Cloze`):** Taşıyıcı cümlede hedef lemmanın biçimleri (ilkinden sonuncusuna); kenardaki noktalama dışarıda kalır. Noktalama, paketin normalizasyonunun attığı karakterdir (I-15). Cümlede hedef yoksa ya da cümle yalnızca hedefse kart gösterilmez.
+  - **Ekran:** "Boşluğu İngilizce söyle/yaz", cümle `____` ile, altında "Eksik parçanın anlamı: …" (öğenin Türkçe anlamı). Türkçe cümle istemi gösterilmez: görev çeviri değil, biçimi çağırmak.
+  - **Değerlendirme:** Cevap boşluğa konur ve cümlenin tamamı A01 gibi denetlenir: deterministik eşleşme, LLM, ipucu merdiveni, "yanlış duyuldu". Öğrenci cümlenin tamamını söylediyse (boşluğun çevresindeki ilk ve son kelime cevapta varsa) olduğu gibi alınır.
+  - **Kayıt:** `card.cloze`, `response.text` oluşan cümle, `response.gap` boşluk için söylenen, `prompt.cloze` = `{before, after, hint}`. Easy için gecikme profili `cloze` modunun kendi denemelerinden.
 
 ## A05 — Dikte (`dictation`)
 - **Amaç:** Konuşmayı kelimelere ayırma, işlev kelimeleri ve ekleri duyma (aşağıdan yukarı dinleme).

@@ -222,6 +222,27 @@ void main() {
       expect(level('en.ws.chicken.n.1'), ItemLevel.recallable);
       expect(level('en.ws.milk.n.1'), ItemLevel.learning);
       expect(level('en.ws.tea.n.1'), ItemLevel.unseen);
+      // One item's evidence alone.
+      final one = await cards.evidence(courseId, itemRef: 'en.ws.milk.n.1');
+      expect(one.keys, ['en.ws.milk.n.1']);
+      expect(
+        one['en.ws.milk.n.1']!.productionLevel(now: now),
+        ItemLevel.learning,
+      );
+    });
+
+    test('every mode has its activity code (docs/03)', () {
+      expect(
+        {for (final mode in CardMode.values) mode: cardActivity(mode)},
+        {
+          CardMode.speak: 'card.produce_speak',
+          CardMode.type: 'card.produce_type',
+          CardMode.cloze: 'card.cloze',
+          CardMode.contrast: 'card.contrast',
+          CardMode.recognizeAudio: 'card.recognize_audio',
+          CardMode.dictation: 'dictation',
+        },
+      );
     });
 
     test('recent latencies are the newest answers of the mode', () async {

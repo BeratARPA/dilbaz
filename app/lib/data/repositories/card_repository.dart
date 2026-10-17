@@ -23,8 +23,12 @@ typedef PersonalAnswers = ({List<String> variants, List<String> alternatives});
 
 /// The activity code of a card answer in [mode] (docs/03-activities.md).
 String cardActivity(CardMode mode) => switch (mode) {
+  CardMode.speak => 'card.produce_speak',
   CardMode.type => 'card.produce_type',
-  _ => 'card.produce_speak',
+  CardMode.cloze => 'card.cloze',
+  CardMode.contrast => 'card.contrast',
+  CardMode.recognizeAudio => 'card.recognize_audio',
+  CardMode.dictation => 'dictation',
 };
 
 /// Cards and their attempts (docs/13-data-model.md §2.3). Attempts are
@@ -35,8 +39,11 @@ abstract interface class CardRepository {
   Future<List<StoredCard>> cards(String courseId);
 
   /// The evidence of every item with a card, projected from the attempts
-  /// (docs/04-learner-model.md §3, I-04).
-  Future<Map<String, ItemEvidence>> evidence(String courseId);
+  /// (docs/04-learner-model.md §3, I-04); of [itemRef] alone when given.
+  Future<Map<String, ItemEvidence>> evidence(
+    String courseId, {
+    String? itemRef,
+  });
 
   /// Latencies of the latest answers in [mode], newest first, for the Easy
   /// rating (docs/03 §0.3).
@@ -171,11 +178,24 @@ class DriftCardRepository implements CardRepository {
   }
 
   @override
-  Future<Map<String, ItemEvidence>> evidence(String courseId) async {
-    final cards = await this.cards(courseId);
+  Future<Map<String, ItemEvidence>> evidence(
+    String courseId, {
+    String? itemRef,
+  }) async {
+    final cards = [
+      for (final card in await this.cards(courseId))
+        if (itemRef == null || card.itemRef == itemRef) card,
+    ];
     final rated =
         await (_db.select(_db.attempts)
-              ..where((t) => t.courseId.equals(courseId) & t.rating.isNotNull())
+              ..where(
+                (t) =>
+                    t.courseId.equals(courseId) &
+                    t.rating.isNotNull() &
+                    (itemRef == null
+                        ? const Constant(true)
+                        : t.itemRef.equals(itemRef)),
+              )
               ..orderBy([(t) => OrderingTerm(expression: t.createdAtClient)]))
             .get();
     final late = {

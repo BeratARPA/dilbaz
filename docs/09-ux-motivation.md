@@ -132,6 +132,10 @@ Ayarlar ve profil, İlerleme'nin sağ üstündedir.
   - "Gönder" ile `content_reports` satırı yazılır, kartın gösterdiği taşıyıcı, istem ve cümleyle birlikte. Ardından "Teşekkürler. Bakacağız." görünür.
 - **"Cevabım da doğru olabilir" (F1-21):** Gösterim düz bir doğruyla bitmediyse son ekranda çıkar (`03` §0.5 adım 5).
 
+**Uygulama notları (F2-06):**
+- **Dinle-anla kartı (A03):** "Dinle ve anlamını seç", dinle düğmesi, dört anlam. Seçenekler ses dinlenmeden açılmaz ("Önce dinle; seçenekler sonra açılır."). Seçimden sonra doğru anlam ✓ ile işaretlenir (ekran okuyucu için "doğru anlam"), alt satırda duyulan kelime; "Devam".
+- **Boşluk kartı (A04):** Başlık "Boşluğu İngilizce söyle/yaz", cümle `____` ile; ekran okuyucu "…, boşluk, …" okur. Altında ampul simgesiyle eksik parçanın anlamı. Gerisi Söyle kartıyla aynı.
+
 ### 5.4 Tanıtım (A00)
 Taşıyıcı cümle, ses, Türkçe anlam, işaretli kalıp, karşıtlık notu → "Şimdi sen söyle."
 

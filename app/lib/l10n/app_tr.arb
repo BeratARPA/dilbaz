@@ -2552,5 +2552,68 @@
   "shadowingDoneNote": "Telaffuz, dinleyip tekrar ettikçe yerine oturur.",
   "@shadowingDoneNote": {
     "description": "Shadowing: closing note."
+  },
+  "cardsRecognizeTitle": "Dinle ve anlamını seç",
+  "@cardsRecognizeTitle": {
+    "description": "Listening card (A03): what to do."
+  },
+  "cardsListenAgain": "Yeniden dinle",
+  "@cardsListenAgain": {
+    "description": "Listening card: plays the clip again."
+  },
+  "cardsRecognizeListenFirst": "Önce dinle; seçenekler sonra açılır.",
+  "@cardsRecognizeListenFirst": {
+    "description": "Listening card: the choices open after listening."
+  },
+  "cardsRecognizeRight": "Doğru. Duyduğun: {heard}",
+  "@cardsRecognizeRight": {
+    "description": "Listening card: the right meaning was chosen.",
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsRecognizeHeard": "Duyduğun: {heard}. Anlamı işaretli olan.",
+  "@cardsRecognizeHeard": {
+    "description": "Listening card: another meaning was chosen; the right one is marked.",
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsClozeSay": "Boşluğu İngilizce söyle",
+  "@cardsClozeSay": {
+    "description": "Cloze card (A04), spoken."
+  },
+  "cardsClozeType": "Boşluğu İngilizce yaz",
+  "@cardsClozeType": {
+    "description": "Cloze card (A04), typed."
+  },
+  "cardsClozeHint": "Eksik parçanın anlamı: {hint}",
+  "@cardsClozeHint": {
+    "description": "Cloze card: the missing part's meaning.",
+    "placeholders": {
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsClozeSentence": "{before}, boşluk, {after}",
+  "@cardsClozeSentence": {
+    "description": "Cloze card: the sentence for screen readers.",
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      }
+    }
+  },
+  "cardsRecognizeRightChoice": "doğru anlam",
+  "@cardsRecognizeRightChoice": {
+    "description": "Listening card: screen reader label of the right meaning's check."
   }
 }

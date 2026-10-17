@@ -33,6 +33,9 @@ Future<void> install(AppDatabase db) async {
         rank: 12,
         data: {
           'carriers': ['zz.sent.0002', 'zz.sent.0001'],
+          'audio': [
+            {'voice': 'v1', 'speed': 1.0, 'file': 'v1/w.mp3'},
+          ],
         },
       ),
       item('zz.ws.kolu.v.1', 'word_sense', packId: pack, text: 'kolu'),
@@ -161,6 +164,9 @@ void main() {
       expect(card.targetSpan, 'bada');
       expect(card.clip, 'zz/v1/a.mp3');
       expect(card.slowClip, 'zz/v1/b.mp3');
+      // The word as heard alone, for listening (A03).
+      expect(card.itemClip, 'zz/v1/w.mp3');
+      expect(card.itemSlowClip, isNull);
       expect(card.headword, 'bada');
       expect(card.meaning, 'anlam');
       expect(card.usageNote, 'nasıl');
@@ -178,6 +184,24 @@ void main() {
     expect(card.answerKey.targetLemmas, isEmpty);
     expect(card.targetSpan, 'Kolu bada.');
     expect(card.clip, isNull);
+  });
+
+  test('the meanings of words and chunks, for listening (A03)', () async {
+    expect(await content.meanings(), [
+      (
+        key: 'zz.ws.bada.n.1',
+        kind: ItemKind.wordSense,
+        level: CefrLevel.a1,
+        meaning: 'anlam',
+      ),
+      (
+        key: 'zz.chunk.kolu_bada',
+        kind: ItemKind.chunk,
+        level: CefrLevel.a1,
+        meaning: 'Kalıp.',
+      ),
+    ]);
+    expect(await content.meanings(), same(await content.meanings()));
   });
 
   test('items without a card of their own give none', () async {

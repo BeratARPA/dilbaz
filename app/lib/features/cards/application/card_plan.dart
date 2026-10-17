@@ -111,9 +111,18 @@ Future<CardPlan?> planCards(Ref ref, {bool beyondBudget = false}) async {
   final evidence = await cards.evidence(course.id);
   final today = startOfLocalDay(now);
   final lately = today.subtract(const Duration(days: 2));
+  // An item is new on the day of its first card: a listening or cloze
+  // card made later is not a new item (A03, A04).
+  final firstCard = <String, DateTime>{};
+  for (final card in stored) {
+    final first = firstCard[card.itemRef];
+    if (first == null || card.createdAt.isBefore(first)) {
+      firstCard[card.itemRef] = card.createdAt;
+    }
+  }
   final introducedToday = {
-    for (final card in stored)
-      if (!card.createdAt.isBefore(today)) card.itemRef,
+    for (final MapEntry(:key, :value) in firstCard.entries)
+      if (!value.isBefore(today)) key,
   };
   final candidates = Curriculum(items: [...items, ...personal], links: links)
       .next(
@@ -124,8 +133,8 @@ Future<CardPlan?> planCards(Ref ref, {bool beyondBudget = false}) async {
         personal: {for (final item in personal) item.key},
         introducedToday: introducedToday,
         introducedLately: {
-          for (final card in stored)
-            if (!card.createdAt.isBefore(lately)) card.itemRef,
+          for (final MapEntry(:key, :value) in firstCard.entries)
+            if (!value.isBefore(lately)) key,
         },
       );
   final spent = await sessions.timeSince(course.id, today);

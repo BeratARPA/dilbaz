@@ -36,6 +36,7 @@ class TodayPlan {
   - Önerilen seçenek `options` listesinin ilkidir; ayrı bir `recommended` alanı yoktur.
   - `estimate` = tekrarlar + yeni öğeler + önerilen seçenek.
   - `newCardMode`: yeni öğenin ilk kartı `speak`, sessiz modda `type` (I-05).
+- **Yan kartlar (F2-06):** Dinle-anla (A03) ve boşluk (A04) kartları ayrı FSRS kartlarıdır; planlayıcı onları diğer tekrarlar gibi önceliğe (mod ağırlığı 0,6 ve 0,9) ve tekrar tavanına (I-07) katar. Yeni öğe sayılmazlar: "bugün tanıtılan" ve "son günlerde tanıtılan" öğeler, öğenin **ilk** kartının tarihine göre bulunur.
 - Sonraya kalanlar: davetler (satır 22), etkinlik uygunluğu (§4), geçmişten süre ve `c` tahmini (§5), seviye aralığı ve kapsama kontrolleri (§8 madde 3–5, 8, 10).
 - **Kart oturumu (F1-16):** Planı oturum başında bir kez kurar ve kuyruğu sabit tutar ("7 / 12"): önce tekrarlar, sonra yeni öğeler (tanıtım + ilk kart). Seed, öğrenci ve yerel güne göre gün boyu aynıdır.
 - **Oturum kaydı ve girdiler (F1-18):**

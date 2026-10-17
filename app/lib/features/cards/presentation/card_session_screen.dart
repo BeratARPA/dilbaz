@@ -6,6 +6,7 @@ import 'package:dilbaz_app/features/cards/application/card_session_state.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/card_page.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/content_report_sheet.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/introduction_page.dart';
+import 'package:dilbaz_app/features/cards/presentation/views/recognize_page.dart';
 import 'package:dilbaz_app/features/cards/presentation/views/session_done_page.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,10 @@ class CardSessionScreen extends ConsumerWidget {
         view.total,
       ),
       CardSessionCard(:final view) => l10n.cardsProgress(
+        view.number,
+        view.total,
+      ),
+      CardSessionRecognize(:final view) => l10n.cardsProgress(
         view.number,
         view.total,
       ),
@@ -90,6 +95,10 @@ class CardSessionScreen extends ConsumerWidget {
                 view: view,
               ),
               CardSessionCard(:final view) => CardPage(
+                session: session,
+                view: view,
+              ),
+              CardSessionRecognize(:final view) => RecognizePage(
                 session: session,
                 view: view,
               ),

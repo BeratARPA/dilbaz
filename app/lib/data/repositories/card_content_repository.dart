@@ -29,6 +29,10 @@ abstract interface class CardContentRepository {
 
   /// The packs' sentences that have audio, for dictation (A05).
   Future<List<SentenceAudio>> sentences();
+
+  /// The meanings of the words and chunks in the learner's language, the
+  /// choices of listening cards (A03).
+  Future<List<MeaningChoice>> meanings();
 }
 
 /// A sentence of the packs to hear: its text, lemmas and level, and its
@@ -54,6 +58,7 @@ class DriftCardContentRepository implements CardContentRepository {
 
   List<ContentItem>? _items;
   Map<String, String>? _contrasts;
+  List<MeaningChoice>? _meanings;
 
   static const _gloss = 'gloss';
   static const _variants = 'variants';
@@ -226,6 +231,24 @@ class DriftCardContentRepository implements CardContentRepository {
   }
 
   @override
+  Future<List<MeaningChoice>> meanings() async {
+    if (_meanings case final cached?) return cached;
+    final glosses = await _db.contentDao.pairEntries(_gloss);
+    return _meanings = [
+      for (final item in await items())
+        if ((item.kind == ItemKind.wordSense || item.kind == ItemKind.chunk) &&
+            !item.deprecated)
+          if (glosses[item.key]?['meaning'] case final String meaning)
+            (
+              key: item.key,
+              kind: item.kind,
+              level: item.level,
+              meaning: meaning,
+            ),
+    ];
+  }
+
+  @override
   Future<CardContent?> content(
     String itemKey, {
     required LemmaKnowledge knowledge,
@@ -304,6 +327,8 @@ class DriftCardContentRepository implements CardContentRepository {
       grammarCodes: carrier.grammarCodes,
       clip: clip(1),
       slowClip: clip(0.8),
+      itemClip: _clip(row.data, prefix, 1),
+      itemSlowClip: _clip(row.data, prefix, 0.8),
       headword: row.textL2 ?? reference,
       meaning: meaning!['meaning']! as String,
       usageNote: meaning['usage_note'] as String?,

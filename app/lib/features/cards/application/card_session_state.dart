@@ -86,7 +86,11 @@ sealed class CardPhase with _$CardPhase {
   }) = CardEnded;
 }
 
-/// A card on screen (A01, A02).
+/// The sentence of a cloze card (A04): the words around the gap, and the
+/// missing part's meaning in the learner's language.
+typedef ClozeView = ({String before, String after, String hint});
+
+/// A card on screen (A01, A02, A04).
 @freezed
 abstract class CardView with _$CardView {
   const factory({
@@ -104,6 +108,9 @@ abstract class CardView with _$CardView {
 
     /// When the prompt needs a situation ("to a friend").
     String? contextNote,
+
+    /// A cloze card shows the sentence with its gap instead of the prompt.
+    ClozeView? cloze,
 
     /// Hints opened so far, H1 first.
     @Default(<Hint>[]) List<Hint> hints,
@@ -135,6 +142,29 @@ abstract class CardView with _$CardView {
     @Default(false) bool hasClip,
     @Default(false) bool playing,
   }) = _CardView;
+}
+
+/// A listening card (A03): hear the word or chunk, choose its meaning.
+@freezed
+abstract class RecognizeView with _$RecognizeView {
+  const factory({
+    required int number,
+    required int total,
+
+    /// The meanings to choose from, in the learner's language.
+    required List<String> choices,
+
+    /// The clip was played at least once: the choices open.
+    required bool heard,
+    @Default(false) bool playing,
+    @Default(true) bool hasClip,
+
+    /// What was chosen, and once chosen, the right choice and what was
+    /// heard.
+    int? chosen,
+    int? right,
+    String? headword,
+  }) = _RecognizeView;
 }
 
 /// A new item before its first card (A00).
@@ -178,6 +208,8 @@ sealed class CardSessionState with _$CardSessionState {
   const factory introduction(IntroductionView view) = CardSessionIntroduction;
 
   const factory card(CardView view) = CardSessionCard;
+
+  const factory recognize(RecognizeView view) = CardSessionRecognize;
 
   /// The session is over: what was done in it.
   const factory done({required int reviewed, required int introduced}) =

@@ -41,6 +41,10 @@ abstract class CardContent with _$CardContent {
     String? clip,
     String? slowClip,
 
+    /// The item itself as heard (a word's own clip), for listening (A03).
+    String? itemClip,
+    String? itemSlowClip,
+
     /// The item's usage note and the contrast note with an easily
     /// confused item, for the introduction.
     String? usageNote,

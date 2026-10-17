@@ -28,8 +28,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'card_session_controller.g.dart';
 
 /// One card of the session: a review, or a new item (no card yet) that is
-/// introduced first (A00).
-typedef _Entry = ({StoredCard? card, CardContent content});
+/// introduced first (A00). A cloze card has its gap (A04), a listening
+/// card its choices (A03).
+typedef _Entry = ({
+  StoredCard? card,
+  CardContent content,
+  Cloze? cloze,
+  List<String>? choices,
+});
 
 /// An answer as it was given.
 typedef _Answer = ({
@@ -46,6 +52,10 @@ typedef _Answer = ({
   String? correctedFrom,
   int latencyMs,
   int? durationMs,
+
+  /// On a cloze card, what was said for the gap; [text] is the sentence it
+  /// makes.
+  String? gap,
 });
 
 /// What the checks said about an answer.
@@ -76,8 +86,25 @@ typedef _Session = ({
   Scaffolds scaffolds,
   AnswerChecker checker,
   CardMode newCardMode,
-  Map<AnswerInput, LatencyProfile> latencies,
+  Map<CardMode, LatencyProfile> latencies,
 });
+
+/// A listening card on screen (A03): one choice ends it.
+final class _Listening {
+  new(this.entry, this.choices);
+
+  final _Entry entry;
+  final List<String> choices;
+  bool heard = false;
+  bool playing = false;
+  int? chosen;
+  bool saved = false;
+
+  /// From the clip's first end to the choice.
+  final watch = Stopwatch();
+
+  int get right => choices.indexOf(entry.content.meaning);
+}
 
 /// The card under review and everything its attempts need.
 final class _Review {
@@ -137,6 +164,7 @@ class CardSessionController extends _$CardSessionController {
   var _queue = <_Entry>[];
   var _index = 0;
   _Review? _review;
+  _Listening? _listening;
   var _reviewed = 0;
   var _introduced = 0;
 
@@ -178,9 +206,29 @@ class CardSessionController extends _$CardSessionController {
     final knowledge = planned.knowledge;
     final byId = planned.cards;
     final queue = <_Entry>[];
+    final meanings = await content.meanings();
+    final seed = ref.read(cardSeedProvider);
     Future<void> add(String itemKey, StoredCard? card) async {
       final found = await content.content(itemKey, knowledge: knowledge);
       if (found == null) return;
+      final mode = card?.mode;
+      // A card its packs cannot show now waits (A03, A04).
+      final cloze = mode == CardMode.cloze
+          ? Cloze.of(found.answerKey, planned.language)
+          : null;
+      if (mode == CardMode.cloze && cloze == null) return;
+      List<String>? choices;
+      if (mode == CardMode.recognizeAudio) {
+        final own = meanings.where((m) => m.key == itemKey).firstOrNull;
+        choices = own == null || found.itemClip == null
+            ? null
+            : pickChoices(
+                target: own,
+                pool: meanings,
+                seed: seed + queue.length,
+              );
+        if (choices == null) return;
+      }
       final own = await cards.personalAnswers(
         courseId: course.id,
         itemRef: itemKey,
@@ -195,6 +243,8 @@ class CardSessionController extends _$CardSessionController {
             alternatives: [...key.alternatives, ...own.alternatives],
           ),
         ),
+        cloze: cloze,
+        choices: choices,
       ));
     }
 
@@ -218,10 +268,8 @@ class CardSessionController extends _$CardSessionController {
       checker: AnswerChecker(planned.language),
       newCardMode: plan.newCardMode,
       latencies: {
-        for (final input in AnswerInput.values)
-          input: LatencyProfile.of(
-            await cards.recentLatencies(course.id, _mode(input)),
-          ),
+        for (final mode in [CardMode.speak, CardMode.type, CardMode.cloze])
+          mode: LatencyProfile.of(await cards.recentLatencies(course.id, mode)),
       },
     );
     _queue = queue;
@@ -247,6 +295,16 @@ class CardSessionController extends _$CardSessionController {
   CardSessionState _open(int index) {
     final entry = _queue[index];
     final settings = _session.settings;
+    _openedAt = ref.read(clockProvider)();
+    if (entry.choices case final choices?) {
+      final listening = _Listening(entry, choices);
+      _review = null;
+      _listening = listening;
+      // Out loud only when that suits the learner (silent mode).
+      if (!settings.silentMode) unawaited(Future(play));
+      return _listeningState(listening);
+    }
+    _listening = null;
     final typed =
         settings.silentMode ||
         (entry.card?.mode ?? _session.newCardMode) == CardMode.type;
@@ -257,12 +315,27 @@ class CardSessionController extends _$CardSessionController {
       introducing: entry.card == null,
     );
     _review = review;
-    _openedAt = ref.read(clockProvider)();
     _restartWatch();
     // After the state is in place; out loud only when that suits the
     // learner (silent mode).
     if (review.introducing && !settings.silentMode) unawaited(Future(play));
     return _stateOf(review);
+  }
+
+  CardSessionState _listeningState(_Listening listening) {
+    final chosen = listening.chosen;
+    return CardSessionState.recognize(
+      RecognizeView(
+        number: _index + 1,
+        total: _queue.length,
+        choices: listening.choices,
+        heard: listening.heard,
+        playing: listening.playing,
+        chosen: chosen,
+        right: chosen == null ? null : listening.right,
+        headword: chosen == null ? null : listening.entry.content.headword,
+      ),
+    );
   }
 
   CardSessionState _stateOf(_Review review) {
@@ -293,6 +366,14 @@ class CardSessionController extends _$CardSessionController {
         total: _queue.length,
         prompt: content.prompt,
         contextNote: content.contextNote,
+        cloze: switch (review.entry.cloze) {
+          final cloze? => (
+            before: cloze.before,
+            after: cloze.after,
+            hint: content.meaning,
+          ),
+          null => null,
+        },
         input: review.input,
         phase: review.phase,
         canSpeak: _session.settings.audioConsent,
@@ -386,10 +467,14 @@ class CardSessionController extends _$CardSessionController {
     _emit(review);
   }
 
-  /// Plays the card's sentence.
+  /// Plays the card's sentence; on a listening card, its word or chunk.
   Future<void> play() async {
     // It may come after the session was closed.
     if (!ref.mounted) return;
+    if (_listening case final listening?) {
+      await _playListening(listening);
+      return;
+    }
     final review = _review;
     if (review == null || review.playing) return;
     final clip = _clip(review.entry.content);
@@ -405,6 +490,53 @@ class CardSessionController extends _$CardSessionController {
     }
     review.playing = false;
     _emit(review);
+  }
+
+  Future<void> _playListening(_Listening listening) async {
+    if (listening.playing) return;
+    final content = listening.entry.content;
+    final clip = _session.scaffolds.slowAudio
+        ? content.itemSlowClip ?? content.itemClip
+        : content.itemClip ?? content.itemSlowClip;
+    if (clip == null) return;
+    listening.playing = true;
+    _emitListening(listening);
+    final file = await ref.read(packAudioProvider).file(clip);
+    if (!ref.mounted) return;
+    var played = false;
+    if (file case Ok(value: final path) when _listening == listening) {
+      played = await ref.read(clipPlayerProvider).play(path);
+      if (!ref.mounted) return;
+    }
+    listening.playing = false;
+    if (played && !listening.heard) {
+      listening
+        ..heard = true
+        ..watch.start();
+    }
+    _emitListening(listening);
+  }
+
+  void _emitListening(_Listening listening) {
+    if (_listening != listening || !ref.mounted) return;
+    state = AsyncData(_listeningState(listening));
+  }
+
+  /// Chooses meaning [index] on a listening card; it ends the card. Only
+  /// after the clip was heard: the choices are no reading test.
+  void choose(int index) {
+    final listening = _listening;
+    if (listening == null ||
+        !listening.heard ||
+        listening.chosen != null ||
+        index < 0 ||
+        index >= listening.choices.length) {
+      return;
+    }
+    listening
+      ..chosen = index
+      ..watch.stop();
+    _emitListening(listening);
   }
 
   /// Types instead of speaking, or speaks again.
@@ -493,6 +625,7 @@ class CardSessionController extends _$CardSessionController {
           correctedFrom: null,
           latencyMs: latency,
           durationMs: audio.duration.inMilliseconds,
+          gap: null,
         ));
     }
   }
@@ -527,6 +660,7 @@ class CardSessionController extends _$CardSessionController {
       correctedFrom: null,
       latencyMs: latency ?? _watch.elapsedMilliseconds,
       durationMs: latency == null ? null : _typing.elapsedMilliseconds,
+      gap: null,
     ));
   }
 
@@ -560,6 +694,8 @@ class CardSessionController extends _$CardSessionController {
       correctedFrom: replaced.text,
       latencyMs: replaced.latencyMs,
       durationMs: replaced.durationMs,
+      // What is typed over a cloze answer is a new answer for the gap.
+      gap: null,
     ));
   }
 
@@ -593,9 +729,8 @@ class CardSessionController extends _$CardSessionController {
 
   /// "Bu içerikte hata var": reports the content on screen (docs/10 §8).
   Future<void> report(ReportReason reason, {String? note}) async {
-    final review = _review;
-    if (review == null) return;
-    final content = review.entry.content;
+    final content = (_review?.entry ?? _listening?.entry)?.content;
+    if (content == null) return;
     await ref
         .read(cardFeedbackRepositoryProvider)
         .report(
@@ -634,15 +769,23 @@ class CardSessionController extends _$CardSessionController {
   /// Stores the ended review and opens the next card.
   Future<void> next() async {
     final review = _review;
-    if (review == null || review.phase is! CardEnded) return;
-    await _save(review);
-    if (!ref.mounted || _review != review) return;
+    final listening = _listening;
+    if (listening != null) {
+      if (listening.chosen == null) return;
+      await _saveListening(listening);
+      if (!ref.mounted || _listening != listening) return;
+    } else {
+      if (review == null || review.phase is! CardEnded) return;
+      await _save(review);
+      if (!ref.mounted || _review != review) return;
+    }
     unawaited(ref.read(clipPlayerProvider).stop());
     if (_index + 1 < _queue.length) {
       _index++;
       state = AsyncData(_open(_index));
     } else {
       _review = null;
+      _listening = null;
       await _record();
       if (!ref.mounted) return;
       state = AsyncData(
@@ -655,8 +798,11 @@ class CardSessionController extends _$CardSessionController {
   Future<void> leave() async {
     _limit?.cancel();
     final review = _review;
+    final listening = _listening;
     _review = null;
+    _listening = null;
     unawaited(ref.read(clipPlayerProvider).stop());
+    if (listening != null) await _saveListening(listening);
     if (review != null) {
       if (review.phase is CardListening) {
         await ref.read(answerRecorderProvider).cancel();
@@ -686,7 +832,21 @@ class CardSessionController extends _$CardSessionController {
         );
   }
 
-  Future<void> _answer(_Review review, _Answer answer) async {
+  Future<void> _answer(_Review review, _Answer said) async {
+    // A cloze answer is checked as the sentence it makes (A04).
+    final cloze = review.entry.cloze;
+    final gap = said.gap ?? said.text;
+    final answer = cloze == null
+        ? said
+        : (
+            text: cloze.fill(gap, _session.checker.language),
+            input: said.input,
+            heard: said.heard,
+            correctedFrom: said.correctedFrom,
+            latencyMs: said.latencyMs,
+            durationMs: said.durationMs,
+            gap: gap,
+          );
     review
       ..phase = const CardPhase.checking()
       ..speechFailure = null
@@ -859,16 +1019,26 @@ class CardSessionController extends _$CardSessionController {
     final heard = answer.heard;
     final llm = judged.llm;
     final failure = judged.failure;
+    final cloze = review.entry.cloze;
     return AttemptDraft(
-      activity: cardActivity(_mode(answer.input)),
+      activity: cardActivity(
+        cloze == null ? _mode(answer.input) : CardMode.cloze,
+      ),
       prompt: {
         'prompt_l1': content.prompt,
         'reference': review.key.reference,
         'carrier': content.carrierKey,
         'context': ?content.contextNote,
+        if (cloze != null)
+          'cloze': {
+            'before': cloze.before,
+            'after': cloze.after,
+            'hint': content.meaning,
+          },
       },
       response: {
         'text': answer.text,
+        'gap': ?answer.gap,
         'source': _heard(answer) ? 'asr' : 'typed',
         if (heard != null) ...{
           'transcript': heard.text,
@@ -968,9 +1138,11 @@ class CardSessionController extends _$CardSessionController {
           itemRef: entry.content.itemKey,
           mode: _session.newCardMode,
         );
-    final input = review.answers.last.input;
+    final mode = entry.cloze != null
+        ? CardMode.cloze
+        : _mode(review.answers.last.input);
     final rating = review.state.outcome!.rating(
-      _session.latencies[input]!,
+      _session.latencies[mode]!,
       justIntroduced: entry.card == null,
     );
     final after = _scheduler.review(
@@ -1016,15 +1188,108 @@ class CardSessionController extends _$CardSessionController {
             },
           );
     }
+    await _companions(entry, card);
     if (entry.card == null) {
       _introduced++;
     } else {
       _reviewed++;
     }
+    _count();
+  }
+
+  /// The card's time, up to the cap, goes to the session.
+  void _count() {
     final opened = _openedAt;
     if (opened != null) {
       final spent = ref.read(clockProvider)().difference(opened);
       _active += spent > _cardCap ? _cardCap : spent;
     }
+  }
+
+  /// The cards an item gets besides its production card (A03, A04): the
+  /// engine says which, the packs whether they can be shown.
+  Future<void> _companions(_Entry entry, StoredCard card) async {
+    final content = entry.content;
+    final cards = ref.read(cardRepositoryProvider);
+    Future<void> make(CardMode mode) => cards.introduce(
+      userId: _session.userId,
+      courseId: _session.courseId,
+      itemRef: content.itemKey,
+      mode: mode,
+    );
+    if (entry.card == null &&
+        content.itemClip != null &&
+        CompanionCards.listening(kind: content.kind, level: _session.level)) {
+      await make(CardMode.recognizeAudio);
+    }
+    if (card.mode.group != ModeGroup.production ||
+        card.mode == CardMode.cloze ||
+        content.kind != ItemKind.wordSense ||
+        Cloze.of(content.answerKey, _session.checker.language) == null) {
+      return;
+    }
+    final evidence = await cards.evidence(
+      _session.courseId,
+      itemRef: content.itemKey,
+    );
+    final production =
+        evidence[content.itemKey]?.productionLevel(
+          now: ref.read(clockProvider)(),
+        ) ??
+        ItemLevel.unseen;
+    if (CompanionCards.cloze(
+      kind: content.kind,
+      level: _session.level,
+      production: production,
+    )) {
+      await make(CardMode.cloze);
+    }
+  }
+
+  /// Stores a chosen listening card: one attempt, rated by whether the
+  /// meaning was recognized (A03). Receptive evidence only (I-05).
+  Future<void> _saveListening(_Listening listening) async {
+    final chosen = listening.chosen;
+    final card = listening.entry.card;
+    if (listening.saved || chosen == null || card == null) return;
+    listening.saved = true;
+    final recognized = chosen == listening.right;
+    final rating = recognitionRating(recognized: recognized);
+    final content = listening.entry.content;
+    await ref
+        .read(cardRepositoryProvider)
+        .recordReview(
+          userId: _session.userId,
+          courseId: _session.courseId,
+          deviceId: _session.deviceId,
+          card: card,
+          attempts: [
+            AttemptDraft(
+              activity: cardActivity(CardMode.recognizeAudio),
+              prompt: {
+                'heard': content.headword,
+                'choices': listening.choices,
+                'right': listening.right,
+              },
+              response: {
+                'choice': chosen,
+                'text': listening.choices[chosen],
+                'source': 'choice',
+              },
+              createdAtClient: ref.read(clockProvider)(),
+              verdict: recognized ? Verdict.correct.code : Verdict.wrong.code,
+              targetOk: recognized,
+              latencyMs: listening.watch.elapsedMilliseconds,
+            ),
+          ],
+          rating: rating,
+          after: _scheduler.review(
+            card.memory,
+            rating,
+            at: ref.read(clockProvider)(),
+          ),
+        );
+    _reviewed++;
+    _count();
   }
 }
