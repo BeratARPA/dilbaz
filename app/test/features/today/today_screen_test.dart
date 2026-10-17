@@ -1,12 +1,15 @@
 import 'package:dilbaz_app/data/db/app_database.dart';
 import 'package:dilbaz_app/data/repositories/attempt_draft.dart';
 import 'package:dilbaz_app/data/repositories/card_repository.dart';
+import 'package:dilbaz_app/data/repositories/pack_remote.dart';
 import 'package:dilbaz_app/data/repositories/session_repository.dart';
 import 'package:dilbaz_app/features/cards/presentation/card_session_screen.dart';
+import 'package:dilbaz_app/features/content/application/content_status.dart';
 import 'package:dilbaz_app/features/today/application/today_controller.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/card_fixture.dart';
@@ -17,6 +20,16 @@ import '../../helpers/placement_fixture.dart';
 import '../../helpers/pump_app.dart';
 
 final String courseId = FakeAssessmentRepository.zzCourse.id;
+
+/// Whether the first packs have come; the content follows it.
+final _packsIn = NotifierProvider<_PacksIn, bool>(_PacksIn.new);
+
+class _PacksIn extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void arrive() => state = true;
+}
 
 void main() {
   late AppDatabase db;
@@ -119,6 +132,30 @@ void main() {
       final local = DateTime(2026, 10, 1, hour, 30);
       expect(TodayGreeting.of(local.toUtc()), expected, reason: '$hour');
     }
+  });
+
+  testWidgets('Today plans once the first packs are in', (tester) async {
+    // The home screen asks for the day before the packs are imported.
+    profiles.silentMode = true;
+    await tester.runAsync(() async => db = memoryDatabase());
+    addTearDown(db.close);
+    await tester.pumpDilbazApp(
+      profiles: profiles,
+      db: db,
+      content: (ref) => ref.watch(_packsIn)
+          ? readyContent
+          : const ContentStatus.unavailable(PackFailure.network),
+      extra: cardDataOverrides(db: db, tutor: tutor, clock: () => now),
+    );
+    expect(find.text(greeting(cardNow)), findsNothing);
+
+    await tester.runAsync(() => installCardPacks(db));
+    ProviderScope.containerOf(tester.element(find.byType(TodayScreen)))
+        .read(_packsIn.notifier)
+        .arrive();
+    await tester.pumpAndSettle();
+    expect(find.text(greeting(cardNow)), findsOneWidget);
+    expect(find.text(trStrings.todayCardsSummary(0, 3, 3)), findsOneWidget);
   });
 
   testWidgets('Today plans the cards for the time there is', (tester) async {

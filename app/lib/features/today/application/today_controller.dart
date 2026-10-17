@@ -4,6 +4,7 @@ import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/session_providers.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
+import 'package:dilbaz_app/features/content/application/content_controller.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
 import 'package:dilbaz_app/features/week/application/week_summary.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
@@ -74,7 +75,11 @@ abstract class TodayView with _$TodayView {
 @riverpod
 Future<TodayView?> today(Ref ref) async {
   // Rows from another device, or answers checked late, change the day.
-  ref.watch(syncControllerProvider.select((status) => status.changedAt));
+  ref
+    ..watch(syncControllerProvider.select((status) => status.changedAt))
+    // The home screen asks for the day before the first packs are in: plan
+    // again once they are, and when newer ones come.
+    ..watch(contentControllerProvider.select((status) => status.value));
   final planned = await planCards(ref);
   if (planned == null) return null;
   final now = ref.watch(clockProvider)();

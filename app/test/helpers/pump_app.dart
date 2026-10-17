@@ -60,6 +60,7 @@ List<Override> appOverrides({
   ShortcutSource? shortcuts,
   HomeScreenWidget? homeWidget,
   TogetherRepository? together,
+  ContentStatus Function(Ref ref)? content,
   AppDatabase? db,
   List<Override> extra = const [],
 }) => [
@@ -78,7 +79,9 @@ List<Override> appOverrides({
   permissionGatewayProvider.overrideWithValue(
     permissions ?? FakePermissionGateway(),
   ),
-  contentControllerProvider.overrideWithBuild((ref, notifier) => readyContent),
+  contentControllerProvider.overrideWithBuild(
+    (ref, notifier) => content?.call(ref) ?? readyContent,
+  ),
   // The device's notifications have their own tests.
   notificationGatewayProvider.overrideWithValue(const NoNotificationGateway()),
   // The sync has its own tests; here the app stays on the device.
@@ -131,6 +134,7 @@ extension PumpApp on WidgetTester {
     ShortcutSource? shortcuts,
     HomeScreenWidget? homeWidget,
     TogetherRepository? together,
+    ContentStatus Function(Ref ref)? content,
     AppDatabase? db,
     List<Override> extra = const [],
   }) async {
@@ -153,6 +157,7 @@ extension PumpApp on WidgetTester {
           shortcuts: shortcuts,
           homeWidget: homeWidget,
           together: together,
+          content: content,
           db: db,
           extra: extra,
         ),
