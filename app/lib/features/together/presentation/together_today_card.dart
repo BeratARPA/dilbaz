@@ -21,6 +21,17 @@ class TogetherTodayCard extends ConsumerWidget {
     if (view is! TogetherReady) return const SizedBox.shrink();
     final actions = ref.read(togetherActionsProvider.notifier);
     final (String text, List<Widget> buttons) = switch (view) {
+      TogetherReady(gap: (:final session, :final task))
+          when session.createdBy != view.self =>
+        (
+          l10n.gapOpenPartner(view.partner.name, task.title),
+          [
+            FilledButton(
+              onPressed: () => context.push(AppRoutes.infoGapOf(session.id)),
+              child: Text(l10n.gapOpen),
+            ),
+          ],
+        ),
       TogetherReady(incoming: (:final invite, :final card)) => (
         l10n.togetherIncoming(view.partner.name, card.title),
         [

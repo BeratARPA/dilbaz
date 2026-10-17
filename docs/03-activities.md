@@ -344,6 +344,13 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   2. Partnerler konuşur. **Her telefon yalnızca kendi sahibini kaydeder** (bas-konuş). Konuşmacıyı ayırt etme (diarization) gerekmez.
   3. Sonunda cevaplar gönderilir ve deterministik cevap anahtarıyla görev başarısı kontrol edilir.
   4. Her kişi kendi kayıtlarından kişisel geri bildirim alır (en önemli 2 düzeltme).
+- **Uygulama (F2-08, ADR-0012):**
+  - **İçerik:** `en@1`'de 10 görev (A1 6, A2 4), görev türü `pair_info_gap`. Resim yok; metin kartları: *kim/hangisi* (gap_friend, gap_room, gap_bag, gap_flat), *plan* (gap_train, gap_movie, gap_dinner: bir rolde tarife, öbüründe şartlar), *farklar* (gap_kitchen, gap_park, gap_desk: altışar satır, üç fark). Kör kontrol iki tur (5/10 → 5/5); kontrolcü her anahtarın tek doğru cevap olduğunu da doğruladı (gap_dinner'da ikinci doğru cevap bulunup düzeltildi).
+  - **Akış:** Birlikte sekmesinde görev seçilir → oturum başlar (başlatan rol a) → partner Birlikte ya da Bugün ekranından "Göreve git" → "Katıl". Her telefon yalnızca kendi rolünün yönergesini, satırlarını ve seçeneklerini gösterir. Bas-konuş: düğme basılıyken kayıt; her bırakışta döküm. Seçen rol seçeneği, sorulan rol "Partnerim seçti", farklar türünde her rol kendi işaretlerini gönderir.
+  - **Başarı (motor `InfoGapCheck`):** İki cevap gelince oturum `done` olur; iki telefon da aynı anahtarla aynı sonucu hesaplar: seçim doğru mu ya da bulunan farklar (bir farkı iki partnerden birinin işaretlemesi yeter), yanlış işaretler. Sonuç `done` / `partial` / `not_done` (`04` §5).
+  - **Kişisel geri bildirim:** Öğrencinin kendi dökümleri (kliplerin zamanları art arda) görev hedefiyle `speaking_annotate`'e gider; motor en çok 2 düzeltme seçer. Konuşulmadıysa not yok; işaretleme alınamazsa "Notlar şu an hazırlanamadı".
+  - **Kayıt:** Öğrencinin kendi `attempts` satırı (`activity = 'pair_info_gap'`, `task_ref`, `prompt` = `{session, role}`, `response` = `{answer, source: 'asr', text, result}`, `verdict` sonuç, `llm` işaretleme) ve `output` oturumu (en çok 30 dk, `done` = `{found, total, with_partner}`). Ses saklanmaz; partner bu satırları görmez (I-18).
+  - **Sonraya kalanlar:** resimli görevler, 6 resimlik hikâye sıralama, düzeltmeleri kart yapma, can-do kanıtına bağlama.
 
 ## A16 — Seviyeli okuma (`graded_reading`)
 - **Amaç:** Anlam odaklı girdi (P6).

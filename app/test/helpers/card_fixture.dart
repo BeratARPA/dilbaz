@@ -96,7 +96,59 @@ Future<void> installCardPacks(AppDatabase db) async {
               'goal': 'Talk about $key.',
               'phrases': phrases,
             }),
-          ), // Chat cards (A14).
+          ),
+        // Information gaps (A15): a choice, and differences.
+        ContentTasksCompanion.insert(
+          key: gapChoose,
+          packId: target,
+          kind: 'pair_info_gap',
+          level: 'A1',
+          data: const Value({
+            'type': 'choose',
+            'goal': 'Find the friend.',
+            'roles': {
+              'a': {
+                'lines': ['Bada kolu.', 'Sima dero.'],
+                'options': <Object?>[],
+              },
+              'b': {
+                'lines': <Object?>[],
+                'options': [
+                  {'id': 'p', 'text': 'Bada.'},
+                  {'id': 'q', 'text': 'Bada kolu, sima dero.'},
+                  {'id': 'r', 'text': 'Sima.'},
+                  {'id': 's', 'text': 'Kolu.'},
+                ],
+              },
+            },
+            'answer': {'chooser': 'b', 'option': 'q'},
+          }),
+        ),
+        ContentTasksCompanion.insert(
+          key: gapDifferences,
+          packId: target,
+          kind: 'pair_info_gap',
+          level: 'A1',
+          data: const Value({
+            'type': 'differences',
+            'goal': 'Find the differences.',
+            'roles': {
+              'a': {
+                'lines': ['A0', 'A1', 'A2', 'A3', 'A4', 'A5'],
+                'options': <Object?>[],
+              },
+              'b': {
+                'lines': ['B0', 'B1', 'B2', 'B3', 'B4', 'B5'],
+                'options': <Object?>[],
+              },
+            },
+            'answer': {
+              'a': [0, 2, 4],
+              'b': [0, 2, 4],
+            },
+          }),
+        ),
+        // Chat cards (A14).
         for (final (key, level) in [(chatB, 'A2'), (chatA, 'A1')])
           ContentTasksCompanion.insert(
             key: key,
@@ -218,6 +270,20 @@ Future<void> installCardPacks(AppDatabase db) async {
               ],
             },
           ),
+        for (final (key, title) in [
+          (gapChoose, 'Arkadaşımı bul'),
+          (gapDifferences, 'Farklar'),
+        ])
+          ContentPairEntriesCompanion.insert(
+            kind: 'task_instruction',
+            key: key,
+            packId: pair,
+            data: {
+              'title': title,
+              'prompt': '$title: konuşun.',
+              'roles': {'a': 'Sen anlat.', 'b': 'Sen bul.'},
+            },
+          ),
         for (final (key, title) in [(chatA, 'Yemek'), (chatB, 'Tatil')])
           ContentPairEntriesCompanion.insert(
             kind: 'task_instruction',
@@ -272,6 +338,10 @@ Future<void> installCardPacks(AppDatabase db) async {
     expect(result, isA<Ok<void, PackFailure>>(), reason: built.info.id);
   }
 }
+
+/// Information gap tasks of [installCardPacks] (A15).
+const gapChoose = 'zz.gap.friend';
+const gapDifferences = 'zz.gap.room';
 
 /// Chat cards of [installCardPacks] (A14): A1, then A2.
 const chatA = 'zz.chat.food';

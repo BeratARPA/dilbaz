@@ -248,6 +248,7 @@ create table subtitle_imports (
 
 ### 2.5 Birlikte
 
+- **`pair_sessions` (F2-08, `20261017200149_pair_sessions.sql`, ADR-0012):** `id`, `team_id`, `task_ref`, `created_by`, `participants uuid[2]`, `roles jsonb` (`{profil: 'a'|'b'}`), `state` (`invited` / `active` / `done` / `cancelled`), `answers jsonb` (`{profil: cevap}`, ≤ 4 KB), `created_at`, `ended_at`. `supabase_realtime` yayınında. Aşağıdaki SQL taslağındaki `pair_roles` uygulanmadı.
 - **`pair_invites` (F2-07, `20261017190643_together.sql`):** `id`, `team_id`, `from_profile`, `to_profile`, `activity` (`chat`), `task_ref`, `state` (`sent` / `accepted` / `declined` / `cancelled`), `created_at`, `answered_at`. Yalnızca iki taraf okur. Gönderen kendi adına ve yalnızca ekip arkadaşına, `sent` olarak ekler; açık daveti alıcı kabul eder ya da reddeder, gönderen geri alır; cevaplanmış davet değişmez. `authenticated` için SELECT, INSERT ve yalnızca `state`/`answered_at` sütunlarında UPDATE. `supabase_realtime` yayınında. Senkron edilmez: sekme çevrimiçidir.
 - **`my_team()`** (security definer): çağıranın ilk ekibi, üyelerin kimliği ve görünen adıyla (`14` §3).
 - **Presence:** `realtime.messages` üzerinde iki politika: yalnızca `extension = 'presence'`, yalnızca `team:<ekip kimliği>` konusunda ve yalnızca o ekibin üyesi (`private.may_use_team_topic`). Yayın (broadcast) açık değildir.
@@ -367,9 +368,7 @@ create index on llm_usage (profile_id, created_at);
   - Üyelik denetimi `private.is_team_member()` ile yapılır (SECURITY DEFINER, politika özyinelemesini önler; `private` şeması Data API'ye açık değildir).
   - Partnerin verisine **doğrudan erişim yoktur**. Yalnızca `partner_week_summary` fonksiyonu kullanılır.
 - **İkili görev:**
-  - `pair_sessions`: katılımcılar okur.
-  - `pair_roles`: `profile_id = auth.uid()` olan satır okunur.
-  - Yazma işlemleri `pair` fonksiyonu üzerinden yapılır.
+  - `pair_sessions` (F2-08, ADR-0012): katılımcılar okur; `authenticated` yalnızca SELECT. Yazma yalnızca SECURITY DEFINER RPC'lerle: `pair_start` (iki kişinin ortak ekibi şart; aynı kimlikle yeniden çağrı aynı oturumu döndürür), `pair_join` (yalnızca davet edilen, `invited` → `active`), `pair_answer` (yalnızca çağıranın cevabı, yalnızca `active`; iki cevap gelince `done`), `pair_cancel`. `pair_roles` tablosu yoktur. pgTAP: `13_pair_sessions.test.sql` (18).
 - **`packs`:** kimliği doğrulanmış herkes `status = 'published'` satırları okur. Yazma yalnızca servis rolüyle.
 - **`content_reports`:** kullanıcı kendi bildirimini okur ve ekler, yalnızca `status = 'open'` ile. Durumu servis rolü değiştirir.
 - **`llm_usage`, `speech_usage`:** kullanıcı kendi satırını okur. Yazma yalnızca servis rolüyle.

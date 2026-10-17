@@ -28,6 +28,12 @@ sealed class TogetherView with _$TogetherView {
     required bool partnerHere,
     required List<ChatCard> cards,
 
+    /// The information gap tasks to choose from (A15).
+    @Default(<InfoGapTask>[]) List<InfoGapTask> gaps,
+
+    /// Today's session still open: started by either, waiting or under way.
+    ({PairSession session, InfoGapTask task})? gap,
+
     /// An invitation from the partner waiting for an answer.
     ({PairInvite invite, ChatCard card})? incoming,
 

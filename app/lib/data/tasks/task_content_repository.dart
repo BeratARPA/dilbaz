@@ -22,7 +22,36 @@ abstract interface class TaskContentRepository {
   /// The chat cards (A14) with what they mean; a card without its meaning
   /// in the pair pack is left out.
   Future<List<ChatCard>> chatCards();
+
+  /// The information gap tasks (A15) with their roles and answer keys; a
+  /// task without its instructions in the pair pack is left out.
+  Future<List<InfoGapTask>> infoGaps();
 }
+
+/// An option of the role that chooses (A15).
+typedef GapOption = ({String id, String text});
+
+/// What one role of an information gap task sees: its lines (English), its
+/// options if it chooses, and what it is asked to do (learner's language).
+typedef GapRole = ({
+  List<String> lines,
+  List<GapOption> options,
+  String instruction,
+});
+
+/// An information gap task (A15, ADR-0012).
+typedef InfoGapTask = ({
+  String key,
+  CefrLevel level,
+  String title,
+  String prompt,
+
+  /// What doing it means, for the speaking annotation.
+  String goal,
+  GapRole a,
+  GapRole b,
+  InfoGapKey answer,
+});
 
 /// A chat card (A14): a question to talk about with the partner, two
 /// follow-ups and three phrases, each with its meaning.
@@ -49,6 +78,7 @@ class DriftTaskContentRepository implements TaskContentRepository {
 
   static const _speaking = 'speaking';
   static const _chat = 'pair_chat';
+  static const _gap = 'pair_info_gap';
   static const _instruction = 'task_instruction';
   static const _lemma = 'lemma';
   static const _summary = 'can_do_summary';
@@ -171,5 +201,85 @@ class DriftTaskContentRepository implements TaskContentRepository {
       ));
     }
     return cards;
+  }
+
+  static List<int> _ints(Object? value) => switch (value) {
+    final List<Object?> list => [
+      for (final item in list)
+        if (item case final int i) i,
+    ],
+    _ => const [],
+  };
+
+  static GapRole? _role(Object? role, Object? instruction) {
+    if (role is! Map<String, Object?> || instruction is! String) return null;
+    return (
+      lines: _strings(role['lines']),
+      options: switch (role['options']) {
+        final List<Object?> list => [
+          for (final option in list)
+            if (option case {'id': final String id, 'text': final String text})
+              (id: id, text: text),
+        ],
+        _ => const <GapOption>[],
+      },
+      instruction: instruction,
+    );
+  }
+
+  @override
+  Future<List<InfoGapTask>> infoGaps() async {
+    final instructions = await _db.contentDao.pairEntries(_instruction);
+    final tasks = <InfoGapTask>[];
+    for (final row in await _db.contentDao.tasks()) {
+      final level = CefrLevel.values
+          .where((l) => l.code == row.level)
+          .firstOrNull;
+      final read = instructions[row.key];
+      if (row.kind != _gap || level == null || read == null) continue;
+      final roles = row.data['roles'];
+      final said = read['roles'];
+      if (roles is! Map<String, Object?> || said is! Map<String, Object?>) {
+        continue;
+      }
+      final a = _role(roles['a'], said['a']);
+      final b = _role(roles['b'], said['b']);
+      final answer = switch ((row.data['type'], row.data['answer'])) {
+        (
+          'choose',
+          {'chooser': final String chooser, 'option': final String option},
+        ) =>
+          ChooseKey(chooser: chooser, option: option),
+        ('differences', final Map<String, Object?> key) => DifferencesKey(
+          a: _ints(key['a']),
+          b: _ints(key['b']),
+        ),
+        _ => null,
+      };
+      final (title, prompt, goal) = (
+        read['title'],
+        read['prompt'],
+        row.data['goal'],
+      );
+      if (a == null ||
+          b == null ||
+          answer == null ||
+          title is! String ||
+          prompt is! String ||
+          goal is! String) {
+        continue;
+      }
+      tasks.add((
+        key: row.key,
+        level: level,
+        title: title,
+        prompt: prompt,
+        goal: goal,
+        a: a,
+        b: b,
+        answer: answer,
+      ));
+    }
+    return tasks;
   }
 }

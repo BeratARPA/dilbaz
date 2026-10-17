@@ -46,6 +46,11 @@ abstract final class AppRoutes {
   static String chatCardOf(String key) =>
       Uri(path: chatCard, queryParameters: {'key': key}).toString();
 
+  /// An information gap session (A15), over the tabs: `/gap?id=<session>`.
+  static const infoGap = '/info-gap';
+  static String infoGapOf(String id) =>
+      Uri(path: infoGap, queryParameters: {'id': id}).toString();
+
   /// The week summary, over the tabs (docs/09 §5.13); last week's.
   static const week = '/week';
   static const weekLast = '/week?last=1';

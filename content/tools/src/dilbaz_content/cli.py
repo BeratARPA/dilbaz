@@ -371,6 +371,7 @@ def tasks(
     console.print(
         f"tasks per level {report.tasks_by_level}; anchors {', '.join(report.anchors)}; "
         f"chat cards per level {report.chat_cards_by_level}; "
+        f"information gaps per level {report.info_gaps_by_level}; "
         f"{report.can_dos} can-do codes, {report.connectors} connectors"
     )
     for issue in report.issues:

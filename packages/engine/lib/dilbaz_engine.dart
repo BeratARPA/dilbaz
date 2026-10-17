@@ -80,6 +80,7 @@ export 'src/scoring/evaluation.dart';
 export 'src/scoring/hint_kind.dart';
 export 'src/scoring/hint_ladder.dart';
 export 'src/scoring/hint_place.dart';
+export 'src/scoring/info_gap_check.dart';
 export 'src/scoring/latency_profile.dart';
 export 'src/scoring/review_outcome.dart';
 export 'src/scoring/verdict.dart';

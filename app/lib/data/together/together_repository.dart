@@ -35,6 +35,30 @@ typedef PairInvite = ({
   DateTime createdAt,
 });
 
+/// Where an information gap session is (A15).
+enum PairState {
+  invited('invited'),
+  active('active'),
+  done('done'),
+  cancelled('cancelled');
+
+  new(this.code);
+
+  final String code;
+}
+
+/// An information gap session (A15, ADR-0012): who plays which role ('a'
+/// or 'b'), where it is, and each partner's answer, by profile.
+typedef PairSession = ({
+  String id,
+  String taskRef,
+  String createdBy,
+  Map<String, String> roles,
+  PairState state,
+  Map<String, Object?> answers,
+  DateTime createdAt,
+});
+
 /// Why the Together tab could not reach the server; it is online only.
 enum TogetherFailure { network, refused }
 
@@ -66,6 +90,28 @@ abstract interface class TogetherRepository {
   /// The members of [teamId] with the app open now, the learner [self]
   /// included; joining counts the learner in.
   Stream<Set<String>> present({required String teamId, required String self});
+
+  /// The latest information gap sessions of the learner, newest first, and
+  /// every change after.
+  Stream<List<PairSession>> sessions();
+
+  /// Starts session [id] on task [taskRef] with [partner], the learner in
+  /// [role] ('a' or 'b').
+  Future<Result<void, TogetherFailure>> startSession({
+    required String id,
+    required String taskRef,
+    required String partner,
+    required String role,
+  });
+
+  /// Joins the partner's session [id].
+  Future<Result<void, TogetherFailure>> joinSession(String id);
+
+  /// The learner's [answer] in session [id]: an option id, or line indices.
+  Future<Result<void, TogetherFailure>> answerSession(String id, Object answer);
+
+  /// Leaves session [id] before it is done.
+  Future<Result<void, TogetherFailure>> cancelSession(String id);
 }
 
 class SupabaseTogetherRepository implements TogetherRepository {
@@ -79,6 +125,7 @@ class SupabaseTogetherRepository implements TogetherRepository {
   static String _uuidV7() => const Uuid().v7();
 
   static const _invites = 'pair_invites';
+  static const _sessions = 'pair_sessions';
 
   /// How many invitations the tab keeps in view.
   static const latest = 20;
@@ -225,4 +272,81 @@ class SupabaseTogetherRepository implements TogetherRepository {
         });
     return controller.stream;
   }
+
+  static PairSession? _session(Map<String, dynamic> row) => switch (row) {
+    {
+      'id': final String id,
+      'task_ref': final String taskRef,
+      'created_by': final String createdBy,
+      'roles': final Map<String, dynamic> roles,
+      'state': final String state,
+      'answers': final Map<String, dynamic> answers,
+      'created_at': final String createdAt,
+    } =>
+      (
+        id: id,
+        taskRef: taskRef,
+        createdBy: createdBy,
+        roles: {
+          for (final MapEntry(:key, :value) in roles.entries)
+            if (value case final String role) key: role,
+        },
+        state: PairState.values.firstWhere(
+          (s) => s.code == state,
+          orElse: () => PairState.cancelled,
+        ),
+        answers: Map<String, Object?>.of(answers),
+        createdAt: DateTime.parse(createdAt).toUtc(),
+      ),
+    _ => null,
+  };
+
+  @override
+  Stream<List<PairSession>> sessions() => _client
+      .from(_sessions)
+      .stream(primaryKey: ['id'])
+      .order('created_at')
+      .limit(latest)
+      .map(
+        (rows) =>
+            [for (final row in rows) ?_session(row)]
+              ..sort((a, b) => b.createdAt.compareTo(a.createdAt)),
+      );
+
+  @override
+  Future<Result<void, TogetherFailure>> startSession({
+    required String id,
+    required String taskRef,
+    required String partner,
+    required String role,
+  }) => _call(
+    () => _client.rpc<Object?>(
+      'pair_start',
+      params: {
+        'p_id': id,
+        'p_task_ref': taskRef,
+        'p_partner': partner,
+        'p_role': role,
+      },
+    ),
+  );
+
+  @override
+  Future<Result<void, TogetherFailure>> joinSession(String id) =>
+      _call(() => _client.rpc<Object?>('pair_join', params: {'p_id': id}));
+
+  @override
+  Future<Result<void, TogetherFailure>> answerSession(
+    String id,
+    Object answer,
+  ) => _call(
+    () => _client.rpc<Object?>(
+      'pair_answer',
+      params: {'p_id': id, 'p_answer': answer},
+    ),
+  );
+
+  @override
+  Future<Result<void, TogetherFailure>> cancelSession(String id) =>
+      _call(() => _client.rpc<Object?>('pair_cancel', params: {'p_id': id}));
 }

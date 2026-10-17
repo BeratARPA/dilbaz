@@ -351,3 +351,68 @@ chat_instructions:
     question: "Bana mutlu bir anını anlat."
     follow_ups: ["Ne zaman oldu?", "Yanında kim vardı?"]
     phrases: ["Mutlu bir anım ...", "... zaman oldu.", "Yanımda ... vardı."]
+
+# What the information gap tasks (curation/en/tasks.yaml info_gaps) say in
+# Turkish: a title, the task, and each role's instruction (role a, role b).
+# The English lines are the task itself and are not translated. Checked in
+# tasks.validation.jsonl (I-16).
+gap_instructions:
+  - id: gap_friend
+    title: "Arkadaşımı bul"
+    prompt: "Kafede bir arkadaşınızı arıyorsunuz. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Arkadaşını anlat. Partnerin, dört kişiden hangisinin o olduğunu bulacak."
+    b: "Partnerinin arkadaşı bu dört kişiden biri. Sorular sor ve doğru kişiyi seç."
+
+  - id: gap_room
+    title: "Otel odası"
+    prompt: "Otelde birinizin odasını bulmaya çalışıyorsunuz. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Odanı anlat. Partnerin, dört odadan hangisinin seninki olduğunu bulacak."
+    b: "Partnerinin odası bu dört odadan biri. Sorular sor ve doğru odayı seç."
+
+  - id: gap_bag
+    title: "Kayıp çanta"
+    prompt: "İstasyonda bir çanta kayboldu. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Çantanı anlat. Partnerin, dört çantadan hangisinin seninki olduğunu bulacak."
+    b: "Partnerinin çantası bu dördünden biri. Sorular sor ve doğru çantayı seç."
+
+  - id: gap_flat
+    title: "Kiralık daire"
+    prompt: "Biriniz kiralık bir daire arıyor. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Neye ihtiyacın olduğunu anlat. Partnerin sana uygun daireyi seçecek."
+    b: "Partnerine neye ihtiyacı olduğunu sor ve dört daireden ona uygun olanı seç."
+
+  - id: gap_train
+    title: "Tren seçimi"
+    prompt: "Bir tren seçiyorsunuz. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Tren saatleri ve fiyatları sende. Partnerin sorunca anlat."
+    b: "Senin bazı şartların var. Partnerine trenleri sor ve sana uyanı seç."
+
+  - id: gap_movie
+    title: "Sinema"
+    prompt: "Bu akşam izlenecek bir film seçiyorsunuz. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Filmlerin saatleri ve fiyatları sende. Partnerin sorunca anlat."
+    b: "Senin bazı şartların var. Partnerine filmleri sor ve sana uyanı seç."
+
+  - id: gap_dinner
+    title: "Akşam yemeği"
+    prompt: "Akşam yemeği için bir restoran seçiyorsunuz. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Restoranların bilgisi sende. Partnerin sorunca anlat."
+    b: "Senin bazı şartların var. Partnerine restoranları sor ve sana uyanı seç."
+
+  - id: gap_kitchen
+    title: "Mutfaktaki farklar"
+    prompt: "İkinizin mutfağı neredeyse aynı, ama üç fark var. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Mutfağını anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."
+    b: "Mutfağını anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."
+
+  - id: gap_park
+    title: "Parktaki farklar"
+    prompt: "İkinizin parkı neredeyse aynı, ama üç fark var. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Parkını anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."
+    b: "Parkını anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."
+
+  - id: gap_desk
+    title: "Masadaki farklar"
+    prompt: "İkinizin masası neredeyse aynı, ama üç fark var. İngilizce konuşun, ekranınızı göstermeyin."
+    a: "Masanı anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."
+    b: "Masanı anlat, partnerine sor. Senin listende farklı olan üç cümleyi işaretle."

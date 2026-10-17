@@ -2961,5 +2961,116 @@
   "chatDoneGap": "Söyleyemediğin bir şey oldu mu? Hemen not al.",
   "@chatDoneGap": {
     "description": "Chat card: offers a gap capture at the end (A14 step 3)."
+  },
+  "gapTitle": "Bilgi boşluğu",
+  "@gapTitle": {
+    "description": "Information gap (A15): page title."
+  },
+  "gapTasksTitle": "Bilgi boşluğu görevleri",
+  "@gapTasksTitle": {
+    "description": "Together: the information gap tasks."
+  },
+  "gapTasksNote": "İkiniz de telefonunuzu açın. Her biriniz yalnızca kendi bilgisini görür; İngilizce konuşarak çözersiniz.",
+  "@gapTasksNote": {
+    "description": "Together: how information gap tasks work."
+  },
+  "gapOpenMine": "{title} görevini başlattın.",
+  "@gapOpenMine": {
+    "description": "Together: the learner's open session.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "gapOpenPartner": "{name} bir görev başlattı: {title}",
+  "@gapOpenPartner": {
+    "description": "Together and Today: the partner's open session.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "gapOpen": "Göreve git",
+  "@gapOpen": {
+    "description": "Together: opens the session."
+  },
+  "gapJoin": "Katıl",
+  "@gapJoin": {
+    "description": "Information gap: joins the partner's session."
+  },
+  "gapWaiting": "Partnerinin katılması bekleniyor.",
+  "@gapWaiting": {
+    "description": "Information gap: the partner has not joined yet."
+  },
+  "gapPushToTalk": "Konuşurken düğmeyi basılı tut. Yalnızca senin sesin yazıya geçer. Kaydedilen: {count}",
+  "@gapPushToTalk": {
+    "description": "Information gap: push to talk, and how many turns were recorded.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gapSubmit": "Cevabı gönder",
+  "@gapSubmit": {
+    "description": "Information gap: sends the choice or the lines marked."
+  },
+  "gapDoneAsked": "Partnerim seçti",
+  "@gapDoneAsked": {
+    "description": "Information gap: the role that was asked is done."
+  },
+  "gapAnswered": "Cevabın gitti. Partnerin bekleniyor.",
+  "@gapAnswered": {
+    "description": "Information gap: the learner's answer went; the partner's has not yet."
+  },
+  "gapSolved": "Çözdünüz!",
+  "@gapSolved": {
+    "description": "Information gap: solved."
+  },
+  "gapFound": "{total} sonuçtan {found} tanesini buldunuz.",
+  "@gapFound": {
+    "description": "Information gap: found out of total.",
+    "placeholders": {
+      "found": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gapFeedbackTitle": "Senin konuşman için notlar",
+  "@gapFeedbackTitle": {
+    "description": "Information gap: heading of the learner's own feedback."
+  },
+  "gapNothingSaid": "Bu görevde kayıt yapmadın; not yok.",
+  "@gapNothingSaid": {
+    "description": "Information gap: nothing recorded."
+  },
+  "gapFeedbackLater": "Notlar şu an hazırlanamadı.",
+  "@gapFeedbackLater": {
+    "description": "Information gap: the marks could not be had."
+  },
+  "gapNoCorrections": "Belirgin bir hata görmedim.",
+  "@gapNoCorrections": {
+    "description": "Information gap: no correction."
+  },
+  "gapYouSaid": "Sen: {said}",
+  "@gapYouSaid": {
+    "description": "Information gap: what the learner said.",
+    "placeholders": {
+      "said": {
+        "type": "String"
+      }
+    }
+  },
+  "gapCancelled": "Görev bitirilmeden kapandı.",
+  "@gapCancelled": {
+    "description": "Information gap: one of them left it."
   }
 }

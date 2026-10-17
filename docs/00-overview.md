@@ -115,6 +115,7 @@ Ayrıntı ve kanıtlar: `01-pedagogy.md`. Kısaca:
 | 0009 | Sıfır bütçe: her bileşende ücretsiz olan en iyi seçenek. LLM rotaları Gemini + Groq ücretsiz katmanlarıyla; her zaman deterministik yedek. Deepgram kredisi, cihaz üstü ses, Kokoro paket sesleri, içerik Claude Code oturumlarında. |
 | 0010 | Küçük hatada hedefi (`target_ok`) LLM değil motor belirler |
 | 0011 | Telaffuz: Gemini ses dinleme (`pron_check`, kapalı `phon.*` listesi) + ASR karşılaştırması; gösterilecek sorunları motor seçer |
+| 0012 | İkili görev: içerik ve cevap anahtarı pakette, oturum `pair_sessions` + RPC; `pair` fonksiyonu yok; başarıyı motor hesaplar |
 
 ## 9. Durum
 

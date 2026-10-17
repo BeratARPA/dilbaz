@@ -146,7 +146,37 @@ class _Ready extends ConsumerWidget {
                 ),
             ],
           ),
+        if (view.gap case (:final session, :final task))
+          _Note(
+            text: session.createdBy == view.self
+                ? l10n.gapOpenMine(task.title)
+                : l10n.gapOpenPartner(partner, task.title),
+            actions: [
+              FilledButton(
+                onPressed: () => context.push(AppRoutes.infoGapOf(session.id)),
+                child: Text(l10n.gapOpen),
+              ),
+            ],
+          ),
         if (failed) Text(l10n.togetherFailed),
+        Text(l10n.gapTasksTitle, style: theme.textTheme.titleLarge),
+        Text(l10n.gapTasksNote),
+        for (final task in view.gaps)
+          Card.outlined(
+            margin: EdgeInsets.zero,
+            child: ListTile(
+              title: Text(task.title),
+              subtitle: Text(task.prompt),
+              trailing: const Icon(Icons.chevron_right),
+              enabled: view.gap == null,
+              onTap: () async {
+                final id = await actions.startGap(task);
+                if (id != null && context.mounted) {
+                  unawaited(context.push(AppRoutes.infoGapOf(id)));
+                }
+              },
+            ),
+          ),
         Text(l10n.togetherCardsTitle, style: theme.textTheme.titleLarge),
         Text(l10n.togetherCardsNote),
         for (final card in view.cards)

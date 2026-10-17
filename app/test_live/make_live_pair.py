@@ -86,6 +86,7 @@ for sql in [
     "insert into public.team_members (team_id, profile_id) values "
     f"('{TEAM}', '{a_id}'), ('{TEAM}', '{b_id}') on conflict do nothing",
     f"delete from public.pair_invites where team_id = '{TEAM}'",
+    f"delete from public.pair_sessions where team_id = '{TEAM}'",
 ]:
     npx("db", "query", "--local", sql)
 

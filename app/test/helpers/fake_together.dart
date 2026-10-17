@@ -119,4 +119,120 @@ class FakeTogetherRepository implements TogetherRepository {
     yield {...here, self};
     yield* _here.stream.map((ids) => {...ids, self});
   }
+
+  final _sessions = <PairSession>[];
+  final _sessionsOut = StreamController<List<PairSession>>.broadcast();
+
+  /// The learner, as the server knows them from the session.
+  String self = '11111111-1111-4111-8111-111111111111';
+
+  List<PairSession> get allSessions => List.unmodifiable(_sessions);
+
+  void _publishSessions() => _sessionsOut.add([..._sessions.reversed]);
+
+  /// A session started elsewhere (the partner's app), or changed there.
+  void putSession(PairSession session) {
+    final i = _sessions.indexWhere((s) => s.id == session.id);
+    if (i < 0) {
+      _sessions.add(session);
+    } else {
+      _sessions[i] = session;
+    }
+    _publishSessions();
+  }
+
+  PairSession _with(
+    PairSession s, {
+    PairState? state,
+    Map<String, Object?>? answers,
+  }) => (
+    id: s.id,
+    taskRef: s.taskRef,
+    createdBy: s.createdBy,
+    roles: s.roles,
+    state: state ?? s.state,
+    answers: answers ?? s.answers,
+    createdAt: s.createdAt,
+  );
+
+  @override
+  Stream<List<PairSession>> sessions() async* {
+    yield [..._sessions.reversed];
+    yield* _sessionsOut.stream;
+  }
+
+  @override
+  Future<Result<void, TogetherFailure>> startSession({
+    required String id,
+    required String taskRef,
+    required String partner,
+    required String role,
+  }) async {
+    calls.add('start $taskRef $role');
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    putSession((
+      id: id,
+      taskRef: taskRef,
+      createdBy: self,
+      roles: {self: role, partner: role == 'a' ? 'b' : 'a'},
+      state: PairState.invited,
+      answers: const {},
+      createdAt: now,
+    ));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void, TogetherFailure>> joinSession(String id) async {
+    calls.add('join $id');
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    final i = _sessions.indexWhere((s) => s.id == id);
+    putSession(_with(_sessions[i], state: PairState.active));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void, TogetherFailure>> answerSession(
+    String id,
+    Object answer,
+  ) async {
+    calls.add('answer-session $id');
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    final s = _sessions.firstWhere((s) => s.id == id);
+    final answers = {...s.answers, self: answer};
+    putSession(
+      _with(
+        s,
+        answers: answers,
+        state: answers.length == 2 ? PairState.done : s.state,
+      ),
+    );
+    return const Ok(null);
+  }
+
+  /// The partner answers in session [id].
+  void partnerAnswers(String id, String partner, Object answer) {
+    final s = _sessions.firstWhere((s) => s.id == id);
+    final answers = {...s.answers, partner: answer};
+    putSession(
+      _with(
+        s,
+        answers: answers,
+        state: answers.length == 2 ? PairState.done : s.state,
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void, TogetherFailure>> cancelSession(String id) async {
+    calls.add('cancel-session $id');
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    final s = _sessions.firstWhere((s) => s.id == id);
+    putSession(_with(s, state: PairState.cancelled));
+    return const Ok(null);
+  }
 }

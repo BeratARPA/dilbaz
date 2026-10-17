@@ -23,6 +23,7 @@ import 'package:dilbaz_app/features/shadowing/presentation/shadowing_screen.dart
 import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/chat_card_screen.dart';
+import 'package:dilbaz_app/features/together/presentation/info_gap_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
 import 'package:dilbaz_app/features/week/presentation/week_screen.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +186,12 @@ GoRouter router(Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (context, state) =>
             ChatCardScreen(cardKey: state.uri.queryParameters['key'] ?? ''),
+      ),
+      GoRoute(
+        path: AppRoutes.infoGap,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) =>
+            InfoGapScreen(sessionId: state.uri.queryParameters['id'] ?? ''),
       ),
       GoRoute(
         path: AppRoutes.week,

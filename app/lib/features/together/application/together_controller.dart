@@ -11,11 +11,15 @@ import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_app/features/together/application/together_view.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'together_controller.g.dart';
 
 /// The activity code of a chat card session (A14).
 const chatActivity = 'pair_chat';
+
+/// The activity code of an information gap task (A15).
+const pairTaskActivity = 'pair_info_gap';
 
 /// A chat card talked about this lately goes after the others.
 const _lately = Duration(days: 7);
@@ -29,6 +33,11 @@ Future<Result<TeamView?, TogetherFailure>> team(Ref ref) =>
 @riverpod
 Stream<List<PairInvite>> invites(Ref ref) =>
     ref.watch(togetherRepositoryProvider).invites();
+
+/// The learner's information gap sessions, live.
+@riverpod
+Stream<List<PairSession>> pairSessions(Ref ref) =>
+    ref.watch(togetherRepositoryProvider).sessions();
 
 /// Who of the team has the app open, live.
 @riverpod
@@ -63,6 +72,29 @@ Future<TogetherView> together(Ref ref) async {
         .watch(sessionRepositoryProvider)
         .tasksSince(course.id, now.subtract(_lately), chatActivity),
   );
+  final sessions = ref.watch(sessionRepositoryProvider);
+  final gaps = await ref.watch(taskContentRepositoryProvider).infoGaps();
+  final gapsByKey = {for (final task in gaps) task.key: task};
+  final gapOrder = chatCardOrder(
+    cards: [for (final task in gaps) (key: task.key, level: task.level)],
+    level: course.level,
+    talkedLately: await sessions.tasksSince(
+      course.id,
+      now.subtract(_lately),
+      pairTaskActivity,
+    ),
+  );
+  ({PairSession session, InfoGapTask task})? open;
+  for (final session in await ref.watch(pairSessionsProvider.future)) {
+    final task = gapsByKey[session.taskRef];
+    if (task != null &&
+        !session.createdAt.isBefore(startOfLocalDay(now)) &&
+        (session.state == PairState.invited ||
+            session.state == PairState.active)) {
+      open = (session: session, task: task);
+      break;
+    }
+  }
   final here = await ref.watch(presentProvider(team.id, userId).future);
   final invites = await ref.watch(invitesProvider.future);
   final today = startOfLocalDay(now);
@@ -82,6 +114,8 @@ Future<TogetherView> together(Ref ref) async {
     partner: partner,
     partnerHere: here.contains(partner.id),
     cards: [for (final key in order) byKey[key]!],
+    gaps: [for (final key in gapOrder) gapsByKey[key]!],
+    gap: open,
     incoming: first((i) => i.to == userId && i.state == InviteState.sent),
     outgoing: first(
       (i) => i.from == userId && i.state != InviteState.cancelled,
@@ -99,6 +133,8 @@ class TogetherActions extends _$TogetherActions {
 
   TogetherRepository get _repository => ref.read(togetherRepositoryProvider);
 
+  static String _newId() => const Uuid().v7();
+
   /// Asks the partner to talk through chat card [card] together.
   Future<void> invite(ChatCard card) async {
     final view = ref.read(togetherProvider).value;
@@ -111,6 +147,22 @@ class TogetherActions extends _$TogetherActions {
         taskRef: card.key,
       ),
     );
+  }
+
+  /// Starts information gap task [task] with the partner; the learner
+  /// takes role a. Returns the session's id, or null when it could not.
+  Future<String?> startGap(InfoGapTask task) async {
+    final view = ref.read(togetherProvider).value;
+    if (view is! TogetherReady) return null;
+    final id = _newId();
+    final result = await _repository.startSession(
+      id: id,
+      taskRef: task.key,
+      partner: view.partner.id,
+      role: 'a',
+    );
+    _settle(result);
+    return result is Ok ? id : null;
   }
 
   /// Answers the partner's invitation [invite]: yes or not now.

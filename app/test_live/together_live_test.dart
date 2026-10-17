@@ -117,4 +117,47 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 2)),
   );
+
+  test(
+    'an information gap session: start, join, two answers, done',
+    () async {
+      final ra = SupabaseTogetherRepository(a);
+      final rb = SupabaseTogetherRepository(b);
+      final idA = a.auth.currentUser!.id;
+      final idB = b.auth.currentUser!.id;
+      final seen = rb.sessions().asBroadcastStream();
+      await first(seen, (_) => true);
+      const id = '9e000000-0000-4000-8000-0000000000b1';
+      expect(
+        await ra.startSession(
+          id: id,
+          taskRef: 'en.gap.gap_friend',
+          partner: idB,
+          role: 'a',
+        ),
+        isA<Ok<void, TogetherFailure>>(),
+      );
+      final invited = await first(
+        seen,
+        (list) => list.any((s) => s.id == id && s.state == PairState.invited),
+      );
+      expect(invited.firstWhere((s) => s.id == id).roles, {idA: 'a', idB: 'b'});
+      expect(await rb.joinSession(id), isA<Ok<void, TogetherFailure>>());
+      expect(await rb.answerSession(id, 'c'), isA<Ok<void, TogetherFailure>>());
+      expect(
+        await ra.answerSession(id, 'done'),
+        isA<Ok<void, TogetherFailure>>(),
+      );
+      final done = await first(
+        seen,
+        (list) => list.any((s) => s.id == id && s.state == PairState.done),
+      );
+      expect(done.firstWhere((s) => s.id == id).answers, {
+        idB: 'c',
+        idA: 'done',
+      });
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }

@@ -18,10 +18,13 @@ from dilbaz_content.tasks_step import (
     CanDoSummary,
     ChatCardDraft,
     ChatInstruction,
+    GapInstruction,
+    InfoGapDraft,
     Instruction,
     TaskCheck,
     TaskDraft,
     chat_texts,
+    gap_texts,
     run_tasks,
     summary_texts,
     task_texts,
@@ -359,3 +362,117 @@ def test_unchecked_or_broken_chat_cards_stay_out(tmp_path: Path) -> None:
 
 # A chat card whose id is a task's.
 ROUTINE_AS_CHAT = FOOD | {"id": "daily_routine"}
+
+
+# --- Information gaps (A15) ----------------------------------------------------
+
+FRIEND = {
+    "id": "gap_friend",
+    "level": "A1",
+    "type": "choose",
+    "goal": "Find the friend.",
+    "a": {"lines": ["She has short hair.", "She wears glasses."]},
+    "b": {
+        "options": [
+            {"id": "a", "text": "Long hair."},
+            {"id": "b", "text": "Short hair, glasses."},
+            {"id": "c", "text": "Short hair."},
+            {"id": "d", "text": "Glasses."},
+        ]
+    },
+    "answer": {"chooser": "b", "option": "b"},
+}
+FRIEND_TR = {
+    "id": "gap_friend",
+    "title": "Arkadaşımı bul",
+    "prompt": "Arkadaşı bulun.",
+    "a": "Arkadaşını anlat.",
+    "b": "Doğru kişiyi seç.",
+}
+ROOM_LINES = [f"Line {i}." for i in range(6)]
+DIFF = {
+    "id": "gap_room",
+    "level": "A1",
+    "type": "differences",
+    "goal": "Find the differences.",
+    "a": {"lines": ROOM_LINES},
+    "b": {"lines": [*ROOM_LINES[:3], "Other 3.", "Other 4.", "Other 5."]},
+    "answer": {"a": [3, 4, 5], "b": [3, 4, 5]},
+}
+DIFF_TR = FRIEND_TR | {"id": "gap_room", "title": "Farklar"}
+
+
+def add_gaps(
+    root: Path,
+    gaps: list[dict[str, object]],
+    meanings: list[dict[str, object]],
+    checked: list[str],
+) -> None:
+    """Adds information gap tasks to a curation made by `write_curation`."""
+    en = root / "curation" / "en" / TASKS_CURATION
+    data = yaml.safe_load(en.read_text(encoding="utf-8"))
+    data["info_gaps"] = gaps
+    en.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    pair = root / "curation" / "tr-en" / TASKS_CURATION
+    data = yaml.safe_load(pair.read_text(encoding="utf-8"))
+    data["gap_instructions"] = meanings
+    pair.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    by_id = {str(m["id"]): GapInstruction.model_validate(m) for m in meanings}
+    with (root / "curation" / "tr-en" / TASKS_VALIDATION).open("a", encoding="utf-8") as stream:
+        for gap in gaps:
+            draft = InfoGapDraft.model_validate(gap)
+            if draft.id not in checked or draft.id not in by_id:
+                continue
+            check = TaskCheck(
+                id=draft.id,
+                round=1,
+                texts=gap_texts(draft, by_id[draft.id]),
+                clear=True,
+                faithful=True,
+                correct=True,
+                level_ok=True,
+            )
+            stream.write(check.model_dump_json() + "\n")
+
+
+def test_checked_information_gaps_go_to_both_packs(tmp_path: Path) -> None:
+    write_curation(tmp_path, [ANCHOR, ROUTINE], INSTRUCTIONS)
+    add_gaps(tmp_path, [FRIEND, DIFF], [FRIEND_TR, DIFF_TR], ["gap_friend", "gap_room"])
+
+    report = run_tasks(tmp_path, l1="tr", l2="en")
+
+    assert report.issues == ()
+    assert report.info_gaps_by_level == {"A1": 2}
+    tasks = {t["key"]: t for t in lines(tmp_path / "packs" / "en" / TASKS_FILE)}
+    friend = tasks["en.gap.gap_friend"]
+    assert friend["kind"] == "pair_info_gap"
+    assert friend["type"] == "choose"
+    assert friend["roles"]["a"] == {"lines": FRIEND["a"]["lines"], "options": []}
+    assert friend["answer"] == {"chooser": "b", "option": "b"}
+    assert tasks["en.gap.gap_room"]["answer"] == {"a": [3, 4, 5], "b": [3, 4, 5]}
+    instruction = lines(tmp_path / "packs" / "tr-en" / INSTRUCTIONS_FILE)[-2]
+    assert instruction["key"] == "en.gap.gap_friend"
+    assert instruction["roles"] == {"a": "Arkadaşını anlat.", "b": "Doğru kişiyi seç."}
+
+
+def test_misshaped_information_gaps_stay_out(tmp_path: Path) -> None:
+    write_curation(tmp_path, [ANCHOR, ROUTINE], INSTRUCTIONS)
+    wrong_option = FRIEND | {"id": "gap_x", "answer": {"chooser": "b", "option": "z"}}
+    both_choose = FRIEND | {"id": "gap_y", "a": FRIEND["b"]}
+    two_differ = DIFF | {"id": "gap_z", "answer": {"a": [4, 5], "b": [4, 5]}}
+    add_gaps(
+        tmp_path,
+        [wrong_option, both_choose, two_differ, FRIEND],
+        [FRIEND_TR | {"id": i} for i in ("gap_x", "gap_y", "gap_z")],
+        ["gap_x", "gap_y", "gap_z"],
+    )
+
+    report = run_tasks(tmp_path, l1="tr", l2="en")
+
+    assert {issue.id: issue.kind for issue in report.issues} == {
+        "gap_x": "phrases",
+        "gap_y": "phrases",
+        "gap_z": "phrases",
+        "gap_friend": "missing_instruction",
+    }
+    assert report.info_gaps_by_level == {}
