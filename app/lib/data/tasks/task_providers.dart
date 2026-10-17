@@ -5,6 +5,7 @@ import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
 import 'package:dilbaz_app/data/tasks/recording_files.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
 import 'package:dilbaz_app/data/tasks/recording_store.dart';
+import 'package:dilbaz_app/data/tasks/shadowing_repository.dart';
 import 'package:dilbaz_app/data/tasks/task_content_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,6 +27,13 @@ RecordingRepository recordingRepository(Ref ref) => DriftRecordingRepository(
 /// The rounds of 4/3/2, stamped with the app's clock.
 @Riverpod(keepAlive: true)
 FluencyRepository fluencyRepository(Ref ref) => DriftFluencyRepository(
+  ref.watch(appDatabaseProvider),
+  now: ref.watch(clockProvider),
+);
+
+/// The tries of shadowing, stamped with the app's clock.
+@Riverpod(keepAlive: true)
+ShadowingRepository shadowingRepository(Ref ref) => DriftShadowingRepository(
   ref.watch(appDatabaseProvider),
   now: ref.watch(clockProvider),
 );

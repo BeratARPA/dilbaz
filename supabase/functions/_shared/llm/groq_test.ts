@@ -72,6 +72,14 @@ Deno.test("asks for strict JSON with low reasoning and no reasoning text", async
   assertEquals(body.max_completion_tokens, 4000);
 });
 
+Deno.test("a recording is not sent: these models do not hear", async () => {
+  const { fetcher, seen } = fakeFetch(() => Response.json({}));
+  const outcome = await groqModel("openai/gpt-oss-120b", "test-key", fetcher)
+    .generate({ ...request, audio: { data: "AAAA", mimeType: "audio/wav" } });
+  assertEquals(outcome, { ok: false, failure: "bad_request" });
+  assertEquals(seen.length, 0);
+});
+
 Deno.test("a cut answer and a filtered one are failures", async () => {
   for (
     const [finish, failure] of [["length", "length"], [

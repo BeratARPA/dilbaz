@@ -9,8 +9,9 @@ class PlatformAnswerRecorder implements AnswerRecorder {
   const new(AudioRecorder recorder);
 
   @override
-  Future<Result<void, RecordFailure>> start() async =>
-      const Err(RecordFailure.unsupported);
+  Future<Result<void, RecordFailure>> start({
+    bool pronunciation = false,
+  }) async => const Err(RecordFailure.unsupported);
 
   @override
   Future<RecordedAudio?> stop() async => null;

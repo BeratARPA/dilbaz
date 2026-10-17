@@ -362,10 +362,12 @@
   grammar_codes: []
 
 # --- pronunciation -------------------------------------------------------------
+# severity follows docs/02 §6: the first tier (A0-A1: vowels, w/v, final
+# voicing, clusters, -ed/-s) 0.3-0.4, the second (th, stress) 0.2 (ADR-0011).
 
 - code: phon.th
   category: pronunciation
-  severity: 0.3
+  severity: 0.2
   description: "th sesleri /θ/ ve /ð/ yerine t, d, s ya da z söylenmiş."
   examples:
     - "tink → think"
@@ -405,7 +407,7 @@
 
 - code: phon.epenthesis
   category: pronunciation
-  severity: 0.2
+  severity: 0.3
   description: "Ünsüz kümesinin başına ya da arasına ünlü eklenmiş."
   examples:
     - "istation → station"
@@ -425,7 +427,7 @@
 
 - code: phon.word_stress
   category: pronunciation
-  severity: 0.3
+  severity: 0.2
   description: "Vurgu Türkçedeki gibi son heceye konmuş; İngilizcede vurgulu hece kelimeye göre değişir ve çoğu zaman sonda değildir."
   examples:
     - "probLEM → PROBlem"

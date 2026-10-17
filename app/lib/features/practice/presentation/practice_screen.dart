@@ -55,6 +55,13 @@ class PracticeScreen extends StatelessWidget {
               body: l10n.practiceDictationBody,
               route: AppRoutes.dictation,
             ),
+            const SizedBox(height: 12),
+            _Activity(
+              icon: Icons.graphic_eq,
+              title: l10n.practiceShadowingTitle,
+              body: l10n.practiceShadowingBody,
+              route: AppRoutes.shadowing,
+            ),
             const SizedBox(height: 24),
             Text(
               l10n.practiceMoreSoon,

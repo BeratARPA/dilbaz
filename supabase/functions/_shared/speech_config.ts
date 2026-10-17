@@ -46,8 +46,12 @@ export const speechConfig = {
     },
   },
 
-  /** S3: pronunciation assessment is chosen at the start of Faz 2. */
-  pronunciation: null,
+  /**
+   * S3: pronunciation (ADR-0011): the recording is transcribed here and
+   * heard by Gemini on `tutor/pron_check` (`llm_config.ts`); 16 kHz WAV of
+   * at most 15 s.
+   */
+  pronunciation: { route: "tutor/pron_check", type: "audio/wav", seconds: 15 },
 
   /**
    * S4: pack audio is made offline with Kokoro; dynamic speech is spoken

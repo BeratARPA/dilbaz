@@ -36,6 +36,18 @@ abstract final class RecorderConfig {
           contentType: 'audio/mp4',
         );
 
+  /// Speech for pronunciation (S3, ADR-0011): uncompressed 16 kHz mono
+  /// PCM16 in a WAV file, on every platform.
+  static const RecordSpec pronunciation = (
+    config: RecordConfig(
+      encoder: AudioEncoder.wav,
+      sampleRate: 16000,
+      numChannels: 1,
+    ),
+    extension: 'wav',
+    contentType: 'audio/wav',
+  );
+
   /// Longest answer of each kind, after which recording stops by itself.
   static const cardLimit = Duration(seconds: 12);
   static const shadowingLimit = Duration(seconds: 15);

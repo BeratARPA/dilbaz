@@ -21,6 +21,15 @@ export interface LlmRequest {
   effort: Effort;
   maxTokens: number;
   timeoutMs: number;
+  /** A recording sent with the user message, for models that hear. */
+  audio?: LlmAudio;
+}
+
+export interface LlmAudio {
+  /** The bytes in base64. */
+  data: string;
+  /** Media type, such as `audio/wav`. */
+  mimeType: string;
 }
 
 export interface LlmUsage {

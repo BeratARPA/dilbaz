@@ -19,18 +19,21 @@ import {
 import type { LlmModel } from "../_shared/llm/types.ts";
 import { answerCheckUserMessage } from "../_shared/prompts/answer_check.ts";
 import { AnswerCheckInput } from "../_shared/schemas/answer_check.ts";
+import { pronCheckUserMessage } from "../_shared/prompts/pron_check.ts";
 import { speakingAnnotateUserMessage } from "../_shared/prompts/speaking_annotate.ts";
 import { GapSuggestInput } from "../_shared/schemas/gap_suggest.ts";
+import { PronCheckInput } from "../_shared/schemas/pron_check.ts";
 import { SpeakingAnnotateInput } from "../_shared/schemas/speaking_annotate.ts";
 import { guard, kitFor, parseWire } from "./answer_check.ts";
 import { gapKitFor, parseGapWire, suggestGap } from "./gap_suggest.ts";
+import { parsePronWire, pronKitFor, pronOutput } from "./pron_check.ts";
 import {
   annotateKitFor,
   annotationOutput,
   parseAnnotateWire,
 } from "./speaking_annotate.ts";
 
-export const version = "0.4.0";
+export const version = "0.5.0";
 
 /** What the learner allows and has used today, read with the service role. */
 export interface LearnerState {
@@ -78,6 +81,7 @@ const routeMethods: Record<string, string[]> = {
   answer_check: ["POST"],
   gap_suggest: ["POST"],
   speaking_annotate: ["POST"],
+  pron_check: ["POST"],
 };
 
 /** Route name after the `tutor` segment, or null when absent. */
@@ -319,6 +323,43 @@ export function createTutorHandler(deps: TutorDeps) {
           code: leaked.join(","),
         }, deps.logSink);
       }
+      return finish(json(output), undefined, userId, result.model.id);
+    }
+
+    if (name === "pron_check") {
+      const parsed = PronCheckInput.safeParse(body);
+      if (!parsed.success) return fail(400, "invalid_input");
+      const input = parsed.data;
+      const kit = pronKitFor(`${input.ctx.l1}-${input.ctx.l2}`);
+      if (!kit) return fail(400, "unsupported_pair");
+
+      const route = llmConfig.routes.pron_check;
+      const models = chainOf("pron_check");
+      if (models.length === 0) return fail(503, "llm_unavailable");
+      const state = await stateFor(models);
+      const result = await runChain(
+        { models, consent: state.consent, use: state.use, cooldown, now },
+        {
+          system: kit.system,
+          user: pronCheckUserMessage(input),
+          schemaName: "pron_check",
+          schema: kit.schema,
+          effort: route.effort,
+          maxTokens: route.maxTokens,
+          timeoutMs: route.timeoutMs,
+          audio: {
+            data: input.audio.data,
+            mimeType: input.audio.mime_type,
+          },
+        },
+        (text) => parsePronWire(kit, text),
+      );
+      await record(result.calls);
+      if (!result.ok) return fail(failureStatus[result.code], result.code);
+      const output = pronOutput(input, result.value, kit, {
+        provider: result.model.provider,
+        model: result.model.id,
+      });
       return finish(json(output), undefined, userId, result.model.id);
     }
 

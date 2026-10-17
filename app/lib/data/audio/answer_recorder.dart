@@ -33,8 +33,9 @@ abstract interface class AnswerRecorder {
   /// The recorder of this platform.
   factory(AudioRecorder recorder) = PlatformAnswerRecorder;
 
-  /// Starts recording.
-  Future<Result<void, RecordFailure>> start();
+  /// Starts recording; for [pronunciation] as uncompressed WAV
+  /// (`RecorderConfig.pronunciation`).
+  Future<Result<void, RecordFailure>> start({bool pronunciation = false});
 
   /// Stops and hands over what was said; null if nothing was recorded.
   Future<RecordedAudio?> stop();

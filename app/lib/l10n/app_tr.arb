@@ -2386,5 +2386,171 @@
   "settingsFailed": "Şu an olmadı. Birazdan yeniden dene.",
   "@settingsFailed": {
     "description": "Settings: the request did not go through."
+  },
+  "practiceShadowingTitle": "Gölgeleme",
+  "@practiceShadowingTitle": {
+    "description": "Practice: the shadowing activity (A07)."
+  },
+  "practiceShadowingBody": "Cümleyi dinler, aynı biçimde söylersin; anlaşılmayı zorlaştıran seslere birlikte bakarız.",
+  "@practiceShadowingBody": {
+    "description": "Practice: what shadowing is."
+  },
+  "shadowingTitle": "Gölgeleme",
+  "@shadowingTitle": {
+    "description": "Shadowing: page title."
+  },
+  "shadowingLeave": "Bitir ve çık",
+  "@shadowingLeave": {
+    "description": "Shadowing: closes the page; what was said is kept."
+  },
+  "shadowingNeedsConsent": "Gölgeleme sesini dinler. Ses kaydına izin verilmediği için şimdilik kapalı.",
+  "@shadowingNeedsConsent": {
+    "description": "Shadowing: no audio consent (I-18)."
+  },
+  "shadowingNothingToSay": "Şu an rahat anlayabileceğin bir cümle yok. Kart çalıştıkça gölgeleme cümleleri açılır.",
+  "@shadowingNothingToSay": {
+    "description": "Shadowing: no sentence with personal coverage of 95 % yet (I-06)."
+  },
+  "shadowingSentenceOf": "Cümle {number} / {total}",
+  "@shadowingSentenceOf": {
+    "description": "Shadowing: which sentence.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "shadowingIntro": "Önce dinle. Sonra aynı hızda ve aynı vurguyla söyle.",
+  "@shadowingIntro": {
+    "description": "Shadowing: what to do with a sentence."
+  },
+  "shadowingAgainIntro": "Bir kez daha söyle; işaretli kelimelere dikkat et.",
+  "@shadowingAgainIntro": {
+    "description": "Shadowing: the second try (A07 step 5)."
+  },
+  "shadowingListen": "Dinle",
+  "@shadowingListen": {
+    "description": "Shadowing: plays the model sentence."
+  },
+  "shadowingListenAgain": "Yeniden dinle",
+  "@shadowingListenAgain": {
+    "description": "Shadowing: plays the model sentence again."
+  },
+  "shadowingRecord": "Söyle",
+  "@shadowingRecord": {
+    "description": "Shadowing: starts recording."
+  },
+  "shadowingStop": "Bitti",
+  "@shadowingStop": {
+    "description": "Shadowing: stops recording."
+  },
+  "shadowingRecording": "Dinliyorum… En fazla 15 saniye.",
+  "@shadowingRecording": {
+    "description": "Shadowing: while recording."
+  },
+  "shadowingListenFirst": "Önce cümleyi bir kez dinle.",
+  "@shadowingListenFirst": {
+    "description": "Shadowing: recording opens after listening."
+  },
+  "shadowingAudioFailure": "Ses şu an açılamadı. Yeniden dene.",
+  "@shadowingAudioFailure": {
+    "description": "Shadowing: the model clip could not be played."
+  },
+  "shadowingChecking": "Söylediğine bakıyorum…",
+  "@shadowingChecking": {
+    "description": "Shadowing: the try is recognized and heard."
+  },
+  "shadowingWords": "Tanınan kelimeler",
+  "@shadowingWords": {
+    "description": "Shadowing: heading of the sentence as recognized."
+  },
+  "shadowingNotRecognized": "Tanınmayan ya da başka kelime gibi duyulan: {words}",
+  "@shadowingNotRecognized": {
+    "description": "Shadowing: words speech recognition did not get.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "shadowingAllRecognized": "Her kelime tanındı.",
+  "@shadowingAllRecognized": {
+    "description": "Shadowing: every word was recognized."
+  },
+  "shadowingNoRecognition": "Kelimeler şu an tanınamadı.",
+  "@shadowingNoRecognition": {
+    "description": "Shadowing: speech recognition failed."
+  },
+  "shadowingIssuesTitle": "Dikkat edilecek sesler",
+  "@shadowingIssuesTitle": {
+    "description": "Shadowing: heading of the problems heard."
+  },
+  "shadowingIssue": "{word}: \"{heard}\" gibi duyuldu.",
+  "@shadowingIssue": {
+    "description": "Shadowing: a word and how it sounded.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      },
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "shadowingNoIssue": "Anlaşılmayı zorlaştıran bir ses duymadım.",
+  "@shadowingNoIssue": {
+    "description": "Shadowing: no problem heard."
+  },
+  "shadowingUncertain": "Kaydı tam anlayamadım; ses kısık ya da kesik olabilir. Kendini dinleyip bir kez daha deneyebilirsin.",
+  "@shadowingUncertain": {
+    "description": "Shadowing: the recording could not be judged."
+  },
+  "shadowingNotHeard": "Telaffuzunu şu an dinleyemiyorum. Kendi sesini model sesle karşılaştırabilirsin.",
+  "@shadowingNotHeard": {
+    "description": "Shadowing: no pronunciation check (no consent, quota or connection)."
+  },
+  "shadowingHearSelf": "Kendini dinle",
+  "@shadowingHearSelf": {
+    "description": "Shadowing: plays the learner's own try."
+  },
+  "shadowingHearModel": "Modeli dinle",
+  "@shadowingHearModel": {
+    "description": "Shadowing: plays the model sentence after the try."
+  },
+  "shadowingTryAgain": "Bir kez daha söyle",
+  "@shadowingTryAgain": {
+    "description": "Shadowing: the second try."
+  },
+  "shadowingNext": "Sonraki cümle",
+  "@shadowingNext": {
+    "description": "Shadowing: on to the next sentence."
+  },
+  "shadowingFinish": "Bitir",
+  "@shadowingFinish": {
+    "description": "Shadowing: ends after the last sentence."
+  },
+  "shadowingDoneTitle": "Gölgeleme bitti",
+  "@shadowingDoneTitle": {
+    "description": "Shadowing: the end."
+  },
+  "shadowingDoneSaid": "{count} cümle söyledin.",
+  "@shadowingDoneSaid": {
+    "description": "Shadowing: how many sentences were said.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shadowingDoneShown": "Üzerinde durduğumuz sesler:",
+  "@shadowingDoneShown": {
+    "description": "Shadowing: heading of the kinds of problems shown."
+  },
+  "shadowingDoneNote": "Telaffuz, dinleyip tekrar ettikçe yerine oturur.",
+  "@shadowingDoneNote": {
+    "description": "Shadowing: closing note."
   }
 }

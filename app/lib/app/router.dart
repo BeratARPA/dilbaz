@@ -19,6 +19,7 @@ import 'package:dilbaz_app/features/practice/presentation/practice_screen.dart';
 import 'package:dilbaz_app/features/progress/presentation/progress_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/microphone_check_screen.dart';
 import 'package:dilbaz_app/features/settings/presentation/settings_screen.dart';
+import 'package:dilbaz_app/features/shadowing/presentation/shadowing_screen.dart';
 import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
@@ -171,6 +172,11 @@ GoRouter router(Ref ref) {
         path: AppRoutes.dictation,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const DictationPracticeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.shadowing,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const ShadowingScreen(),
       ),
       GoRoute(
         path: AppRoutes.monthly,

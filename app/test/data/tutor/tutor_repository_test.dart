@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dilbaz_app/core/result.dart';
 import 'package:dilbaz_app/data/gap/gap_entry.dart';
@@ -6,6 +7,7 @@ import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/pron_check.dart';
 import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
 import 'package:dilbaz_engine/dilbaz_engine.dart';
@@ -66,6 +68,7 @@ Response json(Request request, int status, Object? body) => Response(
 void main() {
   gapSuggestTests();
   speakingAnnotateTests();
+  pronCheckTests();
   test('a request kept with its attempt reads back the same', () {
     expect(AnswerCheckRequest.fromJson(request.toJson()), request);
     final heard = request.copyWith(
@@ -421,6 +424,81 @@ void speakingAnnotateTests() {
           );
           expect(
             (await repository.speakingAnnotate(annotateRequest) as Err).error,
+            TutorFailure.invalid,
+          );
+        }
+      },
+    );
+  });
+}
+
+void pronCheckTests() {
+  final pronRequest = PronCheckRequest(
+    l1: 'tr',
+    l2: 'en',
+    level: CefrLevel.a1,
+    reference: 'We work.',
+    wav: Uint8List.fromList([82, 73, 70, 70]),
+  );
+  const heard = <String, Object?>{
+    'uncertain': false,
+    'issues': [
+      {'i': 1, 'word': 'work', 'tag': 'phon.w_v', 'heard': 'vork'},
+    ],
+    'catalog': 'tr-en@1',
+    'prompt_version': 'pron_check@1',
+    'provider': 'gemini',
+    'model': 'gemini-3.1-flash-lite',
+  };
+
+  group('pron_check (docs/07-ai-tutor.md §4.4, ADR-0011)', () {
+    test('sends the sentence and its WAV, reads what was heard', () async {
+      late Request seen;
+      final repository = repositoryWith((sent) async {
+        seen = sent;
+        return json(sent, 200, heard);
+      });
+      final result = await repository.pronCheck(pronRequest);
+      final value = (result as Ok<HeardPronunciation, TutorFailure>).value;
+      expect(value.uncertain, isFalse);
+      expect(value.issues, [
+        (index: 1, word: 'work', tag: 'phon.w_v', heard: 'vork'),
+      ]);
+      expect(value.toJson(), heard);
+      expect(seen.url.path, '/functions/v1/tutor/pron_check');
+      expect(jsonDecode(seen.body), {
+        'ctx': {'l1': 'tr', 'l2': 'en', 'level': 'A1', 'explain_in': 'l1'},
+        'reference': 'We work.',
+        'audio': {'data': 'UklGRg==', 'mime_type': 'audio/wav'},
+      });
+    });
+
+    test(
+      'its codes are failures; answers off the contract are invalid',
+      () async {
+        final unavailable = repositoryWith(
+          (sent) async => json(sent, 503, {
+            'error': {'code': 'llm_unavailable'},
+          }),
+        );
+        expect(
+          (await unavailable.pronCheck(pronRequest) as Err).error,
+          TutorFailure.unavailable,
+        );
+        for (final broken in [
+          {...heard, 'uncertain': 'no'},
+          {
+            ...heard,
+            'issues': [
+              {'i': '1', 'word': 'work', 'tag': 'phon.w_v', 'heard': ''},
+            ],
+          },
+        ]) {
+          final repository = repositoryWith(
+            (sent) async => json(sent, 200, broken),
+          );
+          expect(
+            (await repository.pronCheck(pronRequest) as Err).error,
             TutorFailure.invalid,
           );
         }

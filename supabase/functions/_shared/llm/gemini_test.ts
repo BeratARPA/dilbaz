@@ -80,6 +80,19 @@ Deno.test("sends the prompt, the schema and the thinking level", async () => {
   assert(init.signal instanceof AbortSignal, "every call has a timeout");
 });
 
+Deno.test("a recording goes before the text as inline data", async () => {
+  const { fetcher, seen } = fakeFetch(() => Response.json(answered));
+  await geminiModel("gemini-test", "test-key", fetcher).generate({
+    ...request,
+    audio: { data: "UklGRg==", mimeType: "audio/wav" },
+  });
+  const body = JSON.parse(String(seen[0].init.body));
+  assertEquals(body.contents[0].parts, [
+    { inlineData: { mimeType: "audio/wav", data: "UklGRg==" } },
+    { text: '{"response":"he go"}' },
+  ]);
+});
+
 Deno.test("a cut answer, a block and a refusal are failures", async () => {
   const cases: [unknown, string][] = [
     [{ candidates: [{ finishReason: "MAX_TOKENS" }] }, "length"],

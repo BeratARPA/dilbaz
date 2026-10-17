@@ -38,6 +38,9 @@ abstract final class AppRoutes {
   /// Dictation, over the tabs (A05).
   static const dictation = '/dictation';
 
+  /// Shadowing, over the tabs (A07).
+  static const shadowing = '/shadowing';
+
   /// The monthly speaking test, over the tabs (A23).
   static const monthly = '/monthly';
 

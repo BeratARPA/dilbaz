@@ -1,0 +1,6 @@
+{"id":"w_v-1","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[{"i":1,"tag":"phon.w_v","heard":"vork"}],"latencyMs":2141,"prompt":"pron_check@1"}
+{"id":"w_v-1-clean","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[{"i":1,"tag":"phon.w_v","heard":"vork"}],"latencyMs":1766,"prompt":"pron_check@1"}
+{"id":"w_v-2","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[{"i":1,"tag":"phon.w_v","heard":"vater"}],"latencyMs":9951,"prompt":"pron_check@1"}
+{"id":"w_v-2-clean","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[],"latencyMs":4417,"prompt":"pron_check@1"}
+{"id":"w_v-3","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[],"latencyMs":1355,"prompt":"pron_check@1"}
+{"id":"w_v-3-clean","model":"gemini-3.1-flash-lite","uncertain":false,"issues":[{"i":4,"tag":"phon.w_v","heard":"vindov"}],"latencyMs":1596,"prompt":"pron_check@1"}

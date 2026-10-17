@@ -27,6 +27,21 @@ Deno.test("route settings follow docs/07 §2–§3", () => {
   assertEquals(llmConfig.fairShare, 0.5);
 });
 
+Deno.test("pronunciation is heard only by models that hear (ADR-0011)", () => {
+  const route = llmConfig.routes.pron_check;
+  assert(route.chain.length > 0);
+  for (const id of route.chain) {
+    assertEquals(llmConfig.models[id].audio, true, id);
+    assertEquals(llmConfig.models[id].provider, "gemini", id);
+  }
+});
+
+Deno.test("15 s of 16 kHz WAV fits a pron_check request", async () => {
+  const { maxAudioBase64 } = await import("./schemas/pron_check.ts");
+  const wav = 44 + speechConfig.pronunciation.seconds * 16_000 * 2;
+  assert(Math.ceil(wav / 3) * 4 <= maxAudioBase64);
+});
+
 Deno.test("routes of later phases have no model until their eval", () => {
   for (
     const route of [
@@ -113,7 +128,8 @@ Deno.test("English ASR is configured for verbatim transcripts", () => {
 Deno.test("only free providers serve speech (ADR-0009)", () => {
   assertEquals(speechConfig.sttEnglish.provider, "deepgram");
   assertEquals(speechConfig.sttTurkish.onDevice, true);
-  assertEquals(speechConfig.pronunciation, null);
+  // Pronunciation is heard on the free Gemini tier (ADR-0011).
+  assertEquals(speechConfig.pronunciation.route, "tutor/pron_check");
   assertEquals(speechConfig.tts.dynamic, "on-device");
   assert(speechConfig.pricing.deepgramPerMinute > 0);
 });

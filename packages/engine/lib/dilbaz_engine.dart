@@ -80,5 +80,6 @@ export 'src/scoring/latency_profile.dart';
 export 'src/scoring/review_outcome.dart';
 export 'src/scoring/verdict.dart';
 export 'src/speaking/correction_choice.dart';
+export 'src/speaking/pron_choice.dart';
 export 'src/speaking/speech_annotation.dart';
 export 'src/speaking/timed_word.dart';

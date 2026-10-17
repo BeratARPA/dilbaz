@@ -23,6 +23,7 @@ service-account*.json
 
 # ---- Audio data (user recordings are never committed) -----------------------
 evals/asr/audio/
+evals/pron/audio/
 *.m4a
 *.wav
 *.webm

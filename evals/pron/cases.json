@@ -1,0 +1,479 @@
+{
+  "_note": "pron_check eval (ADR-0011): each sentence said right and with one mistake on word i (Kokoro, phoneme input). edit = [regex, replacement] on that word's misaki phonemes; said = its phonemes. expect null = said right: no issue expected.",
+  "cases": [
+    {
+      "text": "We work every day.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.w_v"
+      },
+      "edit": [
+        "w",
+        "v"
+      ]
+    },
+    {
+      "text": "We work every day.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-1-clean",
+      "expect": null
+    },
+    {
+      "text": "The water is cold.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-2",
+      "expect": {
+        "i": 1,
+        "tag": "phon.w_v"
+      },
+      "edit": [
+        "w",
+        "v"
+      ]
+    },
+    {
+      "text": "The water is cold.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-2-clean",
+      "expect": null
+    },
+    {
+      "text": "I want a new window.",
+      "i": 4,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-3",
+      "expect": {
+        "i": 4,
+        "tag": "phon.w_v"
+      },
+      "edit": [
+        "w",
+        "v"
+      ]
+    },
+    {
+      "text": "I want a new window.",
+      "i": 4,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "w_v-3-clean",
+      "expect": null
+    },
+    {
+      "text": "I think it is good.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.th"
+      },
+      "edit": [
+        "θ",
+        "t"
+      ]
+    },
+    {
+      "text": "I think it is good.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-1-clean",
+      "expect": null
+    },
+    {
+      "text": "There are three cats.",
+      "i": 2,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-2",
+      "expect": {
+        "i": 2,
+        "tag": "phon.th"
+      },
+      "edit": [
+        "θ",
+        "t"
+      ]
+    },
+    {
+      "text": "There are three cats.",
+      "i": 2,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-2-clean",
+      "expect": null
+    },
+    {
+      "text": "This is my mother.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-3",
+      "expect": {
+        "i": 3,
+        "tag": "phon.th"
+      },
+      "edit": [
+        "ð",
+        "d"
+      ]
+    },
+    {
+      "text": "This is my mother.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "th-3-clean",
+      "expect": null
+    },
+    {
+      "text": "The sheep are in the field.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.vowel_length"
+      },
+      "edit": [
+        "i",
+        "ɪ"
+      ]
+    },
+    {
+      "text": "The sheep are in the field.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-1-clean",
+      "expect": null
+    },
+    {
+      "text": "Please leave the door open.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-2",
+      "expect": {
+        "i": 1,
+        "tag": "phon.vowel_length"
+      },
+      "edit": [
+        "i",
+        "ɪ"
+      ]
+    },
+    {
+      "text": "Please leave the door open.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-2-clean",
+      "expect": null
+    },
+    {
+      "text": "It was a bad day.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-3",
+      "expect": {
+        "i": 3,
+        "tag": "phon.vowel_length"
+      },
+      "edit": [
+        "æ",
+        "ɛ"
+      ]
+    },
+    {
+      "text": "It was a bad day.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "vowel_length-3-clean",
+      "expect": null
+    },
+    {
+      "text": "My bag is red.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.final_devoicing"
+      },
+      "edit": [
+        "ɡ$",
+        "k"
+      ]
+    },
+    {
+      "text": "My bag is red.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-1-clean",
+      "expect": null
+    },
+    {
+      "text": "The dog is happy.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-2",
+      "expect": {
+        "i": 1,
+        "tag": "phon.final_devoicing"
+      },
+      "edit": [
+        "ɡ$",
+        "k"
+      ]
+    },
+    {
+      "text": "The dog is happy.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-2-clean",
+      "expect": null
+    },
+    {
+      "text": "I go to bed early.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-3",
+      "expect": {
+        "i": 3,
+        "tag": "phon.final_devoicing"
+      },
+      "edit": [
+        "d$",
+        "t"
+      ]
+    },
+    {
+      "text": "I go to bed early.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "final_devoicing-3-clean",
+      "expect": null
+    },
+    {
+      "text": "The station is near.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.epenthesis"
+      },
+      "edit": [
+        "st",
+        "ɪst"
+      ]
+    },
+    {
+      "text": "The station is near.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-1-clean",
+      "expect": null
+    },
+    {
+      "text": "My school is big.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-2",
+      "expect": {
+        "i": 1,
+        "tag": "phon.epenthesis"
+      },
+      "edit": [
+        "sk",
+        "ɪsk"
+      ]
+    },
+    {
+      "text": "My school is big.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-2-clean",
+      "expect": null
+    },
+    {
+      "text": "I like sport.",
+      "i": 2,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-3",
+      "expect": {
+        "i": 2,
+        "tag": "phon.epenthesis"
+      },
+      "edit": [
+        "sp",
+        "ɪsp"
+      ]
+    },
+    {
+      "text": "I like sport.",
+      "i": 2,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "epenthesis-3-clean",
+      "expect": null
+    },
+    {
+      "text": "I worked yesterday.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-1",
+      "expect": {
+        "i": 1,
+        "tag": "phon.spelling"
+      },
+      "edit": [
+        "kt$",
+        "kɪd"
+      ]
+    },
+    {
+      "text": "I worked yesterday.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-1-clean",
+      "expect": null
+    },
+    {
+      "text": "We walk to work.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-2",
+      "expect": {
+        "i": 1,
+        "tag": "phon.spelling"
+      },
+      "edit": [
+        "ɔk",
+        "ɔlk"
+      ]
+    },
+    {
+      "text": "We walk to work.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-2-clean",
+      "expect": null
+    },
+    {
+      "text": "I talked to her.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-3",
+      "expect": {
+        "i": 1,
+        "tag": "phon.spelling"
+      },
+      "edit": [
+        "kt$",
+        "kɪd"
+      ]
+    },
+    {
+      "text": "I talked to her.",
+      "i": 1,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "spelling-3-clean",
+      "expect": null
+    },
+    {
+      "text": "This is a problem.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-1",
+      "expect": {
+        "i": 3,
+        "tag": "phon.word_stress"
+      },
+      "said": "pɹɑblˈɛm"
+    },
+    {
+      "text": "This is a problem.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-1-clean",
+      "expect": null
+    },
+    {
+      "text": "I use the internet.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-2",
+      "expect": {
+        "i": 3,
+        "tag": "phon.word_stress"
+      },
+      "said": "ɪntəɹnˈɛt"
+    },
+    {
+      "text": "I use the internet.",
+      "i": 3,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-2-clean",
+      "expect": null
+    },
+    {
+      "text": "It is a good program.",
+      "i": 4,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-3",
+      "expect": {
+        "i": 4,
+        "tag": "phon.word_stress"
+      },
+      "said": "pɹOɡɹˈæm"
+    },
+    {
+      "text": "It is a good program.",
+      "i": 4,
+      "voice": "af_heart",
+      "lang": "en-us",
+      "id": "word_stress-3-clean",
+      "expect": null
+    }
+  ]
+}

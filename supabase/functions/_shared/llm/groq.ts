@@ -67,6 +67,8 @@ export function groqModel(
     id,
     provider: "groq",
     async generate(request: LlmRequest): Promise<LlmOutcome> {
+      // Chat models here do not hear: a recording is not theirs to judge.
+      if (request.audio) return { ok: false, failure: "bad_request" };
       const response = await timedFetch(fetcher, url, {
         method: "POST",
         headers: {

@@ -14,12 +14,17 @@ class PlatformAnswerRecorder implements AnswerRecorder {
 
   final AudioRecorder _recorder;
   final Future<Directory> Function() _directory;
-  final RecordSpec _spec = RecorderConfig.speech(web: false);
+  RecordSpec _spec = RecorderConfig.speech(web: false);
   final _watch = Stopwatch();
   String? _path;
 
   @override
-  Future<Result<void, RecordFailure>> start() async {
+  Future<Result<void, RecordFailure>> start({
+    bool pronunciation = false,
+  }) async {
+    _spec = pronunciation
+        ? RecorderConfig.pronunciation
+        : RecorderConfig.speech(web: false);
     try {
       if (!await _recorder.hasPermission()) {
         return const Err(RecordFailure.permission);

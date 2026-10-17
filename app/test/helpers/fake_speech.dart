@@ -22,13 +22,19 @@ class FakeAnswerRecorder implements AnswerRecorder {
 
   int starts = 0;
   int cancels = 0;
+
+  /// Whether the last recording was one for pronunciation (WAV).
+  bool pronunciation = false;
   bool recording = false;
   bool disposed = false;
   final levels = StreamController<double>.broadcast();
 
   @override
-  Future<Result<void, RecordFailure>> start() async {
+  Future<Result<void, RecordFailure>> start({
+    bool pronunciation = false,
+  }) async {
     starts++;
+    this.pronunciation = pronunciation;
     final failure = this.failure;
     if (failure != null) return Err(failure);
     recording = true;
@@ -42,7 +48,7 @@ class FakeAnswerRecorder implements AnswerRecorder {
     if (silent) return null;
     return (
       bytes: Uint8List.fromList([1, 2, 3]),
-      contentType: 'audio/mp4',
+      contentType: pronunciation ? 'audio/wav' : 'audio/mp4',
       duration: duration,
     );
   }
@@ -87,11 +93,12 @@ class _MadeAnswerRecorder implements AnswerRecorder {
   }
 
   @override
-  Future<Result<void, RecordFailure>> start() => _next(() async {
-    await Future<void>.delayed(Duration.zero);
-    if (_disposed) return const Err(RecordFailure.device);
-    return await _fake.start();
-  });
+  Future<Result<void, RecordFailure>> start({bool pronunciation = false}) =>
+      _next(() async {
+        await Future<void>.delayed(Duration.zero);
+        if (_disposed) return const Err(RecordFailure.device);
+        return await _fake.start(pronunciation: pronunciation);
+      });
 
   @override
   Future<RecordedAudio?> stop() =>

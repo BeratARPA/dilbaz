@@ -100,6 +100,20 @@ void main() {
       expect(platform.path, endsWith('.m4a'));
     });
 
+    test('records pronunciation as 16 kHz mono WAV (ADR-0011)', () async {
+      await recorder.start(pronunciation: true);
+      final config = platform.config!;
+      expect(config.encoder, AudioEncoder.wav);
+      expect(config.sampleRate, 16000);
+      expect(config.numChannels, 1);
+      expect(platform.path, endsWith('.wav'));
+      expect((await recorder.stop())!.contentType, 'audio/wav');
+
+      // The next answer is speech again.
+      await recorder.start();
+      expect(platform.config!.encoder, AudioEncoder.aacLc);
+    });
+
     test('hands over the answer and keeps no file of it', () async {
       await recorder.start();
 

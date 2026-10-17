@@ -4,6 +4,7 @@ import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/pron_check.dart';
 import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:json_annotation/json_annotation.dart'
     show CheckedFromJsonException;
@@ -49,6 +50,11 @@ abstract interface class TutorRepository {
   Future<Result<AnnotatedSpeech, TutorFailure>> speakingAnnotate(
     SpeakingAnnotateRequest request,
   );
+
+  /// Hears a shadowed sentence (A07, ADR-0011).
+  Future<Result<HeardPronunciation, TutorFailure>> pronCheck(
+    PronCheckRequest request,
+  );
 }
 
 class SupabaseTutorRepository implements TutorRepository {
@@ -57,12 +63,14 @@ class SupabaseTutorRepository implements TutorRepository {
     this._wait = answerCheckWait,
     this._gapWait = gapSuggestWait,
     this._annotateWait = speakingAnnotateWait,
+    this._pronWait = pronCheckWait,
   });
 
   final SupabaseClient _client;
   final Duration _wait;
   final Duration _gapWait;
   final Duration _annotateWait;
+  final Duration _pronWait;
 
   /// How long a card waits for the check: the route's limit for one model
   /// (docs/07 §3). After it the request is cut off and the card judges
@@ -78,9 +86,14 @@ class SupabaseTutorRepository implements TutorRepository {
   /// feedback starts from the word times alone.
   static const speakingAnnotateWait = Duration(seconds: 100);
 
+  /// How long a shadowed sentence waits to be heard: one model of up to
+  /// half a minute. After it the sentence shows what was recognized only.
+  static const pronCheckWait = Duration(seconds: 35);
+
   static const _answerCheck = 'tutor/answer_check';
   static const _gapSuggest = 'tutor/gap_suggest';
   static const _speakingAnnotate = 'tutor/speaking_annotate';
+  static const _pronCheck = 'tutor/pron_check';
 
   @override
   Future<Result<LlmAnswerCheck, TutorFailure>> answerCheck(
@@ -100,6 +113,16 @@ class SupabaseTutorRepository implements TutorRepository {
     request.toJson(),
     _annotateWait,
     AnnotatedSpeech.fromJson,
+  );
+
+  @override
+  Future<Result<HeardPronunciation, TutorFailure>> pronCheck(
+    PronCheckRequest request,
+  ) => _call(
+    _pronCheck,
+    request.toJson(),
+    _pronWait,
+    HeardPronunciation.read,
   );
 
   Future<Result<T, TutorFailure>> _call<T>(

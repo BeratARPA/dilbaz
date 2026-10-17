@@ -34,6 +34,8 @@ export interface ModelConfig {
   readonly requestsPerDay: number;
   /** Free daily tokens, where the provider limits them. */
   readonly tokensPerDay?: number;
+  /** The model hears audio sent with the message. */
+  readonly audio?: boolean;
 }
 
 export interface RouteConfig {
@@ -50,6 +52,7 @@ export type TutorRoute =
   | "answer_check"
   | "speaking_annotate"
   | "gap_suggest"
+  | "pron_check"
   | "roleplay_turn"
   | "roleplay_debrief"
   | "writing_feedback"
@@ -80,8 +83,16 @@ export const llmConfig = {
 
   /** Free-tier limits as of 2026-09-26 (ADR-0009); the consoles decide. */
   models: {
-    "gemini-3.1-flash-lite": { provider: "gemini", requestsPerDay: 500 },
-    "gemini-3.5-flash": { provider: "gemini", requestsPerDay: 20 },
+    "gemini-3.1-flash-lite": {
+      provider: "gemini",
+      requestsPerDay: 500,
+      audio: true,
+    },
+    "gemini-3.5-flash": {
+      provider: "gemini",
+      requestsPerDay: 20,
+      audio: true,
+    },
     "openai/gpt-oss-120b": {
       provider: "groq",
       requestsPerDay: 1000,
@@ -117,6 +128,14 @@ export const llmConfig = {
       effort: "medium",
       maxTokens: 12000,
       timeoutMs: 60_000,
+    },
+    // Hears a shadowed sentence (ADR-0011): only models that hear; Flash's
+    // 20 requests a day are too few for shadowing.
+    pron_check: {
+      chain: ["gemini-3.1-flash-lite"],
+      effort: "low",
+      maxTokens: 3000,
+      timeoutMs: 30_000,
     },
     roleplay_turn: later("low", 3000),
     comprehension_check: later("low", 3000),

@@ -22,6 +22,7 @@ import 'package:dilbaz_app/data/tutor/annotated_speech.dart';
 import 'package:dilbaz_app/data/tutor/answer_check_request.dart';
 import 'package:dilbaz_app/data/tutor/gap_suggest_request.dart';
 import 'package:dilbaz_app/data/tutor/llm_answer_check.dart';
+import 'package:dilbaz_app/data/tutor/pron_check.dart';
 import 'package:dilbaz_app/data/tutor/speaking_annotate_request.dart';
 import 'package:dilbaz_app/data/tutor/tutor_providers.dart';
 import 'package:dilbaz_app/data/tutor/tutor_repository.dart';
@@ -224,6 +225,21 @@ Future<void> installCardPacks(AppDatabase db) async {
             'alternatives': ['Sima kolu.'],
           },
         ),
+        for (final (code, category, severity, description) in [
+          ('zz.phon.a', 'pronunciation', 0.4, 'A sesi kısa kalmış.'),
+          ('zz.phon.b', 'pronunciation', 0.2, 'B sesi yumuşamış.'),
+          ('zz.gram.c', 'grammar', 0.3, 'C eki eksik.'),
+        ])
+          ContentPairEntriesCompanion.insert(
+            kind: 'error_tag',
+            key: code,
+            packId: pair,
+            data: {
+              'category': category,
+              'severity': severity,
+              'description': description,
+            },
+          ),
       ],
     ),
   ];
@@ -303,6 +319,21 @@ class FakeTutorRepository implements TutorRepository {
     annotateAsked.add(request);
     final annotated = this.annotated;
     return annotated == null ? Err(annotateFailure) : Ok(annotated);
+  }
+
+  /// What the next shadowed sentence is heard as; null makes [pronCheck]
+  /// fail with [pronFailure].
+  HeardPronunciation? heard;
+  TutorFailure pronFailure = TutorFailure.unavailable;
+  final pronAsked = <PronCheckRequest>[];
+
+  @override
+  Future<Result<HeardPronunciation, TutorFailure>> pronCheck(
+    PronCheckRequest request,
+  ) async {
+    pronAsked.add(request);
+    final heard = this.heard;
+    return heard == null ? Err(pronFailure) : Ok(heard);
   }
 }
 

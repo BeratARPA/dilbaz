@@ -1,8 +1,10 @@
 /**
  * Gemini `generateContent` over REST (docs/07-ai-tutor.md §3): the fixed
  * prompt as the system instruction, the answer's JSON Schema as
- * `responseJsonSchema`, the effort as `thinkingConfig.thinkingLevel`.
- * Checked against the Gemini API reference on 2026-09-30.
+ * `responseJsonSchema`, the effort as `thinkingConfig.thinkingLevel`; a
+ * recording goes before the text as `inlineData` (a request ≤ 20 MB).
+ * Checked against the Gemini API reference on 2026-09-30; audio input on
+ * 2026-10-17.
  */
 import { type Effort, llmConfig } from "../llm_config.ts";
 import {
@@ -96,7 +98,20 @@ export function geminiModel(
         },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: request.system }] },
-          contents: [{ role: "user", parts: [{ text: request.user }] }],
+          contents: [{
+            role: "user",
+            parts: [
+              ...(request.audio
+                ? [{
+                  inlineData: {
+                    mimeType: request.audio.mimeType,
+                    data: request.audio.data,
+                  },
+                }]
+                : []),
+              { text: request.user },
+            ],
+          }],
           generationConfig: {
             responseMimeType: "application/json",
             responseJsonSchema: request.schema,
