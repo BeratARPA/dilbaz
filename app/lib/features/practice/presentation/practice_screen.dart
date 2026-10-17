@@ -41,6 +41,13 @@ class PracticeScreen extends StatelessWidget {
               body: l10n.practiceSpeakingBody,
               route: AppRoutes.speaking,
             ),
+            const SizedBox(height: 12),
+            _Activity(
+              icon: Icons.timer_outlined,
+              title: l10n.practiceFluencyTitle,
+              body: l10n.practiceFluencyBody,
+              route: AppRoutes.fluency,
+            ),
             const SizedBox(height: 24),
             Text(
               l10n.practiceMoreSoon,

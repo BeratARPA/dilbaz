@@ -1363,6 +1363,122 @@
   "@practiceSpeakingBody": {
     "description": "Practice: what a speaking task is."
   },
+  "practiceFluencyTitle": "4/3/2 akıcılık",
+  "@practiceFluencyTitle": {
+    "description": "Practice: the 4/3/2 activity (A12)."
+  },
+  "practiceFluencyBody": "Konuştuğun bir konuyu üç kez anlatırsın, her seferinde daha kısa sürede.",
+  "@practiceFluencyBody": {
+    "description": "Practice: what 4/3/2 is."
+  },
+  "fluencyTitle": "4/3/2 akıcılık",
+  "@fluencyTitle": {
+    "description": "4/3/2: page title."
+  },
+  "fluencyLeave": "Bitir ve çık",
+  "@fluencyLeave": {
+    "description": "4/3/2: closes the page; what was said is kept."
+  },
+  "fluencyNoTopic": "4/3/2, daha önce konuştuğun bir konuyla yapılır. Önce bir konuşma görevi yap; sonra o konuyu burada üç kez anlatırsın.",
+  "@fluencyNoTopic": {
+    "description": "4/3/2: no task spoken about yet (A12 step 1)."
+  },
+  "fluencyChooseTitle": "Hangi konuyu yeniden anlatmak istersin?",
+  "@fluencyChooseTitle": {
+    "description": "4/3/2: choose a topic spoken about before."
+  },
+  "fluencyRoundsNote": "Üç tur: {first}, {second}, {third}. Her turda süre kısalır. Yeni kelime gerekmez; bildiklerinle akıcı anlatmaya çalış. Düzeltme yok.",
+  "@fluencyRoundsNote": {
+    "description": "4/3/2: the three rounds' times and what the activity is (A12).",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "third": {
+        "type": "String"
+      }
+    }
+  },
+  "fluencyRoundNumber": "Tur {number} / 3",
+  "@fluencyRoundNumber": {
+    "description": "4/3/2: which round.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "fluencyChecking": "Kaydına bakıyorum…",
+  "@fluencyChecking": {
+    "description": "4/3/2: the round is written down."
+  },
+  "fluencyRoundResult": "Tur {number}",
+  "@fluencyRoundResult": {
+    "description": "4/3/2: one round in the results.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "fluencyMeasures": "Dakikada {rate} kelime · dakikada {pauses} uzun duraklama",
+  "@fluencyMeasures": {
+    "description": "4/3/2: one round's measures (counts, I-04).",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      },
+      "pauses": {
+        "type": "String"
+      }
+    }
+  },
+  "fluencyNotMeasured": "Bu tur ölçülemedi: bağlantı yoktu. Kaydın sayıldı.",
+  "@fluencyNotMeasured": {
+    "description": "4/3/2: a round that could not be written down."
+  },
+  "fluencyNext": "Sıradaki tur {time}. Aynı konuyu daha kısa sürede anlat.",
+  "@fluencyNext": {
+    "description": "4/3/2: between rounds, the next round's time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "fluencyNextRound": "Sıradaki tura başla",
+  "@fluencyNextRound": {
+    "description": "4/3/2: starts the next round."
+  },
+  "fluencyDoneTitle": "Üç tur bitti",
+  "@fluencyDoneTitle": {
+    "description": "4/3/2: the end."
+  },
+  "fluencyDoneNote": "Aynı konuyu kısalan sürelerle yeniden anlatmak akıcılığı geliştirir. Turdan tura dakikadaki kelime sayısına bakabilirsin.",
+  "@fluencyDoneNote": {
+    "description": "4/3/2: why the rounds (P16), no grade."
+  },
+  "fluencyMinutes": "{minutes} dk",
+  "@fluencyMinutes": {
+    "description": "4/3/2: a time in minutes, such as 1,5.",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "fluencySeconds": "{seconds} sn",
+  "@fluencySeconds": {
+    "description": "4/3/2: a time in seconds.",
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
   "speakingTitle": "Konuşma görevi",
   "@speakingTitle": {
     "description": "Speaking task: the screen's title."

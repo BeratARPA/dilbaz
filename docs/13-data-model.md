@@ -454,6 +454,7 @@ Kod: `app/lib/data/db/` (şema v1 F0-05; v2 F1-16: yerel `devices`; v3 F1-21: `c
     - `prompt` = `{prompt_l1}`, `response` = `{source: 'asr', recording_id, text?, asr?: {provider, model}}`
     - `error_tags` işaretlemedeki etiketlerdir, her biri bir kez. `duration_ms` kaydın süresidir.
     - `llm` = `{route: 'speaking_annotate', pending, provider?, model?, catalog?, code?}`
+  - **4/3/2 turu (F2-03):** `activity = 'fluency_432'`, `task_ref` konu, `prompt` = `{round, limit_ms}`, `response` = `{source: 'asr', text?, asr?: {provider, model}, metrics?: SpeechMetrics}`, `duration_ms` turun süresi. 2. ve 3. tur `parent_attempt_id` ile 1. tura bağlanır. Kayıt satırı ve ses yoktur.
   - **Pratik denemeleri:** `prompt` = `{original, reference, tag}`, `response` = `{text, source}`. Önceki denemeye `parent_attempt_id` ile bağlıdır.
   - **`personal_items`:** `source = task_correction`.
 - **Aylık konuşma kaydı (F1-19):** `assessments.kind = monthly_speaking`, `results` = `{month: 'YYYY-MM' (yerel), baseline, complete, tasks: [{task_ref, recording_id, anchor, metrics, clauses, error_free}]}`. Test bitince ya da bırakılınca bir kez yazılır. Kayıtları `is_assessment = true` ve `assessment_id` taşır. `recordings` ve `assessments` satırlarının zamanı uygulamanın saatinden gelir.

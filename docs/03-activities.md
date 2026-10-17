@@ -267,6 +267,13 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   2. Üç tur yapılır.
   3. Tur başına dakikadaki kelime ve uzun duraksama sayısı gösterilir.
   4. Düzeltme yapılmaz. En sonda isteğe bağlı tek bir düzeltme.
+- **Uygulama (F2-03):**
+  - **Motor:** `fluencyRounds(level)` tur sürelerini, `fluencyTopics` konuların sırasını verir. Konu yalnızca daha önce konuşulmuş görevlerdir: içinde konuşma duyulan bir pratik kaydı olan görev. Son 7 günde 4/3/2'si yapılan konu sona gider; içlerinde en son konuşulan önce gelir.
+  - **Akış:** Pratik → "4/3/2 akıcılık" → konu seçimi (I-14) → üç tur. Hazırlık ve kalıp yok, konu bilinen konudur. Tur kendi süresinde kendiliğinden durur, öğrenci önce de bitirebilir.
+  - **Turdan sonra** dakikadaki kelime ve dakikadaki uzun duraklama gösterilir (sayı, yüzde değil; I-04). Sonda üç tur yan yana: satırlar ve dakikadaki kelimenin sütunları.
+  - **İçinde İngilizce bir şey duyulmayan tur** yeniden yapılır, diğer konuşma akışlarındaki gibi. Bağlantı yoksa tur ölçülmeden sayılır ve alıştırma sürer.
+  - **Kayıt:** Her tur bir denemedir (`activity = fluency_432`, I-03). 2. ve 3. tur 1. turun denemesine zincirlenir. Ses saklanmaz, kart cevabı gibi; transkript ve ölçümler denemededir. Oturum `fluency` koluna konuşma süresiyle yazılır.
+  - **Sonraya kalanlar:** En sondaki isteğe bağlı tek düzeltme; Bugün ekranında seçenek olarak önerilmesi (planlayıcı tam, F3-01); E6 deneyi (`16`).
 
 ## A13 — Yapay zekâyla rol oyunu (`roleplay_ai`)
 - **Amaç:** Etkileşim; anlam müzakeresi; telafi stratejileri.

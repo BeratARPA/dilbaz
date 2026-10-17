@@ -194,6 +194,13 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 ### 5.7 4/3/2 (A12)
 Üç tur sayacı. Tur arasında dakikadaki kelime ve uzun duraklama sayısı gösterilir. Sonunda üç turun küçük grafiği.
 
+**Uygulama notları (F2-03):**
+- **Giriş:** Pratik → "4/3/2 akıcılık". Daha önce konuşulmuş konu yoksa "Önce bir konuşma görevi yap" notu çıkar.
+- **Seçim:** "Hangi konuyu yeniden anlatmak istersin?" ve tur süreleri (A2'de "2 dk, 1,5 dk, 1 dk").
+- **Tur:** Konuşma görevinin kartı; üstünde "Tur 1 / 3" ve süre, altında "İngilizce anlat". Hazırlık sayacı yok.
+- **Turlar arası:** Önceki turların ölçümleri ve "Sıradaki tur 1,5 dk. Aynı konuyu daha kısa sürede anlat."
+- **Son:** "Üç tur bitti", üç sütun (dakikada kelime; sayı sütunun üstünde, okuyucuya satırlarda) ve not ya da puan olmadan kısa açıklama.
+
 ### 5.8 Rol oyunu (A13)
 - Sohbet görünümü, sesli sıralar. Yapay zekânın cevabı hem yazılı hem sesli.
 - Seviyeye göre "yazıyı gizle".

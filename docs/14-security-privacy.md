@@ -40,6 +40,7 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
   | Kayıt türü | Saklama |
   |---|---|
   | Kart kayıtları | **Saklanmaz.** Cihazda geçici tutulur. Ayarlardan açılabilir, açılırsa 30 gün. |
+  | 4/3/2 turları (F2-03) | **Saklanmaz.** Yazıya geçirilince bırakılır; transkript ve ölçümler denemede kalır. |
   | Görev ve pratik kayıtları | 30 gün, sonra ses silinir. Transkript ve ölçümler kalır. |
   | Yıldızlanan kayıtlar (`keep`) | Kullanıcı silene kadar |
   | Aylık test ve seviye testi kayıtları | Kullanıcı silene kadar ("önce/sonra" için) |

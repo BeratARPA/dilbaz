@@ -1,5 +1,6 @@
 import 'package:dilbaz_app/core/clock.dart';
 import 'package:dilbaz_app/data/db/database_provider.dart';
+import 'package:dilbaz_app/data/tasks/fluency_repository.dart';
 import 'package:dilbaz_app/data/tasks/monthly_test_repository.dart';
 import 'package:dilbaz_app/data/tasks/recording_files.dart';
 import 'package:dilbaz_app/data/tasks/recording_repository.dart';
@@ -18,6 +19,13 @@ TaskContentRepository taskContentRepository(Ref ref) =>
 /// Both stamp their rows with the app's clock, which tests fix.
 @Riverpod(keepAlive: true)
 RecordingRepository recordingRepository(Ref ref) => DriftRecordingRepository(
+  ref.watch(appDatabaseProvider),
+  now: ref.watch(clockProvider),
+);
+
+/// The rounds of 4/3/2, stamped with the app's clock.
+@Riverpod(keepAlive: true)
+FluencyRepository fluencyRepository(Ref ref) => DriftFluencyRepository(
   ref.watch(appDatabaseProvider),
   now: ref.watch(clockProvider),
 );
