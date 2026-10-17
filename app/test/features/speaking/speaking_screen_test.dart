@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/card_fixture.dart';
+import '../../helpers/fake_auth_repository.dart';
 import '../../helpers/fake_profile_repository.dart';
 import '../../helpers/fake_speech.dart';
-import '../../helpers/fake_auth_repository.dart';
 import '../../helpers/pack_fixture.dart';
 import '../../helpers/placement_fixture.dart';
 import '../../helpers/pump_app.dart';
