@@ -4,7 +4,7 @@
  *   cd content/tts && uv run --no-sync python ../../evals/pron/make_audio.py
  *   cd evals
  *   deno run -A --env-file=../supabase/functions/.env pron/run.ts \
- *     [--models <id>,<id>] [--limit <n>]
+ *     --models <id>,<id> [--limit <n>]
  *
  * Each case goes the way the app's request goes in the tutor function: the
  * same prompt, schema and guards, the recording as inline audio. It uses
@@ -13,7 +13,7 @@
  *
  * Results: `pron/results/<model>.jsonl` keeps one line per case and prompt
  * version, so a run cut short goes on where it stopped;
- * `pron/results/<date>-<model>.json` holds the scores.
+ * `pron/results/<date>-<model>.<prompt>.json` holds the scores.
  */
 import { dirname, fromFileUrl, join } from "@std/path";
 import { geminiModel } from "../../supabase/functions/_shared/llm/gemini.ts";
@@ -56,8 +56,11 @@ function flag(name: string): string | undefined {
 const apiKey = Deno.env.get(llmConfig.providers.gemini.keyEnv);
 if (!apiKey) throw new Error("GEMINI_API_KEY is not set (--env-file)");
 
+// The route is closed until a model passes: candidates are named then.
 const models = (flag("models") ?? llmConfig.routes.pron_check.chain.join(","))
-  .split(",");
+  .split(",")
+  .filter((id) => id !== "");
+if (models.length === 0) throw new Error("name the candidates: --models <id>");
 const limit = Number(flag("limit") ?? Infinity);
 const cases = (JSON.parse(
   await Deno.readTextFile(join(here, "cases.json")),
@@ -154,7 +157,10 @@ for (const id of models) {
   const score = scorePron(cases, [...done.values()]);
   const date = new Date().toISOString().slice(0, 10);
   await Deno.writeTextFile(
-    join(resultsDir, `${date}-${id.replaceAll("/", "_")}.json`),
+    join(
+      resultsDir,
+      `${date}-${id.replaceAll("/", "_")}.${pronCheckPromptVersion}.json`,
+    ),
     JSON.stringify({ prompt: pronCheckPromptVersion, ...score }, null, 2) +
       "\n",
   );

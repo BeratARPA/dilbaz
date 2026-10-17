@@ -1,6 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
 import type { AuthOutcome, UserVerifier } from "../_shared/auth.ts";
 import type { CallRecord } from "../_shared/llm/router.ts";
+import { llmConfig } from "../_shared/llm_config.ts";
 import type { LlmModel, LlmOutcome, LlmRequest } from "../_shared/llm/types.ts";
 import {
   createTutorHandler,
@@ -640,6 +641,7 @@ const pronInput = {
 };
 const heard = {
   uncertain: false,
+  words: [],
   issues: [
     { i: 1, tag: "phon.w_v", heard: "vork" },
     { i: 4, tag: "phon.epenthesis", heard: "istation" },
@@ -652,32 +654,57 @@ const hear = (body: unknown) =>
     body: JSON.stringify(body),
   });
 
-Deno.test("pron_check sends the recording with the numbered sentence", async () => {
-  const primary = fakeModel(lite, "gemini", () => answer(heard));
-  const { handle, recorded, lines } = setup({ models: [primary.model] });
-
-  const response = await handle(hear(pronInput));
-
-  assertEquals(response.status, 200);
-  const body = await response.json();
-  assertEquals(body.uncertain, false);
-  assertEquals(body.issues, [
-    { i: 1, word: "work", tag: "phon.w_v", heard: "vork" },
-    { i: 4, word: "station", tag: "phon.epenthesis", heard: "istation" },
-  ]);
-  assertEquals(body.prompt_version, "pron_check@1");
-  assertEquals(body.catalog, "tr-en@1");
-  const request = primary.asked[0];
-  assertEquals(request.schemaName, "pron_check");
-  assertEquals(request.audio, { data: wav, mimeType: "audio/wav" });
-  assert(request.user.includes("[0]We [1]work [2]at [3]the [4]station"));
-  assert(request.system.includes("phon.w_v"));
-  assert(!request.system.includes("art.missing"), "only pronunciation tags");
-  assertEquals(recorded[0].route, "pron_check");
-  for (const line of lines) {
-    assert(!line.includes("station") && !line.includes(wav), "no text in logs");
+/** Opens pron_check on [chain] for one test: no model passed its eval yet. */
+async function withPronChain(chain: string[], body: () => Promise<void>) {
+  const route = llmConfig.routes.pron_check as { chain: readonly string[] };
+  const before = route.chain;
+  route.chain = chain;
+  try {
+    await body();
+  } finally {
+    route.chain = before;
   }
+}
+
+Deno.test("pron_check is closed until a model passes its eval", async () => {
+  const primary = fakeModel(lite, "gemini", () => answer(heard));
+  const { handle } = setup({ models: [primary.model] });
+  const response = await handle(hear(pronInput));
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
+  assertEquals(primary.asked.length, 0);
 });
+
+Deno.test("pron_check sends the recording with the numbered sentence", () =>
+  withPronChain([lite], async () => {
+    const primary = fakeModel(lite, "gemini", () => answer(heard));
+    const { handle, recorded, lines } = setup({ models: [primary.model] });
+
+    const response = await handle(hear(pronInput));
+
+    assertEquals(response.status, 200);
+    const body = await response.json();
+    assertEquals(body.uncertain, false);
+    assertEquals(body.issues, [
+      { i: 1, word: "work", tag: "phon.w_v", heard: "vork" },
+      { i: 4, word: "station", tag: "phon.epenthesis", heard: "istation" },
+    ]);
+    assertEquals(body.prompt_version, "pron_check@2");
+    assertEquals(body.catalog, "tr-en@1");
+    const request = primary.asked[0];
+    assertEquals(request.schemaName, "pron_check");
+    assertEquals(request.audio, { data: wav, mimeType: "audio/wav" });
+    assert(request.user.includes("[0]We [1]work [2]at [3]the [4]station"));
+    assert(request.system.includes("phon.w_v"));
+    assert(!request.system.includes("art.missing"), "only pronunciation tags");
+    assertEquals(recorded[0].route, "pron_check");
+    for (const line of lines) {
+      assert(
+        !line.includes("station") && !line.includes(wav),
+        "no text in logs",
+      );
+    }
+  }));
 
 Deno.test("pron_check needs a WAV recording, a sentence and a known pair", async () => {
   const primary = fakeModel(lite, "gemini", () => answer(heard));
@@ -716,14 +743,15 @@ Deno.test("pron_check needs a WAV recording, a sentence and a known pair", async
   assertEquals(primary.asked.length, 0);
 });
 
-Deno.test("pron_check asks no one without consent: shadowing goes on unheard", async () => {
-  const primary = fakeModel(lite, "gemini", () => answer(heard));
-  const { handle } = setup({
-    models: [primary.model],
-    state: { consent: false, use: new Map() },
-  });
-  const response = await handle(hear(pronInput));
-  assertEquals(response.status, 503);
-  assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
-  assertEquals(primary.asked.length, 0);
-});
+Deno.test("pron_check asks no one without consent: shadowing goes on unheard", () =>
+  withPronChain([lite], async () => {
+    const primary = fakeModel(lite, "gemini", () => answer(heard));
+    const { handle } = setup({
+      models: [primary.model],
+      state: { consent: false, use: new Map() },
+    });
+    const response = await handle(hear(pronInput));
+    assertEquals(response.status, 503);
+    assertEquals(await response.json(), { error: { code: "llm_unavailable" } });
+    assertEquals(primary.asked.length, 0);
+  }));

@@ -102,7 +102,7 @@ Her görev bir ya da daha fazla can-do kodunu destekler. Görev sonucu `done | p
 
 ## 6. L4 — Hata profili
 
-- **Veri:** Serbest üretimdeki (konuşma ve yazma) hata etiketleri, kelime sayısıyla birlikte. Algı hataları (`perc.*`, dikte) ve telaffuz hataları (`pron.*`, gölgeleme) ayrı gruplarda tutulur.
+- **Veri:** Serbest üretimdeki (konuşma ve yazma) hata etiketleri, kelime sayısıyla birlikte. Algı hataları (`perc.*`, dikte) ve telaffuz hataları (`phon.*`, gölgeleme) ayrı gruplarda tutulur.
 - **Oran:** `r_t = etiket t hataları / 100 kelime`, haftalık hesaplanır. Haftada en az 200 kelime veri yoksa hafta "yetersiz veri" sayılır.
 - **Eğilim:** Haftalık oranların üssel hareketli ortalaması (EWMA, α = 0,3).
 - **Durumlar:**

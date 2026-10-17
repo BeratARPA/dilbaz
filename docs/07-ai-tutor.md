@@ -22,6 +22,7 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
   | `answer_check` | Gemini 3.1 Flash-Lite | – (Groq eşikleri geçmedi, 2026-10-10) | Deterministik değerlendirme |
   | `gap_suggest` | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite → Groq | Yakalama + bekleyen öneri |
   | `speaking_annotate` (aylık test dahil) | Gemini 3.5 Flash | Gemini 3.1 Flash-Lite | Deterministik akıcılık ölçümleri; işaretleme sonradan |
+  | `pron_check` (ADR-0011) | – (Flash-Lite eşikleri geçmedi, 2026-10-17; yalnızca ses duyan modeller adaydır) | – | Tanıma karşılaştırması + kendini dinleme |
   | Sonraki fazların rotaları | O fazda eval ile seçilir | | |
 
   - **Model kimlikleri** (Gemini belgeleri, 2026-09-30): `gemini-3.1-flash-lite` belgelerin düşük maliyetli ve yüksek hacimli işler için önerdiği kararlı, uzun ömürlü model; `gemini-3.5-flash` genel kullanımda (GA). ADR-0009'daki "Flash-Lite 3.5" belgelerde yok.
@@ -38,6 +39,7 @@ Bu doküman Dilbaz'ın LLM kullanımını tanımlar: rotalar, sağlayıcı ve mo
   | `gap_suggest` | low | |
   | `roleplay_turn` | low | Gecikme önemli |
   | `comprehension_check` | low | |
+  | `pron_check` | low | |
   | `speaking_annotate` | medium (aylık testte high) | |
   | `roleplay_debrief` | medium | |
   | `writing_feedback` | medium | |
@@ -226,7 +228,21 @@ Output = { l2_natural: string, l2_simple: string,
 - **Cevap:** sözleşmedeki alanlar + `above_level` (son `l2_simple`'ın seviye üstü kelimeleri), `simplified`, `provider`, `model`.
 - **Hata kodları:** `answer_check` ile aynı; boş metin `missing_text` (400, cevapsız çağrı yok, I-11), seviye listesi olmayan dil `unsupported_pair`. Hiçbir model cevap vermezse istemci yakalamayı "öneri bekliyor" olarak saklar ve sonra yeniden dener.
 
-### 4.4 `roleplay_turn` ve `roleplay_debrief` (A13)
+### 4.4 `pron_check` — gölgeleme telaffuzu (A07, ADR-0011)
+
+```ts
+Input  = { ctx, reference: string, audio: { data: base64, mime_type: "audio/wav" } }   // ≤ 15 sn, 16 kHz
+Output = { uncertain: boolean, issues: { i: number, word: string, tag: string, heard: string }[],
+           catalog: string, prompt_version: string, provider: string, model: string }
+```
+
+- **Rota (F2-05):** `POST /functions/v1/tutor/pron_check`, prompt `_shared/prompts/pron_check.ts`. Ses Gemini'ye `inlineData` olarak, mesajdan önce gider. Zincir yalnızca ses duyan modellerden kurulur (`llm_config.ts` `audio: true`); Groq adaptörü sesli isteği ağa çıkmadan reddeder.
+- **Etiketler:** Çift kataloğunun `pronunciation` kategorisi (tr-en: 7 `phon.*`). İstemde etiketlerin yalnızca açıklaması durur; örnekler ("vork") modelin onları duymasına yol açtı (`@1` eval'i).
+- **Model cevabı:** Önce her kelimenin nasıl duyulduğu (`words`: IPA), sonra sorunlar. Sunucu `words`'ü döndürmez; dizini cümle dışında kalan, aynı kelimede aynı etiketi tekrarlayan sorunları atar, en fazla 6 sorun, `uncertain` ise sorun yok. Kelime metnini sunucu kendi numaralandırmasından koyar.
+- **Durum (2026-10-17, 👤 karar):** Zincir boş; rota `llm_unavailable` döner ve uygulama tanıma karşılaştırmasıyla sürer. Uygulama yine de sorar: bir model eval'i geçip zincire girince uygulama güncellemesi gerekmez.
+- **Hata kodları:** `answer_check` ile aynı. WAV dışı ya da > ~16 sn ses `invalid_input`; telaffuz etiketi olmayan çift `unsupported_pair`. Onay yoksa `llm_unavailable`: uygulama yalnızca tanıma karşılaştırmasını gösterir.
+
+### 4.5 `roleplay_turn` ve `roleplay_debrief` (A13)
 
 ```ts
 TurnInput  = { ctx, scenario: { ai_role, learner_role, learner_goal, setting },
@@ -243,7 +259,7 @@ DebriefOutput = { task_outcome, strengths: string[], top_corrections: [...en faz
 - Yapay zekâ öğrencinin seviyesinde konuşur. Cevaplar kısadır (1–2 cümle), ara sıra doğal netleştirme soruları sorar.
 - Konuşma sırasında **düzeltme yapmaz**. Hatalar `hidden_notes`'a gider.
 
-### 4.5 `writing_feedback` (A20)
+### 4.6 `writing_feedback` (A20)
 
 ```ts
 Output = { strengths: string[],
@@ -252,7 +268,7 @@ Output = { strengths: string[],
            rewrite_focus: string[] }                  // en fazla 3 odak
 ```
 
-### 4.6 `mediation_check` (A21) ve `comprehension_check` (A16, A17)
+### 4.7 `mediation_check` (A21) ve `comprehension_check` (A16, A17)
 
 ```ts
 MediationOutput     = { covered_points: string[], missed_points: string[],
@@ -260,7 +276,7 @@ MediationOutput     = { covered_points: string[], missed_points: string[],
 ComprehensionOutput = { result: "correct"|"partial"|"wrong", feedback: string }
 ```
 
-### 4.7 İçerik rotaları (Claude Code oturumları, çevrimdışı)
+### 4.8 İçerik rotaları (Claude Code oturumları, çevrimdışı)
 
 İçerik hattı (`10-content-pipeline.md`) çalışma anı LLM'i kullanmaz (ADR-0009). Aşağıdaki işler Claude Code oturumlarında yapılır. Çıktılar `content/work/` altına JSONL olarak yazılır ve pydantic şemalarıyla doğrulanır:
 
@@ -375,6 +391,8 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   | speaking_annotate | EFC oranı mutlak farkı (medyan) | ≤ 0,10 |
   | speaking_annotate | Görev sonucu uyumu | ≥ %85 |
   | gap_suggest | Seviye üstü kelime (A seviyeleri, `l2_simple`) | ≤ 1 kelime/cümle, A seviyesi cevapların en az %95'inde |
+  | pron_check | Doğru söylenmiş cümlede yanlış alarm | ≤ %10 |
+  | pron_check | Hatanın kendi kelimesinde, doğru etiketle bulunması | ≥ %60 |
   | roleplay_turn | Seviye+1 üstü kelime oranı | ≤ %5 |
   | roleplay_turn | Konuşma sırasında düzeltme | %0 |
 
@@ -385,6 +403,8 @@ LLM rotalarının kalitesi ölçülmeden prompt ya da model değiştirilmez.
   - `gap_suggest@1`: Flash-Lite 44 vaka, seviye %100 ✓, şema %95,5, p50 10,4 sn. 3.5 Flash ilk 20 vakada seviye %100, p50 1,4 sn.
   - `speaking_annotate@1`: Flash-Lite 30 vaka, F1 0,96 ✓, EFC farkı 0 ✓, görev sonucu %96,7 ✓. Sızıntı denetimi 9 ipucunu boşalttı; öğrenciye sızan yok.
     - 3.5 Flash (2026-10-10, günlük 20 istek sınırıyla 7/30): F1 1,0 ✓, etiket uyumu 1,0, EFC farkı 0 ✓, görev sonucu 1,0 ✓, şema %100; denetim 2 ipucunu boşalttı, öğrenciye sızan yok; p50 10,4 sn. Kalan 23 vaka günlük kotayla Faz 2 sırasında koşar.
+- **`pron_check` (F2-05, ADR-0011):** Set `evals/pron/cases.json`: 21 cümle, her biri bir kez doğru, bir kez bir kelimesi bilerek yanlış söylenmiş (7 etiketin her biri 3 cümle). Ses Kokoro'nun ses birimi girişiyle üretilir (`pron/make_audio.py`, 16 kHz WAV, git dışı); hata tam istenen sestir. Çalıştırıcı `pron/run.ts --models <id>`, puanlama `pron/score.ts`. Gerçek öğrenci sesi 👤 kayıtlarla eklenecek.
+  - **Sonuçlar (2026-10-17, Flash-Lite, 42 vaka):** `@1` yanlış alarm %90,5 ✗, bulma %61,9; istemdeki örnekleri ("vork") doğru söylenmiş cümlede de duydu. `@2` (örnekler çıktı, önce kelime kelime IPA, "çoğu kelime doğrudur") yanlış alarm %14,3 ✗, bulma %33,3 ✗; ünlü uzunluğu, araya ünlü ve vurgu hiç bulunmadı. Zincir boş bırakıldı (👤 karar). 3.5 Flash denenmedi: günde 20 isteği gölgelemeye yetmez.
 - **Öğrenciye yansıyan uyum:** Katı karar doğruluğu kart için sonucu tek başına göstermez. Örneğin `minor_error` ve `target_ok=true` öğrenciyi geçirir, `wrong` kaldırır. Bu yüzden kararlar geçti/kaldı olarak da karşılaştırılır; `minor_error`'da hedefi motorun hükmü verir (ADR-0010). Henüz eşik değil, raporlanır.
 - **Deterministik denetleyici:** Aynı `answer_check` altın seti, deterministik değerlendirme için birim testi olarak CI'da çalışır (`packages/engine/test/scoring/answer_check_golden_test.dart`). Eşikler:
   - doğru ya da varyant cevabı "yanlış" sayma ≤ %3

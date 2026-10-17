@@ -9,21 +9,26 @@
 import type { Catalog } from "../catalogs/catalog.ts";
 import type { PronCheckInput } from "../schemas/pron_check.ts";
 
-export const pronCheckPromptVersion = "pron_check@1";
+export const pronCheckPromptVersion = "pron_check@2";
 
 /** The catalog category this route judges. */
 export const pronCategory = "pronunciation";
 
 const rules =
-  `You listen for Dilbaz, an app in which Turkish speakers learn English by speaking. The learner heard an English sentence and repeated it. You get the recording and the sentence, its words numbered. You say which words the learner pronounced in a way that would make them hard to understand, and what kind of problem each is. The app shows the learner at most two of them; it never shows a score.
+  `You listen for Dilbaz, a language app. A learner heard an English sentence and repeated it. You get the recording and the sentence, its words numbered. You report how each word actually sounded, and which words were pronounced in a way that would make them hard to understand. The app shows the learner at most two problems; it never shows a score.
+
+# How to listen
+- Judge the sound you hear, not what learners often get wrong. Do not expect mistakes: most words of most recordings are said well, and the most common right answer is an empty issues list.
+- First write words: for every numbered word, in order, i and sounded = how it actually sounded in this recording, in IPA. Write what you hear, even when it is the standard pronunciation.
+- Then compare each sounded with the word's standard pronunciations (American, British and other standard accents are all right). A word has a problem only when its sound clearly differs from all of them in a way of the tag catalog below.
 
 # What to mark
-- Only problems of the tag catalog below, each on the word where you hear it: i = the word's number, tag = the problem's tag, heard = how the word sounded, in plain letters a Turkish speaker can read ("vork", "istation", "tink").
-- The criterion is being understood, not a native accent. American, British and other accents are all right. A Turkish accent that does not change or blur the word is all right.
-- Mark only what you clearly hear. When you are not sure a word was said wrong, do not mark it. A wrong alarm teaches the learner a mistake they did not make.
-- Do not mark words the learner left out, added or replaced with another word: the app finds those from speech recognition. Do not mark hesitations, repeats or speed.
-- A word may have two problems of different tags; then mark both. Never mark the same tag twice on one word.
-- uncertain: true when the recording is silent, mostly noise, cut off, or clearly not this sentence; then issues is empty. Otherwise false, and issues may be empty: a sentence said well has no issues.
+- issues: one per problem, on the word where you hear it: i = the word's number, tag = the problem's tag, heard = how the word sounded, in plain letters a Turkish speaker can read.
+- The criterion is being understood, not a native accent. A foreign accent that does not change or blur the word is all right.
+- When you are not sure a word was said wrong, do not mark it. A wrong alarm teaches the learner a mistake they did not make.
+- Do not mark words left out, added or replaced with another word: the app finds those from speech recognition. Do not mark hesitations, repeats or speed.
+- A word may have two problems of different tags; never the same tag twice on one word.
+- uncertain: true when the recording is silent, mostly noise, cut off, or clearly not this sentence; then issues is empty.
 
 # Rules
 - Use only tags of the tag catalog; never invent one.
@@ -33,7 +38,8 @@ const rules =
 export function pronCheckSystemPrompt(catalog: Catalog): string {
   const tags = catalog.errorTags
     .filter((tag) => tag.category === pronCategory)
-    .map((tag) => `- ${tag.code}: ${tag.description} (${tag.example})`)
+    // No examples: they made the model hear them (pron_check@1 eval).
+    .map((tag) => `- ${tag.code}: ${tag.description}`)
     .join("\n");
   return `${rules}\n\n# Tag catalog (${catalog.pack})\nDescriptions are in the learner's language.\n${tags}`;
 }

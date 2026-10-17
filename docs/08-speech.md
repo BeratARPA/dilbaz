@@ -96,6 +96,8 @@ interface TextToSpeech {
 }
 ```
 
+`PronunciationAssessor` Azure içindi ve kullanılmıyor (ADR-0011): telaffuzu `tutor/pron_check` rotası Gemini'ye dinletir (`07` §4.4), kelime tanıma `SpeechToText` ile ayrıca yapılır.
+
 Adaptörler `supabase/functions/_shared/speech/` altındadır: `deepgram.ts` (F1-14), Türkçe sunucu yedeği için `groq_stt.ts` (F1-17: Groq `whisper-large-v3`, `language=tr`, `verbose_json`; ücretsiz katman, `speech_usage`'da maliyet 0; `transcribe?lang=tr`, Groq anahtarı yoksa `stt_unavailable`), Faz 2'de karşılaştırma testinin adayları. Hangi rotanın hangi adaptörü kullandığı `speech_config.ts` dosyasında tanımlıdır. Cihaz üstü tanıma ve dinamik TTS istemcide, `app/lib/data/speech/` altında aynı arayüzlerin Dart karşılıklarıyla çalışır. Türkçe dikte (F1-17, `DeviceFirstDictation`): cihaz tanıyıcısı (`speech_to_text` 7.5) Türkçe yerel ayarını listeliyorsa ses cihazda kalır; listelemiyorsa (Windows'ta Türkçe paketi yoksa, bazı web tarayıcılarında) kayıt `transcribe?lang=tr`'ye gider. Karar dinlemeden önce verilir, çünkü cihaz tanıyıcısı sesi saklamaz. `TextToSpeech` arayüzü sunucuda yalnızca bir sağlayıcı seçilirse kullanılır.
 
 ## 4. Kayıt formatları (istemci)
@@ -183,22 +185,13 @@ kayıt ─▶ cihazda dosya ─▶ Storage audio-private/{uid}/{yyyy}/{mm}/{uuid
 
 ## 7. Telaffuz değerlendirmesinin kullanımı (A07)
 
-> Sağlayıcı Faz 2 başında seçilir (ADR-0009). Aşağıdaki eşleme Azure'un hata türleri içindir. Başka bir sağlayıcı seçilirse onun çıktısı aynı `pron.*` etiketlerine eşlenir.
+> ADR-0011 (2026-10-17): Azure yerine iki katman. Gemini katmanı eval'i geçemediği için şimdilik kapalı; gölgeleme tanıma karşılaştırması ve kendini dinlemeyle çalışır. Kayıt `speech/transcribe` ile yazıya geçer (hangi kelimeler tanındı) ve `tutor/pron_check` ile Gemini'ye dinletilir (hangi kelimede hangi sorun). Puan yoktur.
 
-- **Yerel ayar `en-US`:** IPA ses adları ve prozodi yalnızca bu yerel ayarda var. Aksan olarak Amerikan İngilizcesi hedeflenmez; ölçüt anlaşılırlıktır (P17).
-- Azure hata türleri Dilbaz `pron.*` etiketlerine eşlenir:
-
-  | Azure | Dilbaz etiketi | Not |
-  |---|---|---|
-  | Mispronunciation + ses düzeyi (/ɪ/↔/iː/) | `pron.vowel_length` / `pron.vowel_quality` | Eşleme tablosu tr-en paketinde |
-  | Mispronunciation (/w/↔/v/) | `pron.w_v` | |
-  | Mispronunciation (sonda /d/→/t/) | `pron.final_devoicing` | |
-  | Insertion (küme başında) | `pron.epenthesis` | "istation" |
-  | Omission | `pron.omission` | -s/-ed düşmesi dahil |
-  | UnexpectedBreak / MissingBreak | `pron.phrasing` | |
-  | Monotone | `pron.intonation` | B1+ |
-
-- Kullanıcıya **yalnızca öncelik listesindeki** (`02` §6) ve o anki seviyesiyle ilgili en fazla 2 sorun gösterilir. Sayısal puanlar ekranda not gibi durmaz. İlerleme ekranında eğilim olarak görünür (I-04).
+- **Kayıt:** WAV PCM16, 16 kHz, mono, en fazla 15 sn (`RecorderConfig.pronunciation`). Ses sunucuda saklanmaz; öğrenci kendini dinleyebilsin diye cümle bitene kadar cihazda durur.
+- **Etiketler:** Çift paketinin `pronunciation` kategorisi. tr-en'de: `phon.vowel_length` (ünlü uzunluğu ve /æ/–/e/), `phon.w_v`, `phon.final_devoicing`, `phon.epenthesis`, `phon.spelling` (sessiz harf, -ed ayrı hece), `phon.th`, `phon.word_stress`. Ölçüt anlaşılırlıktır, aksan değil (P17).
+- **Tanıma karşılaştırması:** Söylenmeyen ya da başka kelime olarak tanınan kelimeler ayrıca gösterilir; etiketlenmez (ASR dil modeli yanlış söyleneni doğru kelimeye düzeltebilir, bu yüzden tek başına telaffuz kanıtı değildir).
+- Kullanıcıya en fazla 2 sorun gösterilir; sırayı paketteki `severity` verir (`02` §6'ya göre: birinci basamak 0,3–0,4, ikinci basamak 0,2). Sayısal puanlar ekranda not gibi durmaz. İlerleme ekranında etiket eğilimi olarak görünür (I-04).
+- **Bilinen sınırlar:** Ses birimi puanı (GOP), prozodi ve tonlama ölçümü yok; `pron.omission`, `pron.phrasing`, `pron.intonation` gibi Azure'a bağlı etiketler katalogda yok.
 
 ## 8. Seslendirme (TTS)
 

@@ -2508,7 +2508,7 @@
   "@shadowingUncertain": {
     "description": "Shadowing: the recording could not be judged."
   },
-  "shadowingNotHeard": "Telaffuzunu şu an dinleyemiyorum. Kendi sesini model sesle karşılaştırabilirsin.",
+  "shadowingNotHeard": "Telaffuzu şimdilik yalnızca tanınan kelimelerle değerlendiriyorum. Kendini ve modeli dinleyip karşılaştır: farklı duyulan bir ses var mı?",
   "@shadowingNotHeard": {
     "description": "Shadowing: no pronunciation check (no consent, quota or connection)."
   },

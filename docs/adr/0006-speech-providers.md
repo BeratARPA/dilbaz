@@ -1,6 +1,6 @@
 # ADR-0006 — Ses sağlayıcıları
 
-- **Durum:** Kabul edildi, **Faz 2 karşılaştırma testiyle kesinleşecek** (2026-09-26). **ADR-0009 ile kısmen değiştirildi:** Azure kullanılmıyor (kart gerekiyor). İngilizce ASR Deepgram kayıt kredisiyle; Türkçe ASR ve dinamik TTS cihaz üstü; paket sesleri Kokoro ile çevrimdışı; telaffuz kararı Faz 2 başında.
+- **Durum:** Kabul edildi, **Faz 2 karşılaştırma testiyle kesinleşecek** (2026-09-26). **ADR-0009 ile kısmen değiştirildi:** Azure kullanılmıyor (kart gerekiyor). İngilizce ASR Deepgram kayıt kredisiyle; Türkçe ASR ve dinamik TTS cihaz üstü; paket sesleri Kokoro ile çevrimdışı; telaffuz kararı Faz 2 başında. **Telaffuz ADR-0011 ile değişti:** Gemini ses dinleme + ASR karşılaştırması.
 
 ## Bağlam
 Öğrenci konuşmasının transkripti kelimesi kelimesine olmalı. Araştırmalar Whisper'ın öğrenci hatalarını ve duraksamalarını "düzelttiğini" gösteriyor (`08` §2). Ayrıca telaffuz değerlendirmesi, Türkçe konuşma tanıma ve çok sesli TTS gerekiyor.

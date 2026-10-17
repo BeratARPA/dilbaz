@@ -129,10 +129,12 @@ export const llmConfig = {
       maxTokens: 12000,
       timeoutMs: 60_000,
     },
-    // Hears a shadowed sentence (ADR-0011): only models that hear; Flash's
-    // 20 requests a day are too few for shadowing.
+    // Hears a shadowed sentence (ADR-0011): only models that hear. Closed
+    // until one passes the eval: Flash-Lite missed the thresholds
+    // (2026-10-17: @1 14 of 21 right sentences given a problem; @2 a third
+    // of the mistakes found). Shadowing goes on with recognition alone.
     pron_check: {
-      chain: ["gemini-3.1-flash-lite"],
+      chain: [],
       effort: "low",
       maxTokens: 3000,
       timeoutMs: 30_000,

@@ -149,7 +149,7 @@ Konuşma hedefi olduğu için sesli üretim önde (P3). **Odak bonusu:** haftal�
 | A22 Hata odağı | language | Haftalık odak var |
 | A08 Karşıtlık | language | İkisi de `recallable` olan en az 3 karşıtlık çifti var |
 | A05 Dikte | language | A1+ |
-| A06 Ses ayırt etme | language | `perc.*` ya da `pron.*` etiketi kalıcıysa ya da A0–A1 ise |
+| A06 Ses ayırt etme | language | `perc.*` ya da `phon.*` etiketi kalıcıysa ya da A0–A1 ise |
 | A23 Aylık test | — | Davet olarak eklenir, seçeneklerin yerini almaz |
 
 ## 5. Süre tahminleri

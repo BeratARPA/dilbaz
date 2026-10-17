@@ -29,7 +29,8 @@ Deno.test("route settings follow docs/07 §2–§3", () => {
 
 Deno.test("pronunciation is heard only by models that hear (ADR-0011)", () => {
   const route = llmConfig.routes.pron_check;
-  assert(route.chain.length > 0);
+  // No model passed the eval yet (docs/07 §8): the route waits.
+  assertEquals(route.chain, []);
   for (const id of route.chain) {
     assertEquals(llmConfig.models[id].audio, true, id);
     assertEquals(llmConfig.models[id].provider, "gemini", id);

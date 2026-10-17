@@ -40,6 +40,7 @@ Deno.test("the kit knows the pair's pronunciation tags only", () => {
 Deno.test("an answer outside the closed list is no answer (I-11)", () => {
   const valid: PronCheckWire = {
     uncertain: false,
+    words: [],
     issues: [{ i: 1, tag: "phon.th", heard: "tink" }],
   };
   assertEquals(parsePronWire(kit, JSON.stringify(valid)), valid);
@@ -62,6 +63,7 @@ Deno.test("the server keeps indices inside, one tag per word, nothing when uncer
     input,
     {
       uncertain: false,
+      words: [],
       issues: [
         { i: 1, tag: "phon.th", heard: "  tink " },
         { i: 1, tag: "phon.th", heard: "sink" },
@@ -86,6 +88,7 @@ Deno.test("the server keeps indices inside, one tag per word, nothing when uncer
     input,
     {
       uncertain: false,
+      words: [],
       issues: Array.from({ length: 6 }, (_, i) => [
         { i, tag: "phon.th", heard: "" },
         { i, tag: "phon.w_v", heard: "" },
@@ -100,6 +103,7 @@ Deno.test("the server keeps indices inside, one tag per word, nothing when uncer
     input,
     {
       uncertain: true,
+      words: [],
       issues: [{ i: 1, tag: "phon.th", heard: "tink" }],
     },
     kit,

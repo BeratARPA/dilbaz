@@ -204,6 +204,16 @@ Kota ve hız için LLM'den önce çalışır. LLM erişilemezse tek başına ça
   4. Öncelik listesindeki (`02` §6) en önemli 1–2 sorun gösterilir.
   5. Tekrar denenir.
 - **Kanıt:** Ses denetimi (phonological control) göstergeleri.
+- **Uygulama (F2-05, ADR-0011):**
+  - **Seçim:** Diktenin seçimi (`pickDictations`): kişisel kapsaması ≥ %95 (I-06), seviyesi öğrencininki ya da altı, paket sesi olan 5 cümle. Gölgelemenin kartı yoktur; her cümle yenidir.
+  - **Akış:** Pratik → "Gölgeleme". Cümle yazılı durur (gölgeleme dinleme testi değildir); önce dinlenir, sonra söylenir ("sonra" biçimi; üst üste söyleme sonraya kaldı). Kayıt 16 kHz WAV, en fazla 15 sn.
+  - **Değerlendirme:** Kayıt aynı anda `speech/transcribe`'a (hangi kelimeler tanındı; motor `DictationCheck` ile hizalar) ve `tutor/pron_check`'e (Gemini; hangi kelimede hangi `phon.*` sorunu) gider. Motor en fazla 2 sorunu seçer (`pickPronIssues`: kalıcı etiketler, sonra paketteki `severity`, sonra sıklık; her etiketten bir).
+  - **Sonuç ekranı:** Cümle kelime kelime (tanınmayan ya da sorunlu kelimeler altı çizili ve vurgulu, kırmızı değil; I-12), sorunlar kelime + "nasıl duyuldu" + etiketin Türkçe açıklamasıyla. "Kendini dinle" ve "Modeli dinle". Sorun ya da tanınmayan kelime varsa bir kez "Bir kez daha söyle" (adım 5). Puan yok (I-04).
+  - **Şu anki durum:** `pron_check`'in zinciri boş (Flash-Lite eval'i geçemedi, ADR-0011); sonuç ekranı tanıma karşılaştırması ve kendini dinlemeyle çalışır.
+  - **Gemini dinleyemezse** (zincir boş, onay yok, kota, bağlantı): Yalnızca tanıma karşılaştırması ve kendini dinleme kalır (ADR-0009'daki puansız yol). Kayıt değerlendirilemezse (`uncertain`) öğrenciye kendini dinleyip yeniden denemesi önerilir.
+  - **Kayıt:** Öğrencinin sesi yalnızca cümle ekrandayken cihazda durur, sonra silinir; sunucuda saklanmaz. Her deneme `attempts`'e yazılır (`activity = shadowing`, I-03); üretim kanıtı sayılmaz (I-05).
+  - **Oturum:** `fluency` kolu.
+  - **Sonraya kalanlar:** Üst üste söyleme; A06 ses ayırt etmeye yönlendirme; hata profiline yazma (F3-02); Bugün'de öneri (F3-01).
 
 ## A08 — Karşıtlık alıştırması (`contrast_drill`)
 - **Amaç:** Karışan öğeleri ayırt etmek (P12). Örnekler: say/tell, house/home, Past Simple/Present Perfect, a/the, he/she.

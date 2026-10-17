@@ -36,6 +36,10 @@ export function pronCheckWire(tags: readonly [string, ...string[]]) {
   return z.strictObject({
     /** The recording is silent, noise, or not the sentence. */
     uncertain: z.boolean(),
+    /** How each word sounded, written before judging it (IPA). */
+    words: z.array(
+      z.strictObject({ i: z.number().int().min(0), sounded: z.string() }),
+    ),
     issues: z.array(
       z.strictObject({
         /** Index of the word in the numbered sentence. */

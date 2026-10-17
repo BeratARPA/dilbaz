@@ -1,0 +1,22 @@
+{
+  "prompt": "pron_check@1",
+  "model": "gemini-3.1-flash-lite",
+  "answered": 42,
+  "failed": 0,
+  "falseAlarm": 0.905,
+  "found": 0.619,
+  "onWord": 0.714,
+  "strayPerCase": 0.19,
+  "uncertain": 0,
+  "byTag": {
+    "phon.w_v": 0.667,
+    "phon.th": 0.667,
+    "phon.vowel_length": 0.333,
+    "phon.final_devoicing": 0.667,
+    "phon.epenthesis": 0.667,
+    "phon.spelling": 1,
+    "phon.word_stress": 0.333
+  },
+  "medianLatencyMs": 1850,
+  "passes": false
+}
