@@ -2664,9 +2664,9 @@
       }
     }
   },
-  "weekNothing": "Bu hafta için henüz kayıt yok.",
+  "weekNothing": "Bu tarihlerde kayıt yok.",
   "@weekNothing": {
-    "description": "Week summary: nothing recorded in the week."
+    "description": "Week summary: nothing recorded in the week shown, this one or the last; the dates are above it."
   },
   "weekDays": "{days} / {goal} gün",
   "@weekDays": {
