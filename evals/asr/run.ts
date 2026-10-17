@@ -264,10 +264,25 @@ async function main() {
   }
   const day = new Date().toISOString().slice(0, 10);
   await Deno.mkdir(join(here, "results"), { recursive: true });
+  // The day's scores of this set, the latest of each candidate.
+  const path = join(here, "results", `${day}-${set}.json`);
+  let earlier: { candidate: string }[] = [];
+  try {
+    earlier = JSON.parse(await Deno.readTextFile(path)).scores;
+  } catch (error) {
+    if (!(error instanceof Deno.errors.NotFound)) throw error;
+  }
+  const merged = [
+    ...earlier.filter((s) => !names.includes(s.candidate)),
+    ...scores,
+  ].sort((a, b) => a.candidate.localeCompare(b.candidate));
   await Deno.writeTextFile(
-    join(here, "results", `${day}-${set}.json`),
-    JSON.stringify({ set, recordings: recordings.size, scores }, null, 2) +
-      "\n",
+    path,
+    JSON.stringify(
+      { set, recordings: recordings.size, scores: merged },
+      null,
+      2,
+    ) + "\n",
   );
 }
 
