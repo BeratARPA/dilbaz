@@ -286,6 +286,12 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - Öğrenme bilimi notu (A25)
 - Partnerle ortak hedef durumu
 
+**Uygulama notları (F2-11):**
+- **Nerede:** İlerleme sekmesinin başında "Haftalık özet". Bugün ekranında sessiz bir kart: pazar günü, o hafta bir şey yapıldıysa "Bu haftanın özeti"; yeni haftanın ilk açılışında, henüz bir şey yapılmamışken ve geçen hafta çalışıldıysa "Geçen haftanın özeti". Hafta başlayınca kart kendiliğinden kalkar; "görüldü" durumu tutulmaz.
+- **Sayfa:** Bu hafta / Geçen hafta seçimi, tarihler (pazartesiden), "3 / 5 gün", toplam dakika ve kollara göre dakika (dil çalışması, konuşma, akıcılık, dinleme ve okuma). Altında yalnızca yapılanlar: kart tekrarı ve yeni öğe, konuşma görevi, kaydedilen konuşma dakikası, aylık kayıt, 4/3/2, dikte cümlesi, gölgeleme cümlesi, Söyleyemedim notu. Yüzde yok (I-04); yapılmayan sayılmaz (I-12). Hiçbir şey yoksa "Bu hafta için henüz kayıt yok.".
+- **Sayım:** Hafta öğrencinin yerel pazartesisinden başlar. Kart tekrarı = puanlı kart cevapları − bu hafta tanıtılan öğeler (ilk kartları tanıtımdır); yeni öğe, öğenin ilk kartının tarihine göre. Gölgeleme ve 4/3/2 ilk denemelerinden sayılır.
+- **Sonraya kalanlar:** Haftanın hata odağı (F3-04), öğrenme bilimi notu (F5-05), partnerle ortak hedef (F2-09), pazar akşamı bildirimi.
+
 ### 5.14 "Bugünlük yeter"
 - Özet: tekrar edilen kartlar, yeni kalıplar, konuşma dakikası, varsa somut bir gelişme.
 - Düşük vurgulu "Devam etmek istersen" bağlantısı.

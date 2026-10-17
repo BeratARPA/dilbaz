@@ -5,6 +5,7 @@ import 'package:dilbaz_app/data/repositories/card_providers.dart';
 import 'package:dilbaz_app/data/repositories/session_providers.dart';
 import 'package:dilbaz_app/features/cards/application/card_plan.dart';
 import 'package:dilbaz_app/features/sync/application/sync_controller.dart';
+import 'package:dilbaz_app/features/week/application/week_summary.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show ProviderListenableSelect;
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -63,6 +64,9 @@ abstract class TodayView with _$TodayView {
 
     /// The learner's habit anchor, for "see you tomorrow".
     String? anchor,
+
+    /// The week summary on offer (docs/09 §5.13).
+    WeekSummaryOffer? weekOffer,
   }) = _TodayView;
 }
 
@@ -82,6 +86,13 @@ Future<TodayView?> today(Ref ref) async {
   final plan = planned.plan;
   // A new item's first review is part of its introduction.
   final reviewed = await cards.reviewsSince(courseId, day) - planned.newToday;
+  final monday = startOfLocalWeek(now);
+  final daysThisWeek = (await sessions.daysSince(courseId, monday)).length;
+  final lastMonday = startOfLocalWeek(monday.subtract(const Duration(days: 1)));
+  final daysLastWeek = (await sessions.daysSince(
+    courseId,
+    lastMonday,
+  )).where((d) => d.isBefore(monday.toLocal())).length;
   return TodayView(
     greeting: TodayGreeting.of(now),
     dailyBudget: planned.settings.dailyBudget,
@@ -95,10 +106,12 @@ Future<TodayView?> today(Ref ref) async {
     reviewedToday: max(0, reviewed),
     introducedToday: planned.newToday,
     spentToday: planned.spentToday,
-    daysThisWeek: (await sessions.daysSince(
-      courseId,
-      startOfLocalWeek(now),
-    )).length,
+    daysThisWeek: daysThisWeek,
+    weekOffer: weekSummaryOffer(
+      now: now,
+      daysThisWeek: daysThisWeek,
+      daysLastWeek: daysLastWeek,
+    ),
     weeklyGoal: planned.settings.weeklyDaysGoal,
     anchor: planned.settings.anchor,
   );

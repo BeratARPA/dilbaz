@@ -23,6 +23,7 @@ import 'package:dilbaz_app/features/shadowing/presentation/shadowing_screen.dart
 import 'package:dilbaz_app/features/speaking/presentation/speaking_screen.dart';
 import 'package:dilbaz_app/features/today/presentation/today_screen.dart';
 import 'package:dilbaz_app/features/together/presentation/together_screen.dart';
+import 'package:dilbaz_app/features/week/presentation/week_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -177,6 +178,12 @@ GoRouter router(Ref ref) {
         path: AppRoutes.shadowing,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const ShadowingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.week,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) =>
+            WeekScreen(last: state.uri.queryParameters['last'] == '1'),
       ),
       GoRoute(
         path: AppRoutes.monthly,

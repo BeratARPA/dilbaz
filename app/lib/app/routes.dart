@@ -41,6 +41,10 @@ abstract final class AppRoutes {
   /// Shadowing, over the tabs (A07).
   static const shadowing = '/shadowing';
 
+  /// The week summary, over the tabs (docs/09 §5.13); last week's.
+  static const week = '/week';
+  static const weekLast = '/week?last=1';
+
   /// The monthly speaking test, over the tabs (A23).
   static const monthly = '/monthly';
 

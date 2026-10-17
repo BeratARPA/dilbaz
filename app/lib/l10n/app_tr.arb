@@ -2639,5 +2639,168 @@
   "widgetDescription": "Bugünün kartları ve Söyleyemedim",
   "@widgetDescription": {
     "description": "Home screen widget: its description in the widget picker (android strings.xml)."
+  },
+  "weekTitle": "Haftalık özet",
+  "@weekTitle": {
+    "description": "Week summary: page title, and its entry on the Progress tab."
+  },
+  "weekThis": "Bu hafta",
+  "@weekThis": {
+    "description": "Week summary: this week."
+  },
+  "weekLast": "Geçen hafta",
+  "@weekLast": {
+    "description": "Week summary: last week."
+  },
+  "weekRange": "{from} – {to}",
+  "@weekRange": {
+    "description": "Week summary: its days.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "weekNothing": "Bu hafta için henüz kayıt yok.",
+  "@weekNothing": {
+    "description": "Week summary: nothing recorded in the week."
+  },
+  "weekDays": "{days} / {goal} gün",
+  "@weekDays": {
+    "description": "Week summary: days studied and the weekly goal.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "weekTime": "Toplam {minutes} dk",
+  "@weekTime": {
+    "description": "Week summary: time studied.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStrandLanguage": "Dil çalışması {minutes} dk",
+  "@weekStrandLanguage": {
+    "description": "Week summary: time on the language strand.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStrandOutput": "Konuşma {minutes} dk",
+  "@weekStrandOutput": {
+    "description": "Week summary: time on the output strand.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStrandFluency": "Akıcılık {minutes} dk",
+  "@weekStrandFluency": {
+    "description": "Week summary: time on the fluency strand.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStrandInput": "Dinleme ve okuma {minutes} dk",
+  "@weekStrandInput": {
+    "description": "Week summary: time on the input strand.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekCards": "{reviews} kart tekrarı · {fresh} yeni öğe",
+  "@weekCards": {
+    "description": "Week summary: cards reviewed and new items.",
+    "placeholders": {
+      "reviews": {
+        "type": "int"
+      },
+      "fresh": {
+        "type": "int"
+      }
+    }
+  },
+  "weekSpeakingTasks": "{count} konuşma görevi",
+  "@weekSpeakingTasks": {
+    "description": "Week summary: speaking tasks recorded.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekSpoken": "{minutes} dk konuşma kaydın var",
+  "@weekSpoken": {
+    "description": "Week summary: speech recorded.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekMonthly": "Aylık kaydını yaptın.",
+  "@weekMonthly": {
+    "description": "Week summary: the monthly recording was made."
+  },
+  "weekFluency": "{count} kez 4/3/2",
+  "@weekFluency": {
+    "description": "Week summary: 4/3/2 sets.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekDictation": "{count} dikte cümlesi",
+  "@weekDictation": {
+    "description": "Week summary: dictation sentences.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekShadowing": "{count} gölgeleme cümlesi",
+  "@weekShadowing": {
+    "description": "Week summary: shadowed sentences.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekCaptures": "{count} Söyleyemedim notu",
+  "@weekCaptures": {
+    "description": "Week summary: gap captures.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayWeekSummary": "Bu haftanın özeti",
+  "@todayWeekSummary": {
+    "description": "Today: the week summary on Sunday."
+  },
+  "todayLastWeekSummary": "Geçen haftanın özeti",
+  "@todayLastWeekSummary": {
+    "description": "Today: last week's summary on a new week's first opening."
   }
 }

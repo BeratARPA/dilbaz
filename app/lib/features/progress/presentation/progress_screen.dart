@@ -43,6 +43,15 @@ class ProgressScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 24,
                   children: [
+                    Card.outlined(
+                      margin: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: const Icon(Icons.insights_outlined),
+                        title: Text(l10n.weekTitle),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => context.push(AppRoutes.week),
+                      ),
+                    ),
                     _Evidence(view: view),
                     if (view.canDos.isNotEmpty) _CanDos(view: view),
                     _Monthly(view: view),

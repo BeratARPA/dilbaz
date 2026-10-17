@@ -7,6 +7,7 @@ import 'package:dilbaz_app/features/content/presentation/content_status_view.dar
 import 'package:dilbaz_app/features/monthly/presentation/monthly_invitation_card.dart';
 import 'package:dilbaz_app/features/placement/presentation/placement_invitation_card.dart';
 import 'package:dilbaz_app/features/today/application/today_controller.dart';
+import 'package:dilbaz_app/features/week/application/week_summary.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,6 +61,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 const _Greeting(),
                 const PlacementInvitationCard(),
                 const MonthlyInvitationCard(),
+                const _WeekOffer(),
                 const _Today(),
                 const SizedBox(height: 24),
                 Text(
@@ -82,6 +84,38 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
 
 /// Minutes as the learner reads them: rounded, at least one.
 int _minutes(Duration time) => max(1, (time.inSeconds / 60).round());
+
+/// The week summary on Sunday, or last week's on a new week's first
+/// opening (docs/09 §5.13); quiet, and gone once the week has begun.
+class _WeekOffer extends ConsumerWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final offer = ref.watch(todayProvider).value?.weekOffer;
+    if (offer == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card.outlined(
+        margin: EdgeInsets.zero,
+        child: ListTile(
+          leading: const Icon(Icons.insights_outlined),
+          title: Text(switch (offer) {
+            WeekSummaryOffer.thisWeek => l10n.todayWeekSummary,
+            WeekSummaryOffer.lastWeek => l10n.todayLastWeekSummary,
+          }),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push(
+            offer == WeekSummaryOffer.lastWeek
+                ? AppRoutes.weekLast
+                : AppRoutes.week,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _Greeting extends ConsumerWidget {
   const new();
