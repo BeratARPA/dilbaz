@@ -1,0 +1,34 @@
+# Keeps the free Supabase project from pausing (docs/19-setup.md §6): the
+# free plan pauses a project after a week without enough database requests.
+# Once a day, a few anonymous requests reach Postgres; the tables refuse
+# them (RLS and no grant to anon), but the query is run all the same.
+# Scheduled workflows run from the default branch (main).
+name: keepalive
+
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Reach the database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          for table in packs profiles courses; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
+              "$SUPABASE_URL/rest/v1/$table?select=id&limit=1")
+            echo "$table: $code"
+            # 401 is Postgres refusing the anonymous role: the request got there.
+            # 5xx or nothing means the project is paused or down.
+            case "$code" in 200|401) ;; *) exit 1 ;; esac
+            sleep 5
+          done

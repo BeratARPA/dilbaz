@@ -244,3 +244,11 @@ cd app && flutter build apk --release --dart-define-from-file=env/prod.json
 
 1. `version` artırılır ve 5.2'deki gibi derlenip imza denetlenir.
 2. Dosya iki telefona da 5.3 / 5.4'teki gibi gönderilip eskisinin üstüne kurulur. Veri yerinde kalır.
+
+## 6. Supabase'in duraklamaması (2026-10-17)
+
+- **Sorun:** Ücretsiz planda, son bir haftada veritabanına yeterli istek gelmeyen proje kendiliğinden duraklatılır ([belge](https://supabase.com/docs/guides/platform/free-project-pausing)). Duraklıyken giriş, senkron, yapay zekâ ve ses tanıma çalışmaz; cihazdaki kartlar çalışır. Veri kaybolmaz; panelden "Restore" ile (bir yıl içinde) geri açılır. 2026-10-17'de bir kez duraklamıştı.
+- **Önlem:** `.github/workflows/keepalive.yml` her gün 05:23 UTC'de (08:23 TSİ) uygulamanın herkese açık anahtarıyla üç tabloya istek atar. Tablolar anonimi reddeder (Postgres 42501, HTTP 401), ama istek veritabanına ulaşır. 5xx ya da cevapsızlık işi kırmızı yapar: proje duraklamış ya da çökmüştür, panelden geri açılır.
+- **Gizli değerler:** GitHub secrets'ta `SUPABASE_URL` ve `SUPABASE_PUBLISHABLE_KEY` (`app/env/prod.json`'dan, ajan `gh secret set` ile ekrana yazmadan koydu).
+- **Belirsizlik:** Belgeler reddedilen anonim isteğin "etkinlik" sayılıp sayılmadığını yazmıyor. İlk hafta izlenir; yine duraklarsa yalnızca anonime açık, hiçbir şey döndürmeyen bir `keepalive()` fonksiyonu (migrasyon + pgTAP) eklenir.
+- **Maliyet:** GitHub Actions'ta ayda ~30 dakika (özel depo, ücretsiz 2000 dakika).
