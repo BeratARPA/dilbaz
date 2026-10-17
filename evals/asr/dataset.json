@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "about": "ASR bake-off set (docs/08-speech.md §3.2). Scripted items carry a deliberate error of a Turkish speaker: `keep` must appear in the transcript as said, `fix` is the corrected form a recognizer must not write. Free items are 30-60 s of the learner's own speech; their reference is written by the learner after listening.",
+  "scripted": [
+    {
+      "id": "s01",
+      "text": "He go to work every day.",
+      "keep": ["he go"],
+      "fix": ["he goes"]
+    },
+    {
+      "id": "s02",
+      "text": "She have two brother.",
+      "keep": ["she have", "two brother"],
+      "fix": ["she has", "two brothers"]
+    },
+    {
+      "id": "s03",
+      "text": "I am agree with you.",
+      "keep": ["i am agree"],
+      "fix": ["i agree with"]
+    },
+    {
+      "id": "s04",
+      "text": "Yesterday I go to cinema.",
+      "keep": ["i go to cinema"],
+      "fix": ["i went", "the cinema"]
+    },
+    {
+      "id": "s05",
+      "text": "How many years are you?",
+      "keep": ["how many years are you"],
+      "fix": ["how old are you"]
+    },
+    {
+      "id": "s06",
+      "text": "I didn't went there.",
+      "keep": ["didn't went"],
+      "fix": ["didn't go"]
+    },
+    {
+      "id": "s07",
+      "text": "He is doctor.",
+      "keep": ["he is doctor"],
+      "fix": ["a doctor"]
+    },
+    {
+      "id": "s08",
+      "text": "I am living here since two years.",
+      "keep": ["since two years"],
+      "fix": ["for two years"]
+    },
+    {
+      "id": "s09",
+      "text": "I have problem with my key.",
+      "keep": ["have problem"],
+      "fix": ["have a problem"]
+    },
+    {
+      "id": "s10",
+      "text": "She don't like coffee.",
+      "keep": ["she don't"],
+      "fix": ["she doesn't"]
+    },
+    {
+      "id": "s11",
+      "text": "I am work in a bank.",
+      "keep": ["i am work"],
+      "fix": ["i work in"]
+    },
+    {
+      "id": "s12",
+      "text": "We was at home last night.",
+      "keep": ["we was"],
+      "fix": ["we were"]
+    },
+    {
+      "id": "s13",
+      "text": "Can you say me the time?",
+      "keep": ["say me"],
+      "fix": ["tell me"]
+    },
+    {
+      "id": "s14",
+      "text": "I very like this song.",
+      "keep": ["i very like"],
+      "fix": ["i really like", "i like this song very"]
+    },
+    {
+      "id": "s15",
+      "text": "My sister is more tall than me.",
+      "keep": ["more tall"],
+      "fix": ["taller"]
+    },
+    {
+      "id": "s16",
+      "text": "I want that you come.",
+      "keep": ["want that you come"],
+      "fix": ["want you to come"]
+    },
+    {
+      "id": "s17",
+      "text": "There is many people here.",
+      "keep": ["there is many"],
+      "fix": ["there are many"]
+    },
+    {
+      "id": "s18",
+      "text": "I listened him carefully.",
+      "keep": ["listened him"],
+      "fix": ["listened to him"]
+    },
+    {
+      "id": "s19",
+      "text": "He explained me the rule.",
+      "keep": ["explained me"],
+      "fix": ["explained to me"]
+    },
+    {
+      "id": "s20",
+      "text": "I must to go now.",
+      "keep": ["must to go"],
+      "fix": ["must go"]
+    }
+  ],
+  "free": [
+    {
+      "id": "f01",
+      "prompt_tr": "Kendini tanıt: kimsin, ne iş yapıyorsun, nerede yaşıyorsun?"
+    },
+    { "id": "f02", "prompt_tr": "Dün neler yaptın?" },
+    {
+      "id": "f03",
+      "prompt_tr": "En sevdiğin yemeği ve nasıl yapıldığını anlat."
+    },
+    {
+      "id": "f04",
+      "prompt_tr": "İşinde ya da okulunda sıradan bir gün nasıl geçiyor?"
+    },
+    { "id": "f05", "prompt_tr": "Bu hafta sonu için planın ne?" },
+    {
+      "id": "f06",
+      "prompt_tr": "Yaşadığın şehri anlat: neyi seviyorsun, neyi sevmiyorsun?"
+    },
+    { "id": "f07", "prompt_tr": "Yakın bir arkadaşını anlat." },
+    { "id": "f08", "prompt_tr": "Son izlediğin film ya da diziyi anlat." },
+    { "id": "f09", "prompt_tr": "Neden İngilizce öğreniyorsun?" },
+    { "id": "f10", "prompt_tr": "Unutamadığın bir tatili anlat." }
+  ]
+}
