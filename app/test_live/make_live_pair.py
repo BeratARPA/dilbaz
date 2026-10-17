@@ -87,6 +87,7 @@ for sql in [
     f"('{TEAM}', '{a_id}'), ('{TEAM}', '{b_id}') on conflict do nothing",
     f"delete from public.pair_invites where team_id = '{TEAM}'",
     f"delete from public.pair_sessions where team_id = '{TEAM}'",
+    f"delete from public.cheers where team_id = '{TEAM}'",
 ]:
     npx("db", "query", "--local", sql)
 

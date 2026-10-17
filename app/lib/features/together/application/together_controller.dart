@@ -34,6 +34,29 @@ Future<Result<TeamView?, TogetherFailure>> team(Ref ref) =>
 Stream<List<PairInvite>> invites(Ref ref) =>
     ref.watch(togetherRepositoryProvider).invites();
 
+/// The team's week so far (the learner's Monday on), asked once a screen
+/// needs it; null when the server cannot be reached.
+@riverpod
+Future<TeamWeek?> teamWeek(Ref ref, String teamId) async {
+  final now = ref.watch(clockProvider)();
+  final found = await ref
+      .watch(togetherRepositoryProvider)
+      .week(
+        teamId: teamId,
+        since: startOfLocalWeek(now),
+        offsetMinutes: now.toLocal().timeZoneOffset.inMinutes,
+      );
+  return switch (found) {
+    Ok(:final value) => value,
+    Err() => null,
+  };
+}
+
+/// Cheers to or from the learner, live.
+@riverpod
+Stream<List<Cheer>> cheers(Ref ref) =>
+    ref.watch(togetherRepositoryProvider).cheers();
+
 /// The learner's information gap sessions, live.
 @riverpod
 Stream<List<PairSession>> pairSessions(Ref ref) =>
@@ -96,6 +119,12 @@ Future<TogetherView> together(Ref ref) async {
     }
   }
   final here = await ref.watch(presentProvider(team.id, userId).future);
+  final week = await ref.watch(teamWeekProvider(team.id).future);
+  final cheer = (await ref.watch(cheersProvider.future))
+      .where(
+        (c) => c.to == userId && !c.createdAt.isBefore(startOfLocalDay(now)),
+      )
+      .firstOrNull;
   final invites = await ref.watch(invitesProvider.future);
   final today = startOfLocalDay(now);
   ({PairInvite invite, ChatCard card})? first(bool Function(PairInvite) test) {
@@ -115,6 +144,8 @@ Future<TogetherView> together(Ref ref) async {
     partnerHere: here.contains(partner.id),
     cards: [for (final key in order) byKey[key]!],
     gaps: [for (final key in gapOrder) gapsByKey[key]!],
+    week: week,
+    cheer: cheer,
     gap: open,
     incoming: first((i) => i.to == userId && i.state == InviteState.sent),
     outgoing: first(
@@ -163,6 +194,20 @@ class TogetherActions extends _$TogetherActions {
     );
     _settle(result);
     return result is Ok ? id : null;
+  }
+
+  /// Sends the partner cheer [key] (docs/09 §7).
+  Future<bool> cheer(CheerKey key) async {
+    final view = ref.read(togetherProvider).value;
+    if (view is! TogetherReady) return false;
+    final result = await _repository.cheer(
+      teamId: view.teamId,
+      from: view.self,
+      to: view.partner.id,
+      key: key,
+    );
+    _settle(result);
+    return result is Ok;
   }
 
   /// Answers the partner's invitation [invite]: yes or not now.

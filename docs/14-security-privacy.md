@@ -27,7 +27,8 @@ Dilbaz iki kişilik, kişisel bir sistemdir. Yine de iki kişinin **ses kayıtla
 | Görünen ad | Evet (`my_team()`, F2-07) |
 | Şu an uygulamada mı (presence) | Evet, yalnızca ekip kanalında ve o an |
 | Birlikte davetleri | Yalnızca iki taraf |
-| Aktif gün ve dakika, kol dağılımı, birlikte görevler | Evet (ortak hedef için) |
+| Aktif gün ve dakika, kol dağılımı, birlikte görevler | Evet (ortak hedef için; yalnızca `partner_week_summary` sayıları, F2-09) |
+| Tebrikler | Yalnızca iki taraf |
 | Seviye tahmini | Yalnızca `share_levels` açıksa |
 | Aylık test özeti (ölçümler) | Yalnızca `share_monthly` açıksa |
 | Ses kayıtları, transkriptler | **Hayır** |

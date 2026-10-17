@@ -59,6 +59,42 @@ typedef PairSession = ({
   DateTime createdAt,
 });
 
+/// One member's week, as a partner may see it (I-18): counts only, and
+/// the level when the member shares it (docs/04 §9).
+typedef MemberWeek = ({
+  String id,
+  String name,
+  int days,
+  int minutes,
+  Map<String, int> strands,
+  int together,
+});
+
+/// The team's week: the shared goal in days (both weekly goals added up)
+/// and each member's week (docs/09 §7).
+typedef TeamWeek = ({int goalDays, List<MemberWeek> members});
+
+/// The fixed kind messages of "tebrik gönder" (docs/09 §7); the words are
+/// the app's.
+enum CheerKey {
+  steady('steady'),
+  speaking('speaking'),
+  together('together');
+
+  new(this.code);
+
+  final String code;
+}
+
+/// A cheer from one partner to the other.
+typedef Cheer = ({
+  String id,
+  String from,
+  String to,
+  CheerKey key,
+  DateTime createdAt,
+});
+
 /// Why the Together tab could not reach the server; it is online only.
 enum TogetherFailure { network, refused }
 
@@ -112,6 +148,25 @@ abstract interface class TogetherRepository {
 
   /// Leaves session [id] before it is done.
   Future<Result<void, TogetherFailure>> cancelSession(String id);
+
+  /// The week of [teamId] from [since] (the learner's Monday, UTC), its
+  /// days counted [offsetMinutes] from UTC.
+  Future<Result<TeamWeek, TogetherFailure>> week({
+    required String teamId,
+    required DateTime since,
+    required int offsetMinutes,
+  });
+
+  /// The latest cheers to or from the learner, newest first, live.
+  Stream<List<Cheer>> cheers();
+
+  /// Sends cheer [key] to [to].
+  Future<Result<void, TogetherFailure>> cheer({
+    required String teamId,
+    required String from,
+    required String to,
+    required CheerKey key,
+  });
 }
 
 class SupabaseTogetherRepository implements TogetherRepository {
@@ -349,4 +404,101 @@ class SupabaseTogetherRepository implements TogetherRepository {
   @override
   Future<Result<void, TogetherFailure>> cancelSession(String id) =>
       _call(() => _client.rpc<Object?>('pair_cancel', params: {'p_id': id}));
+
+  @override
+  Future<Result<TeamWeek, TogetherFailure>> week({
+    required String teamId,
+    required DateTime since,
+    required int offsetMinutes,
+  }) => _call(() async {
+    final found = await _client.rpc<Object?>(
+      'partner_week_summary',
+      params: {
+        'p_team_id': teamId,
+        'p_since': since.toUtc().toIso8601String(),
+        'p_offset_minutes': offsetMinutes,
+      },
+    );
+    return switch (found) {
+      {'goal_days': final int goal, 'members': final List<Object?> members} => (
+        goalDays: goal,
+        members: [
+          for (final member in members)
+            if (member case {
+              'id': final String id,
+              'name': final String name,
+              'days': final int days,
+              'minutes': final int minutes,
+              'together': final int together,
+            })
+              (
+                id: id,
+                name: name,
+                days: days,
+                minutes: minutes,
+                strands: switch (member['strands']) {
+                  final Map<String, dynamic> strands => {
+                    for (final MapEntry(:key, :value) in strands.entries)
+                      if (value case final int minutes) key: minutes,
+                  },
+                  _ => const <String, int>{},
+                },
+                together: together,
+              ),
+        ],
+      ),
+      _ => (goalDays: 0, members: const <MemberWeek>[]),
+    };
+  });
+
+  static const _cheers = 'cheers';
+
+  static Cheer? _cheer(Map<String, dynamic> row) => switch (row) {
+    {
+      'id': final String id,
+      'from_profile': final String from,
+      'to_profile': final String to,
+      'message_key': final String key,
+      'created_at': final String createdAt,
+    } =>
+      switch (CheerKey.values.where((k) => k.code == key).firstOrNull) {
+        final key? => (
+          id: id,
+          from: from,
+          to: to,
+          key: key,
+          createdAt: DateTime.parse(createdAt).toUtc(),
+        ),
+        null => null,
+      },
+    _ => null,
+  };
+
+  @override
+  Stream<List<Cheer>> cheers() => _client
+      .from(_cheers)
+      .stream(primaryKey: ['id'])
+      .order('created_at')
+      .limit(latest)
+      .map(
+        (rows) =>
+            [for (final row in rows) ?_cheer(row)]
+              ..sort((a, b) => b.createdAt.compareTo(a.createdAt)),
+      );
+
+  @override
+  Future<Result<void, TogetherFailure>> cheer({
+    required String teamId,
+    required String from,
+    required String to,
+    required CheerKey key,
+  }) => _call(
+    () => _client.from(_cheers).insert({
+      'id': _newId(),
+      'team_id': teamId,
+      'from_profile': from,
+      'to_profile': to,
+      'message_key': key.code,
+    }),
+  );
 }

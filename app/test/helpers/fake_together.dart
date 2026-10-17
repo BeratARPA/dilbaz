@@ -235,4 +235,55 @@ class FakeTogetherRepository implements TogetherRepository {
     putSession(_with(s, state: PairState.cancelled));
     return const Ok(null);
   }
+
+  /// The week the server sums up; null makes [week] fail as [failure] or
+  /// network.
+  TeamWeek? teamWeek = (goalDays: 0, members: const <MemberWeek>[]);
+  final _cheers = <Cheer>[];
+  final _cheersOut = StreamController<List<Cheer>>.broadcast();
+
+  @override
+  Future<Result<TeamWeek, TogetherFailure>> week({
+    required String teamId,
+    required DateTime since,
+    required int offsetMinutes,
+  }) async {
+    calls.add('week $teamId');
+    final week = teamWeek;
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    return week == null ? const Err(TogetherFailure.network) : Ok(week);
+  }
+
+  /// A cheer from elsewhere (the partner's app).
+  void cheered(Cheer cheer) {
+    _cheers.add(cheer);
+    _cheersOut.add([..._cheers.reversed]);
+  }
+
+  @override
+  Stream<List<Cheer>> cheers() async* {
+    yield [..._cheers.reversed];
+    yield* _cheersOut.stream;
+  }
+
+  @override
+  Future<Result<void, TogetherFailure>> cheer({
+    required String teamId,
+    required String from,
+    required String to,
+    required CheerKey key,
+  }) async {
+    calls.add('cheer $to ${key.code}');
+    final failure = this.failure;
+    if (failure != null) return Err(failure);
+    cheered((
+      id: 'cheer-${_cheers.length}',
+      from: from,
+      to: to,
+      key: key,
+      createdAt: now,
+    ));
+    return const Ok(null);
+  }
 }

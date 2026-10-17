@@ -348,6 +348,12 @@ Görev kartı → hazırlık sayacı (seviyeye göre) → kayıt (dalga formu + 
 - **Birlikte görevler** (A14, A15) ve birlikte izleme kaydı (`media_logs.with_partner`).
 - **"Tebrik gönder":** tek dokunuş, sabit birkaç nazik mesaj. Yetkinlik bilgisi içerir, genel övgü değildir. Örnek: "Bugünkü konuşma görevini gördüm, helal!"
 
+**Uygulama notları (F2-09):**
+- **Ortak hedef:** İki partnerin haftalık gün hedeflerinin toplamı (ör. 5 + 4 = 9). Birlikte sekmesinde halka: öğrencinin günleri bir renkte, partnerinki öbür renkte, ardı ardına; yanında "Bu hafta ikiniz toplam 5 / 9 gün". Kimin kaç gün yaptığı ayrı yazılmaz, sıralama yok (I-12). Hedefi değiştirme sonraya.
+- **Partnerin haftası:** "Ada bu hafta: 3 gün · 55 dk · birlikte 1" (`partner_week_summary`; günler öğrencinin yerel takvimiyle).
+- **Tebrik:** "Tebrik gönder" alttan üç sabit mesaj açar: "Bu hafta düzenli çalıştın, helal!", "Konuşma görevini gördüm, eline sağlık!", "Birlikte konuşmak güzeldi, yine yapalım!". Gelen tebrik o gün Birlikte sekmesinde ve Bugün ekranında "Ada: …" olarak durur. Bildirim yok (F2-07 kararı).
+- **Sonraya kalanlar:** haftalık özette ortak hedef satırı, hedef değiştirme, birlikte yapılanların geçmiş listesi, paylaşım anahtarları (seviye, aylık özet) için ayar.
+
 ## 8. Erişilebilirlik
 
 - TalkBack etiketleri

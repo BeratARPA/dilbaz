@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/features/together/application/together_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_view.dart';
+import 'package:dilbaz_app/features/together/presentation/week_goal.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,9 +60,13 @@ class TogetherTodayCard extends ConsumerWidget {
           ),
         ],
       ),
+      TogetherReady(cheer: final cheer?) => (
+        l10n.cheerReceived(view.partner.name, cheerText(l10n, cheer.key)),
+        const <Widget>[],
+      ),
       _ => ('', const <Widget>[]),
     };
-    if (buttons.isEmpty) return const SizedBox.shrink();
+    if (text.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Card.filled(
@@ -79,7 +84,8 @@ class TogetherTodayCard extends ConsumerWidget {
                   Expanded(child: Text(text)),
                 ],
               ),
-              Wrap(spacing: 8, runSpacing: 8, children: buttons),
+              if (buttons.isNotEmpty)
+                Wrap(spacing: 8, runSpacing: 8, children: buttons),
             ],
           ),
         ),

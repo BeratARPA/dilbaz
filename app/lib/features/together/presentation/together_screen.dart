@@ -4,6 +4,7 @@ import 'package:dilbaz_app/app/routes.dart';
 import 'package:dilbaz_app/data/together/together_repository.dart';
 import 'package:dilbaz_app/features/together/application/together_controller.dart';
 import 'package:dilbaz_app/features/together/application/together_view.dart';
+import 'package:dilbaz_app/features/together/presentation/week_goal.dart';
 import 'package:dilbaz_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,6 +100,13 @@ class _Ready extends ConsumerWidget {
             ),
           ],
         ),
+        if (view.cheer case final cheer?)
+          _Note(
+            text: l10n.cheerReceived(partner, cheerText(l10n, cheer.key)),
+            actions: const [],
+          ),
+        if (view.week case final week?)
+          WeekGoal(week: week, self: view.self, partner: view.partner),
         if (view.incoming case (:final invite, :final card))
           _Note(
             text: l10n.togetherIncoming(partner, card.title),

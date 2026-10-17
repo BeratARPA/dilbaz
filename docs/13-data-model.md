@@ -248,6 +248,7 @@ create table subtitle_imports (
 
 ### 2.5 Birlikte
 
+- **`cheers` (F2-09):** `id`, `team_id`, `from_profile`, `to_profile`, `message_key` (`steady` / `speaking` / `together`; metinler ARB'de), `created_at`. İki taraf okur; gönderen kendi adına ve yalnızca ekip arkadaşına ekler; değiştirilemez. `supabase_realtime` yayınında.
 - **`pair_sessions` (F2-08, `20261017200149_pair_sessions.sql`, ADR-0012):** `id`, `team_id`, `task_ref`, `created_by`, `participants uuid[2]`, `roles jsonb` (`{profil: 'a'|'b'}`), `state` (`invited` / `active` / `done` / `cancelled`), `answers jsonb` (`{profil: cevap}`, ≤ 4 KB), `created_at`, `ended_at`. `supabase_realtime` yayınında. Aşağıdaki SQL taslağındaki `pair_roles` uygulanmadı.
 - **`pair_invites` (F2-07, `20261017190643_together.sql`):** `id`, `team_id`, `from_profile`, `to_profile`, `activity` (`chat`), `task_ref`, `state` (`sent` / `accepted` / `declined` / `cancelled`), `created_at`, `answered_at`. Yalnızca iki taraf okur. Gönderen kendi adına ve yalnızca ekip arkadaşına, `sent` olarak ekler; açık daveti alıcı kabul eder ya da reddeder, gönderen geri alır; cevaplanmış davet değişmez. `authenticated` için SELECT, INSERT ve yalnızca `state`/`answered_at` sütunlarında UPDATE. `supabase_realtime` yayınında. Senkron edilmez: sekme çevrimiçidir.
 - **`my_team()`** (security definer): çağıranın ilk ekibi, üyelerin kimliği ve görünen adıyla (`14` §3).
@@ -327,7 +328,7 @@ create table app_config (key text primary key, value jsonb not null);
 
 ### 2.7 Görünümler ve fonksiyonlar
 
-- **`partner_week_summary(team_id, week_start)`** (security definer, üyelik kontrolü yapar). Her üye için şunları döner:
+- **`partner_week_summary(p_team_id, p_since, p_offset_minutes)`** (F2-09, `20261017202607_partner_week.sql`; security definer, üyelik kontrolü yapar, değilse `not_a_member`). `p_since` öğrencinin yerel pazartesisi (UTC), günler `p_offset_minutes` ile yerel takvimde sayılır. Döner: `goal_days` (üyelerin `weekly_days_goal` toplamı) ve her üye için `id`, `name`, `days`, `minutes`, `strands`, `together`, `levels` (yalnızca `share_levels` açıksa). Aylık özet henüz yok. pgTAP `14_partner_week.test.sql` (13). Her üye için şunları döner (plan):
   - aktif gün sayısı, aktif dakika
   - kol dakikaları
   - birlikte görev sayısı

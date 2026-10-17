@@ -9,7 +9,7 @@ import '../../helpers/card_fixture.dart';
 import '../../helpers/fake_together.dart';
 import '../../helpers/pack_fixture.dart';
 import '../../helpers/pump_app.dart';
-import 'together_test.dart' show invited, partnerId, team;
+import 'together_test.dart' show invited, partnerId, self, team;
 
 void main() {
   late AppDatabase db;
@@ -97,6 +97,53 @@ void main() {
     server.failure = null;
     await tapText(tester, trStrings.togetherRetry);
     expect(find.text(trStrings.togetherPartnerAway('Ada')), findsOneWidget);
+  });
+
+  testWidgets('the shared goal; a cheer is sent and one arrives', (
+    tester,
+  ) async {
+    server
+      ..teamWeek = (
+        goalDays: 9,
+        members: [
+          (
+            id: self,
+            name: 'Berat',
+            days: 2,
+            minutes: 40,
+            strands: const {},
+            together: 1,
+          ),
+          (
+            id: partnerId,
+            name: 'Ada',
+            days: 3,
+            minutes: 55,
+            strands: const {},
+            together: 1,
+          ),
+        ],
+      )
+      ..cheered((
+        id: 'c1',
+        from: partnerId,
+        to: self,
+        key: CheerKey.speaking,
+        createdAt: cardNow,
+      ));
+    await open(tester, tab: false);
+    final received = trStrings.cheerReceived('Ada', trStrings.cheerSpeaking);
+    expect(find.text(received), findsOneWidget, reason: 'on Today');
+    await tapText(tester, trStrings.tabTogether);
+    expect(find.text(trStrings.togetherGoal(5, 9)), findsOneWidget);
+    expect(
+      find.text(trStrings.togetherPartnerWeek('Ada', 3, 55, 1)),
+      findsOneWidget,
+    );
+    await tapText(tester, trStrings.cheerSend);
+    await tapText(tester, trStrings.cheerSteady);
+    expect(find.text(trStrings.cheerSent), findsOneWidget);
+    expect(server.calls, contains('cheer $partnerId steady'));
   });
 
   testWidgets('fits a small phone at double text size', (tester) async {

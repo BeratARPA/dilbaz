@@ -160,4 +160,42 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 2)),
   );
+
+  test(
+    'the week together and a cheer over Realtime',
+    () async {
+      final ra = SupabaseTogetherRepository(a);
+      final rb = SupabaseTogetherRepository(b);
+      final idA = a.auth.currentUser!.id;
+      final idB = b.auth.currentUser!.id;
+      final team = (await ra.team() as Ok<TeamView?, TogetherFailure>).value!;
+      final week = await rb.week(
+        teamId: team.id,
+        since: DateTime.now().toUtc().subtract(const Duration(days: 6)),
+        offsetMinutes: 180,
+      );
+      final summary = (week as Ok<TeamWeek, TogetherFailure>).value;
+      expect(summary.members.map((m) => m.id).toSet(), {idA, idB});
+      expect(summary.goalDays, greaterThan(0));
+
+      final seen = rb.cheers().asBroadcastStream();
+      await first(seen, (_) => true);
+      expect(
+        await ra.cheer(
+          teamId: team.id,
+          from: idA,
+          to: idB,
+          key: CheerKey.speaking,
+        ),
+        isA<Ok<void, TogetherFailure>>(),
+      );
+      final got = await first(
+        seen,
+        (list) => list.any((c) => c.from == idA && c.key == CheerKey.speaking),
+      );
+      expect(got.first.to, idB);
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }

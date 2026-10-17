@@ -169,6 +169,7 @@ class LearnerSnapshot {
   - birlikte yapılan görevler
 - **Hiçbir zaman:** ses kayıtları, hata profili, tek tek denemeler.
 - **İsteğe bağlı paylaşım:** seviye tahmini ve aylık test özeti, kullanıcı ayrı ayrı açarsa.
+- **Uygulama (F2-09):** `partner_week_summary` yalnızca bu sayıları döndürür: aktif gün (öğrencinin saat dilimiyle), dakika, kollara göre dakika, birlikte yapılan görev sayısı (`pair_chat`, `pair_info_gap` oturumları); `share_levels` açıksa kursun seviye tahminleri. Aylık test özeti ve paylaşım ayarları sonraya.
 
 ## 10. Uç durumlar
 

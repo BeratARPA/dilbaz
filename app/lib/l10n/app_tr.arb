@@ -3072,5 +3072,67 @@
   "gapCancelled": "Görev bitirilmeden kapandı.",
   "@gapCancelled": {
     "description": "Information gap: one of them left it."
+  },
+  "togetherGoal": "Bu hafta ikiniz toplam {days} / {goal} gün",
+  "@togetherGoal": {
+    "description": "Together: the shared weekly goal (docs/09 §7); nobody ranked.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "togetherPartnerWeek": "{name} bu hafta: {days} gün · {minutes} dk · birlikte {together}",
+  "@togetherPartnerWeek": {
+    "description": "Together: the partner's week in counts (I-18).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "together": {
+        "type": "int"
+      }
+    }
+  },
+  "cheerSend": "Tebrik gönder",
+  "@cheerSend": {
+    "description": "Together: opens the cheers."
+  },
+  "cheerSent": "Gönderildi.",
+  "@cheerSent": {
+    "description": "Together: the cheer went."
+  },
+  "cheerReceived": "{name}: {message}",
+  "@cheerReceived": {
+    "description": "Together and Today: a cheer from the partner.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "cheerSteady": "Bu hafta düzenli çalıştın, helal!",
+  "@cheerSteady": {
+    "description": "Cheer: steady study this week."
+  },
+  "cheerSpeaking": "Konuşma görevini gördüm, eline sağlık!",
+  "@cheerSpeaking": {
+    "description": "Cheer: a speaking task done."
+  },
+  "cheerTogether": "Birlikte konuşmak güzeldi, yine yapalım!",
+  "@cheerTogether": {
+    "description": "Cheer: something done together."
   }
 }

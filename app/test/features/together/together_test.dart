@@ -103,7 +103,7 @@ void main() {
       expect(ready.cards.map((c) => c.key), [chatA, chatB]);
       expect(ready.cards.first.title, 'Yemek');
       expect(ready.cards.first.followUpMeanings, ['Kolu mu?', 'Sima mı?']);
-      expect(server.calls, ['present team-1']);
+      expect(server.calls, ['present team-1', 'week team-1']);
 
       server.setHere({partnerId});
       await pumpEventQueue();
@@ -165,6 +165,69 @@ void main() {
       server.failure = null;
       await actions.invite(ready.cards.first);
       expect(container.read(togetherActionsProvider), isNull);
+    });
+  });
+
+  group('the week together (F2-09)', () {
+    test(
+      "the shared goal, the partner's counts; today's cheer; sending one",
+      () async {
+        server
+          ..teamWeek = (
+            goalDays: 9,
+            members: [
+              (
+                id: self,
+                name: 'Berat',
+                days: 2,
+                minutes: 40,
+                strands: {'language': 40},
+                together: 1,
+              ),
+              (
+                id: partnerId,
+                name: 'Ada',
+                days: 3,
+                minutes: 55,
+                strands: {'output': 20},
+                together: 1,
+              ),
+            ],
+          )
+          ..cheered((
+            id: 'old',
+            from: partnerId,
+            to: self,
+            key: CheerKey.steady,
+            createdAt: cardNow.subtract(const Duration(days: 1)),
+          ))
+          ..cheered((
+            id: 'today',
+            from: partnerId,
+            to: self,
+            key: CheerKey.speaking,
+            createdAt: cardNow,
+          ));
+        final ready = await view() as TogetherReady;
+        expect(ready.week?.goalDays, 9);
+        expect(ready.week?.members.last.minutes, 55);
+        expect(ready.cheer?.id, 'today');
+
+        expect(
+          await container
+              .read(togetherActionsProvider.notifier)
+              .cheer(CheerKey.together),
+          isTrue,
+        );
+        expect(server.calls, contains('cheer $partnerId together'));
+      },
+    );
+
+    test('without the week: the rest still shows', () async {
+      server.teamWeek = null;
+      final ready = await view() as TogetherReady;
+      expect(ready.week, isNull);
+      expect(ready.cards, isNotEmpty);
     });
   });
 

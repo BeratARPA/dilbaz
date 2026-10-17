@@ -34,6 +34,13 @@ sealed class TogetherView with _$TogetherView {
     /// Today's session still open: started by either, waiting or under way.
     ({PairSession session, InfoGapTask task})? gap,
 
+    /// The team's week: the shared goal and each one's counts (F2-09);
+    /// null when it could not be had.
+    TeamWeek? week,
+
+    /// A cheer the partner sent today.
+    Cheer? cheer,
+
     /// An invitation from the partner waiting for an answer.
     ({PairInvite invite, ChatCard card})? incoming,
 
