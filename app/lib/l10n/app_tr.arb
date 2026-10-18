@@ -1443,9 +1443,9 @@
   "@dictationYours": {
     "description": "Dictation: label of what the learner wrote."
   },
-  "dictationMarkWeakForm": "Duyulmayan küçük kelime: {words}",
+  "dictationMarkWeakForm": "Duyulmayan sık kelime: {words}",
   "@dictationMarkWeakForm": {
-    "description": "Dictation: function words not heard (perc.weak_forms).",
+    "description": "Dictation: very frequent words not heard (perc.weak_forms); the engine tells them by rank, so a few content words are among them.",
     "placeholders": {
       "words": {
         "type": "String"
@@ -1525,7 +1525,7 @@
       }
     }
   },
-  "dictationDoneWeakForm": "Duyulmayan küçük kelime: {count}",
+  "dictationDoneWeakForm": "Duyulmayan sık kelime: {count}",
   "@dictationDoneWeakForm": {
     "description": "Dictation summary: function words not heard.",
     "placeholders": {
