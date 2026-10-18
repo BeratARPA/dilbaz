@@ -67,7 +67,9 @@ BACKGROUND = f"""<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
 
 
 def svg(body: str) -> str:
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">{body}</svg>'
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">{body}</svg>'
+    )
 
 
 # The whole icon, full bleed: the glyph fills about half of it.
@@ -150,7 +152,7 @@ def main() -> None:
         "dilbaz_foreground.svg": FOREGROUND,
         "dilbaz_monochrome.svg": MONOCHROME,
     }.items():
-        (HERE / name).write_text(source + "\n", encoding="utf-8")
+        (HERE / name).write_text(source + "\n", encoding="utf-8", newline="\n")
 
     big = render(FULL, 1024)
     save(rounded(big), HERE / "dilbaz_icon.png")
@@ -166,9 +168,11 @@ def main() -> None:
             RES / f"drawable-{density}" / "ic_notification.png",
         )
     (RES / "mipmap-anydpi-v26").mkdir(exist_ok=True)
-    (RES / "mipmap-anydpi-v26" / "ic_launcher.xml").write_text(ADAPTIVE, encoding="utf-8")
+    (RES / "mipmap-anydpi-v26" / "ic_launcher.xml").write_text(
+        ADAPTIVE, encoding="utf-8", newline="\n"
+    )
     (RES / "drawable" / "ic_launcher_background.xml").write_text(
-        ADAPTIVE_BACKGROUND, encoding="utf-8"
+        ADAPTIVE_BACKGROUND, encoding="utf-8", newline="\n"
     )
 
     web = APP / "web"
