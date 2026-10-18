@@ -49,6 +49,7 @@ Geri bildirim, kişiye değil görev ve sürece yönelik olmalıdır. Kişiye y�
 - **Renk tek sinyal değildir:** her durumda ikon ve metin de vardır (erişilebilirlik).
 - **Tipografi:** Kart istemleri büyük (≥ 24 sp). Okuma metinleri rahat satır aralıklı.
 - **Ses/titreşim:** isteğe bağlı, yumuşak. Hata için sert ses yok.
+- **Uygulama ikonu (2026-10-18):** Konuşma balonunun içinde ses dalgası: önce konuşmak (I-05). Zemin birincil renk `#1F7A74` (açıktan koyuya), balon krem, ortadaki çubuk kehribar. Tek kaynak `app/assets/icon/make_icons.py`: Android uyarlanabilir ikonu (temalı tek renk katmanıyla), eski kare ikonlar, bildirim ikonu (tek renk), Windows `.ico` ve web ikonlarını üretir.
 
 ## 4. Gezinme
 
