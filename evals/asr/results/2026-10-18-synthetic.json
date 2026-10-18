@@ -1,0 +1,40 @@
+{
+  "set": "synthetic",
+  "recordings": 20,
+  "scores": [
+    {
+      "candidate": "moonshine",
+      "scripted": 20,
+      "failures": 0,
+      "errorKept": 1,
+      "errorLost": [],
+      "werScripted": 0,
+      "werFree": null,
+      "fillerCapture": null,
+      "latencyP50": 102,
+      "latencyP90": 169,
+      "passes": {
+        "errorKept": true
+      },
+      "complete": true
+    },
+    {
+      "candidate": "parakeet",
+      "scripted": 20,
+      "failures": 0,
+      "errorKept": 0.95,
+      "errorLost": [
+        "s13"
+      ],
+      "werScripted": 0.008333333333333333,
+      "werFree": null,
+      "fillerCapture": null,
+      "latencyP50": 126,
+      "latencyP90": 206,
+      "passes": {
+        "errorKept": true
+      },
+      "complete": true
+    }
+  ]
+}

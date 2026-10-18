@@ -5,6 +5,9 @@
  *   cd evals && deno run -A --env-file=../supabase/functions/.env \
  *     asr/run.ts --set <name> [--candidates deepgram,groq,gemini,gemini-ts]
  *
+ * On-device candidates (`parakeet`, `moonshine`: sherpa-onnx) are written
+ * down first by `local_stt.py`; here they are only scored.
+ *
  * Recordings are `asr/audio/<set>/<id>.<wav|m4a|mp3|ogg>`, ids from
  * `dataset.json` (s01…s20 read, f01…f10 free). Free items are scored for
  * WER and fillers when `asr/audio/<set>/refs/<id>.txt` holds what was said,
@@ -157,6 +160,9 @@ const candidates: Record<string, { make: () => Transcribe; paceMs: number }> = {
   "gemini-ts": { make: () => gemini(true), paceMs: 21_000 },
 };
 
+/** Written down by `local_stt.py`; scored here. */
+const local = new Set(["parakeet", "moonshine"]);
+
 function arg(name: string): string | undefined {
   const at = Deno.args.indexOf(`--${name}`);
   return at < 0 ? undefined : Deno.args[at + 1];
@@ -210,16 +216,23 @@ async function main() {
   await Deno.mkdir(join(folder, "transcripts"), { recursive: true });
   for (const name of names) {
     const candidate = candidates[name];
-    if (!candidate) throw new Error(`unknown candidate ${name}`);
+    if (!candidate && !local.has(name)) {
+      throw new Error(`unknown candidate ${name}`);
+    }
     const path = join(folder, "transcripts", `${name}.jsonl`);
     const done = await readLines(path);
     const finished = new Set(
       done.filter((r) => r.text !== undefined).map((r) => r.id),
     );
-    const transcribe = candidate.make();
+    const transcribe = candidate?.make();
     let stopped = false;
     for (const [id, file] of [...recordings].sort()) {
       if (finished.has(id)) continue;
+      if (!transcribe) {
+        // A local candidate left this one: run `local_stt.py` again.
+        stopped = true;
+        continue;
+      }
       const bytes = await Deno.readFile(join(folder, file));
       const contentType = types[file.split(".").at(-1)!];
       let started = performance.now();
@@ -250,7 +263,7 @@ async function main() {
         stopped = true;
         break;
       }
-      await new Promise((resolve) => setTimeout(resolve, candidate.paceMs));
+      await new Promise((resolve) => setTimeout(resolve, candidate!.paceMs));
     }
     const latest = new Map<string, AsrResult>();
     for (const result of await readLines(path)) {

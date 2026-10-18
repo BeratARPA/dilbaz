@@ -61,6 +61,8 @@ Bütçe sıfırdır (ADR-0009). Azure kart doğrulaması istediği için kullan�
 - Cihaz üstü: Android `SpeechRecognizer` (`speech_to_text`), `sherpa-onnx` modelleri
 - AssemblyAI (`disfluencies=true`; ücretsiz kredisi varsa)
 
+**Uygulama (F2-01):** `evals/asr/run.ts` Deepgram, Groq ve Gemini'yi (kelime zamanlı ve zamansız) çağırır. Cihaz üstü adaylar telefona sığacak iki sherpa-onnx modelidir (~110 MB): NeMo Parakeet TDT 110M (int8) ve Moonshine base (2026-02, nicelenmiş). `evals/asr/local_stt.py` bunları bilgisayarda çalıştırır; kelimeler telefondakiyle aynıdır, gecikme telefonunki değildir. Android `SpeechRecognizer` dosya kabul etmediği (canlı mikrofon ister) için aynı kayıtlarla ölçülemez, dışarıda kaldı. AssemblyAI hesap açmayı gerektirir; ancak diğer adaylar %90'a ulaşmazsa sorulur.
+
 **Ölçütler:**
 1. **Hata koruma oranı:** bilinçli hataların düzeltilmeden transkripte geçme yüzdesi. Hedef ≥ %90.
 2. Kelimesi kelimesine transkripte göre WER.
