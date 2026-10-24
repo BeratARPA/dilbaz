@@ -25,3 +25,8 @@ Bir dili sıfırdan ileri seviyeye **gerçekten** öğreten, öğrenme bilimine 
 ## Doküman haritası
 
 `docs/00-overview.md` §7'de tüm dokümanların listesi ve ne zaman okunacağı var. Mimari kararlar: `docs/adr/`.
+
+## Lisans
+
+- **Kod:** [MIT](LICENSE).
+- **İçerik verisi** (`content/` altındaki paketler ve küratörlük dosyaları): açık lisanslı kaynaklardan türetilir. Her kaynağın lisansı ve atfı [`content/sources.yaml`](content/sources.yaml) dosyasında kayıtlıdır (Tatoeba CC BY 2.0 FR, NGSL ve Octanove CC BY-SA 4.0, Wiktionary/Wiktextract CC BY-SA 4.0, CMUdict BSD-2-Clause, CEFR-J atıfla serbest). CC BY-SA kaynak içeren paketler CC BY-SA 4.0 ile dağıtılır; ayrıntı: [`docs/10-content-pipeline.md`](docs/10-content-pipeline.md) §2.
